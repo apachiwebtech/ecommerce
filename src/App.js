@@ -16,6 +16,7 @@ import DashBoard from './MainComponent/DashBoard';
 import Product from './AdminComponent/Product';
 import Product_Catalog from './AdminComponent/Product_Catalog';
 import Sellers_Product_Inventory from './AdminComponent/Sellers_Product_Inventory';
+import Product_Catalog1 from './AdminComponent/Product_Catalog1';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -69,6 +70,11 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/product',
         element: <Product />
+      },
+
+      {
+        path: '/webapp/product_catalog1',
+        element: <Product_Catalog1 />
       },
 
       {

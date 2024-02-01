@@ -4,7 +4,15 @@ import Icon from '@mdi/react';
 import { mdiApps, mdiCheckDecagram, mdiLandPlotsCircle, mdiMagnifyPlusOutline, mdiMenu } from '@mdi/js';
 import { mdiAccountGroupOutline } from '@mdi/js';
 import { mdiAccountOutline } from '@mdi/js'
+import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
+import { Collapse } from '@mui/material';
 const Header = () => {
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   return (
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
@@ -77,6 +85,23 @@ const Header = () => {
           </Link>
         </li>
 
+        <li className="nav-item" onClick={handleClick}>
+          <Link className="nav-link" to='/webapp/product_catalog1'>
+          <StarBorder />
+            {/* <Icon path={mdiCheckDecagram} size={1} className='mx-3' /> */}
+            <span className="menu-title mx-2">Product Catalog1</span>
+            {open ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3'/>}
+          </Link>
+        </li>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <li className="nav-item">
+            <Link className="nav-link" to='/webapp/product_catalog'>
+              <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+              <span className="menu-title">item1</span>
+            </Link>
+          </li>
+        </Collapse>
+        
         <li className="nav-item">
           <Link className="nav-link" to='/webapp/product_catalog'>
             <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
