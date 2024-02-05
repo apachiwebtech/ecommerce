@@ -15,7 +15,12 @@ import WebLogin from './AdminComponent/WebLogin';
 import DashBoard from './MainComponent/DashBoard';
 import Product from './AdminComponent/Product';
 import Product_Catalog from './AdminComponent/Product_Catalog';
-import Sellers_Product_Inventory from './AdminComponent/Sellers_Product_Inventory';
+import SellersProductInventory from './AdminComponent/SellersProductInventory';
+import Brand from './AdminComponent/Brand';
+import Shop from './AdminComponent/Shop';
+import ProductOption from './AdminComponent/ProductOption';
+import ProductTag from './AdminComponent/ProductTag';
+import ThresholdProduct from './AdminComponent/ThresholdProduct';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -77,10 +82,33 @@ const Router = createBrowserRouter([
       },
 
       {
-        path: '/webapp/Sellers_Product_Inventory',
-        element: <Sellers_Product_Inventory />
+        path: '/webapp/sellersproductinventory',
+        element: <SellersProductInventory />
       },
 
+      {
+        path: '/webapp/brand',
+        element: <Brand />
+      },
+      {
+        path: '/webapp/shop',
+        element: <Shop />
+      },
+
+      {
+        path: '/webapp/productoption',
+        element: <ProductOption />
+      },
+
+      {
+        path: '/webapp/producttag',
+        element: <ProductTag />
+      },
+
+      {
+        path: '/webapp/thresholdproduct',
+        element: <ThresholdProduct />
+      },
       
     ]
   }

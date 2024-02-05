@@ -59,7 +59,7 @@ const Header = () => {
           </Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to='/webapp/adminuser'>
+          <Link className="nav-link" to='/webapp/brand'>
             <Icon path={mdiMagnifyPlusOutline} size={1} className='mx-3' />
             <span className="menu-title">Brand</span>
           </Link>
@@ -84,9 +84,33 @@ const Header = () => {
           </Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link" to='/webapp/Sellers_Product_Inventory'>
+          <Link className="nav-link" to='/webapp/SellersProductInventory'>
             <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
-            <span className="menu-title">Sellers Product Inventory</span>
+            <span className="menu-title">SellersProductInventory</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/shop'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Shop</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/productoption'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Product Option</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/producttag'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Product Tag</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/thresholdproduct'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Threshold Product</span>
           </Link>
         </li>
         {/* <li className="nav-item sidebar-category">

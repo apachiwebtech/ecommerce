@@ -51,3 +51,34 @@
   margin: 0px 5px;
   border-radius:5px ;
 }
+.product-profile{
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 200px;
+}
+.product-profile__thumbnail {
+  width: 100%;
+  max-width: 60px;
+  height: 60px;
+  margin-right: 1rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: rgba(0,0,0,0.03);
+  box-shadow: rgba(0,0,0,0.16) 0px 1px 4px;
+}
+.product-profile__data {
+  flex: 1;
+  min-width: 0px;
+}
+.product-profile__data .title {
+  font-weight: 500;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: rgba(0,0,0,0.87);
+}
+
