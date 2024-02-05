@@ -4,10 +4,19 @@ import Icon from '@mdi/react';
 import { mdiApps, mdiCheckDecagram, mdiLandPlotsCircle, mdiMagnifyPlusOutline, mdiMenu } from '@mdi/js';
 import { mdiAccountGroupOutline } from '@mdi/js';
 import { mdiAccountOutline } from '@mdi/js'
+import { ExpandLess, ExpandMore, Star } from '@mui/icons-material';
+import { Collapse } from '@mui/material';
 const Header = () => {
 
+  
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
-    <nav className="sidebar sidebar-offcanvas" id="sidebar">
+    <nav className="sidebar sidebar-offcanvas" id="sidebar" wordBreak= 'break-word' overflowWrap= 'break-word'>
       <ul className="nav">
 
         <li className="nav-item">
@@ -113,6 +122,55 @@ const Header = () => {
             <span className="menu-title">Threshold Product</span>
           </Link>
         </li>
+
+        <li className="nav-item" onClick={handleClick}>
+          <Link className="nav-link" to='/webapp/thresholdproduct'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Orders</span>
+            {open ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </Link>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <ul>
+              <li className="nav-item">
+                <Link className="nav-link" to='/webapp/thresholdproduct'>
+                  <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+                  <span className="menu-title">Orders</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to='/webapp/thresholdproduct'>
+                  <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+                  <span className="menu-title">Subscription Orders</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to='/webapp/thresholdproduct'>
+                  <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+                  <span className="menu-title">Order Cancellation Reasons</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to='/webapp/thresholdproduct'>
+                  <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+                  <span className="menu-title">Order Return Reasons</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to='/webapp/thresholdproduct'>
+                  <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+                  <span className="menu-title">Product Reviews</span>
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to='/webapp/thresholdproduct'>
+                  <Star className='mx-3' />
+                  <span className="menu-title">Abandoned Cart</span>
+                </Link>
+              </li>
+            </ul>
+          </Collapse>
+        </li>
+
         {/* <li className="nav-item sidebar-category">
           <p>Pages</p>
           <span></span>
