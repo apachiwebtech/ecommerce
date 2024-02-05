@@ -3,6 +3,8 @@ import axios from 'axios';
 import md5 from 'js-md5';
 import { Link, useNavigate } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const AdminUser = () => {
 
@@ -14,7 +16,7 @@ const AdminUser = () => {
         lastname: "",
         email: "",
         password: "",
-        
+
     })
 
     const validateForm = () => {
@@ -236,7 +238,9 @@ const AdminUser = () => {
                                                             </td>
 
                                                             <td>
-                                                                <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button>
+                                                                <EditIcon />
+                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
+                                                                {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>

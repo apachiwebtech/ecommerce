@@ -20516,7 +20516,7 @@ dl li {
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;
   -ms-transition: width 0.25s ease, background 0.25s ease;
-  /* width: 240px; */
+  width: 300px;
 }
 
 .sidebar .nav {
@@ -20556,7 +20556,7 @@ dl li {
   -webkit-align-items: center;
   align-items: center;
   white-space: nowrap;
-  padding: 0.76rem 2.125rem;
+  padding: 0.76rem 0.125rem;
   color: #ffffff;
   -webkit-transition-duration: 0.45s;
   -moz-transition-duration: 0.45s;
@@ -20706,7 +20706,7 @@ dl li {
     top: 65px;
     bottom: 0;
     overflow: auto;
-    right: -240px;
+    right: -300px;
     -webkit-transition: all 0.25s ease-out;
     -o-transition: all 0.25s ease-out;
     transition: all 0.25s ease-out;

@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const SubCategory = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -200,7 +202,7 @@ const SubCategory = () => {
                                                     return (
                                                         <tr key={index}>
                                                             <td>
-                                                                {item.id}
+                                                                {index + 1}
                                                             </td>
                                                             <td>
                                                                 {item.title}
@@ -208,7 +210,9 @@ const SubCategory = () => {
 
 
                                                             <td>
-                                                                <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button>
+                                                                <EditIcon />
+                                                                <DeleteIcon style={{color :"red"}} onClick={() => handleClick(item.id)}/>
+                                                                {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>

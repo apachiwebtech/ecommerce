@@ -2,6 +2,8 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { BASE_URL } from './BaseUrl'
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const VendorMaster = () => {
     const [vendordata, setVendorData] = useState([])
@@ -124,7 +126,9 @@ const VendorMaster = () => {
                                                                 {item.address}
                                                             </td>
                                                             <td>
-                                                                <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button>
+                                                            <EditIcon />
+                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
+                                                                {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>

@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 
 
@@ -59,10 +60,10 @@ const Category = () => {
                 console.log(err)
             })
 
-            setConfirmationVisibleMap((prevMap) => ({
-                ...prevMap,
-                [id]: false,
-            }));
+        setConfirmationVisibleMap((prevMap) => ({
+            ...prevMap,
+            [id]: false,
+        }));
     }
 
     const handleSubmit = (e) => {
@@ -154,7 +155,7 @@ const Category = () => {
                                                     return (
                                                         <tr key={index}>
                                                             <td>
-                                                                {item.id}
+                                                                {index + 1}
                                                             </td>
                                                             <td>
                                                                 {item.title}
@@ -162,13 +163,15 @@ const Category = () => {
 
 
                                                             <td>
-                                                                <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button>
+                                                                <EditIcon />
+                                                                <DeleteIcon style={{color :"red"}} onClick={() => handleClick(item.id)}/>
+                                                                {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>
                                                                     <p>Are you sure you want to delete?</p>
                                                                     <button onClick={() => handleDelete(item.id)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() =>handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                                    <button onClick={() => handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
                                                                 </div>
                                                             )}
                                                         </tr>
@@ -179,7 +182,7 @@ const Category = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                
+
                                 </div>
                             </div>
                         </div>

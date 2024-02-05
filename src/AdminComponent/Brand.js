@@ -16,7 +16,7 @@ const Brand = () => {
         lastname: "",
         email: "",
         password: "",
-        
+
     })
 
     const validateForm = () => {
@@ -199,7 +199,7 @@ const Brand = () => {
                                                     </th>
 
                                                     <th>
-                                                        Brand 
+                                                        Brand
                                                     </th>
 
                                                     <th width="17%">
@@ -213,17 +213,17 @@ const Brand = () => {
                                                     return (
                                                         <tr key={index}>
                                                             <td>
-                                                               
+
                                                             </td>
                                                             <td>
-                                                               
+
                                                             </td>
                                                             <td>
                                                             </td>
 
                                                             <td>
-                                                            <Link><EditIcon /></Link>
-                                                            <Link style={{color : "red"}}><DeleteIcon /></Link>
+                                                                <Link><EditIcon /></Link>
+                                                                <Link style={{ color: "red" }}><DeleteIcon /></Link>
                                                                 {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (

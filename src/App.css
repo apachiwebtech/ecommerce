@@ -199,4 +199,10 @@
   text-overflow: ellipsis;
   color: rgba(0,0,0,0.87);
 }
-
+li{
+  list-style: none;
+} 
+.inner-item span{
+  font-size: 15px !important;
+  font-weight: 200 !important;
+}

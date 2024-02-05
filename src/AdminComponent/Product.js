@@ -33,6 +33,7 @@ const Product = () => {
       });
   }
 
+
   useEffect(() => {
     getcatData();
   }, []);
@@ -620,7 +621,7 @@ const Product = () => {
                           <button
                             type="button"
                             class="browse-button"
-                            onclick="$('#hiddenMediaFrmFileJs').click();"
+                            
                           >
                             <strong> Upload images(s)</strong>
                             <span class="text-muted form-text">

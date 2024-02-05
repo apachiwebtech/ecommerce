@@ -138,10 +138,11 @@ const Product_Catalog = () => {
                       <p class="card-description">List Of Products</p>
                     </div>
                     <div>
-                      <Link to="/webapp/product">
-                        {/* <button className=" btn btn-primary">Add Product</button> */}
+                      {/* <Link to="/webapp/product">
+                        <button className=" btn btn-primary">Add Product</button>
                         <Button variant="outlined" size="medium"><AddCircleOutlineIcon  style={{fontSize : "16px"}}/> Add Product</Button>
-                      </Link>
+                      </Link> */}
+                      <Link to="/webapp/product" ><button className=' btn btn-primary'>Add Product</button></Link>
                     </div>
                   </div>
 
