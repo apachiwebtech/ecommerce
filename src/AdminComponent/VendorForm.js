@@ -10,6 +10,7 @@ import CustomHeder from './CustomHeder';
 import axios from 'axios';
 import { BASE_URL } from './BaseUrl';
 import md5 from 'js-md5'
+import { useParams } from 'react-router-dom';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -18,6 +19,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const VendorForm = () => {
     const [open, setOpen] = React.useState(false);
+    const [vendor, setVendor] = useState({})
     const [errors, setErrors] = useState({
         email: "",
         mobile: "",
@@ -25,18 +27,18 @@ const VendorForm = () => {
     });
 
     const [value, setValue] = useState({
-        email: "",
-        mobile: "",
-        username: "",
-        password: "",
-        address: "",
-        state: "",
-        city: "",
-        pincode: "",
-        personemail: "",
+        email: "" || vendor.emailid,
+        mobile: "" || vendor.mobile,
+        username: "" || vendor.username,
+        password: "" || vendor.password,
+        address: "" || vendor.address,
+        state: "" || vendor.state,
+        city: "" || vendor.city,
+        pincode: "" || vendor.pincode,
+        personemail: "" ,
         personmobile: "",
         personname: "",
-        gst: "",
+        gst: "" || vendor.gst_upload,
         pancard: "",
         gstupload: "",
         panupload: "",
@@ -46,6 +48,52 @@ const VendorForm = () => {
         ifsc_code: "",
 
     })
+
+
+    useEffect(()=>{
+        setValue({
+            email: vendor.emailid,
+            mobile: vendor.mobile,
+            username: "",
+            password: "",
+            address: "",
+            state: "",
+            city: "",
+            pincode: "",
+            personemail: "",
+            personmobile: "",
+            personname: "",
+            gst: "",
+            pancard: "",
+            gstupload: "",
+            panupload: "",
+            agreementupload: "",
+            account_name: "",
+            account_no: "",
+            ifsc_code: "",
+        })
+    
+    },[vendor])
+
+    const { id } = useParams()
+
+
+
+    async function formdata() {
+        const data = {
+            u_id: id
+        }
+
+        axios.post(`${BASE_URL}/vendor_update`, data)
+            .then((res) => {
+                console.log(res.data)
+                setVendor(res.data[0])
+            })
+    }
+
+    useEffect(() => {
+        formdata()
+    }, [])
 
     const validateForm = () => {
         let isValid = true;
@@ -206,6 +254,8 @@ const VendorForm = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
+    console.log(value.email)
+
 
     return (
         <div class="container-fluid page-body-wrapper">
@@ -225,12 +275,12 @@ const VendorForm = () => {
                                         <div className='row'>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Email</label>
-                                                <input type="email" class="form-control" id="exampleInputUsername1" placeholder="Email" name="email" onChange={onhandleChange} />
+                                                <input type="email" class="form-control" id="exampleInputUsername1" value={value.email} placeholder="Email" name="email" onChange={onhandleChange} />
                                                 {errors.email && <div className="text-danger">{errors.email}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputEmail1">Mobile No</label>
-                                                <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Mobile No" name="mobile" onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Mobile No" value={value.mobile} name="mobile" onChange={onhandleChange} />
                                                 {errors.mobile && <div className="text-danger">{errors.mobile}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">

@@ -27,7 +27,7 @@ const Router = createBrowserRouter([
     element: <WebLogin />
   },
   {
-    path: '/webapp/vendorform',
+    path: '/webapp/vendorform/:id',
     element: <VendorForm />
   },
   {
