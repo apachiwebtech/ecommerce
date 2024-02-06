@@ -10,11 +10,30 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const Brand = () => {
 
     const [brand, setBrand] = useState([])
+    const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [value, setValue] = useState({
-        title: "",
-        description: "",
+        title: "" || uid.title,
+        description: "" || uid.description,
+
     })
+
+    useEffect(() => {
+        setValue({
+            title: "" || uid.title,
+            description: "" || uid.description,
+        })
+    }, [uid])
+
+    const handleUpdate = (id) => {
+        axios.post(`${BASE_URL}/brand_update`, { u_id: id })
+            .then((res) => {
+                setUid(res.data[0])
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
     async function getBrandData() {
         axios.get(`${BASE_URL}/Brand_data`)
@@ -108,11 +127,11 @@ const Brand = () => {
                                     <form class="forms-sample" onSubmit={handleSubmit}>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Title</label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Title" name='title' onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4" name='description' onChange={onhandleChange}></textarea>
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
@@ -164,8 +183,8 @@ const Brand = () => {
 
 
                                                             <td>
-                                                                <EditIcon />
-                                                                <DeleteIcon style={{color :"red"}} onClick={() => handleClick(item.id)}/>
+                                                                <EditIcon onClick={() => handleUpdate(item.id)}/>
+                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
                                                                 {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
