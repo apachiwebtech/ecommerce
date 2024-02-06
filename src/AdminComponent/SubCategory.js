@@ -11,14 +11,23 @@ const SubCategory = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [subcat, setsubCatData] = useState([])
     const [cat, setCatData] = useState([])
-
+    const [uid, setUid] = useState([])
 
     const [cat_id, setId] = useState("")
     const [value, setValue] = useState({
-        title: "",
-        description: "",
+        title: "" || uid.title,
+        description: "" || uid.description,
 
     })
+
+
+
+    useEffect (()=>{
+    setValue({
+        title: "" || uid.title,
+        description: "" || uid.description,
+    })
+    },[uid])
 
     async function getcatData() {
         axios.get(`${BASE_URL}/category_data`)
@@ -49,6 +58,16 @@ const SubCategory = () => {
     useEffect(() => {
         getsubcatData()
     }, [])
+
+    const handleUpdate = (id) => {
+        axios.post(`${BASE_URL}/subcategory_update`, { u_id: id })
+            .then((res) => {
+                setUid(res.data[0])
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
 
     const handleClick = (id) => {
@@ -96,7 +115,8 @@ const SubCategory = () => {
             title: value.title,
             description: value.description,
             user_id: localStorage.getItem("userid"),
-            cat_id: cat_id
+            cat_id: cat_id,
+            u_id : uid.id
         }
 
         axios.post(`${BASE_URL}/add_subcategory`, data)
@@ -152,11 +172,11 @@ const SubCategory = () => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Title</label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Title" name='title' onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4" name='description' onChange={onhandleChange}></textarea>
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
@@ -210,7 +230,7 @@ const SubCategory = () => {
 
 
                                                             <td>
-                                                                <EditIcon />
+                                                                <EditIcon  onClick={() => handleUpdate(item.id)}/>
                                                                 <DeleteIcon style={{color :"red"}} onClick={() => handleClick(item.id)}/>
                                                                 {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
                                                             </td>

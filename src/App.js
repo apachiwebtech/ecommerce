@@ -21,6 +21,7 @@ import Shop from './AdminComponent/Shop';
 import ProductOption from './AdminComponent/ProductOption';
 import ProductTag from './AdminComponent/ProductTag';
 import ThresholdProduct from './AdminComponent/ThresholdProduct';
+import Orders from './AdminComponent/Orders';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -63,7 +64,7 @@ const Router = createBrowserRouter([
         element: <AdminUser />
       },
       {
-        path: '/webapp/category',
+        path: '/webapp/category/:id',
         element: <Category />
       },
       {
@@ -89,6 +90,10 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/brand',
         element: <Brand />
+      },
+      {
+        path: '/webapp/orders',
+        element: <Orders />
       },
       {
         path: '/webapp/shop',

@@ -5,12 +5,12 @@ import { BASE_URL } from './BaseUrl'
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const VendorMaster = () => {
+const Orders = () => {
     const [vendordata, setVendorData] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
 
     async function getVendordata() {
-        axios.get(`${BASE_URL}/vendor_data`)
+        axios.get(`${BASE_URL}/brand_data`)
             .then((res) => {
                 console.log(res.data)
                 setVendorData(res.data)
@@ -84,19 +84,19 @@ const VendorMaster = () => {
                                             <thead>
                                                 <tr>
                                                     <th>
-                                                        #
+                                                        Order Id
                                                     </th>
                                                     <th>
-                                                        Vendor Name
+                                                       Buyer
                                                     </th>
                                                     <th>
-                                                        Contact
+                                                        Order's Date & Time
                                                     </th>
                                                     <th>
-                                                        Email
+                                                        Amount
                                                     </th>
                                                     <th>
-                                                        Address
+                                                        Payment Status
                                                     </th>
                                                     <th>
                                                         Action
@@ -111,7 +111,7 @@ const VendorMaster = () => {
                                                     return (
                                                         <tr key={index}>
                                                             <td>
-                                                                {index + 1}
+                                                                {item.id}
                                                             </td>
                                                             <td>
                                                                 {item.username}
@@ -159,4 +159,4 @@ const VendorMaster = () => {
     )
 }
 
-export default VendorMaster
+export default Orders

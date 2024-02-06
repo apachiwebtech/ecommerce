@@ -1,69 +1,26 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import md5 from 'js-md5';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+
+
 const Brand = () => {
 
+    const [brand, setBrand] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-    const [errors, setErrors] = useState({})
-    const [admindata, setData] = useState([])
     const [value, setValue] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
-
+        title: "",
+        description: "",
     })
 
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors = { ...errors };
-
-        if (!value.email) {
-            isValid = false;
-            newErrors.email = "Email is required";
-        }
-        if (!value.firstname) {
-            isValid = false;
-            newErrors.firstname = "FirstName is required"
-        }
-        if (!value.lastname) {
-            isValid = false;
-            newErrors.lastname = "Lastname is required"
-        }
-        if (!value.password) {
-            isValid = false;
-            newErrors.password = "Password is required"
-        }
-        const passwordPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
-
-        if (!passwordPattern.test(value.password)) {
-            isValid = false;
-            newErrors.password = "Password requirements: 8-20 characters, 1 number, 1 letter, 1 symbol."
-        }
-
-
-
-        setErrors(newErrors);
-        setTimeout(() => {
-            setErrors("")
-        }, 5000);
-        return isValid;
-
-
-    }
-
-
-
-    async function getAdminuserData() {
-        axios.get(`${BASE_URL}/adminuser_data`)
+    async function getBrandData() {
+        axios.get(`${BASE_URL}/Brand_data`)
             .then((res) => {
                 console.log(res.data)
-                setData(res.data)
+                setBrand(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -71,7 +28,7 @@ const Brand = () => {
     }
 
     useEffect(() => {
-        getAdminuserData()
+        getBrandData()
     }, [])
 
     const handleClick = (id) => {
@@ -81,7 +38,6 @@ const Brand = () => {
         }));
     };
 
-
     const handleCancel = (id) => {
         // Hide the confirmation dialog without performing the delete action
         setConfirmationVisibleMap((prevMap) => ({
@@ -90,55 +46,47 @@ const Brand = () => {
         }));
     };
 
+
     const handleDelete = (id) => {
-
-
         const data = {
-            adminuser_id: id
+            cat_id: id
         }
 
-
-        axios.post(`${BASE_URL}/adminuser_delete`, data)
+        axios.post(`${BASE_URL}/Brand_delete`, data)
             .then((res) => {
-                getAdminuserData()
+                getBrandData()
 
             })
-
             .catch((err) => {
                 console.log(err)
             })
+
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: false,
         }));
     }
 
-
     const handleSubmit = (e) => {
         e.preventDefault()
-        if (validateForm()) {
-            const hashpassword = md5(value.password)
 
-            const data = {
-                firstname: value.firstname,
-                lastname: value.lastname,
-                email: value.email,
-                password: hashpassword,
 
-            }
 
-            axios.post(`${BASE_URL}/add_adminuser`, data)
-                .then((res) => {
-                    alert(res.data)
-                    getAdminuserData()
-                    if (res.data) {
-                        //    navigate('/vendormaster')
-                    }
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+        const data = {
+            title: value.title,
+            description: value.description,
+            user_id: localStorage.getItem("userid")
         }
+
+        axios.post(`${BASE_URL}/add_brand`, data)
+            .then((res) => {
+                alert(res.data)
+                getBrandData()
+
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
 
@@ -159,17 +107,16 @@ const Brand = () => {
 
                                     <form class="forms-sample" onSubmit={handleSubmit}>
                                         <div class="form-group">
-                                            <label for="brand">Brand Name</label>
-                                            <input type="text" class="form-control" id="brand" placeholder="Brand Name" name='brand' onChange={onhandleChange} />
-                                            {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
+                                            <label for="exampleInputUsername1">Title</label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Title" name='title' onChange={onhandleChange} />
                                         </div>
-                                        <div class="form-group">
-                                            <label for="logo">Brand Logo</label>
-                                            <input type="file" class="form-control" id="logo" placeholder="" name='logo' onChange={onhandleChange} />
-                                            {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
+                                        <div class="form-group ">
+                                            <label for="exampleTextarea1">Description</label>
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4" name='description' onChange={onhandleChange}></textarea>
                                         </div>
+
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <Link to="/webapp/brand"><button class="btn btn-light">Cancel</button></Link>
+                                        <Link to="/webapp/adminuser"><button class="btn btn-light">Cancel</button></Link>
                                     </form>
                                 </div>
                             </div>
@@ -195,36 +142,31 @@ const Brand = () => {
                                                         #
                                                     </th>
                                                     <th>
-                                                        Logo
+                                                        Title
                                                     </th>
 
                                                     <th>
-                                                        Brand
-                                                    </th>
-
-                                                    <th width="17%">
                                                         Action
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
 
-                                                {admindata.map((item, index) => {
+                                                {brand.map((item, index) => {
                                                     return (
                                                         <tr key={index}>
                                                             <td>
-
+                                                                {index + 1}
                                                             </td>
                                                             <td>
-
-                                                            </td>
-                                                            <td>
+                                                                {item.title}
                                                             </td>
 
+
                                                             <td>
-                                                                <Link><EditIcon /></Link>
-                                                                <Link style={{ color: "red" }}><DeleteIcon /></Link>
-                                                                {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
+                                                                <EditIcon />
+                                                                <DeleteIcon style={{color :"red"}} onClick={() => handleClick(item.id)}/>
+                                                                {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>
@@ -234,15 +176,14 @@ const Brand = () => {
                                                                 </div>
                                                             )}
                                                         </tr>
-
                                                     )
                                                 })}
 
 
                                             </tbody>
                                         </table>
-
                                     </div>
+
                                 </div>
                             </div>
                         </div>

@@ -10,7 +10,7 @@ const navigate = useNavigate()
 
 const handleLogout = () =>{
   localStorage.removeItem("userid")
-  navigate('/log')
+  navigate('/weblog')
 }
 
   return (

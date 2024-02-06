@@ -10,11 +10,39 @@ import DeleteIcon from "@mui/icons-material/Delete";
 const Category = () => {
 
     const [cat, setCatData] = useState([])
+    const [error, setError] = useState({})
+    const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [value, setValue] = useState({
-        title: "",
-        description: "",
+        title: "" || uid.title,
+        description: "" || uid.description,
     })
+
+    useEffect(() => {
+        setValue({
+            title: uid.title,
+            description: uid.description,
+        })
+    }, [uid])
+
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
+
+        if (!value.title) {
+            isValid = false;
+            newErrors.title = "title is require"
+        }
+        if (!value.description) {
+            isValid = false
+            newErrors.description = "description is require"
+        }
+
+        setError(newErrors)
+        return isValid
+    }
+
+
 
     async function getcatData() {
         axios.get(`${BASE_URL}/category_data`)
@@ -30,6 +58,8 @@ const Category = () => {
     useEffect(() => {
         getcatData()
     }, [])
+
+
 
     const handleClick = (id) => {
         setConfirmationVisibleMap((prevMap) => ({
@@ -66,26 +96,43 @@ const Category = () => {
         }));
     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-
-
-
-        const data = {
-            title: value.title,
-            description: value.description,
-            user_id: localStorage.getItem("userid")
-        }
-
-        axios.post(`${BASE_URL}/add_category`, data)
+    const handleUpdate = (id) => {
+        axios.post(`${BASE_URL}/category_update`, { u_id: id })
             .then((res) => {
-                alert(res.data)
-                getcatData()
-
+                setUid(res.data[0])
             })
             .catch((err) => {
                 console.log(err)
             })
+    }
+
+    console.log(uid)
+
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+
+        if (validateForm()) {
+
+            const data = {
+                title: value.title,
+                description: value.description,
+                user_id: localStorage.getItem("userid"),
+                u_id: uid.id
+            }
+
+            axios.post(`${BASE_URL}/add_category`, data)
+                .then((res) => {
+                    alert(res.data)
+                    getcatData()
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
+
     }
 
 
@@ -107,11 +154,13 @@ const Category = () => {
                                     <form class="forms-sample" onSubmit={handleSubmit}>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Title</label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Title" name='title' onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
+                                            {error.title && <span className='text-danger'>{error.title}</span>}
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4" name='description' onChange={onhandleChange}></textarea>
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
+                                            {error.description && <span className='text-danger'>{error.description}</span>}
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
@@ -161,10 +210,9 @@ const Category = () => {
                                                                 {item.title}
                                                             </td>
 
-
                                                             <td>
-                                                                <EditIcon />
-                                                                <DeleteIcon style={{color :"red"}} onClick={() => handleClick(item.id)}/>
+                                                                <EditIcon onClick={() => handleUpdate(item.id)} />
+                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
                                                                 {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (

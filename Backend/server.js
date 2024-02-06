@@ -222,20 +222,51 @@ app.post('/add_category', (req, res) => {
   let title = req.body.title;
   let description = req.body.description;
   let created_date = new Date()
+  let u_id = req.body.u_id;
+  console.log(u_id)
+
+  let sql;
+  let param ;
+
+  if(u_id == undefined){
+     sql = "insert into awt_category(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
+     param = [title, description, user_id, created_date]
+    
+  }else{
+     sql = "update awt_category set title = ? , description = ? , updated_by = ? ,updated_date = ? where id = ?"
+     param = [title, description, user_id, created_date,u_id]
+  }
 
 
-  const sql = "insert into awt_category(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
-
-  con.query(sql, [title, description, user_id, created_date], (err, data) => {
+  con.query(sql, param, (err, data) => {
     if (err) {
+
       return res.json(err)
     }
     else {
+      console.log(data)
       return res.json("Data Added Successfully!")
     }
 
 
   })
+})
+
+app.post('/category_update', (req, res) => {
+
+  let u_id  = req.body.u_id;
+
+  const sql = "select * from awt_category where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
 })
 
 app.get('/category_data', (req, res) => {
@@ -275,11 +306,21 @@ app.post('/add_subcategory', (req, res) => {
   let title = req.body.title;
   let description = req.body.description;
   let created_date = new Date()
+  let u_id = req.body.u_id;
+  console.log(u_id)
 
+  let sql;
+  let param ;
 
-  const sql = "insert into awt_subcategory(`cat_id`,`title`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
+  if(u_id == undefined){
+    sql = "insert into awt_subcategory(`cat_id`,`title`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
+    param= [cat_id, title, description, user_id, created_date]
+  }else{
+    sql = "update awt_subcategory set cat_id = ?, title = ? , description = ? , updated_by = ?, updated_date = ? where id = ?"
+    param = [cat_id, title, description, user_id, created_date, u_id]
+  }
 
-  con.query(sql, [cat_id, title, description, user_id, created_date], (err, data) => {
+  con.query(sql, param, (err, data) => {
     if (err) {
       return res.json(err)
     }
@@ -289,6 +330,22 @@ app.post('/add_subcategory', (req, res) => {
 
 
   })
+})
+
+app.post('/subcategory_update', (req, res) => {
+
+  let u_id  = req.body.u_id;
+  const sql = "select * from awt_subcategory where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
 })
 
 app.get('/subcategory_data', (req, res) => {
@@ -310,6 +367,58 @@ app.post('/subcategory_delete', (req, res) => {
   let cat_id = req.body.cat_id;
 
   const sql = "update awt_subcategory set deleted = 1 where id = ?"
+
+  con.query(sql, [cat_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/add_brand', (req, res) => {
+  let user_id = req.body.user_id
+  let title = req.body.title;
+  let description = req.body.description;
+  let created_date = new Date()
+
+
+  const sql = "insert into awt_brand(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
+
+  con.query(sql, [title, description, user_id, created_date], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+app.get('/Brand_data', (req, res) => {
+
+  const sql = "select * from awt_brand where deleted = 0 "
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+app.post('/Brand_delete', (req, res) => {
+
+  let cat_id = req.body.cat_id;
+
+  const sql = "update awt_brand set deleted = 1 where id = ?"
 
   con.query(sql, [cat_id], (err, data) => {
     if (err) {

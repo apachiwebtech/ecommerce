@@ -85,7 +85,7 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='/webapp/category'>
+              <Link className="nav-link" to='/webapp/category/:uid'>
                 <Icon path={mdiLandPlotsCircle} size={1} className='mx-3' />
                 <span className="menu-title">Category</span>
               </Link>
@@ -155,18 +155,18 @@ const Header = () => {
 
 
         <li className="nav-item" onClick={handleClick}>
-          <Link className="nav-link" to='/webapp/thresholdproduct'>
+          <div className="nav-link" >
             <Icon path={mdiCartOutline} size={1} className='mx-3' />
             <span className="menu-title">Orders</span>
             {open ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
-          </Link>
+          </div>
 
 
         </li>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <ul className='inner-item'>
             <li className="nav-item">
-              <Link className="nav-link" to='/webapp/thresholdproduct'>
+              <Link className="nav-link" to='/webapp/orders'>
 
                 <Icon path={mdiCartOutline} size={1} className='mx-3' />
                 <span className="menu-title">Orders</span>
