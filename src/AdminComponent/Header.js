@@ -113,6 +113,36 @@ const Header = () => {
             <span className="menu-title">Threshold Product</span>
           </Link>
         </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/view'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">View</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/banner'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Banner</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/reviewcomment'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Review & Comment</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/testimonial'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Testimonials</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/socialmedia'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Social Media Links</span>
+          </Link>
+        </li>
         {/* <li className="nav-item sidebar-category">
           <p>Pages</p>
           <span></span>

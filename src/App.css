@@ -252,5 +252,148 @@
   z-index: 1020;
   top: 90px;
 }
+.breadcrumb-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  min-height: 42px;
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  font-size: .85rem;
+  font-weight: 600;
+  position: relative;
+}
+.breadcrumb-item a {
+  color: #a1a5b7;
+}
 
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  position: relative;
+  padding: 20px 1.5625rem;
+  border-bottom: solid 1px #dee2e6;
+}
 
+.arrow{
+  padding: 0;
+    width: 40px;
+  
+    height: 40px;
+  
+}
+.cart-summary {
+  font-size: 0.85rem;
+}
+.cart-summary ul li:first-child {
+  padding-top: 0;
+}
+.cart-summary ul li {
+  padding: 0.8rem 0;
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cart-summary ul li.highlighted {
+  font-weight: 500;
+  border-top: solid 1px #dee2e6;
+  color: rgba(0,0,0,0.87);
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+.list-stats {
+  word-break: break-word;
+  font-size: 0.85rem;
+  min-width: 250px;
+  list-style: none;
+  gap: 10px;
+}
+.list-stats-item:first-child {
+  padding-top: 0;
+}
+.list-stats-item {
+  list-style: none;
+  padding: 0.8rem 0;
+  display: flex;
+  flex-direction: column;
+}
+.list-stats-item .value {
+  font-weight: 600;
+  color: rgba(0,0,0,0.87);
+}
+.main-header {
+  background-color: rgba(255,255,255,0.5);
+  box-shadow: 0 10px 30px 0 rgba(82,63,105,0.05);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.main-header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+.main-header .page-title {
+  display: flex;
+  flex-direction: column;
+}
+.main-header .page-title h1, .main-header .page-title .h1 {
+  font-size: 1.2rem;
+  color: #000;
+}
+
+.main-header-toolbar {
+  margin-left: auto;
+}
+.header-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.link {
+  color: rgba(0,0,0,0.67);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1px;
+  position: relative;
+}
+
+.header-account__img {
+  width: 42px;
+  height: 42px;
+  max-width: 42px;
+  flex: 0 0 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #ffffff;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.26);
+}
+.link img{
+  max-width: 100%;
+}
+.header-acc{
+  margin-left: 1.5rem;
+}

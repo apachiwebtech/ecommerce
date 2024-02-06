@@ -21,6 +21,11 @@ import Shop from './AdminComponent/Shop';
 import ProductOption from './AdminComponent/ProductOption';
 import ProductTag from './AdminComponent/ProductTag';
 import ThresholdProduct from './AdminComponent/ThresholdProduct';
+import View from './AdminComponent/View';
+import Banner from './AdminComponent/Banner';
+import ReviewComment from './AdminComponent/ReviewComment';
+import Testimonial from './AdminComponent/Testimonials';
+import SocialMedia from './AdminComponent/SocialMedia';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -110,6 +115,29 @@ const Router = createBrowserRouter([
         element: <ThresholdProduct />
       },
       
+      {
+        path: '/webapp/view',
+        element: <View />
+      },
+
+      {
+        path: '/webapp/banner',
+        element: <Banner />
+      },
+
+      {
+        path: '/webapp/reviewcomment',
+        element: <ReviewComment />
+      },
+      {
+        path: '/webapp/testimonial',
+        element: <Testimonial />
+      },
+
+      {
+        path: '/webapp/socialmedia',
+        element: <SocialMedia />
+      },
     ]
   }
 ])
