@@ -12,7 +12,8 @@ import { styled } from "@mui/material/styles";
 import MenuIcon from '@mui/icons-material/Menu';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 const Product = () => {
   const [cat, setCatData] = useState([]);
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -137,85 +138,85 @@ const Product = () => {
           <div class="row">
             <div class="col-lg-3 grid-margin stretch-card">
               <div class="sticky-top">
-              <div class="card" style={{ height: "600px" }}>
-                <div class="card-body list">
-                  <ul class="prod_list">
-                    <li class="prod_li">
-                      <a href="#basic_info" class="prod_flex"> 
-                        <div style={{ marginRight: "8px" }}>
-                          <DescriptionOutlinedIcon />
-                        </div>
-                        <div>
-                          <h5>Basic Details</h5>
-                          <span class="weight para">
-                            Manage the product's basic information.
-                          </span>
-                        </div>
-                      </a>
-                    </li>
-                    <hr></hr>
-                    <li class="prod_li">
-                      <a href="#varients" class="prod_flex">
-                        <div style={{ marginRight: "8px" }}>
-                          <MenuIcon />
-                        </div>
-                        <div>
-                          <h5>Variants & options</h5>
-                          <span class="weight para">
-                            Customize the product variants, including size,
-                            color, etc.
-                          </span>
-                        </div>
-                      </a>
-                    </li>
-                    <hr></hr>
-                    <li class="prod_li">
-                      <a href="#media" class="prod_flex">
-                        <div style={{ marginRight: "8px" }}>
-                          <PermMediaIcon />
-                        </div>
-                        <div>
-                          <h5>Media</h5>
-                          <span class="weight para">
-                            {" "}
-                            Manage your product's image gallery.{" "}
-                          </span>
-                        </div>
-                      </a>
-                    </li>
-                    <hr></hr>
-                    <li class="prod_li">
-                      <a href="#specification" class="prod_flex">
-                        <div style={{ marginRight: "8px" }}>
-                          <DescriptionOutlinedIcon />
-                        </div>
-                        <div>
-                          <h5>Specifications</h5>
-                          <span class="weight para">
-                            Manage the product-related specifications.
-                          </span>
-                        </div>
-                      </a>
-                    </li>
-                    <hr></hr>
-                    <li class="prod_li">
-                      <a href="#tax" class="prod_flex">
-                        <div style={{ marginRight: "8px" }}>
-                          <LocalShippingIcon />
-                        </div>
-                        <div>
-                          <h5>Tax and shipping</h5>
-                          <span class="weight para">
-                            Set up the tax and shipping information of the
-                            product.
-                          </span>
-                        </div>
-                      </a>
-                    </li>
-                    <hr></hr>
-                  </ul>
+                <div class="card" style={{ height: "600px" }}>
+                  <div class="card-body list">
+                    <ul class="prod_list">
+                      <li class="prod_li">
+                        <a href="#basic_info" class="prod_flex">
+                          <div style={{ marginRight: "8px" }}>
+                            <DescriptionOutlinedIcon />
+                          </div>
+                          <div>
+                            <h5>Basic Details</h5>
+                            <span class="weight para">
+                              Manage the product's basic information.
+                            </span>
+                          </div>
+                        </a>
+                      </li>
+                      <hr></hr>
+                      <li class="prod_li">
+                        <a href="#varients" class="prod_flex">
+                          <div style={{ marginRight: "8px" }}>
+                            <MenuIcon />
+                          </div>
+                          <div>
+                            <h5>Variants & options</h5>
+                            <span class="weight para">
+                              Customize the product variants, including size,
+                              color, etc.
+                            </span>
+                          </div>
+                        </a>
+                      </li>
+                      <hr></hr>
+                      <li class="prod_li">
+                        <a href="#media" class="prod_flex">
+                          <div style={{ marginRight: "8px" }}>
+                            <PermMediaIcon />
+                          </div>
+                          <div>
+                            <h5>Media</h5>
+                            <span class="weight para">
+                              {" "}
+                              Manage your product's image gallery.{" "}
+                            </span>
+                          </div>
+                        </a>
+                      </li>
+                      <hr></hr>
+                      <li class="prod_li">
+                        <a href="#specification" class="prod_flex">
+                          <div style={{ marginRight: "8px" }}>
+                            <DescriptionOutlinedIcon />
+                          </div>
+                          <div>
+                            <h5>Specifications</h5>
+                            <span class="weight para">
+                              Manage the product-related specifications.
+                            </span>
+                          </div>
+                        </a>
+                      </li>
+                      <hr></hr>
+                      <li class="prod_li">
+                        <a href="#tax" class="prod_flex">
+                          <div style={{ marginRight: "8px" }}>
+                            <LocalShippingIcon />
+                          </div>
+                          <div>
+                            <h5>Tax and shipping</h5>
+                            <span class="weight para">
+                              Set up the tax and shipping information of the
+                              product.
+                            </span>
+                          </div>
+                        </a>
+                      </li>
+                      <hr></hr>
+                    </ul>
+                  </div>
                 </div>
-              </div>
               </div>
             </div>
 
@@ -247,46 +248,12 @@ const Product = () => {
                   <form class="forms-sample" onSubmit={handleSubmit}>
                     <div class="col-md-12">
                       <div class="row">
-                        <div class="col-md-6" style={{ padding: "0 10px" }}>
-                          <div class="form-group">
-                            <label class="label">
-                              Product type<span class="">*</span>
-                            </label>
-                            <ul class="list-radio">
-                              <li>
-                                <label class="radio">
-                                  <input
-                                    type="radio"
-                                    class="form-control"
-                                    id="physical"
-                                    placeholder="Product Id"
-                                    name="physical"
-                                    value="1"
-                                  />
-                                  <i class="input-helper"></i>Physical
-                                </label>
-                              </li>
-                              <li>
-                                <label class="radio">
-                                  <input
-                                    type="radio"
-                                    class="form-control"
-                                    id="physical"
-                                    placeholder="Product Id"
-                                    name="physical"
-                                    value="2"
-                                  />
-                                  <i class="input-helper"></i>Digital
-                                </label>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
+
 
                         <div class="col-md-6">
                           <div class="form-group ">
                             <label for="category">
-                              User<span class="text-danger">*</span>
+                              Vendor <span class="text-danger">*</span>
                             </label>
                             <select
                               type="text"
@@ -295,7 +262,7 @@ const Product = () => {
                               placeholder="Category"
                               name="category"
                             >
-                              <option value="0">Select User</option>
+                              <option value="0">Select Vendor</option>
                               <option value="1">user1</option>
                               <option value="2">user2</option>
                             </select>
@@ -396,18 +363,7 @@ const Product = () => {
                           </div>
                         </div>
 
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="slug">Product Warranty </label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="warranty"
-                              placeholder="Enter.."
-                              name="warranty"
-                            />
-                          </div>
-                        </div>
+
                         <div class="col-md-6">
                           <div class="form-group ">
                             <label for="slug">YouTube video URL </label>
@@ -455,6 +411,10 @@ const Product = () => {
                     Customize the product variants, including size, color, etc.
                   </p>
                 </div>
+
+
+
+
                 <div class="card-body" style={{ padding: "20px 10px" }}>
                   <form class="forms-sample" onSubmit={handleSubmit}>
                     <div class="col-md-12">
@@ -621,7 +581,7 @@ const Product = () => {
                           <button
                             type="button"
                             class="browse-button"
-                            
+
                           >
                             <strong> Upload images(s)</strong>
                             <span class="text-muted form-text">
@@ -704,7 +664,28 @@ const Product = () => {
                   </h5>
                   <p class="para">Manage the product-related specifications.</p>
                 </div>
-                <div class="card-body" style={{ padding: "20px 10px" }}>
+                <div style={{ width: "600px" ,padding: "20px 22px " }} >
+                  <CKEditor
+
+                    editor={ClassicEditor}
+                    data=""
+                    onReady={editor => {
+                      // Allows you to store the editor instance and use it later.
+                      console.log('Editor is ready to use!', editor);
+                    }}
+                    onChange={(event, editor) => {
+                      const data = editor.getData();
+                      console.log({ event, editor, data });
+                    }}
+                    onBlur={(event, editor) => {
+                      console.log('Blur.', editor);
+                    }}
+                    onFocus={(event, editor) => {
+                      console.log('Focus.', editor);
+                    }}
+                  />
+                </div>
+                {/* <div class="card-body" style={{ padding: "20px 10px" }}>
                   <form class="forms-sample" onSubmit={handleSubmit}>
                     <div class="col-md-12">
                       <div class="row">
@@ -776,7 +757,7 @@ const Product = () => {
                       </div>
                     </div>
                   </form>
-                </div>
+                </div> */}
               </div>
               <div class="card mt-3" id="tax">
                 <div class="card-head" style={{ padding: "20px 22px 0px" }}>
@@ -982,24 +963,10 @@ const Product = () => {
                         </div>
                       </div>
                     </div>
-                    <div class="mt-3">
-                      <div class="form-group">
-                        <div class="setting-block">
-                          <label
-                            htmlFor=""
-                            class="switch switch-sm switch-icon"
-                          >
-                            Update other languages data
-                          </label>
-                          <FormControlLabel
-                            control={<Android12Switch defaultChecked />}
-                          />
-                        </div>
-                      </div>
-                    </div>
+
                   </div>
                 </div>
-                <div class="card mt-3" style={{ height: "300px" }}>
+                <div class="card mt-3" >
                   <div
                     class="card-body "
                     style={{ padding: "1.4rem 0.875rem" }}
@@ -1032,6 +999,34 @@ const Product = () => {
                         </p>
                       </div>
                     </div>
+                    <div class="">
+                      <div class="form-group">
+                        <div></div>
+                        <div class="setting-block">
+                          <div>
+                            <label
+                              htmlFor=""
+                              class="switch switch-sm switch-icon"
+                            >
+                              Mark as Trending
+                            </label>
+                          </div>
+                          <div>
+                            <FormControlLabel
+                              control={<Android12Switch defaultChecked />}
+                            />
+                          </div>
+                        </div>
+                        <p
+                          class="para"
+                          style={{ fontSize: "12px", lineHeight: "15px" }}
+                        >
+                          Mark this product as a Trending product, and it will
+                          be displayed under the Trending product list on the
+                          front end.
+                        </p>
+                      </div>
+                    </div>
                     <div class="mt-3">
                       <div class="form-group">
                         <div class="setting-block">
@@ -1042,7 +1037,7 @@ const Product = () => {
                             Available for cash on delivery (COD)
                           </label>
                           <FormControlLabel
-                            control={<Android12Switch defaultChecked />}
+                            control={<Android12Switch />}
                           />
                         </div>
                         <p
@@ -1055,36 +1050,44 @@ const Product = () => {
                         </p>
                       </div>
                     </div>
-                    
+
                   </div>
                 </div>
-                <div class="card mt-3" style={{ height: "200px" }}>
+                <div>
+
+                </div>
+
+
+                {/* <div class="card mt-3" style={{ height: "200px" }}>
                   <div
                     class="card-body "
                     style={{ padding: "1.4rem 0.875rem" }}
                   >
                     <h6>Tags</h6>
-                    <p class="para" style={{ fontSize: "12px"}}>Categorize your store products and organize search results for customers.</p> <hr />
+                    <p class="para" style={{ fontSize: "12px" }}>Categorize your store products and organize search results for customers.</p> <hr />
 
-                     <div class="col-md-12">
-                          <div class="form-group ">
-                           
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="tag"
-                              placeholder="Enter.."
-                              name="tag"
-                            />
-                          </div>
-                        </div>
+                    <div class="col-md-12">
+                      <div class="form-group ">
+
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="tag"
+                          placeholder="Enter.."
+                          name="tag"
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </div> */}
+
               </div>
+
             </div>
           </div>
         </div>
       </div>
+
     </div>
   );
 };
