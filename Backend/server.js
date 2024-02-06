@@ -106,15 +106,19 @@ app.post('/add_vendor', (req, res) => {
       return res.json(err)
     }
 
-    const sql = "insert into awt_vendorbank(`Account_name`,`Account_no`,`ifsc`,`created_date`) values(?,?,?,?)"
-    con.query(sql, [account_name, account_no, ifsc_code, created_date], (err, data) => {
+    const insertedId = data.insertId;
+  console.log(insertedId)
+  
+
+    const sql = "insert into awt_vendorbank(`Account_name`,`Account_no`,`ifsc`,`created_date`,`created_by`) values(?,?,?,?,?)"
+    con.query(sql, [account_name, account_no, ifsc_code, created_date,insertedId], (err, data) => {
       if (err) {
         return res.json(err)
       }
 
 
-      const sql2 = "insert into awt_vendorcontact(`person_email`,`person_mobile`,`person_name`,`created_date`) values(?,?,?,?)"
-      con.query(sql2, [personemail, personmobile, personname, created_date], (err, data) => {
+      const sql2 = "insert into awt_vendorcontact(`person_email`,`person_mobile`,`person_name`,`created_date`,`created_by`) values(?,?,?,?,?)"
+      con.query(sql2, [personemail, personmobile, personname, created_date,insertedId], (err, data) => {
         if (err) {
           return res.json(err)
         }
@@ -129,6 +133,24 @@ app.post('/add_vendor', (req, res) => {
 
   })
 })
+
+app.post('/vendor_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+
+  const sql = "select * from awt_vendor as av left join awt_vendorcontact as avd on av.id = avd.created_by left join awt_vendorbank as avb on av.id = avb.created_by where av.id =?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
 
 app.get('/vendor_data', (req, res) => {
 
@@ -226,15 +248,15 @@ app.post('/add_category', (req, res) => {
   console.log(u_id)
 
   let sql;
-  let param ;
+  let param;
 
-  if(u_id == undefined){
-     sql = "insert into awt_category(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
-     param = [title, description, user_id, created_date]
-    
-  }else{
-     sql = "update awt_category set title = ? , description = ? , updated_by = ? ,updated_date = ? where id = ?"
-     param = [title, description, user_id, created_date,u_id]
+  if (u_id == undefined) {
+    sql = "insert into awt_category(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
+    param = [title, description, user_id, created_date]
+
+  } else {
+    sql = "update awt_category set title = ? , description = ? , updated_by = ? ,updated_date = ? where id = ?"
+    param = [title, description, user_id, created_date, u_id]
   }
 
 
@@ -254,7 +276,7 @@ app.post('/add_category', (req, res) => {
 
 app.post('/category_update', (req, res) => {
 
-  let u_id  = req.body.u_id;
+  let u_id = req.body.u_id;
 
   const sql = "select * from awt_category where id = ?"
 
@@ -310,12 +332,12 @@ app.post('/add_subcategory', (req, res) => {
   console.log(u_id)
 
   let sql;
-  let param ;
+  let param;
 
-  if(u_id == undefined){
+  if (u_id == undefined) {
     sql = "insert into awt_subcategory(`cat_id`,`title`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
-    param= [cat_id, title, description, user_id, created_date]
-  }else{
+    param = [cat_id, title, description, user_id, created_date]
+  } else {
     sql = "update awt_subcategory set cat_id = ?, title = ? , description = ? , updated_by = ?, updated_date = ? where id = ?"
     param = [cat_id, title, description, user_id, created_date, u_id]
   }
@@ -334,7 +356,7 @@ app.post('/add_subcategory', (req, res) => {
 
 app.post('/subcategory_update', (req, res) => {
 
-  let u_id  = req.body.u_id;
+  let u_id = req.body.u_id;
   const sql = "select * from awt_subcategory where id = ?"
 
   con.query(sql, [u_id], (err, data) => {
@@ -399,6 +421,24 @@ app.post('/add_brand', (req, res) => {
 
   })
 })
+
+app.post('/brand_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+
+  const sql = "select * from awt_brand where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
 
 app.get('/Brand_data', (req, res) => {
 
