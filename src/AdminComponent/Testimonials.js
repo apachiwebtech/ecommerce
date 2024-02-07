@@ -120,7 +120,7 @@ const Testimonial = () => {
                                         </div>
 
                                         <button type="submit" class="btn btn-sm btn-primary mr-2">Submit</button>
-                                        <Link to="/webapp/testimonial"><button class="btn btn-sm btn-light">Cancel</button></Link>
+                                        <Link to="/webapp/testimonial "><button class="btn btn-sm btn-light">Cancel</button></Link>
                                     </form>
                                 </div>
                             </div>
