@@ -26,6 +26,7 @@ import Banner from './AdminComponent/Banner';
 import ReviewComment from './AdminComponent/ReviewComment';
 import Testimonial from './AdminComponent/Testimonials';
 import SocialMedia from './AdminComponent/SocialMedia';
+import Gallery from './AdminComponent/Gallery';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -137,6 +138,11 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/socialmedia',
         element: <SocialMedia />
+      },
+
+      {
+        path: '/webapp/gallery',
+        element: <Gallery />
       },
     ]
   }
