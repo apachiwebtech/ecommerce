@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 
 
@@ -140,14 +142,14 @@ const Testimonial = () => {
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>
+                                                    <th width="7%">
                                                         #
                                                     </th>
                                                     <th>
-                                                        Title
+                                                        Name
                                                     </th>
 
-                                                    <th>
+                                                    <th width="18%">
                                                         Action
                                                     </th>
                                                 </tr>
@@ -166,7 +168,9 @@ const Testimonial = () => {
 
 
                                                             <td>
-                                                                <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button>
+                                                            <Link><EditIcon /></Link>
+                                                            <Link style={{color : "red"}}><DeleteIcon /></Link>
+                                                                {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>
