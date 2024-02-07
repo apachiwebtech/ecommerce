@@ -143,6 +143,12 @@ const Header = () => {
             <span className="menu-title">Social Media Links</span>
           </Link>
         </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/gallery'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Gallery</span>
+          </Link>
+        </li>
         {/* <li className="nav-item sidebar-category">
           <p>Pages</p>
           <span></span>
