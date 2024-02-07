@@ -16,6 +16,10 @@ import { mdiArrowUUpRight } from '@mdi/js';
 import { mdiMessageDraw } from '@mdi/js';
 import { mdiArchive } from '@mdi/js';
 import { mdiHome } from '@mdi/js';
+import { mdiLinkVariant } from '@mdi/js';
+import { mdiViewGallery } from '@mdi/js';
+import { mdiImageArea } from '@mdi/js';
+import { mdiStarBox } from '@mdi/js';
 
 const Header = () => {
 
@@ -27,13 +31,21 @@ const Header = () => {
   });
 
   const handleToggle = (itemName) => {
-    
-    setOpenStates((prevState) =>({
-      ...prevState,
-
-      [itemName]: !prevState[itemName],
-    }));
-
+    setOpenStates((prevState) => {
+      // If the clicked item is already true, toggle it to false
+      if (prevState[itemName]) {
+        return {
+          ...prevState,
+          [itemName]: false
+        };
+      } else {
+        // Create a new state object where all items are set to false
+        const newState = Object.fromEntries(Object.keys(prevState).map(key => [key, false]));
+        // Set the clicked item to true
+        newState[itemName] = true;
+        return newState;
+      }
+    });
   };
 
   return (
@@ -76,19 +88,14 @@ const Header = () => {
         <li className="nav-item" onClick={() => handleToggle('product')}>
           <div className="nav-link" >
             <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
-            <span className="menu-title">Product</span>
+            <span className="menu-title">Products</span>
             {openStates.product ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
         </li>
-        
+
         <Collapse in={openStates.product} timeout="auto" unmountOnExit>
           <ul className='inner-item'>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/productcatalog'>
-                <Icon path={mdiMap} size={1} className='mx-3' />
-                <span className="menu-title">Product Catalog</span>
-              </Link>
-            </li>
+
             <li className="nav-item">
               <Link className="nav-link" to='/webapp/category'>
                 <Icon path={mdiLandPlotsCircle} size={1} className='mx-3' />
@@ -103,8 +110,15 @@ const Header = () => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to='/webapp/brand'>
-                <Icon path={mdiMagnifyPlusOutline} size={1} className='mx-3' />
+                {/* <Icon path={mdiMagnifyPlusOutline} size={1}  /> */}
+                <Icon path={mdiStarBox} size={1} className='mx-3' />
                 <span className="menu-title">Brand</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/productcatalog'>
+                <Icon path={mdiMap} size={1} className='mx-3' />
+                <span className="menu-title">Products</span>
               </Link>
             </li>
             <li className="nav-item">
@@ -165,7 +179,7 @@ const Header = () => {
                 <span className="menu-title">Testimonials</span>
               </Link>
             </li> */}
-          
+
           </ul>
         </Collapse>
 
@@ -179,24 +193,22 @@ const Header = () => {
 
 
 
-        <li className="nav-item" onClick={() => handleToggle('order')}>
-          <div className="nav-link" >
+        <li className="nav-item" >
+          <Link className="nav-link" to='/webapp/orders'>
             <Icon path={mdiCartOutline} size={1} className='mx-3' />
             <span className="menu-title">Orders</span>
-            {openStates.order ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
-          </div>
-
-
+          </Link>
         </li>
-        <Collapse  in={openStates.order} timeout="auto" unmountOnExit>
+        
+        <Collapse timeout="auto" unmountOnExit>
           <ul className='inner-item'>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" to='/webapp/orders'>
 
                 <Icon path={mdiCartOutline} size={1} className='mx-3' />
                 <span className="menu-title">Orders</span>
               </Link>
-            </li>
+            </li> */}
             {/* <li className="nav-item">
               <Link className="nav-link" to='/webapp/thresholdproduct'>
                 <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
@@ -241,22 +253,29 @@ const Header = () => {
 
 
         </li>
-        <Collapse  in={openStates.home} timeout="auto" unmountOnExit>
+        <Collapse in={openStates.home} timeout="auto" unmountOnExit>
           <ul className='inner-item'>
             <li className="nav-item">
               <Link className="nav-link" to='/webapp/banner'>
 
-                <Icon path={mdiCartOutline} size={1} className='mx-3' />
+                <Icon path={mdiImageArea} size={1} className='mx-3' />
                 <span className="menu-title">Banner</span>
               </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to='/webapp/socialmedia'>
-                <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+                {/* <Icon path={mdiCheckDecagram} size={1} className='mx-3' /> */}
+                <Icon path={mdiLinkVariant} size={1} className='mx-3' />
                 <span className="menu-title">Social Link</span>
               </Link>
             </li>
-
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/gallery'>
+                {/* <Icon path={mdiCheckDecagram} size={1} className='mx-3' /> */}
+                <Icon path={mdiViewGallery} size={1} className='mx-3' />
+                <span className="menu-title">Gallery</span>
+              </Link>
+            </li>
 
 
           </ul>

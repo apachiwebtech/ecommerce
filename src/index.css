@@ -10415,7 +10415,7 @@ pre code {
   background-color: #ffffff;
   background-clip: padding-box;
   border: 1px solid #dad6d6;
-  border-radius: 2px;
+  border-radius: 5px;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
@@ -21139,4 +21139,15 @@ dl li {
 .back-btn:hover{
 color: #fff;
 background-color: #6640B2;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

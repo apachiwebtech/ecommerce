@@ -133,7 +133,7 @@ const Product = () => {
 
   return (
     <div class="container-fluid page-body-wrapper">
-      <InnerHeader/>
+      <InnerHeader />
       <div class="main-panel">
         <div class="content-wrapper">
           <h4 class="card-title">Add Product</h4>
@@ -337,7 +337,7 @@ const Product = () => {
                         <div class="col-md-6">
                           <div class="form-group ">
                             <label for="prod_id">
-                              Model#<span class="text-danger">*</span>
+                              SubCategory<span class="text-danger">*</span>
                             </label>
                             <input
                               type="text"
@@ -352,7 +352,7 @@ const Product = () => {
                         <div class="col-md-6">
                           <div class="form-group ">
                             <label for="name">
-                              Min Selling Price{" "}
+                              Price{" "}
                               <span class="text-danger">*</span>
                             </label>
                             <input
@@ -368,7 +368,7 @@ const Product = () => {
 
                         <div class="col-md-6">
                           <div class="form-group ">
-                            <label for="slug">YouTube video URL </label>
+                            <label for="slug">Discounted Price </label>
                             <input
                               type="text"
                               class="form-control"
@@ -398,7 +398,9 @@ const Product = () => {
                   </form>
                 </div>
               </div>
-              <div class="card mt-3" id="varients">
+
+
+              {/* <div class="card mt-3" id="varients">
                 <div class="card-head" style={{ padding: "20px 22px 0px" }}>
                   <h5
                     style={{
@@ -558,7 +560,8 @@ const Product = () => {
                     </div>
                   </form>
                 </div>
-              </div>
+              </div> */}
+
               <div class="card mt-3" id="media">
                 <div class="card-head" style={{ padding: "20px 22px 0px" }}>
                   <h5
@@ -572,7 +575,9 @@ const Product = () => {
                   </h5>
                   <p class="para">Manage your product's image gallery.</p>
                 </div>
+
                 <div class="card-body" style={{ padding: "20px 10px" }}>
+
                   <form class="forms-sample" onSubmit={handleSubmit}>
                     <div class="col-md-12">
                       <ul
@@ -651,6 +656,27 @@ const Product = () => {
                       <p class="para">Preferred Dimensions 1500 x 1500</p>
                     </div>
                   </form>
+                  <div className="row">
+                    <div class="my-3 col-lg-4
+                  ">
+                      <select
+                        type="text"
+                        class="form-control"
+                        id="option"
+                        placeholder="Select Option"
+                        name="option"
+                      >
+                        <option value="0">Select Colour</option>
+                        <option value="1">Red</option>
+                        <option value="2">Blue</option>
+                      </select>
+                    </div>
+                    <div className="col-lg-3">
+                    <button className="btn btn-sm btn-primary">Add</button>
+
+                    </div>
+                  </div>
+
                 </div>
               </div>
               <div class="card mt-3" id="specification">
@@ -666,7 +692,7 @@ const Product = () => {
                   </h5>
                   <p class="para">Manage the product-related specifications.</p>
                 </div>
-                <div style={{ width: "600px" ,padding: "20px 22px " }} >
+                <div style={{ width: "600px", padding: "20px 22px " }} >
                   <CKEditor
 
                     editor={ClassicEditor}
@@ -1029,7 +1055,7 @@ const Product = () => {
                         </p>
                       </div>
                     </div>
-                    <div class="mt-3">
+                    {/* <div class="mt-3">
                       <div class="form-group">
                         <div class="setting-block">
                           <label
@@ -1051,7 +1077,7 @@ const Product = () => {
                           is Shipping.
                         </p>
                       </div>
-                    </div>
+                    </div> */}
 
                   </div>
                 </div>

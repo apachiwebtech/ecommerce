@@ -23,12 +23,12 @@ const SubCategory = () => {
 
 
 
-    useEffect (()=>{
-    setValue({
-        title: "" || uid.title,
-        description: "" || uid.description,
-    })
-    },[uid])
+    useEffect(() => {
+        setValue({
+            title: "" || uid.title,
+            description: "" || uid.description,
+        })
+    }, [uid])
 
     async function getcatData() {
         axios.get(`${BASE_URL}/category_data`)
@@ -117,7 +117,7 @@ const SubCategory = () => {
             description: value.description,
             user_id: localStorage.getItem("userid"),
             cat_id: cat_id,
-            u_id : uid.id
+            u_id: uid.id
         }
 
         axios.post(`${BASE_URL}/add_subcategory`, data)
@@ -149,7 +149,7 @@ const SubCategory = () => {
     return (
 
         <div class="container-fluid page-body-wrapper">
-            <InnerHeader/>
+            <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
@@ -158,31 +158,38 @@ const SubCategory = () => {
                                 <div class="card-body">
                                     <h4 class="card-title">Add SubCategory</h4>
 
-                                    <form class="forms-sample" onSubmit={handleSubmit}>
-                                        <div>
+                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                        <div class="form-group">
+                                            <label for="exampleInputUsername1">Category</label>
                                             <Autocomplete
                                                 disablePortal
                                                 id="combo-box-demo"
                                                 options={cat}
                                                 getOptionLabel={(option) => option.title}
                                                 getOptionSelected={(option, value) => option.id === value.id}
-                                                sx={{ width: "100%" }}
-                                                renderInput={(params) => <TextField {...params} label="Category" />}
+                                                sx={{ width: "100%",border : "1px solid lightgrey",borderRadius :"5px" }}
+                                                renderInput={(params) => <TextField {...params} />}
                                                 onChange={(event, value) => HandleChange(value)}
                                                 name="category"
+
                                             />
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Title</label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
                                         </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputUsername1">Slug</label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.slug} placeholder="Add slug" name='slug' onChange={onhandleChange} />
+                                        </div>
+
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <Link to="/webapp/adminuser"><button class="btn btn-light">Cancel</button></Link>
+                                        <button type='button' class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -232,15 +239,15 @@ const SubCategory = () => {
 
 
                                                             <td>
-                                                                <EditIcon  onClick={() => handleUpdate(item.id)}/>
-                                                                <DeleteIcon style={{color :"red"}} onClick={() => handleClick(item.id)}/>
+                                                                <EditIcon onClick={() => handleUpdate(item.id)} />
+                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
                                                                 {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>
                                                                     <p>Are you sure you want to delete?</p>
                                                                     <button onClick={() => handleDelete(item.id)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() =>handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                                    <button onClick={() => handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
                                                                 </div>
                                                             )}
                                                         </tr>

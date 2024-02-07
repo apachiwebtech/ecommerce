@@ -31,6 +31,23 @@ const VendorForm = () => {
         // Add more fields as needed
     });
 
+    const handleDownload = () => {
+        // Replace 'path/to/your/file.pdf' with the actual path to your PDF file
+        const pdfPath = 'path/to/your/file.pdf';
+        
+        // Creating a virtual link element
+        const link = document.createElement('a');
+        link.href = pdfPath;
+        link.download = 'downloaded_file.pdf';
+        
+        // Triggering the click event to start the download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
+
+
     const [value, setValue] = useState({
         email: "" || vendor.emailid,
         mobile: "" || vendor.mobile,
@@ -146,18 +163,18 @@ const VendorForm = () => {
             isValid = false;
             newErrors.pincode = "pincode is required";
         }
-        if (!value.personname) {
-            isValid = false;
-            newErrors.personname = "personname is required";
-        }
-        if (!value.personemail) {
-            isValid = false;
-            newErrors.personemail = "personemail is required";
-        }
-        if (!value.personmobile) {
-            isValid = false;
-            newErrors.personmobile = "personemail is required";
-        }
+        // if (!value.personname) {
+        //     isValid = false;
+        //     newErrors.personname = "personname is required";
+        // }
+        // if (!value.personemail) {
+        //     isValid = false;
+        //     newErrors.personemail = "personemail is required";
+        // }
+        // if (!value.personmobile) {
+        //     isValid = false;
+        //     newErrors.personmobile = "personemail is required";
+        // }
         const gstpattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
         if (!gstpattern.test(value.gst)) {
             isValid = false;
@@ -305,6 +322,8 @@ const VendorForm = () => {
             //     })
 
 
+        }else{
+            alert("Please fill all the field")
         }
     }
 
@@ -346,37 +365,36 @@ const VendorForm = () => {
                                     <form class="forms-sample" onSubmit={handleSubmit}>
                                         <div className='row'>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Email</label>
+                                                <label for="exampleInputUsername1">Email<span className='text-danger'>*</span></label>
                                                 <input type="email" class="form-control" id="exampleInputUsername1" value={value.email} placeholder="Email" name="email" onChange={onhandleChange} />
                                                 {errors.email && <div className="text-danger">{errors.email}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputEmail1">Mobile No</label>
+                                                <label for="exampleInputEmail1">Mobile No<span className='text-danger'>*</span></label>
                                                 <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Mobile No" value={value.mobile} name="mobile" onChange={onhandleChange} />
                                                 {errors.mobile && <div className="text-danger">{errors.mobile}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputPassword1">Username</label>
+                                                <label for="exampleInputPassword1">Username<span className='text-danger'>*</span></label>
                                                 <input type="username" class="form-control" id="exampleInputPassword1" placeholder="Username" value={value.username} name="username" onChange={onhandleChange} />
                                                 {errors.username && <div className="text-danger">{errors.username}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputConfirmPassword1">Password</label>
+                                                <label for="exampleInputConfirmPassword1">Password<span className='text-danger'>*</span></label>
                                                 <input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password" name="password" onChange={onhandleChange} />
                                                 {errors.password && <div className="text-danger">{errors.password}</div>}
                                             </div>
                                             {/* <hr width="100%"></hr> */}
                                             <p class="card-description col-lg-12 bg-light">
-                                                Additional Details
+                                               Contact Details
                                             </p>
                                             <div class="form-group col-lg-12">
-                                                <label for="exampleTextarea1">Address</label>
+                                                <label for="exampleTextarea1">Address<span className='text-danger'>*</span></label>
                                                 <textarea class="form-control" id="exampleTextarea1" rows="4" name='address' value={value.address} onChange={onhandleChange}></textarea>
                                                 {errors.address && <div className="text-danger">{errors.address}</div>}
                                             </div>
-
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleFormControlSelect1">state</label>
+                                                <label for="exampleFormControlSelect1">state<span className='text-danger'>*</span></label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.state} onChange={onhandleChange} name='state'>
                                                     <option selected>Select state</option>
                                                     <option value="1">Maharashtra</option>
@@ -384,13 +402,15 @@ const VendorForm = () => {
                                                 </select>
                                                 {errors.state && <div className="text-danger">{errors.state}</div>}
                                             </div>
+
+                                           
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">City</label>
+                                                <label for="exampleInputUsername1">City<span className='text-danger'>*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.city} placeholder="City" name='city' onChange={onhandleChange} />
                                                 {errors.city && <div className="text-danger">{errors.city}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Pincode</label>
+                                                <label for="exampleInputUsername1">Pincode<span className='text-danger'>*</span></label>
                                                 <input type="number" class="form-control" id="exampleInputUsername1" placeholder="Pincode" value={value.pincode} name='pincode' onChange={onhandleChange} />
                                                 {errors.pincode && <div className="text-danger">{errors.pincode}</div>}
                                             </div>
@@ -399,17 +419,17 @@ const VendorForm = () => {
                                                 Contact Person Details
                                             </p>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Contact Person Name</label>
+                                                <label for="exampleInputUsername1">Contact Person Name<span className='text-danger'>*</span></label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Name" value={value.personname} name='personname' onChange={onhandleChange} />
                                                 {errors.personname && <div className="text-danger">{errors.personname}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Contact Person Email</label>
+                                                <label for="exampleInputUsername1">Contact Person Email<span className='text-danger'>*</span></label>
                                                 <input type="email" class="form-control" id="exampleInputUsername1" placeholder="Email" name='personemail' value={value.personemail} onChange={onhandleChange} />
                                                 {errors.personemail && <div className="text-danger">{errors.personemail}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Contact Person Mobile</label>
+                                                <label for="exampleInputUsername1">Contact Person Mobile<span className='text-danger'>*</span></label>
                                                 <input type="number" class="form-control" id="exampleInputUsername1" placeholder="Mobile" name='personmobile' value={value.personmobile} onChange={onhandleChange} />
                                                 {errors.personmobile && <div className="text-danger">{errors.personmobile}</div>}
                                             </div>
@@ -419,12 +439,12 @@ const VendorForm = () => {
                                                 </p>
                                                 <div className='row'>
                                                     <div class="form-group col-lg-3">
-                                                        <label for="exampleInputUsername1">Vendor GST</label>
+                                                        <label for="exampleInputUsername1">Vendor GST<span className='text-danger'>*</span></label>
                                                         <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Vendor GST" value={value.gst} name='gst' onChange={onhandleChange} />
                                                         {errors.gst && <div className="text-danger">{errors.gst}</div>}
                                                     </div>
                                                     <div class="form-group col-lg-3">
-                                                        <label for="exampleInputUsername1">Vendor Pancard</label>
+                                                        <label for="exampleInputUsername1">Vendor Pancard<span className='text-danger'>*</span></label>
                                                         <input type="text" class="form-control" id="exampleInputUsername1" value={value.pancard} placeholder="Vendor Pancard" name='pancard' onChange={onhandleChange} />
                                                         {errors.pancard && <div className="text-danger">{errors.pancard}</div>}
                                                     </div>
@@ -432,24 +452,24 @@ const VendorForm = () => {
 
                                                 </div>
                                                 <p class="card-description col-lg-12 bg-light text-dark">
-                                                    Upload Kyc
+                                                    Upload Kyc <span className='text-danger'>(upload pdf only)</span>
                                                 </p>
                                                 <div className='row'>
 
                                                     <div class="form-group col-lg-3">
-                                                        <label>GST Certificate Upload</label>
+                                                        <label>GST Certificate Upload<span className='text-danger'>*(size less than 5mb)</span></label>
 
                                                         <input type="file" class="form-control file-upload-info" name='gstupload' onChange={handleUpload} />
                                                         {errors.gstupload && <div className="text-danger">{errors.gstupload}</div>}
                                                     </div>
                                                     <div class="form-group col-lg-3">
-                                                        <label>Pancard Upload</label>
+                                                        <label>Pancard Upload<span className='text-danger'>*(size less than 5mb)</span></label>
 
                                                         <input type="file" class="form-control file-upload-info" name='panupload' onChange={handleUpload2} />
                                                         {errors.panupload && <div className="text-danger">{errors.panupload}</div>}
                                                     </div>
                                                     <div class="form-group col-lg-3">
-                                                        <label>Agreement Upload</label>
+                                                        <label>Agreement Upload<span  className='text-primary' onClick={handleDownload}> Download pdf</span></label>
 
                                                         <input type="file" class="form-control file-upload-info" name='agreementupload' onChange={handleUpload3} />
                                                         {errors.agreementupload && <div className="text-danger">{errors.agreementupload}</div>}
@@ -473,17 +493,17 @@ const VendorForm = () => {
                                                 <DialogContent style={{ width: "500px" }}>
                                                     <div className='row'>
                                                         <div class="form-group col-lg-12">
-                                                            <label for="exampleInputUsername1">Account holder Name</label>
+                                                            <label for="exampleInputUsername1">Account holder Name<span className='text-danger'>*</span></label>
                                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.account_name} placeholder="Enter Name" name='account_name' onChange={onhandleChange} />
                                                             {errors.account_name && <div className="text-danger">{errors.account_name}</div>}
                                                         </div>
                                                         <div class="form-group col-lg-12">
-                                                            <label for="exampleInputUsername1">Account Number</label>
+                                                            <label for="exampleInputUsername1">Account Number<span className='text-danger'>*</span></label>
                                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.account_no} placeholder="Enter Number" name='account_no' onChange={onhandleChange} />
                                                             {errors.account_no && <div className="text-danger">{errors.account_no}</div>}
                                                         </div>
                                                         <div class="form-group col-lg-12">
-                                                            <label for="exampleInputUsername1">Ifsc Code</label>
+                                                            <label for="exampleInputUsername1">Ifsc Code<span className='text-danger'>*</span></label>
                                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.ifsc_code} placeholder="Enter Code" name='ifsc_code' onChange={onhandleChange} />
                                                             {errors.ifsc_code && <div className="text-danger">{errors.ifsc_code}</div>}
                                                         </div>

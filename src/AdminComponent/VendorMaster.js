@@ -9,7 +9,7 @@ import InnerHeader from './InnerHeader';
 const VendorMaster = () => {
     const [vendordata, setVendorData] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-
+    const [hide , setHide] = useState(false)
     async function getVendordata() {
         axios.get(`${BASE_URL}/vendor_data`)
             .then((res) => {
@@ -20,6 +20,22 @@ const VendorMaster = () => {
                 console.log(err)
             })
     }
+
+
+    const handleConfirmation = () => {
+        const userConfirmed = window.confirm('Are you sure you want to proceed?');
+    
+        if (userConfirmed) {
+          // User clicked 'OK', proceed with the action
+          console.log('Action confirmed!');
+
+          setHide(true)
+        } else {
+            setHide(false)
+          // User clicked 'Cancel', do something else or nothing
+          console.log('Action canceled.');
+        }
+      };
 
     useEffect(() => {
         getVendordata()
@@ -101,6 +117,9 @@ const VendorMaster = () => {
                                                         Address
                                                     </th>
                                                     <th>
+                                                        Status
+                                                    </th>
+                                                    <th>
                                                         Action
                                                     </th>
                                                 </tr>
@@ -116,7 +135,7 @@ const VendorMaster = () => {
                                                                 {index + 1}
                                                             </td>
                                                             <td>
-                                                                {item.username}
+                                                                {item.vendor_name}
                                                             </td>
                                                             <td>
                                                                 {item.mobile}
@@ -126,6 +145,9 @@ const VendorMaster = () => {
                                                             </td>
                                                             <td>
                                                                 {item.address}
+                                                            </td>
+                                                            <td>
+                                                                <button className='btn btn-sm btn-danger' onClick={handleConfirmation}>Approve</button>
                                                             </td>
                                                             <td>
                                                                 <Link to={`/webapp/vendorform/${item.id}`}><EditIcon /></Link>

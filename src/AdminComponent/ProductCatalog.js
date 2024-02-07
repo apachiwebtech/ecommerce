@@ -10,7 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import InnerHeader from "./InnerHeader";
-
+import chair from '../assets/images/chair.jpg'
 
 const ProductCatalog = () => {
   const [cat, setCatData] = useState([]);
@@ -138,7 +138,7 @@ const ProductCatalog = () => {
                 <div class="card-body">
                   <div className="d-flex justify-content-between">
                     <div>
-                      <h4 class="card-title">Product Catalog </h4>
+                      <h4 class="card-title">Products </h4>
                       <p class="card-description">List Of Products</p>
                     </div>
                     <div>
@@ -155,17 +155,14 @@ const ProductCatalog = () => {
                       <thead>
                         <tr>
                           <th>
-                            <input
-                              type="checkbox"
-                              id="checkbox"
-                              name="checkbox"
-                            />
+                            #
                           </th>
                           <th>Image</th>
                           <th>Name</th>
-                          <th>User</th>
-                          <th>Created On</th>
-                          <th>Approved</th>
+                          <th>Category</th>
+                          <th>Subcategory</th>
+                          <th>Vendor Name</th>
+                          <th>Price</th>
                           <th>Status</th>
                           <th>Action</th>
                         </tr>
@@ -174,17 +171,15 @@ const ProductCatalog = () => {
                       <tbody>
                         <tr>
                           <td>
-                            <input
-                              type="checkbox"
-                              id="checkbox1"
-                              name="checkbox1"
-                            />
+                            1
                           </td>
-                          <td>Image1</td>
-                          <td>iPhone 14 Pro</td>
-                          <td>PawanDZ</td>
-                          <td>18/12/2023 16:52</td>
-                          <td>Approved</td>
+                          <td><img src={chair} alt="" /></td>
+                          <td>Chair</td>
+                          <td>Chair</td>
+                          <td>Office Chair</td>
+                          <td>Satyam</td>
+                          <td>2000</td>
+                        
                           <td>
                             {" "}
                             <FormControlLabel
@@ -192,12 +187,12 @@ const ProductCatalog = () => {
                             />
                           </td>
                           <td>
-                            <Link>
+                            <Link to="/webapp/product">
                               <EditIcon />
                             </Link>
-                            <Link>
-                              <DeleteIcon />
-                            </Link>
+                            {/* <Link>
+                              <DeleteIcon  className="text-danger"/>
+                            </Link> */}
                           </td>
                         </tr>
                       </tbody>

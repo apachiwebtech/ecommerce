@@ -19,7 +19,7 @@ const InnerHeader = () => {
             case '/webapp/adminuser':
                 return 'Admin Users';
             case '/webapp/productcatalog':
-                return 'Product catalog';
+                return 'Products';
             case '/webapp/category':
                 return 'Category';
             case '/webapp/subcategory':
@@ -34,6 +34,8 @@ const InnerHeader = () => {
                 return 'Banner';
             case '/webapp/socialmedia':
                 return 'Social Media';
+            case '/webapp/gallery':
+                return 'Gallery';
             case location.pathname.match(/^\/addservice\/\d+$/) ? location.pathname : '':
                 return 'Add Service'
 

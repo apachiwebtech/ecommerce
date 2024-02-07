@@ -27,6 +27,7 @@ import ReviewComment from './AdminComponent/ReviewComment';
 import Testimonial from './AdminComponent/Testimonials';
 import SocialMedia from './AdminComponent/SocialMedia';
 import ProductApproval from './AdminComponent/ProductApproval';
+import Gallery from './AdminComponent/Gallery';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -55,6 +56,10 @@ const Router = createBrowserRouter([
       {
         path: '/webapp',
         element: <AdminDashBoard />
+      },
+      {
+        path: '/webapp/gallery',
+        element: <Gallery />
       },
     
       {

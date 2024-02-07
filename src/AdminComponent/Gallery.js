@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InnerHeader from './InnerHeader';
 
 const Gallery = () => {
 
@@ -16,7 +17,7 @@ const Gallery = () => {
         lastname: "",
         email: "",
         password: "",
-        
+
     })
 
     const validateForm = () => {
@@ -149,6 +150,7 @@ const Gallery = () => {
     return (
 
         <div class="container-fluid page-body-wrapper">
+            <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
@@ -180,7 +182,7 @@ const Gallery = () => {
                                     <div className='d-flex justify-content-between'>
                                         <div>
                                             <h4 class="card-title"> List Of Gallery </h4>
-                                           
+
                                         </div>
 
                                     </div>
@@ -203,34 +205,25 @@ const Gallery = () => {
                                             </thead>
                                             <tbody>
 
-                                                {admindata.map((item, index) => {
-                                                    return (
-                                                        <tr key={index}>
-                                                            <td>
-                                                               
-                                                            </td>
-                                                            <td>
-                                                               
-                                                            </td>
-                                                            <td>
-                                                            </td>
 
-                                                            <td>
-                                                            <Link><EditIcon /></Link>
-                                                            <Link style={{color : "red"}}><DeleteIcon /></Link>
-                                                                {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
-                                                            </td>
-                                                            {confirmationVisibleMap[item.id] && (
-                                                                <div className='confirm-delete'>
-                                                                    <p>Are you sure you want to delete?</p>
-                                                                    <button onClick={() => handleDelete(item.id)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() => handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
-                                                                </div>
-                                                            )}
-                                                        </tr>
+                                                <tr >
+                                                    <td>
+                                                        1
+                                                    </td>
+                                                    <td>
+                                                        bed
+                                                    </td>
 
-                                                    )
-                                                })}
+
+                                                    <td>
+                                                        <Link><EditIcon /></Link>
+                                                        <Link style={{ color: "red" }}><DeleteIcon /></Link>
+                                                        {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
+                                                    </td>
+
+                                                </tr>
+
+
 
 
                                             </tbody>
