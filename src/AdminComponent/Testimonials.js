@@ -2,45 +2,24 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import InnerHeader from './InnerHeader';
 
 
 
-const Brand = () => {
 
-    const [brand, setBrand] = useState([])
-    const [uid, setUid] = useState([])
+const Testimonial = () => {
+
+    const [cat, setCatData] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [value, setValue] = useState({
-        title: "" || uid.title,
-        description: "" || uid.description,
-
+        title: "",
+        description: "",
     })
 
-    useEffect(() => {
-        setValue({
-            title: "" || uid.title,
-            description: "" || uid.description,
-        })
-    }, [uid])
-
-    const handleUpdate = (id) => {
-        axios.post(`${BASE_URL}/brand_update`, { u_id: id })
-            .then((res) => {
-                setUid(res.data[0])
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    async function getBrandData() {
-        axios.get(`${BASE_URL}/Brand_data`)
+    async function getcatData() {
+        axios.get(`${BASE_URL}/category_data`)
             .then((res) => {
                 console.log(res.data)
-                setBrand(res.data)
+                setCatData(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -48,7 +27,7 @@ const Brand = () => {
     }
 
     useEffect(() => {
-        getBrandData()
+        getcatData()
     }, [])
 
     const handleClick = (id) => {
@@ -57,7 +36,6 @@ const Brand = () => {
             [id]: true,
         }));
     };
-
     const handleCancel = (id) => {
         // Hide the confirmation dialog without performing the delete action
         setConfirmationVisibleMap((prevMap) => ({
@@ -72,19 +50,19 @@ const Brand = () => {
             cat_id: id
         }
 
-        axios.post(`${BASE_URL}/Brand_delete`, data)
+        axios.post(`${BASE_URL}/category_delete`, data)
             .then((res) => {
-                getBrandData()
+                getcatData()
 
             })
             .catch((err) => {
                 console.log(err)
             })
 
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
+            setConfirmationVisibleMap((prevMap) => ({
+                ...prevMap,
+                [id]: false,
+            }));
     }
 
     const handleSubmit = (e) => {
@@ -98,10 +76,10 @@ const Brand = () => {
             user_id: localStorage.getItem("userid")
         }
 
-        axios.post(`${BASE_URL}/add_brand`, data)
+        axios.post(`${BASE_URL}/add_category`, data)
             .then((res) => {
                 alert(res.data)
-                getBrandData()
+                getcatData()
 
             })
             .catch((err) => {
@@ -117,27 +95,30 @@ const Brand = () => {
     return (
 
         <div class="container-fluid page-body-wrapper">
-            <InnerHeader/>
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Brand</h4>
+                                    <h4 class="card-title">Add Testimonials</h4>
 
                                     <form class="forms-sample" onSubmit={handleSubmit}>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">Title</label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
+                                            <label for="name">Name</label>
+                                            <input type="text" class="form-control" id="name" placeholder="Name" name='name' onChange={onhandleChange} />
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4" name='description' onChange={onhandleChange}></textarea>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="info">Information</label>
+                                            <textarea class="form-control" id="info" rows="4" name='info' onChange={onhandleChange}></textarea>
                                         </div>
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <Link to="/webapp/adminuser"><button class="btn btn-light">Cancel</button></Link>
+                                        <button type="submit" class="btn btn-sm btn-primary mr-2">Submit</button>
+                                        <Link to="/webapp/adminuser"><button class="btn btn-sm btn-light">Cancel</button></Link>
                                     </form>
                                 </div>
                             </div>
@@ -147,9 +128,9 @@ const Brand = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Brand </h4>
+
                                             <p class="card-description">
-                                                List Of Brand
+                                                List Of Testimonials
                                             </p>
                                         </div>
 
@@ -173,11 +154,11 @@ const Brand = () => {
                                             </thead>
                                             <tbody>
 
-                                                {brand.map((item, index) => {
+                                                {cat.map((item, index) => {
                                                     return (
                                                         <tr key={index}>
                                                             <td>
-                                                                {index + 1}
+                                                                {item.id}
                                                             </td>
                                                             <td>
                                                                 {item.title}
@@ -185,15 +166,13 @@ const Brand = () => {
 
 
                                                             <td>
-                                                                <EditIcon onClick={() => handleUpdate(item.id)}/>
-                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
-                                                                {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
+                                                                <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button>
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>
                                                                     <p>Are you sure you want to delete?</p>
                                                                     <button onClick={() => handleDelete(item.id)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() => handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                                    <button onClick={() =>handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
                                                                 </div>
                                                             )}
                                                         </tr>
@@ -216,4 +195,4 @@ const Brand = () => {
     )
 }
 
-export default Brand
+export default Testimonial;

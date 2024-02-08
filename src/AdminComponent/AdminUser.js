@@ -5,19 +5,30 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InnerHeader from './InnerHeader';
 
 const AdminUser = () => {
 
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [errors, setErrors] = useState({})
     const [admindata, setData] = useState([])
+    const [uid, setUid] = useState([])
     const [value, setValue] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
+        firstname: "" || uid.firstname,
+        lastname: "" || uid.lastname,
+        email: "" || uid.email,
         password: "",
 
     })
+
+    useEffect(() => {
+        setValue({
+            firstname: uid.firstname,
+            lastname: uid.lastname,
+            email: uid.email,
+            password: "",
+        })
+    }, [uid])
 
     const validateForm = () => {
         let isValid = true;
@@ -57,6 +68,16 @@ const AdminUser = () => {
 
     }
 
+
+    const handleUpdate = (id) => {
+        axios.post(`${BASE_URL}/adminuser_update`, { u_id: id })
+            .then((res) => {
+                setUid(res.data[0])
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
 
     async function getAdminuserData() {
@@ -124,6 +145,8 @@ const AdminUser = () => {
                 lastname: value.lastname,
                 email: value.email,
                 password: hashpassword,
+                u_id : uid.id,
+                user_id: localStorage.getItem("userid")
 
             }
 
@@ -149,6 +172,8 @@ const AdminUser = () => {
     return (
 
         <div class="container-fluid page-body-wrapper">
+            <InnerHeader />
+
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
@@ -160,17 +185,17 @@ const AdminUser = () => {
                                     <form class="forms-sample" onSubmit={handleSubmit}>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">FirstName</label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="FirstName" name='firstname' onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="FirstName" value={value.firstname} name='firstname' onChange={onhandleChange} />
                                             {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">LastName</label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="LastName" name="lastname" onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="LastName" value={value.lastname} name="lastname" onChange={onhandleChange} />
                                             {errors.lastname && <div className="text-danger">{errors.lastname}</div>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email address</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="email" onChange={onhandleChange} />
+                                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" value={value.email} name="email" onChange={onhandleChange} />
                                             {errors.email && <div className="text-danger">{errors.email}</div>}
                                         </div>
                                         <div class="form-group">
@@ -184,7 +209,7 @@ const AdminUser = () => {
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <Link to="/webapp/adminuser"><button class="btn btn-light">Cancel</button></Link>
+                                        <button type='button' class="btn btn-light" onClick={() => setValue()}>Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -238,7 +263,7 @@ const AdminUser = () => {
                                                             </td>
 
                                                             <td>
-                                                                <EditIcon />
+                                                                <EditIcon onClick={() => handleUpdate(item.id)} />
                                                                 <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
                                                                 {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
                                                             </td>

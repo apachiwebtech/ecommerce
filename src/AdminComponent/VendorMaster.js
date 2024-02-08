@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { BASE_URL } from './BaseUrl'
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InnerHeader from './InnerHeader';
 
 const VendorMaster = () => {
     const [vendordata, setVendorData] = useState([])
@@ -61,6 +62,7 @@ const VendorMaster = () => {
 
     return (
         <div class="container-fluid page-body-wrapper">
+           <InnerHeader/>
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">

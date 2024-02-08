@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { mdiMenu } from '@mdi/js';
 import Icon from '@mdi/react';
 import logo from '../assets/images/logo.svg'
+import InnerHeader from './InnerHeader';
 
 
 const AdminDashBoard = () => {
@@ -17,7 +18,7 @@ const handleLogout = () =>{
 
 
     <div className="container-fluid page-body-wrapper">
-
+       <InnerHeader/>
       <nav className="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row">
         <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
           <button className="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">

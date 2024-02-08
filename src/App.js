@@ -3,7 +3,6 @@ import './App.css';
 import { Outlet, createBrowserRouter, useNavigate } from 'react-router-dom'
 import Header from './AdminComponent/Header';
 import "bootstrap-icons/font/bootstrap-icons.css";
-import EmergencyForm from './AdminComponent/EmergencyForm';
 import VendorMaster from './AdminComponent/VendorMaster';
 import VendorForm from './AdminComponent/VendorForm';
 import AdminUser from './AdminComponent/AdminUser';
@@ -14,7 +13,7 @@ import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import WebLogin from './AdminComponent/WebLogin';
 import DashBoard from './MainComponent/DashBoard';
 import Product from './AdminComponent/Product';
-import Product_Catalog from './AdminComponent/Product_Catalog';
+import ProductCatalog from './AdminComponent/ProductCatalog';
 import SellersProductInventory from './AdminComponent/SellersProductInventory';
 import Brand from './AdminComponent/Brand';
 import Shop from './AdminComponent/Shop';
@@ -22,6 +21,12 @@ import ProductOption from './AdminComponent/ProductOption';
 import ProductTag from './AdminComponent/ProductTag';
 import ThresholdProduct from './AdminComponent/ThresholdProduct';
 import Orders from './AdminComponent/Orders';
+import View from './AdminComponent/View';
+import Banner from './AdminComponent/Banner';
+import ReviewComment from './AdminComponent/ReviewComment';
+import Testimonial from './AdminComponent/Testimonials';
+import SocialMedia from './AdminComponent/SocialMedia';
+import ProductApproval from './AdminComponent/ProductApproval';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -32,16 +37,16 @@ const Router = createBrowserRouter([
     element: <VendorForm />
   },
   {
-    path:'/',
-    element :<App/>,
-    children:[
+    path: '/',
+    element: <App />,
+    children: [
       {
         path: '/',
-        element: <DashBoard/>
+        element: <DashBoard />
       },
     ]
   },
-  
+
 
   {
     path: '/webapp',
@@ -51,10 +56,7 @@ const Router = createBrowserRouter([
         path: '/webapp',
         element: <AdminDashBoard />
       },
-      {
-        path: '/webapp/eform',
-        element: <EmergencyForm />
-      },
+    
       {
         path: '/webapp/vendormaster',
         element: <VendorMaster />
@@ -64,22 +66,26 @@ const Router = createBrowserRouter([
         element: <AdminUser />
       },
       {
-        path: '/webapp/category/:id',
+        path: '/webapp/category/',
         element: <Category />
+      },
+      {
+        path:'/webapp/productapproval',
+        element :<ProductApproval/>
       },
       {
         path: '/webapp/subcategory',
         element: <SubCatetgory />
       },
-      
+
       {
         path: '/webapp/product',
         element: <Product />
       },
 
       {
-        path: '/webapp/product_catalog',
-        element: <Product_Catalog />
+        path: '/webapp/productcatalog',
+        element: <ProductCatalog />
       },
 
       {
@@ -114,7 +120,30 @@ const Router = createBrowserRouter([
         path: '/webapp/thresholdproduct',
         element: <ThresholdProduct />
       },
-      
+      {
+        path: '/webapp/view',
+        element: <View />
+      },
+
+      {
+        path: '/webapp/banner',
+        element: <Banner />
+      },
+
+      {
+        path: '/webapp/reviewcomment',
+        element: <ReviewComment />
+      },
+      {
+        path: '/webapp/testimonial',
+        element: <Testimonial />
+      },
+
+      {
+        path: '/webapp/socialmedia',
+        element: <SocialMedia />
+      },
+
     ]
   }
 ])
@@ -142,14 +171,13 @@ function WebApp() {
       <div className="container-scroller d-flex">
         <Header />
         <Outlet />
-
       </div>
     </>
 
   );
 }
 
-function App(){
+function App() {
   return (
     <>
       <div className="container-scroller d-flex">

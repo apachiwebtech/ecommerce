@@ -9,7 +9,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-const Product_Catalog = () => {
+import InnerHeader from "./InnerHeader";
+const ReviewComment = () => {
   const [cat, setCatData] = useState([]);
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const [value, setValue] = useState({
@@ -126,6 +127,7 @@ const Product_Catalog = () => {
 
   return (
     <div class="container-fluid page-body-wrapper">
+      <InnerHeader/>
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
@@ -134,63 +136,37 @@ const Product_Catalog = () => {
                 <div class="card-body">
                   <div className="d-flex justify-content-between">
                     <div>
-                      <h4 class="card-title">Product Catalog </h4>
-                      <p class="card-description">List Of Products</p>
+                      <h4 class="card-title">List Of Reviews & Comments</h4>
+                      {/* <p class="card-description">List Of Register User</p> */}
                     </div>
-                    <div>
-                      {/* <Link to="/webapp/product">
-                        <button className=" btn btn-primary">Add Product</button>
-                        <Button variant="outlined" size="medium"><AddCircleOutlineIcon  style={{fontSize : "16px"}}/> Add Product</Button>
-                      </Link> */}
-                      <Link to="/webapp/product" ><button className=' btn btn-primary'>Add Product</button></Link>
-                    </div>
+
                   </div>
 
                   <div class="table-responsive pt-3">
                     <table class="table table-bordered">
                       <thead>
                         <tr>
-                          <th>
-                            <input
-                              type="checkbox"
-                              id="checkbox"
-                              name="checkbox"
-                            />
-                          </th>
-                          <th>Image</th>
+
+
                           <th>Name</th>
-                          <th>User</th>
-                          <th>Created On</th>
-                          <th>Approved</th>
-                          <th>Status</th>
+                          <th>Email</th>
+                          <th>Contact No</th>
+                          <th>Review</th>
+                          <th>Comment</th>
                           <th>Action</th>
                         </tr>
                       </thead>
 
                       <tbody>
                         <tr>
+
+                          <td>Satyam</td>
+                          <td>Satyam@gmail.com</td>
+                          <td>987654321</td>
+                          <td>4</td>
+                          <td>Hello</td>
                           <td>
-                            <input
-                              type="checkbox"
-                              id="checkbox1"
-                              name="checkbox1"
-                            />
-                          </td>
-                          <td>Image1</td>
-                          <td>iPhone 14 Pro</td>
-                          <td>PawanDZ</td>
-                          <td>18/12/2023 16:52</td>
-                          <td>Approved</td>
-                          <td>
-                            {" "}
-                            <FormControlLabel
-                              control={<Android12Switch defaultChecked />}
-                            />
-                          </td>
-                          <td>
-                            <Link>
-                              <EditIcon />
-                            </Link>
+
                             <Link>
                               <DeleteIcon />
                             </Link>
@@ -209,4 +185,4 @@ const Product_Catalog = () => {
   );
 };
 
-export default Product_Catalog;
+export default ReviewComment;

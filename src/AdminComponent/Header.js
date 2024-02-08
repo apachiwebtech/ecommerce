@@ -27,10 +27,13 @@ const Header = () => {
   });
 
   const handleToggle = (itemName) => {
-    setOpenStates((prevState) => ({
+    
+    setOpenStates((prevState) =>({
       ...prevState,
+
       [itemName]: !prevState[itemName],
     }));
+
   };
 
   return (
@@ -76,10 +79,8 @@ const Header = () => {
             <span className="menu-title">Product</span>
             {openStates.product ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
-
-
-
         </li>
+        
         <Collapse in={openStates.product} timeout="auto" unmountOnExit>
           <ul className='inner-item'>
             <li className="nav-item">
@@ -89,7 +90,7 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='/webapp/category/:uid'>
+              <Link className="nav-link" to='/webapp/category'>
                 <Icon path={mdiLandPlotsCircle} size={1} className='mx-3' />
                 <span className="menu-title">Category</span>
               </Link>
@@ -107,12 +108,12 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='/webapp/adminuser'>
+              <Link className="nav-link" to='/webapp/productapproval'>
                 <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
                 <span className="menu-title">Product Approval</span>
               </Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" to='/webapp/SellersProductInventory'>
                 <Icon path={mdiArchive} size={1} className='mx-3' />
                 <span className="menu-title">SellersProductInventory</span>
@@ -130,7 +131,7 @@ const Header = () => {
                 <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
                 <span className="menu-title">Product Option</span>
               </Link>
-            </li>
+            </li> */}
             {/* <li className="nav-item">
               <Link className="nav-link" to='/webapp/producttag'>
                 <Icon path={mdiTagTextOutline} size={1} className='mx-3' />
@@ -145,7 +146,7 @@ const Header = () => {
                 <span className="menu-title">Threshold Product</span>
               </Link>
             </li> */}
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" to='/webapp/view'>
                 <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
                 <span className="menu-title">View</span>
@@ -163,7 +164,7 @@ const Header = () => {
                 <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
                 <span className="menu-title">Testimonials</span>
               </Link>
-            </li>
+            </li> */}
           
           </ul>
         </Collapse>
@@ -196,7 +197,7 @@ const Header = () => {
                 <span className="menu-title">Orders</span>
               </Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" to='/webapp/thresholdproduct'>
                 <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
                 <span className="menu-title">Subscription Orders</span>
@@ -226,7 +227,7 @@ const Header = () => {
                 <Icon path={mdiCartOutline} size={1} className='mx-3' />
                 <span className="menu-title">Order Cancellation Reasons</span>
               </Link>
-            </li>
+            </li> */}
           </ul>
         </Collapse>
 

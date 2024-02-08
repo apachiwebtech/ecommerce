@@ -12,6 +12,7 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
+
 const upload = multer({ storage: storage });
 
 app.use(express.json());
@@ -67,7 +68,13 @@ app.post('/login', (req, res) => {
   })
 })
 
-app.post('/add_vendor', (req, res) => {
+
+
+app.post('/add_vendor', upload.fields([
+  { name: 'gstupload', maxCount: 1 },
+  { name: 'panupload', maxCount: 1 },
+  { name: 'agreementupload', maxCount: 1 }
+]), (req, res) => {
 
   let username = req.body.username;
   let email = req.body.email;
@@ -82,47 +89,93 @@ app.post('/add_vendor', (req, res) => {
   let personname = req.body.personname;
   let gst = req.body.gst;
   let pancard = req.body.pancard;
-  // let gstupload = req.body.gstupload;
-  // let panupload = req.body.panupload;
-  // let agreementupload = req.body.agreementupload;
   let account_name = req.body.account_name;
   let account_no = req.body.account_no;
   let ifsc_code = req.body.ifsc_code;
   let created_date = new Date()
+  let u_id = req.body.u_id;
+  let user_id = req.body.user_id
 
 
-  // const image1 = req.files['gstupload'];
-  // const image2 = req.files['panupload'];
-  // const image3 = req.files['agreementupload'];
+  let sql;
+  let sql2;
+  let sql3;
+  let param;
+  let param2;
+  let param3;
 
-  // let gstupload = image1[0].filename
-  // let panupload = image2[0].filename
-  // let agreementupload = image3[0].filename
 
-  const sql = "insert into awt_vendor(`username`,`mobile`,`emailid`,`password`,`address`,`state`,`city`,`pincode`,`gstno`,`vendor_pan`,`created_date`) values(?,?,?,?,?,?,?,?,?,?,?)"
 
-  con.query(sql, [username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date], (err, data) => {
+
+  const image1 = req.files['gstupload'];
+  const image2 = req.files['panupload'];
+  const image3 = req.files['agreementupload'];
+
+  let gstupload = image1[0].filename
+  let panupload = image2[0].filename
+  let agreementupload = image3[0].filename
+
+ 
+
+  if (u_id == "undefined") {
+
+    sql = "insert into awt_vendor(`username`,`mobile`,`emailid`,`password`,`address`,`state`,`city`,`pincode`,`gstno`,`vendor_pan`,`created_date`,`created_by`,`gst_upload`,`pan_upload`,`aggrement_upload`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+ 
+
+    param = [username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload]
+  }
+  else {
+
+    sql = "update awt_vendor set username = ? , mobile = ?, emailid = ?, password = ?, address = ?,state = ?, city = ?,pincode = ?,gstno =?,vendor_pan = ?, updated_date = ?, updated_by = ? ,gst_upload = ?, pan_upload = ?,aggrement_upload =? where id = ?";
+    console.log("update")
+    param = [username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload, u_id]
+  }
+
+
+  con.query(sql, param, (err, data) => {
     if (err) {
+    
       return res.json(err)
     }
 
-    const insertedId = data.insertId;
-  console.log(insertedId)
   
 
-    const sql = "insert into awt_vendorbank(`Account_name`,`Account_no`,`ifsc`,`created_date`,`created_by`) values(?,?,?,?,?)"
-    con.query(sql, [account_name, account_no, ifsc_code, created_date,insertedId], (err, data) => {
+    const insertedId = data.insertId;
+    console.log(insertedId)
+
+    if (u_id == "undefined") {
+
+      sql2 = "insert into awt_vendorbank(`Account_name`,`Account_no`,`ifsc`,`created_date`,`created_by`,`v_id`) values(?,?,?,?,?,?)"
+      param2 = [account_name, account_no, ifsc_code, created_date, user_id, insertedId,]
+    }
+    else {
+      sql2 = "update awt_vendorbank set Account_name = ? ,Account_no = ?, ifsc = ?, updated_date = ?, updated_by = ? where v_id = ?"
+      param2 = [account_name, account_no, ifsc_code, created_date, user_id, u_id]
+    }
+    con.query(sql2, param2, (err, data) => {
       if (err) {
         return res.json(err)
       }
 
+      if (u_id == "undefined") {
 
-      const sql2 = "insert into awt_vendorcontact(`person_email`,`person_mobile`,`person_name`,`created_date`,`created_by`) values(?,?,?,?,?)"
-      con.query(sql2, [personemail, personmobile, personname, created_date,insertedId], (err, data) => {
+        sql3 = "insert into awt_vendorcontact(`person_email`,`person_mobile`,`person_name`,`created_date`,`created_by`,`v_id`) values(?,?,?,?,?,?)"
+
+        param3 = [personemail, personmobile, personname, created_date, user_id, insertedId]
+      } else {
+        sql3 = "update awt_vendorcontact set person_email = ?,person_mobile = ?,person_name = ?,updated_date = ?, updated_by = ? where v_id = ?"
+
+        param3 = [personemail, personmobile, personname, created_date, user_id, u_id]
+      }
+
+
+      con.query(sql3, param3, (err, data) => {
         if (err) {
+
           return res.json(err)
         }
         else {
+        
           return res.json("Data Added successfully")
         }
       })
@@ -138,13 +191,15 @@ app.post('/vendor_update', (req, res) => {
 
   let u_id = req.body.u_id;
 
-  const sql = "select * from awt_vendor as av left join awt_vendorcontact as avd on av.id = avd.created_by left join awt_vendorbank as avb on av.id = avb.created_by where av.id =?"
+
+  const sql = "select av.id,av.emailid,av.username,av.mobile,av.password,av.gstno,av.address,av.state,av.city,av.pincode,av.vendor_pan,av.gst_upload,av.pan_upload,av.aggrement_upload,av.created_date,avd.person_email,avd.person_mobile,avd.person_name,avb.Account_name,avb.Account_no,avb.ifsc from awt_vendor as av left join awt_vendorcontact as avd on av.id = avd.v_id left join awt_vendorbank as avb on av.id = avb.v_id where av.id = ?"
 
   con.query(sql, [u_id], (err, data) => {
     if (err) {
       return res.json(err)
     }
     else {
+   
       return res.json(data)
     }
   })
@@ -192,11 +247,25 @@ app.post('/add_adminuser', (req, res) => {
   let password = req.body.password;
   let role = "2";
   let created_date = new Date()
+  let u_id = req.body.u_id;
+
+  let user_id = req.body.user_id
+  let sql;
+  let param;
+
+  if (u_id == undefined) {
 
 
-  const sql = "insert into awt_adminuser(`firstname`,`lastname`,`email`,`password`,`role`,`created_date`) values(?,?,?,?,?,?)"
+    sql = "insert into awt_adminuser(`firstname`,`lastname`,`email`,`password`,`role`,`created_date`,`created_by`) values(?,?,?,?,?,?,?)"
+    param = [firstname, lastname, email, password, role, created_date, user_id]
 
-  con.query(sql, [firstname, lastname, email, password, role, created_date], (err, data) => {
+  } else {
+    sql = "update awt_adminuser set firstname = ?, lastname = ?, email = ?, password = ?, role = ?,updated_date = ?, updated_by = ? where id = ?"
+    param = [firstname, lastname, email, password, role, created_date, user_id, u_id]
+  }
+
+  con.query(sql, param, (err, data) => {
+    console.log(sql)
     if (err) {
       return res.json(err)
     }
@@ -206,6 +275,23 @@ app.post('/add_adminuser', (req, res) => {
 
 
   })
+})
+
+app.post('/adminuser_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+
+  const sql = "select * from awt_adminuser where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
 })
 
 app.get('/adminuser_data', (req, res) => {
@@ -245,7 +331,7 @@ app.post('/add_category', (req, res) => {
   let description = req.body.description;
   let created_date = new Date()
   let u_id = req.body.u_id;
-  console.log(u_id)
+
 
   let sql;
   let param;
@@ -266,7 +352,7 @@ app.post('/add_category', (req, res) => {
       return res.json(err)
     }
     else {
-      console.log(data)
+
       return res.json("Data Added Successfully!")
     }
 
@@ -329,7 +415,7 @@ app.post('/add_subcategory', (req, res) => {
   let description = req.body.description;
   let created_date = new Date()
   let u_id = req.body.u_id;
-  console.log(u_id)
+
 
   let sql;
   let param;

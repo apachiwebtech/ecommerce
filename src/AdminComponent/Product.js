@@ -14,6 +14,7 @@ import PermMediaIcon from '@mui/icons-material/PermMedia';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import InnerHeader from "./InnerHeader";
 const Product = () => {
   const [cat, setCatData] = useState([]);
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -132,6 +133,7 @@ const Product = () => {
 
   return (
     <div class="container-fluid page-body-wrapper">
+      <InnerHeader/>
       <div class="main-panel">
         <div class="content-wrapper">
           <h4 class="card-title">Add Product</h4>

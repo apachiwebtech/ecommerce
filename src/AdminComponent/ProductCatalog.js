@@ -7,12 +7,12 @@ import Switch, { SwitchProps } from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import MenuIcon from '@mui/icons-material/Menu';
-import Button from "@mui/material/Button";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import img1 from "../assets/images/product_default_image.jpg";
+import Button from '@mui/material/Button';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import InnerHeader from "./InnerHeader";
-const ProductOption = () => {
+
+
+const ProductCatalog = () => {
   const [cat, setCatData] = useState([]);
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const [value, setValue] = useState({
@@ -138,10 +138,16 @@ const ProductOption = () => {
                 <div class="card-body">
                   <div className="d-flex justify-content-between">
                     <div>
-                      <h4 class="card-title">Product Options </h4>
-                      <p class="card-description">List Of Product Options</p>
+                      <h4 class="card-title">Product Catalog </h4>
+                      <p class="card-description">List Of Products</p>
                     </div>
-                    
+                    <div>
+                      {/* <Link to="/webapp/product">
+                        <button className=" btn btn-primary">Add Product</button>
+                        <Button variant="outlined" size="medium"><AddCircleOutlineIcon  style={{fontSize : "16px"}}/> Add Product</Button>
+                      </Link> */}
+                      <Link to="/webapp/product" ><button className=' btn btn-primary'>Add Product</button></Link>
+                    </div>
                   </div>
 
                   <div class="table-responsive pt-3">
@@ -155,11 +161,13 @@ const ProductOption = () => {
                               name="checkbox"
                             />
                           </th>
-                          <th>Option Name</th>
-                          <th>Added By</th>
-                          <th>Display in Filter</th>
-                          <th>Color Option</th>
-                          <th width="15%">Action</th>
+                          <th>Image</th>
+                          <th>Name</th>
+                          <th>User</th>
+                          <th>Created On</th>
+                          <th>Approved</th>
+                          <th>Status</th>
+                          <th>Action</th>
                         </tr>
                       </thead>
 
@@ -172,23 +180,24 @@ const ProductOption = () => {
                               name="checkbox1"
                             />
                           </td>
+                          <td>Image1</td>
+                          <td>iPhone 14 Pro</td>
+                          <td>PawanDZ</td>
+                          <td>18/12/2023 16:52</td>
+                          <td>Approved</td>
                           <td>
-                            <p>Age Group <br></br>(Puzzles)</p>
+                            {" "}
+                            <FormControlLabel
+                              control={<Android12Switch defaultChecked />}
+                            />
                           </td>
-                          <td>Admin</td>
-                          <td>Yes</td>
-                          <td>No</td>
                           <td>
                             <Link>
                               <EditIcon />
                             </Link>
                             <Link>
-                            <MenuIcon/>
+                              <DeleteIcon />
                             </Link>
-                            <Link style={{color : "red",margin : "0px 5px"}}>
-                            <DeleteIcon />
-                            </Link>
-                           
                           </td>
                         </tr>
                       </tbody>
@@ -204,4 +213,4 @@ const ProductOption = () => {
   );
 };
 
-export default ProductOption;
+export default ProductCatalog;

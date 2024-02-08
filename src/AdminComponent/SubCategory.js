@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InnerHeader from './InnerHeader';
 
 const SubCategory = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -148,6 +149,7 @@ const SubCategory = () => {
     return (
 
         <div class="container-fluid page-body-wrapper">
+            <InnerHeader/>
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">

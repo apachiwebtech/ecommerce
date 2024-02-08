@@ -17,9 +17,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 
+
+
 const VendorForm = () => {
     const [open, setOpen] = React.useState(false);
     const [vendor, setVendor] = useState({})
+    const [image, setImage] = useState(null);
+    const [image2, setImage2] = useState(null);
+    const [image3, setImage3] = useState(null);
     const [errors, setErrors] = useState({
         email: "",
         mobile: "",
@@ -30,70 +35,74 @@ const VendorForm = () => {
         email: "" || vendor.emailid,
         mobile: "" || vendor.mobile,
         username: "" || vendor.username,
-        password: "" || vendor.password,
+        password: "",
         address: "" || vendor.address,
         state: "" || vendor.state,
         city: "" || vendor.city,
         pincode: "" || vendor.pincode,
-        personemail: "" ,
-        personmobile: "",
-        personname: "",
+        personemail: "" || vendor.person_email,
+        personmobile: "" || vendor.person_mobile,
+        personname: "" || vendor.person_name,
         gst: "" || vendor.gst_upload,
-        pancard: "",
-        gstupload: "",
-        panupload: "",
-        agreementupload: "",
-        account_name: "",
-        account_no: "",
-        ifsc_code: "",
+        pancard: "" || vendor.vendor_pan,
+        // gstupload: "",
+        // panupload: "",
+        // agreementupload: "",
+        account_name: "" || vendor.Account_name,
+        account_no: "" || vendor.Account_no,
+        ifsc_code: "" || vendor.ifsc,
 
     })
 
 
-    useEffect(()=>{
+    useEffect(() => {
         setValue({
             email: vendor.emailid,
             mobile: vendor.mobile,
-            username: "",
-            password: "",
-            address: "",
-            state: "",
-            city: "",
-            pincode: "",
-            personemail: "",
-            personmobile: "",
-            personname: "",
-            gst: "",
-            pancard: "",
-            gstupload: "",
-            panupload: "",
-            agreementupload: "",
-            account_name: "",
-            account_no: "",
-            ifsc_code: "",
+            username: vendor.username,
+            address: vendor.address,
+            state: vendor.state,
+            city: vendor.city,
+            pincode: vendor.pincode,
+            personemail: vendor.person_email,
+            personmobile: vendor.person_mobile,
+            personname: vendor.person_name,
+            pancard: vendor.vendor_pan,
+            gst: vendor.gstno,
+            account_name: vendor.Account_name,
+            account_no: vendor.Account_no,
+            ifsc_code: vendor.ifsc,
         })
-    
-    },[vendor])
+
+    }, [vendor])
 
     const { id } = useParams()
 
 
 
+
     async function formdata() {
+
         const data = {
             u_id: id
         }
 
         axios.post(`${BASE_URL}/vendor_update`, data)
             .then((res) => {
-                console.log(res.data)
+
                 setVendor(res.data[0])
+
+
             })
+
     }
 
     useEffect(() => {
-        formdata()
-    }, [])
+        if (id !== ":id") {
+
+            formdata()
+        }
+    }, [id])
 
     const validateForm = () => {
         let isValid = true;
@@ -106,17 +115,20 @@ const VendorForm = () => {
         }
 
         // Validate mobile number
-        if (!value.mobile) {
+        const mobileNumberRegex = /^\d{10}$/;
+        if (!mobileNumberRegex.test(value.mobile)) {
             isValid = false;
-            newErrors.mobile = "mobile number is required";
+            newErrors.mobile = "atleat 10 digit needed";
         }
         if (!value.username) {
             isValid = false;
             newErrors.username = "username is required";
         }
-        if (!value.password) {
+        const passwordPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+
+        if (!passwordPattern.test(value.password)) {
             isValid = false;
-            newErrors.password = "password is required";
+            newErrors.password = "Password requirements: 8-20 characters, 1 number, 1 letter, 1 symbol."
         }
         if (!value.address) {
             isValid = false;
@@ -146,37 +158,42 @@ const VendorForm = () => {
             isValid = false;
             newErrors.personmobile = "personemail is required";
         }
-        if (!value.gst) {
+        const gstpattern = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+        if (!gstpattern.test(value.gst)) {
             isValid = false;
-            newErrors.gst = "gst is required";
+            newErrors.gst = "gst no or pattern invalid";
         }
-        if (!value.pancard) {
+
+        const panpattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/
+        if (!panpattern.test(value.pancard)) {
             isValid = false;
-            newErrors.pancard = "pancard is required";
+            newErrors.pancard = "pancard no is invalid";
         }
-        if (!value.gstupload) {
+        if (!image) {
             isValid = false;
             newErrors.gstupload = "gstupload is required";
         }
-        if (!value.panupload) {
+        if (!image2) {
             isValid = false;
             newErrors.panupload = "panupload is required";
         }
-        if (!value.agreementupload) {
+        if (!image3) {
             isValid = false;
             newErrors.agreementupload = "agreementupload is required";
         }
         if (!value.account_name) {
             isValid = false;
             newErrors.account_name = "account_name is required";
+            newErrors.add_bank = "add bank info";
         }
         if (!value.account_no) {
             isValid = false;
             newErrors.account_no = "account_no is required";
         }
-        if (!value.ifsc_code) {
+        const ifscRegex = /^[A-Za-z]{4}[0-9]{7}$/;
+        if (!ifscRegex.test(value.ifsc_code)) {
             isValid = false;
-            newErrors.ifsc_code = "ifsc_code is required";
+            newErrors.ifsc_code = "ifsc_code is invalid";
         }
 
         // Add more validation for other fields as needed
@@ -215,36 +232,77 @@ const VendorForm = () => {
 
             const hashpassword = md5(value.password)
 
-            const data = {
-                email: value.email,
-                mobile: value.mobile,
-                username: value.username,
-                password: hashpassword,
-                address: value.address,
-                state: value.state,
-                city: value.city,
-                pincode: value.pincode,
-                personemail: value.personemail,
-                personmobile: value.personmobile,
-                personname: value.personname,
-                gst: value.gst,
-                pancard: value.pancard,
-                gstupload: value.gstupload,
-                panupload: value.panupload,
-                agreementupload: value.agreementupload,
-                account_name: value.account_name,
-                account_no: value.account_no,
-                ifsc_code: value.ifsc_code,
-            }
+            // const data = {
+            //     // email: value.email,
+            //     // mobile: value.mobile,
+            //     // username: value.username,
+            //     // password: hashpassword,
+            //     // address: value.address,
+            //     // state: value.state,
+            //     // city: value.city,
+            //     // pincode: value.pincode,
+            //     // personemail: value.personemail,
+            //     // personmobile: value.personmobile,
+            //     // personname: value.personname,
+            //     // gst: value.gst,
+            //     // pancard: value.pancard,
 
-            axios.post(`${BASE_URL}/add_vendor`, data)
-                .then((res) => {
-                    alert(res.data)
-                    console.log(res.data)
+            //     // gstupload: value.gstupload,
+            //     // panupload: value.panupload,
+            //     // agreementupload: value.agreementupload,
+            //     // account_name: value.account_name,
+            //     // account_no: value.account_no,
+            //     // ifsc_code: value.ifsc_code,
+            //     // u_id: vendor.id,
+            //     // user_id: localStorage.getItem("userid")
+            // }
+            const formData = new FormData();
+
+            formData.append('email', value.email);
+            formData.append('mobile', value.mobile);
+            formData.append('username', value.username);
+            formData.append('password', hashpassword);
+            formData.append('address', value.address);
+            formData.append('state', value.state);
+            formData.append('city', value.city);
+            formData.append('pincode', value.pincode);
+            formData.append('personemail', value.personemail);
+            formData.append('personmobile', value.personmobile);
+            formData.append('personname', value.personname);
+            formData.append('gst', value.gst);
+            formData.append('pancard', value.pancard);
+            formData.append('gstupload', image);
+            formData.append('panupload', image2);
+            formData.append('agreementupload', image3);
+            formData.append('account_name', value.account_name);
+            formData.append('account_no', value.account_no);
+            formData.append('ifsc_code', value.ifsc_code);
+            formData.append('u_id', vendor.id);
+            formData.append('user_id', localStorage.getItem("userid"));
+
+            fetch(`${BASE_URL}/add_vendor`, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from the backend
+                    console.log(data);
+                    alert(data)
                 })
-                .catch((err) => {
-                    console.log(err)
-                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('Error:', error);
+                });
+
+            // axios.post(`${BASE_URL}/add_vendor`, data)
+            //     .then((res) => {
+            //         alert(res.data)
+            //         console.log(res.data)
+            //     })
+            //     .catch((err) => {
+            //         console.log(err)
+            //     })
 
 
         }
@@ -253,8 +311,22 @@ const VendorForm = () => {
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
+    const handleUpload = async (e) => {
+        const file = e.target.files[0];
+        setImage(file);
+       
+    };
+    const handleUpload2 = async (e) => {
+        const file = e.target.files[0];
+        setImage2(file);
+       
+    };
+    const handleUpload3 = async (e) => {
+        const file = e.target.files[0];
+        setImage3(file);
+       
+    };
 
-    console.log(value.email)
 
 
     return (
@@ -285,7 +357,7 @@ const VendorForm = () => {
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputPassword1">Username</label>
-                                                <input type="username" class="form-control" id="exampleInputPassword1" placeholder="Username" name="username" onChange={onhandleChange} />
+                                                <input type="username" class="form-control" id="exampleInputPassword1" placeholder="Username" value={value.username} name="username" onChange={onhandleChange} />
                                                 {errors.username && <div className="text-danger">{errors.username}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
@@ -299,13 +371,13 @@ const VendorForm = () => {
                                             </p>
                                             <div class="form-group col-lg-12">
                                                 <label for="exampleTextarea1">Address</label>
-                                                <textarea class="form-control" id="exampleTextarea1" rows="4" name='address' onChange={onhandleChange}></textarea>
+                                                <textarea class="form-control" id="exampleTextarea1" rows="4" name='address' value={value.address} onChange={onhandleChange}></textarea>
                                                 {errors.address && <div className="text-danger">{errors.address}</div>}
                                             </div>
 
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleFormControlSelect1">state</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" onChange={onhandleChange} name='state'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.state} onChange={onhandleChange} name='state'>
                                                     <option selected>Select state</option>
                                                     <option value="1">Maharashtra</option>
                                                     <option value="2">Goa</option>
@@ -314,12 +386,12 @@ const VendorForm = () => {
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">City</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="City" name='city' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.city} placeholder="City" name='city' onChange={onhandleChange} />
                                                 {errors.city && <div className="text-danger">{errors.city}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Pincode</label>
-                                                <input type="number" class="form-control" id="exampleInputUsername1" placeholder="Pincode" name='pincode' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" placeholder="Pincode" value={value.pincode} name='pincode' onChange={onhandleChange} />
                                                 {errors.pincode && <div className="text-danger">{errors.pincode}</div>}
                                             </div>
 
@@ -328,17 +400,17 @@ const VendorForm = () => {
                                             </p>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Contact Person Name</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Name" name='personname' onChange={onhandleChange} />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Name" value={value.personname} name='personname' onChange={onhandleChange} />
                                                 {errors.personname && <div className="text-danger">{errors.personname}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Contact Person Email</label>
-                                                <input type="email" class="form-control" id="exampleInputUsername1" placeholder="Email" name='personemail' onChange={onhandleChange} />
+                                                <input type="email" class="form-control" id="exampleInputUsername1" placeholder="Email" name='personemail' value={value.personemail} onChange={onhandleChange} />
                                                 {errors.personemail && <div className="text-danger">{errors.personemail}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Contact Person Mobile</label>
-                                                <input type="number" class="form-control" id="exampleInputUsername1" placeholder="Mobile" name='personmobile' onChange={onhandleChange} />
+                                                <input type="number" class="form-control" id="exampleInputUsername1" placeholder="Mobile" name='personmobile' value={value.personmobile} onChange={onhandleChange} />
                                                 {errors.personmobile && <div className="text-danger">{errors.personmobile}</div>}
                                             </div>
                                             <div className='col-lg-12 kyc-details py-3'>
@@ -348,12 +420,12 @@ const VendorForm = () => {
                                                 <div className='row'>
                                                     <div class="form-group col-lg-3">
                                                         <label for="exampleInputUsername1">Vendor GST</label>
-                                                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Vendor GST" name='gst' onChange={onhandleChange} />
+                                                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Vendor GST" value={value.gst} name='gst' onChange={onhandleChange} />
                                                         {errors.gst && <div className="text-danger">{errors.gst}</div>}
                                                     </div>
                                                     <div class="form-group col-lg-3">
                                                         <label for="exampleInputUsername1">Vendor Pancard</label>
-                                                        <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Vendor Pancard" name='pancard' onChange={onhandleChange} />
+                                                        <input type="text" class="form-control" id="exampleInputUsername1" value={value.pancard} placeholder="Vendor Pancard" name='pancard' onChange={onhandleChange} />
                                                         {errors.pancard && <div className="text-danger">{errors.pancard}</div>}
                                                     </div>
 
@@ -367,25 +439,26 @@ const VendorForm = () => {
                                                     <div class="form-group col-lg-3">
                                                         <label>GST Certificate Upload</label>
 
-                                                        <input type="file" class="form-control file-upload-info" name='gstupload' onChange={onhandleChange} />
+                                                        <input type="file" class="form-control file-upload-info" name='gstupload' onChange={handleUpload} />
                                                         {errors.gstupload && <div className="text-danger">{errors.gstupload}</div>}
                                                     </div>
                                                     <div class="form-group col-lg-3">
                                                         <label>Pancard Upload</label>
 
-                                                        <input type="file" class="form-control file-upload-info" name='panupload' onChange={onhandleChange} />
+                                                        <input type="file" class="form-control file-upload-info" name='panupload' onChange={handleUpload2} />
                                                         {errors.panupload && <div className="text-danger">{errors.panupload}</div>}
                                                     </div>
                                                     <div class="form-group col-lg-3">
                                                         <label>Agreement Upload</label>
 
-                                                        <input type="file" class="form-control file-upload-info" name='agreementupload' onChange={onhandleChange} />
+                                                        <input type="file" class="form-control file-upload-info" name='agreementupload' onChange={handleUpload3} />
                                                         {errors.agreementupload && <div className="text-danger">{errors.agreementupload}</div>}
                                                     </div>
 
                                                 </div>
                                                 <div class="">
                                                     <button className='btn btn-primary' onClick={handleClickOpen} type='button'> + Add Bank Info</button>
+                                                    {errors.add_bank && <div className="text-danger">{errors.add_bank}</div>}
                                                 </div>
                                             </div>
                                             <Dialog
@@ -401,17 +474,17 @@ const VendorForm = () => {
                                                     <div className='row'>
                                                         <div class="form-group col-lg-12">
                                                             <label for="exampleInputUsername1">Account holder Name</label>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Name" name='account_name' onChange={onhandleChange} />
+                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.account_name} placeholder="Enter Name" name='account_name' onChange={onhandleChange} />
                                                             {errors.account_name && <div className="text-danger">{errors.account_name}</div>}
                                                         </div>
                                                         <div class="form-group col-lg-12">
                                                             <label for="exampleInputUsername1">Account Number</label>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Number" name='account_no' onChange={onhandleChange} />
+                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.account_no} placeholder="Enter Number" name='account_no' onChange={onhandleChange} />
                                                             {errors.account_no && <div className="text-danger">{errors.account_no}</div>}
                                                         </div>
                                                         <div class="form-group col-lg-12">
                                                             <label for="exampleInputUsername1">Ifsc Code</label>
-                                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Code" name='ifsc_code' onChange={onhandleChange} />
+                                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.ifsc_code} placeholder="Enter Code" name='ifsc_code' onChange={onhandleChange} />
                                                             {errors.ifsc_code && <div className="text-danger">{errors.ifsc_code}</div>}
                                                         </div>
                                                     </div>
