@@ -28,8 +28,8 @@ const Header = () => {
 
   const handleToggle = (itemName) => {
     setOpenStates((prevState) => ({
-      ...prevState,
-      [itemName]: !prevState[itemName],
+          ...prevState,
+          [itemName]: !prevState[itemName],
     }));
   };
 
@@ -260,6 +260,16 @@ const Header = () => {
 
           </ul>
         </Collapse>
+
+        <li className="nav-item">
+          <Link className="nav-link" to="/webapp/addrole">
+            <Icon path={mdiAccountGroupOutline} size={1} className='mx-3' />
+            <span className="menu-title">Add Role</span>
+          </Link>
+        </li>
+
+
+        
 
 
       </ul>

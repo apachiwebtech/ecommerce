@@ -16,6 +16,7 @@ const AdminUser = () => {
         lastname: "",
         email: "",
         password: "",
+        cnf_password:"",
 
     })
 
@@ -46,6 +47,11 @@ const AdminUser = () => {
             newErrors.password = "Password requirements: 8-20 characters, 1 number, 1 letter, 1 symbol."
         }
 
+        if(value.password !== value.cnf_password) {
+            isValid = false;
+            newErrors.cnf_password = "Password & Confirm Password dont match"
+   
+        }
 
 
         setErrors(newErrors);
@@ -180,7 +186,8 @@ const AdminUser = () => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputConfirmPassword1">Confirm Password</label>
-                                            <input type="text" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password" onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password" name='cnf_password' onChange={onhandleChange} />
+                                            {errors.cnf_password && <div className="text-danger">{errors.cnf_password}</div>}
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>

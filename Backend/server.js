@@ -470,3 +470,72 @@ app.post('/Brand_delete', (req, res) => {
   })
 
 })
+
+app.post('/role_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+  const sql = "select * from role where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/add_role', (req, res) => {
+  let user_id = req.body.user_id
+  let title = req.body.title;
+  let description = req.body.description;
+  let created_date = new Date()
+
+
+  const sql = "insert into role(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
+
+  con.query(sql, [title, description, user_id, created_date], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+app.get('/role_data', (req, res) => {
+
+  const sql = "select * from role where `delete` =0"
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/role_delete', (req, res) => {
+
+  let role_id = req.body.role_id;
+
+  const sql = "update role set deleted = 1 where id = ?"
+
+  con.query(sql, [role_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})

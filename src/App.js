@@ -22,6 +22,7 @@ import ProductOption from './AdminComponent/ProductOption';
 import ProductTag from './AdminComponent/ProductTag';
 import ThresholdProduct from './AdminComponent/ThresholdProduct';
 import Orders from './AdminComponent/Orders';
+import AddRole from './AdminComponent/AddRole';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -113,6 +114,11 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/thresholdproduct',
         element: <ThresholdProduct />
+      },
+
+      {
+        path: '/webapp/addrole',
+        element: <AddRole/>
       },
       
     ]
