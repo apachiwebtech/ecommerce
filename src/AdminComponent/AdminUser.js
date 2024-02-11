@@ -18,7 +18,8 @@ const AdminUser = () => {
         lastname: "" || uid.lastname,
         email: "" || uid.email,
         password: "",
-
+        cnf_password:"",
+        mobile : "",
     })
 
     useEffect(() => {
@@ -55,6 +56,17 @@ const AdminUser = () => {
         if (!passwordPattern.test(value.password)) {
             isValid = false;
             newErrors.password = "Password requirements: 8-20 characters, 1 number, 1 letter, 1 symbol."
+        }
+
+        if(value.password !== value.cnf_password) {
+            isValid = false;
+            newErrors.cnf_password = "Password & Confirm Password dont match"
+   
+        }
+        const mobileNumberRegex = /^\d{10}$/;
+        if (!mobileNumberRegex.test(value.mobile)) {
+            isValid = false;
+            newErrors.mobile = "atleat 10 digit needed";
         }
 
 
@@ -184,14 +196,19 @@ const AdminUser = () => {
 
                                     <form class="forms-sample" onSubmit={handleSubmit}>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">FirstName</label>
+                                            <label for="exampleInputUsername1">Firstname</label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" placeholder="FirstName" value={value.firstname} name='firstname' onChange={onhandleChange} />
                                             {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">LastName</label>
+                                            <label for="exampleInputUsername1">Lastname</label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" placeholder="LastName" value={value.lastname} name="lastname" onChange={onhandleChange} />
                                             {errors.lastname && <div className="text-danger">{errors.lastname}</div>}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputUsername1">Mobile No</label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter No" value={value.mobile} name="mobile" onChange={onhandleChange} />
+                                            {errors.mobile && <div className="text-danger">{errors.mobile}</div>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email address</label>
@@ -205,7 +222,8 @@ const AdminUser = () => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputConfirmPassword1">Confirm Password</label>
-                                            <input type="text" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password" onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputConfirmPassword1" name='cnf_password' placeholder="Password" onChange={onhandleChange} />
+                                            {errors.cnf_password && <div className="text-danger">{errors.cnf_password}</div>}
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>

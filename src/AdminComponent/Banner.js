@@ -156,9 +156,9 @@ const Banner = () => {
     return (
 
         <div class="container-fluid page-body-wrapper">
-            <InnerHeader/>
+            <InnerHeader />
             <div class="main-panel">
-             
+
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-12 grid-margin stretch-card">
@@ -167,7 +167,7 @@ const Banner = () => {
 
 
 
-                                    <div class="forms-sample" >
+                                    <div class="forms-sample " >
 
                                         <div class="row">
                                             <div class="col-md-6">
@@ -176,17 +176,26 @@ const Banner = () => {
 
                                                     <h4 class="card-title">Banner For Desktop</h4>
                                                     <div class="form-group">
-                                                        <label for="title">Title</label>
+                                                        <label for="title">Title<span className='text-danger'>*</span></label>
                                                         <input type="text" class="form-control" id="title" placeholder="Title" name='title' />
                                                         {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="ban_img">Banner Image</label>
+                                                        <label for="ban_img">Banner Image<span className='text-danger'>*</span></label>
                                                         <input type="file" class="form-control" id="ban_img" placeholder="" name='ban_img' />
                                                         {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
                                                     </div>
+                                                    <div class="form-group ">
+                                                        <label for="exampleFormControlSelect1">Target<span className='text-danger'>*</span></label>
+                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" name=''>
+                                                            <option selected>Select</option>
+                                                            <option value="1">blank</option>
+                                                            <option value="2">same</option>
+                                                        </select>
+
+                                                    </div>
                                                     <div class="form-group">
-                                                        <label for="link1">Link</label>
+                                                        <label for="link1">Link<span className='text-danger'>*</span></label>
                                                         <input type="text" class="form-control" id="link1" placeholder="Link" name='link1' />
                                                         {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
                                                     </div>
@@ -208,6 +217,15 @@ const Banner = () => {
                                                         <label for="mob_img">Banner Image</label>
                                                         <input type="file" class="form-control" id="mob_img" placeholder="" name='mob_img' onChange={onhandleChange} />
                                                         {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
+                                                    </div>
+                                                    <div class="form-group ">
+                                                        <label for="exampleFormControlSelect1">Target<span className='text-danger'>*</span></label>
+                                                        <select class="form-control form-control-lg" id="exampleFormControlSelect1" name=''>
+                                                            <option selected>Select</option>
+                                                            <option value="1">blank</option>
+                                                            <option value="2">same</option>
+                                                        </select>
+
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="link2">Link</label>

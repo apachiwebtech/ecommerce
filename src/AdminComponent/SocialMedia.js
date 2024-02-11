@@ -208,7 +208,7 @@ const SocialMedia = () => {
               <div class="card">
                 <div class="card-body">
                 <h4 class="card-title">Add Links</h4>
-                  <form class="forms-sample" onSubmit={handleSubmit}>
+                  <form class="forms-sample py-3" onSubmit={handleSubmit}>
                     <div class="form-group">
                       <label for="title">Title </label>
                       <input

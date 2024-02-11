@@ -175,14 +175,16 @@ const SubCategory = () => {
                                             />
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">Title</label>
+                                            <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">Slug</label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.slug} placeholder="Add slug" name='slug' onChange={onhandleChange} />
+                                            <label for="exampleInputUsername1">SubCategory Slug<span className='text-danger'>*</span></label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.."  />
+                                          
                                         </div>
-
+                                        
+                       
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>

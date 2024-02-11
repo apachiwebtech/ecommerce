@@ -157,21 +157,7 @@ const Product = () => {
                         </a>
                       </li>
                       <hr></hr>
-                      <li class="prod_li">
-                        <a href="#varients" class="prod_flex">
-                          <div style={{ marginRight: "8px" }}>
-                            <MenuIcon />
-                          </div>
-                          <div>
-                            <h5>Variants & options</h5>
-                            <span class="weight para">
-                              Customize the product variants, including size,
-                              color, etc.
-                            </span>
-                          </div>
-                        </a>
-                      </li>
-                      <hr></hr>
+
                       <li class="prod_li">
                         <a href="#media" class="prod_flex">
                           <div style={{ marginRight: "8px" }}>
@@ -182,6 +168,20 @@ const Product = () => {
                             <span class="weight para">
                               {" "}
                               Manage your product's image gallery.{" "}
+                            </span>
+                          </div>
+                        </a>
+                      </li>
+                      <hr></hr>
+                      <li class="prod_li">
+                        <a href="#varients" class="prod_flex">
+                          <div style={{ marginRight: "8px" }}>
+                            <MenuIcon />
+                          </div>
+                          <div>
+                            <h5>Size Chart</h5>
+                            <span class="weight para">
+                              Upload a image of size of your product.
                             </span>
                           </div>
                         </a>
@@ -656,8 +656,8 @@ const Product = () => {
                       <p class="para">Preferred Dimensions 1500 x 1500</p>
                     </div>
                   </form>
-                  <div className="row">
-                    <div class="my-3 col-lg-4
+                  <div className="row align-items-center">
+                    <div class="m-3 col-lg-4
                   ">
                       <select
                         type="text"
@@ -672,13 +672,74 @@ const Product = () => {
                       </select>
                     </div>
                     <div className="col-lg-3">
-                    <button className="btn btn-sm btn-primary">Add</button>
-
+                      <button className="btn btn btn-primary">Add</button>
                     </div>
                   </div>
 
                 </div>
               </div>
+
+
+              <div class="card mt-3" id="varients">
+                <div class="card-head" style={{ padding: "20px 22px 0px" }}>
+                  <h5
+                    style={{
+                      color: "#000000DE",
+                      fontSize: "20px",
+                      margin: "0",
+                    }}
+                  >
+                    Size Chart Upload (Image)
+                  </h5>
+                  <p class="para">Manage your product's image gallery.</p>
+                </div>
+
+                <div class="card-body" style={{ padding: "20px 10px" }}>
+
+                  <form class="forms-sample" onSubmit={handleSubmit}>
+                    <div class="col-md-12">
+                      <ul
+                        class="uploaded-stocks ui-sortable"
+                        id="productDefaultImagesJs"
+                      >
+                        <li class="browse unsortableJs">
+                          <button
+                            type="button"
+                            class="browse-button"
+
+                          >
+                            <strong> Upload images(s)</strong>
+                            <span class="text-muted form-text">
+                              Png,jpeg accepted
+                            </span>
+                          </button>
+                        </li>
+                        <li class="unsortableJs">
+                          <div class="uploaded-stocks-item" data-ratio="1:1">
+                            <img
+                              class="uploaded-stocks-img"
+                              data-bs-toggle="tooltip"
+                              data-placement="top"
+                              src={img1}
+                              title=""
+                              alt=""
+                              data-bs-original-title=""
+                            ></img>
+                            <div class="uploaded-stocks-actions"></div>
+                          </div>
+                        </li>
+
+                      </ul>
+                      <p class="para">Preferred Dimensions 1500 x 1500</p>
+                    </div>
+                  </form>
+
+
+                </div>
+              </div>
+
+
+
               <div class="card mt-3" id="specification">
                 <div class="card-head" style={{ padding: "20px 22px 0px" }}>
                   <h5
@@ -713,80 +774,9 @@ const Product = () => {
                     }}
                   />
                 </div>
-                {/* <div class="card-body" style={{ padding: "20px 10px" }}>
-                  <form class="forms-sample" onSubmit={handleSubmit}>
-                    <div class="col-md-12">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="name">
-                              Name<span class="text-danger">*</span>
-                            </label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="name"
-                              placeholder="Enter.."
-                              name="name"
-                            />
-                          </div>
-                        </div>
 
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="value">
-                              Value
-                              <span class="text-danger">*</span>
-                            </label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="value"
-                              placeholder="Enter.."
-                              name="value"
-                            />
-                          </div>
-                        </div>
-
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="value">Group </label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="value"
-                              placeholder="Enter.."
-                              name="value"
-                            />
-                          </div>
-                        </div>
-
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="value"> </label>
-                            <Button
-                              variant="contained"
-                              style={{
-                                marginTop: "35px",
-                                marginRight: "15px",
-                                borderRadius: "0",
-                              }}
-                            >
-                              Add
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              style={{ marginTop: "35px", borderRadius: "0" }}
-                            >
-                              Clear
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
-                </div> */}
               </div>
+
               <div class="card mt-3" id="tax">
                 <div class="card-head" style={{ padding: "20px 22px 0px" }}>
                   <h5

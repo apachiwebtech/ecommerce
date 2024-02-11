@@ -159,7 +159,7 @@ const Gallery = () => {
                                 <div class="card-body">
                                     <h4 class="card-title">Add Image / Video</h4>
 
-                                    <form class="forms-sample" onSubmit={handleSubmit}>
+                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
                                             <label for="brand">Title</label>
                                             <input type="text" class="form-control" id="title" placeholder="Brand Name" name='brand' onChange={onhandleChange} />

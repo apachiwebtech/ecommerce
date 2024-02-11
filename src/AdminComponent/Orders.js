@@ -99,23 +99,23 @@ const Orders = () => {
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Delivery Status</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"  name='state'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='state'>
                                                     <option selected>All</option>
                                                     <option value="1">Confirm</option>
                                                     <option value="2">Dispatch</option>
                                                     <option value="3">Delivered</option>
                                                     <option value="4">Cancelled</option>
                                                 </select>
-                                      
+
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Payment Status</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1"  name='state'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='state'>
                                                     <option selected>All</option>
                                                     <option value="1">Paid</option>
                                                     <option value="2">Cod</option>
                                                 </select>
-                                      
+
                                             </div>
 
 
@@ -211,7 +211,7 @@ const Orders = () => {
                                                         <button className='bt btn-sm btn-primary'>Print Invoice</button>
                                                     </td>
                                                     <td>
-                                                        <RemoveRedEyeIcon className='text-primary' />
+                                                        <Link to="/webapp/view"><RemoveRedEyeIcon className='text-primary' /></Link>
                                                     </td>
                                                 </tr>
                                                 <tr >
@@ -241,7 +241,7 @@ const Orders = () => {
                                                         <button className='bt btn-sm btn-primary'>Print Invoice</button>
                                                     </td>
                                                     <td>
-                                                        <RemoveRedEyeIcon className='text-primary' />
+                                                        <Link to="/webapp/view"><RemoveRedEyeIcon className='text-primary' /></Link>
                                                     </td>
                                                 </tr>
 

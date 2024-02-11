@@ -153,11 +153,16 @@ const Category = () => {
                                 <div class="card-body">
                                     <h4 class="card-title">Add Category</h4>
 
-                                    <form class="forms-sample" onSubmit={handleSubmit}>
+                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">Title</label>
+                                            <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
                                             {error.title && <span className='text-danger'>{error.title}</span>}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.."  />
+                                          
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
