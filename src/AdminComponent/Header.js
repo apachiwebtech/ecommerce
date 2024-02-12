@@ -281,6 +281,13 @@ const Header = () => {
           </ul>
         </Collapse>
 
+        <li className="nav-item">
+          <Link className="nav-link" to="/webapp/settings">
+            <Icon path={mdiAccountGroupOutline} size={1} className='mx-3' />
+            <span className="menu-title">Settings</span>
+          </Link>
+        </li>
+
 
       </ul>
     </nav>

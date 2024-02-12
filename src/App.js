@@ -28,6 +28,7 @@ import Testimonial from './AdminComponent/Testimonials';
 import SocialMedia from './AdminComponent/SocialMedia';
 import ProductApproval from './AdminComponent/ProductApproval';
 import Gallery from './AdminComponent/Gallery';
+import SettingPages from './AdminComponent/SettingPages';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -147,6 +148,11 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/socialmedia',
         element: <SocialMedia />
+      },
+
+      {
+        path: '/webapp/settings',
+        element: <SettingPages />
       },
 
     ]
