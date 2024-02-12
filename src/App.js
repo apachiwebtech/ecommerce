@@ -32,6 +32,7 @@ import RoleRightAssignment from './AdminComponent/RoleRightAssignment';
 import VenUserListing from './AdminComponent/VenUserListing'; 
 import VenRoleRightAssignment from './AdminComponent/VenRoleRightAssignment';
 import VenAddUser from './AdminComponent/VenAddUser';
+import VenProduct from './AdminComponent/VenProduct';
 
 const Router = createBrowserRouter([
   {
@@ -174,6 +175,11 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/venadduser',
         element: <VenAddUser />
+      },
+
+      {
+        path: '/webapp/venproduct',
+        element: <VenProduct />
       },
     ]
   }
