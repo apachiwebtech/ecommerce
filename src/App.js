@@ -160,35 +160,34 @@ const Router = createBrowserRouter([
 
 
 function WebApp() {
-  const [auth , setauth] = useState()
+
 
   const navigate = useNavigate();
 
-  function checkLocalStorageAndRedirect(navigate) {
+  const checkLocalStorageAndRedirect = (authValue) => {
 
-    if (auth !== 1) {
+    console.log(authValue,"ii")
+    if (authValue !== 1) {
       navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
-    }else{
-      alert("token is not correct")
     }
-  }
+  };
 
-
-  async function accesstoken (){
-    axios.get(`${BASE_URL}/checkauth`,{
-      headers : {
-        'access-token' : localStorage.getItem('token')
+  async function accessToken() {
+    axios.get(`${BASE_URL}/checkauth`, {
+      headers: {
+        'access-token': localStorage.getItem('token')
       }
     })
-    .then((res)=>{
-      setauth(res.data.status)
-    })
+    .then((res) => {
+      console.log(res.data.status);
+   
+      checkLocalStorageAndRedirect(res.data.status); // Pass auth value to the function
+    });
   }
 
   useEffect(() => {
-    accesstoken()
-    checkLocalStorageAndRedirect(navigate);
-  }, [navigate]);
+    accessToken();
+  }, []); // Removed 'navigate' from the dependency array as it was causing unnecessary re-renders
 
 
   return (
