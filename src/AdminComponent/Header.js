@@ -149,6 +149,38 @@ const Header = () => {
             <span className="menu-title">Gallery</span>
           </Link>
         </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/userlisting'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">User Listing</span>
+          </Link>
+        </li>
+
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/rolerightassignment'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Role Right Assignment</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/venuserlisting'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Vendor User Listing</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/venrolerightassignment'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Vendor Role Right Assignment</span>
+          </Link>
+        </li>
+
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/venadduser'>
+            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+            <span className="menu-title">Vendor Add User</span>
+          </Link>
+        </li>
         {/* <li className="nav-item sidebar-category">
           <p>Pages</p>
           <span></span>
