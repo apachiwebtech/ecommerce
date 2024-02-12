@@ -4,6 +4,8 @@ import axios from 'axios'
 import { BASE_URL } from './BaseUrl'
 import md5 from 'js-md5'
 import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie';
+
 const WebLogin = () => {
   const [value, setValue] = useState({
     email: "",
@@ -56,8 +58,9 @@ const WebLogin = () => {
       }
       axios.post(`${BASE_URL}/login`, data)
         .then((res) => {
-          console.log(res.data)
+          console.log(res)
           if (res.data.Login) {
+            Cookies.set('token', res.data.token, { expires: 7 }); 
             localStorage.setItem("token", res.data.token)
             navigate('/webapp')
           }

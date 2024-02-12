@@ -30,6 +30,9 @@ import ProductApproval from './AdminComponent/ProductApproval';
 import Gallery from './AdminComponent/Gallery';
 import axios from 'axios';
 import { BASE_URL } from './AdminComponent/BaseUrl';
+import SettingPages from './AdminComponent/SettingPages';
+import Cookies from 'js-cookie';
+import PageNotFound from './AdminComponent/PageNotFound';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -54,6 +57,7 @@ const Router = createBrowserRouter([
   {
     path: '/webapp',
     element: <WebApp />,
+    errorElement:<PageNotFound/>,
     children: [
       {
         path: '/webapp',
@@ -151,6 +155,11 @@ const Router = createBrowserRouter([
         element: <SocialMedia />
       },
 
+      {
+        path: '/webapp/settings',
+        element: <SettingPages />
+      },
+
     ]
   }
 ])
@@ -164,26 +173,28 @@ function WebApp() {
 
   const navigate = useNavigate();
 
+  async function accessToken() {
+    axios.get(`${BASE_URL}/checkauth`, {
+      headers: {
+        'access-token': Cookies.get('token')
+      }
+    })
+    .then((res) => {
+      // console.log(res.data.status);
+   
+      checkLocalStorageAndRedirect(res.data.status); // Pass auth value to the function
+    });
+  }
+
   const checkLocalStorageAndRedirect = (authValue) => {
 
-    console.log(authValue,"ii")
+    // console.log(authValue,"ii")
     if (authValue !== 1) {
       navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
     }
   };
 
-  async function accessToken() {
-    axios.get(`${BASE_URL}/checkauth`, {
-      headers: {
-        'access-token': localStorage.getItem('token')
-      }
-    })
-    .then((res) => {
-      console.log(res.data.status);
-   
-      checkLocalStorageAndRedirect(res.data.status); // Pass auth value to the function
-    });
-  }
+
 
   useEffect(() => {
     accessToken();
