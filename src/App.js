@@ -27,6 +27,12 @@ import ReviewComment from './AdminComponent/ReviewComment';
 import Testimonial from './AdminComponent/Testimonials';
 import SocialMedia from './AdminComponent/SocialMedia';
 import Gallery from './AdminComponent/Gallery';
+import UserListing from './AdminComponent/UserListing';
+import RoleRightAssignment from './AdminComponent/RoleRightAssignment';
+import VenUserListing from './AdminComponent/VenUserListing'; 
+import VenRoleRightAssignment from './AdminComponent/VenRoleRightAssignment';
+import VenAddUser from './AdminComponent/VenAddUser';
+
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -143,6 +149,31 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/gallery',
         element: <Gallery />
+      },
+
+      {
+        path: '/webapp/userlisting',
+        element: <UserListing />
+      },
+
+      {
+        path: '/webapp/rolerightassignment',
+        element: <RoleRightAssignment />
+      },
+
+      {
+        path: '/webapp/venuserlisting',
+        element: <VenUserListing />
+      }, 
+
+      {
+        path: '/webapp/venrolerightassignment',
+        element: <VenRoleRightAssignment />
+      },
+
+      {
+        path: '/webapp/venadduser',
+        element: <VenAddUser />
       },
     ]
   }
