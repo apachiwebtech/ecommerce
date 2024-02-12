@@ -5,7 +5,7 @@ const cors = require('cors')
 const path = require('path');
 const multer = require('multer');
 const bodyParser = require('body-parser');
-
+var jwt = require('jsonwebtoken');
 const storage = multer.diskStorage({
   destination: 'uploads/', // 
   filename: (req, file, cb) => {
@@ -46,6 +46,26 @@ app.use(
   })
 );
 
+const verifyJwt = (req, res, next) => {
+  const token = req.headers["access-token"];
+  if (!token) {
+    return res.json("we need a token")
+  } else {
+    jwt.verify(token, "jwtSecretkey", (err, decoded) => {
+      if (err) {
+        res.json("Not Authenticated")
+      } else {
+        req.userID = decoded.id;
+        next();
+      }
+    })
+  }
+}
+
+app.get('/checkauth', verifyJwt, (req, res) => {
+  return res.json({status : 1})
+})
+
 app.post('/login', (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
@@ -59,8 +79,9 @@ app.post('/login', (req, res) => {
     } else {
       if (data.length === 1) {
         const id = data[0].id;
+        const token = jwt.sign({ id }, "jwtSecretkey", { expiresIn: 300 })
 
-        return res.json({ id: id })
+        return res.json({ Login: true, token, data })
       } else {
         return res.json({ err: "email or password is wrong" })
       }
@@ -115,12 +136,12 @@ app.post('/add_vendor', upload.fields([
   let panupload = image2[0].filename
   let agreementupload = image3[0].filename
 
- 
+
 
   if (u_id == "undefined") {
 
     sql = "insert into awt_vendor(`username`,`mobile`,`emailid`,`password`,`address`,`state`,`city`,`pincode`,`gstno`,`vendor_pan`,`created_date`,`created_by`,`gst_upload`,`pan_upload`,`aggrement_upload`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
- 
+
 
     param = [username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload]
   }
@@ -134,11 +155,11 @@ app.post('/add_vendor', upload.fields([
 
   con.query(sql, param, (err, data) => {
     if (err) {
-    
+
       return res.json(err)
     }
 
-  
+
 
     const insertedId = data.insertId;
     console.log(insertedId)
@@ -175,7 +196,7 @@ app.post('/add_vendor', upload.fields([
           return res.json(err)
         }
         else {
-        
+
           return res.json("Data Added successfully")
         }
       })
@@ -199,7 +220,7 @@ app.post('/vendor_update', (req, res) => {
       return res.json(err)
     }
     else {
-   
+
       return res.json(data)
     }
   })

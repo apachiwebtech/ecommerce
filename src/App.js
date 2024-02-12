@@ -7,7 +7,7 @@ import VendorMaster from './AdminComponent/VendorMaster';
 import VendorForm from './AdminComponent/VendorForm';
 import AdminUser from './AdminComponent/AdminUser';
 import SubCatetgory from './AdminComponent/SubCategory';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Category from './AdminComponent/Category';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import WebLogin from './AdminComponent/WebLogin';
@@ -28,6 +28,8 @@ import Testimonial from './AdminComponent/Testimonials';
 import SocialMedia from './AdminComponent/SocialMedia';
 import ProductApproval from './AdminComponent/ProductApproval';
 import Gallery from './AdminComponent/Gallery';
+import axios from 'axios';
+import { BASE_URL } from './AdminComponent/BaseUrl';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -154,19 +156,37 @@ const Router = createBrowserRouter([
 ])
 
 
-function checkLocalStorageAndRedirect(navigate) {
-  const user_id = localStorage.getItem('userid');
-  if (user_id == null) {
-    navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
-  }
-}
+
 
 
 function WebApp() {
+  const [auth , setauth] = useState()
 
   const navigate = useNavigate();
 
+  function checkLocalStorageAndRedirect(navigate) {
+
+    if (auth !== 1) {
+      navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
+    }else{
+      alert("token is not correct")
+    }
+  }
+
+
+  async function accesstoken (){
+    axios.get(`${BASE_URL}/checkauth`,{
+      headers : {
+        'access-token' : localStorage.getItem('token')
+      }
+    })
+    .then((res)=>{
+      setauth(res.data.status)
+    })
+  }
+
   useEffect(() => {
+    accesstoken()
     checkLocalStorageAndRedirect(navigate);
   }, [navigate]);
 

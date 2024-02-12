@@ -56,9 +56,9 @@ const WebLogin = () => {
       }
       axios.post(`${BASE_URL}/login`, data)
         .then((res) => {
-          console.log(res.data.err)
-          if (res.data.id) {
-            localStorage.setItem("userid", res.data.id)
+          console.log(res.data)
+          if (res.data.Login) {
+            localStorage.setItem("token", res.data.token)
             navigate('/webapp')
           }
           else {
