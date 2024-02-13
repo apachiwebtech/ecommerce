@@ -5,7 +5,9 @@ const cors = require('cors')
 const path = require('path');
 const multer = require('multer');
 const bodyParser = require('body-parser');
-var jwt = require('jsonwebtoken');
+var session = require('express-session')
+var cookieParser = require('cookie-parser')
+
 const storage = multer.diskStorage({
   destination: 'uploads/', // 
   filename: (req, file, cb) => {
@@ -17,6 +19,27 @@ const upload = multer({ storage: storage });
 
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(cookieParser());
+
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    maxAge: 1000 * 60 * 60 * 24
+
+  }
+}))
+
+// app.use(session({
+//   secret: 'your-secret-key',
+//   resave: true,
+//   saveUninitialized: true,
+// }));
+
+
+
 const con = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -43,28 +66,53 @@ app.listen('8081', () => {
 app.use(
   cors({
     origin: '*',
+    credentials :true
   })
 );
 
-const verifyJwt = (req, res, next) => {
-  const token = req.headers["access-token"];
-  if (!token) {
-    return res.json("we need a token")
-  } else {
-    jwt.verify(token, "jwtSecretkey", (err, decoded) => {
-      if (err) {
-        res.json("Not Authenticated")
-      } else {
-        req.userID = decoded.id;
-        next();
-      }
-    })
-  }
-}
+// const verifyJwt = (req, res, next) => {
+//   const token = req.headers["access-token"];
+//   if (!token) {
+//     return res.json("we need a token")
+//   } else {
+//     jwt.verify(token, "jwtSecretkey", (err, decoded) => {
+//       if (err) {
+//         res.json("Not Authenticated")
+//       } else {
+//         req.userID = decoded.id;
+//         next();
+//       }
+//     })
+//   }
+// }
 
-app.get('/checkauth', verifyJwt, (req, res) => {
-  return res.json({status : 1})
-})
+// app.get('/checkauth', verifyJwt, (req, res) => {
+//   return res.json({ status: 1 })
+// })
+
+// app.post('/login', (req, res) => {
+//   let email = req.body.email;
+//   let password = req.body.password;
+//   let role = req.body.role;
+
+//   const sql = "select * from awt_adminuser where email = ? and password = ? and role = ? and deleted = 0"
+
+//   con.query(sql, [email, password, role], (err, data) => {
+//     if (err) {
+//       return res.json(err);
+//     } else {
+//       if (data.length === 1) {
+//         const id = data[0].id;
+//         const token = jwt.sign({ id }, "jwtSecretkey", { expiresIn: 300 })
+
+//         return res.json({ Login: true, token, data })
+//         // return res.json({id : id})
+//       } else {
+//         return res.json({ err: "email or password is wrong" })
+//       }
+//     }
+//   })
+// })
 
 app.post('/login', (req, res) => {
   let email = req.body.email;
@@ -77,17 +125,31 @@ app.post('/login', (req, res) => {
     if (err) {
       return res.json(err);
     } else {
-      if (data.length === 1) {
+      if (data.length > 0) {
         const id = data[0].id;
-        const token = jwt.sign({ id }, "jwtSecretkey", { expiresIn: 300 })
-
-        return res.json({ Login: true, token, data })
-      } else {
-        return res.json({ err: "email or password is wrong" })
+        req.session.id = id
+        console.log(req.session.id)
+        return res.json({data,id :req.session.id,id : id})
       }
+      
+
     }
   })
 })
+
+
+app.get('/checkauth',(req,res)=>{
+  if(req.session.id){
+    return res.json({valid : true , id :req.session.id})
+  }else{
+    return res.json({valid :false})
+  }
+})
+
+
+
+
+
 
 
 

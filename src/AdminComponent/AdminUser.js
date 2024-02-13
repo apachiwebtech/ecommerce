@@ -6,6 +6,7 @@ import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
+import Cookies from 'js-cookie';
 
 const AdminUser = () => {
 
@@ -158,7 +159,7 @@ const AdminUser = () => {
                 email: value.email,
                 password: hashpassword,
                 u_id : uid.id,
-                user_id: localStorage.getItem("userid")
+                user_id: Cookies.get('userid')
 
             }
 

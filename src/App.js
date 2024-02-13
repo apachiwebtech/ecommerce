@@ -57,7 +57,7 @@ const Router = createBrowserRouter([
   {
     path: '/webapp',
     element: <WebApp />,
-    errorElement:<PageNotFound/>,
+    errorElement: <PageNotFound />,
     children: [
       {
         path: '/webapp',
@@ -67,7 +67,7 @@ const Router = createBrowserRouter([
         path: '/webapp/gallery',
         element: <Gallery />
       },
-    
+
       {
         path: '/webapp/vendormaster',
         element: <VendorMaster />
@@ -81,8 +81,8 @@ const Router = createBrowserRouter([
         element: <Category />
       },
       {
-        path:'/webapp/productapproval',
-        element :<ProductApproval/>
+        path: '/webapp/productapproval',
+        element: <ProductApproval />
       },
       {
         path: '/webapp/subcategory',
@@ -164,41 +164,73 @@ const Router = createBrowserRouter([
   }
 ])
 
+function checkLocalStorageAndRedirect(navigate) {
+  const user_id = localStorage.getItem('userid');
+  if (user_id == null) {
+    navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
+  }
+}
+
 
 
 
 
 function WebApp() {
 
+  const [id, setId] = useState(null)
 
-  const navigate = useNavigate();
-
-  async function accessToken() {
-    axios.get(`${BASE_URL}/checkauth`, {
-      headers: {
-        'access-token': Cookies.get('token')
-      }
-    })
-    .then((res) => {
-      // console.log(res.data.status);
-   
-      checkLocalStorageAndRedirect(res.data.status); // Pass auth value to the function
-    });
+  async function accessSession() {
+    axios.get(`${BASE_URL}/checkauth`)
+      .then((res) => {
+        if (res.data.valid) {
+          // setId(res.data.id)
+        } else {
+          navigate('/weblog')
+        }
+      });
   }
 
-  const checkLocalStorageAndRedirect = (authValue) => {
+  // axios.defaults.withCredentials = true
 
-    // console.log(authValue,"ii")
-    if (authValue !== 1) {
-      navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
-    }
-  };
-
-
-
+  const navigate = useNavigate();
   useEffect(() => {
-    accessToken();
-  }, []); // Removed 'navigate' from the dependency array as it was causing unnecessary re-renders
+    // checkLocalStorageAndRedirect(navigate);
+    accessSession()
+  }, [navigate]);
+
+
+
+
+
+
+  // const navigate = useNavigate();
+
+  // async function accessToken() {
+  //   axios.get(`${BASE_URL}/checkauth`, {
+  //     headers: {
+  //       'access-token': Cookies.get('token')
+  //     }
+  //   })
+  //   .then((res) => {
+  //     // console.log(res.data.status);
+
+  //     checkLocalStorageAndRedirect(res.data.status); // Pass auth value to the function
+  //   });
+  // }
+
+  // const checkLocalStorageAndRedirect = (authValue) => {
+
+  //   // console.log(authValue,"ii")
+  //   if (authValue !== 1) {
+  //     navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
+  //   }
+  // };
+
+
+
+  // useEffect(() => {
+  //   accessToken();
+  // }, []); // Removed 'navigate' from the dependency array as it was causing unnecessary re-renders
 
 
   return (

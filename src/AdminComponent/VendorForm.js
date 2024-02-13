@@ -11,6 +11,7 @@ import axios from 'axios';
 import { BASE_URL } from './BaseUrl';
 import md5 from 'js-md5'
 import { useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -301,7 +302,7 @@ const VendorForm = () => {
             formData.append('account_no', value.account_no);
             formData.append('ifsc_code', value.ifsc_code);
             formData.append('u_id', vendor.id);
-            formData.append('user_id', localStorage.getItem("userid"));
+            formData.append('user_id', Cookies.get('userid'));
 
             fetch(`${BASE_URL}/add_vendor`, {
                 method: 'POST',

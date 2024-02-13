@@ -4,15 +4,25 @@ import { mdiMenu } from '@mdi/js';
 import Icon from '@mdi/react';
 import logo from '../assets/images/logo.svg'
 import InnerHeader from './InnerHeader';
-
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { BASE_URL } from './BaseUrl';
 
 const AdminDashBoard = () => {
 const navigate = useNavigate()
 
-const handleLogout = () =>{
-  localStorage.removeItem("userid")
-  navigate('/weblog')
+async function logout(){
+  axios.get(`${BASE_URL}/logout`)
+  .then((res)=>{
+    console.log(res)
+    // navigate('/weblog')
+  })
 }
+
+
+useEffect(()=>{
+  // logout()
+},[])
 
   return (
 
@@ -34,7 +44,7 @@ const handleLogout = () =>{
            
            
           </ul>
-              <button className="mb-0 font-weight-bold d-none d-xl-block" onClick={handleLogout}>Logout</button>
+              <button className="mb-0 font-weight-bold d-none d-xl-block" >Logout</button>
           <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
             <span className="mdi mdi-menu"></span>
           </button>

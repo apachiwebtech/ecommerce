@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import logo from '../assets/images/logo.svg'
+// import logo from '../assets/images/logo.svg'
 import axios from 'axios'
 import { BASE_URL } from './BaseUrl'
 import md5 from 'js-md5'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
+import logo from '../assets/images/logo/ecomlogo.png'
 
 const WebLogin = () => {
   const [value, setValue] = useState({
@@ -42,6 +43,40 @@ const WebLogin = () => {
 
     return isValid;
   };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault()
+
+  //   if (validateForm()) {
+
+  //     const hashpass = md5(value.password)
+
+
+
+  //     const data = {
+  //       email: value.email,
+  //       password: hashpass,
+  //       role: value.role
+  //     }
+  //     axios.post(`${BASE_URL}/login`, data)
+  //       .then((res) => {
+  //         console.log(res.data.data[0].id)
+  //         if (res.data.Login) {
+  //           Cookies.set('userid', res.data.data[0].id, { expires: 1 }); 
+  //           Cookies.set('token', res.data.token, { expires: 1 }); 
+  //           localStorage.setItem("token", res.data.token)
+  //           navigate('/webapp')
+  //         }
+  //         else {
+  //           setErr(res.data.err)
+  //         }
+
+  //       })
+  //       .catch((err) => {
+  //         console.log(err)
+  //       })
+  //   }
+  // }
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -58,14 +93,13 @@ const WebLogin = () => {
       }
       axios.post(`${BASE_URL}/login`, data)
         .then((res) => {
-          console.log(res)
-          if (res.data.Login) {
-            Cookies.set('token', res.data.token, { expires: 7 }); 
-            localStorage.setItem("token", res.data.token)
+          console.log(res.data.err)
+          if (res.data.id) {
+            localStorage.setItem("userid", res.data.id)
             navigate('/webapp')
           }
           else {
-            setErr(res.data.err)
+            setErr('/weblog')
           }
 
         })
@@ -77,6 +111,18 @@ const WebLogin = () => {
 
   const onhandleChange = (e) => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const apitoken = () =>{
+   
+    axios.get(`${BASE_URL}/gettoken`)
+
+    .then((res)=>{
+      console.log(res)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
   }
 
   return (
@@ -143,6 +189,9 @@ const WebLogin = () => {
                   </div>
                   <p className='text-danger'>{err}</p>
                 </form>
+               
+                <button onClick={apitoken} className='btn btn-danger'>Get</button>
+             
               </div>
             </div>
           </div>
