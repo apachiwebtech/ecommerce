@@ -412,6 +412,7 @@ app.post('/add_category', (req, res) => {
   let user_id = req.body.user_id
   let title = req.body.title;
   let description = req.body.description;
+  let slug = req.body.slug;
   let created_date = new Date()
   let u_id = req.body.u_id;
 
@@ -420,12 +421,12 @@ app.post('/add_category', (req, res) => {
   let param;
 
   if (u_id == undefined) {
-    sql = "insert into awt_category(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
-    param = [title, description, user_id, created_date]
+    sql = "insert into awt_category(`title`,`description`,`slug`,`created_by`,`created_date`) values(?,?,?,?,?)"
+    param = [title, description, slug, user_id, created_date]
 
   } else {
-    sql = "update awt_category set title = ? , description = ? , updated_by = ? ,updated_date = ? where id = ?"
-    param = [title, description, user_id, created_date, u_id]
+    sql = "update awt_category set title = ? , description = ? , slug = ? , updated_by = ? ,updated_date = ? where id = ?"
+    param = [title, description, slug, user_id, created_date, u_id]
   }
 
 
@@ -495,6 +496,7 @@ app.post('/add_subcategory', (req, res) => {
   let cat_id = req.body.cat_id;
   let user_id = req.body.user_id
   let title = req.body.title;
+  let slug = req.body.slug;
   let description = req.body.description;
   let created_date = new Date()
   let u_id = req.body.u_id;
@@ -504,11 +506,11 @@ app.post('/add_subcategory', (req, res) => {
   let param;
 
   if (u_id == undefined) {
-    sql = "insert into awt_subcategory(`cat_id`,`title`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
-    param = [cat_id, title, description, user_id, created_date]
+    sql = "insert into awt_subcategory(`cat_id`,`title`,`slug`,`description`,`created_by`,`created_date`) values(?,?,?,?,?,?)"
+    param = [cat_id, title, slug, description, user_id, created_date]
   } else {
-    sql = "update awt_subcategory set cat_id = ?, title = ? , description = ? , updated_by = ?, updated_date = ? where id = ?"
-    param = [cat_id, title, description, user_id, created_date, u_id]
+    sql = "update awt_subcategory set cat_id = ?, title = ? , slug = ? , description = ? , updated_by = ?, updated_date = ? where id = ?"
+    param = [cat_id, title, slug, description, user_id, created_date, u_id]
   }
 
   con.query(sql, param, (err, data) => {

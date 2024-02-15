@@ -17,12 +17,14 @@ const Category = () => {
     const [value, setValue] = useState({
         title: "" || uid.title,
         description: "" || uid.description,
+        slug: "" || uid.slug,
     })
 
     useEffect(() => {
         setValue({
             title: uid.title,
             description: uid.description,
+            slug: uid.slug,
         })
     }, [uid])
 
@@ -32,11 +34,15 @@ const Category = () => {
 
         if (!value.title) {
             isValid = false;
-            newErrors.title = "title is require"
+            newErrors.title = "title is required"
         }
         if (!value.description) {
             isValid = false
-            newErrors.description = "description is require"
+            newErrors.description = "description is required"
+        }
+        if (!value.slug) {
+            isValid = false
+            newErrors.slug = "slug is required"
         }
 
         setError(newErrors)
@@ -52,7 +58,7 @@ const Category = () => {
                 setCatData(res.data)
             })
             .catch((err) => {
-                console.log(err)
+                console.log(err , "!!!")
             })
     }
 
@@ -107,7 +113,7 @@ const Category = () => {
             })
     }
 
-    console.log(uid)
+    // console.log(uid)
 
 
 
@@ -119,6 +125,7 @@ const Category = () => {
             const data = {
                 title: value.title,
                 description: value.description,
+                slug: value.slug,
                 user_id: localStorage.getItem("userid"),
                 u_id: uid.id
             }
@@ -130,7 +137,7 @@ const Category = () => {
 
                 })
                 .catch((err) => {
-                    console.log(err)
+                    console.log(err , "!!!")
                 })
         }
 
@@ -161,8 +168,8 @@ const Category = () => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.."  />
-                                          
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.."  value={value.slug} name='slug' onChange={onhandleChange}/>
+                                            {error.slug && <span className='text-danger'>{error.slug}</span>}
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
@@ -171,7 +178,7 @@ const Category = () => {
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <Link to="/webapp/adminuser"><button class="btn btn-light">Cancel</button></Link>
+                                        <Link to="/webapp/category"><button class="btn btn-light">Cancel</button></Link>
                                     </form>
                                 </div>
                             </div>

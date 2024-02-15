@@ -10,6 +10,8 @@ import InnerHeader from './InnerHeader';
 
 const SubCategory = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const [error, setError] = useState({})
+    const [selectedOption, setSelectedOption] = useState(null); // State to hold the selected option
     const [subcat, setsubCatData] = useState([])
     const [cat, setCatData] = useState([])
     const [uid, setUid] = useState([])
@@ -18,6 +20,7 @@ const SubCategory = () => {
     const [value, setValue] = useState({
         title: "" || uid.title,
         description: "" || uid.description,
+        slug: "" || uid.slug,
 
     })
 
@@ -25,10 +28,35 @@ const SubCategory = () => {
 
     useEffect(() => {
         setValue({
-            title: "" || uid.title,
-            description: "" || uid.description,
+            title: uid.title,
+            description: null || uid.description,
+            slug:  uid.slug,
         })
     }, [uid])
+
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
+        if(!cat_id) {
+            isValid = false;
+            newErrors.category = "title is required"  
+        }
+        if (!value.title) {
+            isValid = false;
+            newErrors.title = "title is required"
+        }
+        // if (!value.description) {
+        //     isValid = false
+        //     newErrors.description = "description is required"
+        // }
+        if (!value.slug) {
+            isValid = false
+            newErrors.slug = "slug is required"
+        }
+
+        setError(newErrors)
+        return isValid
+    }
 
     async function getcatData() {
         axios.get(`${BASE_URL}/category_data`)
@@ -61,13 +89,18 @@ const SubCategory = () => {
     }, [])
 
     const handleUpdate = (id) => {
+        setValue({
+            description:""
+        })
         axios.post(`${BASE_URL}/subcategory_update`, { u_id: id })
             .then((res) => {
                 setUid(res.data[0])
+                console.log(res.data[0] , "+++")
             })
             .catch((err) => {
                 console.log(err)
             })
+        
     }
 
 
@@ -110,28 +143,31 @@ const SubCategory = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
+        if (validateForm()) {
 
+            const data = {
+                title: value.title,
+                description: value.description,
+                slug: value.slug,
+                user_id: localStorage.getItem("userid"),
+                cat_id: cat_id,
+                u_id: uid.id
+            }
 
-        const data = {
-            title: value.title,
-            description: value.description,
-            user_id: localStorage.getItem("userid"),
-            cat_id: cat_id,
-            u_id: uid.id
-        }
+            axios.post(`${BASE_URL}/add_subcategory`, data)
+                .then((res) => {
+                    alert(res.data)
+                    getsubcatData()
 
-        axios.post(`${BASE_URL}/add_subcategory`, data)
-            .then((res) => {
-                alert(res.data)
-                getsubcatData()
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        } 
     }
 
-    console.log(cat_id, "new")
+    console.log(cat, "new")
 
 
     const onhandleChange = (e) => {
@@ -140,11 +176,23 @@ const SubCategory = () => {
 
     const HandleChange = (selectedValue) => {
         if (selectedValue) {
+            console.log(selectedValue , "::::")
             const selectedId = selectedValue.id;
+            setSelectedOption(selectedValue);
             // Now you have the selected id, you can use it in your application logic
             setId(selectedId)
         }
     };
+
+    useEffect(() => {
+        // If you have received the ID from the API, find the option that matches the ID
+        if (uid.cat_id) {
+            console.log(cat , "111")
+          const selected = cat.find(option => option.id === uid.cat_id);
+          console.log(selected, "dadad")
+          setSelectedOption(selected);
+        }
+      }, [uid, cat]);
 
     return (
 
@@ -160,7 +208,7 @@ const SubCategory = () => {
 
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">Category</label>
+                                            <label for="exampleInputUsername1">Category<span className='text-danger'>*</span></label>
                                             <Autocomplete
                                                 disablePortal
                                                 id="combo-box-demo"
@@ -171,23 +219,26 @@ const SubCategory = () => {
                                                 renderInput={(params) => <TextField {...params} />}
                                                 onChange={(event, value) => HandleChange(value)}
                                                 name="category"
-
+                                                value={selectedOption}    
                                             />
+                                            {error.category && <span className='text-danger'>{error.category}</span>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
+                                            {error.title && <span className='text-danger'>{error.title}</span>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">SubCategory Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.."  />
-                                          
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.slug} placeholder="Enter.." name="slug" onChange={onhandleChange}/>
+                                            {error.slug && <span className='text-danger'>{error.slug}</span>}
                                         </div>
                                         
                        
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
+                                            {error.description && <span className='text-danger'>{error.description}</span>}
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
