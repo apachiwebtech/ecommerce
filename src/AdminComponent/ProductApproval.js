@@ -12,89 +12,88 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import InnerHeader from "./InnerHeader";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import chair from '../assets/images/chair.jpg'
+import { DataGrid } from "@mui/x-data-grid";
+import { Avatar } from "@mui/material";
 
 
 const ProductApproval = () => {
-  const [cat, setCatData] = useState([]);
-  const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-  const [value, setValue] = useState({
-    title: "",
-    description: "",
-  });
 
-  async function getcatData() {
-    axios
-      .get(`${BASE_URL}/category_data`)
-      .then((res) => {
-        console.log(res.data);
-        setCatData(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  const columns = [
+    { 
+      field: 'id', 
+      headerName: 'ID', 
+      flex: 1
+    },
+    {
+      field: 'image', 
+      headerName: 'Image', 
+      renderCell: (params) => {
+        return (
+          <div>
+            <Avatar  src={params.row.avatar} />
+          </div>
+        )
+      },
+      flex: 2,
+      filterable: false,
+      sortable: false
+    },
+    { 
+      field: 'category', 
+      headerName: 'Category',
+      flex: 3
+    },
+    {
+      field: 'subcategory',
+      headerName: 'SubCategory',
+      flex: 2
+    },
+    {
+      field: 'vendor',
+      headerName: 'Vendor Name',
+      flex: 2
+    },
+    {
+      field: 'price',
+      headerName: 'Price',
+      flex: 2
+    },
+    {
+      field: 'status',
+      headerName: 'Active',
+      renderCell: (params) => {
+        return (
+          <div>
+            <button className='btn btn-sm btn-danger'>Approve</button>
+          </div>
+        )
+      },
+      flex: 2
+    },
+    {
+      field: 'action',
+      headerName: 'Action',
+      renderCell: (params) => {
+        return(
+          <Link to={`/webapp/vendorform/${params.row.id}`}><RemoveRedEyeIcon /></Link>
+        )
+      },
+      flex: 2
+    },
 
-  useEffect(() => {
-    getcatData();
-  }, []);
+  ];
 
-  const handleClick = (id) => {
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: true,
-    }));
-  };
-  const handleCancel = (id) => {
-    // Hide the confirmation dialog without performing the delete action
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
-
-  const handleDelete = (id) => {
-    const data = {
-      cat_id: id,
-    };
-
-    axios
-      .post(`${BASE_URL}/category_delete`, data)
-      .then((res) => {
-        getcatData();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const data = {
-      title: value.title,
-      description: value.description,
-      user_id: localStorage.getItem("userid"),
-    };
-
-    axios
-      .post(`${BASE_URL}/add_category`, data)
-      .then((res) => {
-        alert(res.data);
-        getcatData();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const onhandleChange = (e) => {
-    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const rows = [
+    {
+      id: 1,
+      avatar: "https://source.unsplash.com/random",
+      category: "Harry@gmail.com",
+      subcategory: "Active",
+      vendor:"hello",
+      price: "$120",
+      status: "",
+      action: "hello"
+    },];
 
   const Android12Switch = styled(Switch)(({ theme }) => ({
     padding: 8,
@@ -131,7 +130,7 @@ const ProductApproval = () => {
 
   return (
     <div class="container-fluid page-body-wrapper">
-      <InnerHeader/>
+      <InnerHeader />
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
@@ -143,62 +142,15 @@ const ProductApproval = () => {
                       <h4 class="card-title">Product Approval </h4>
                       <p class="card-description">List Of Products</p>
                     </div>
-                    <div>
-                      {/* <Link to="/webapp/product">
-                        <button className=" btn btn-primary">Add Product</button>
-                        <Button variant="outlined" size="medium"><AddCircleOutlineIcon  style={{fontSize : "16px"}}/> Add Product</Button>
-                      </Link> */}
-                      {/* <Link to="/webapp/product" ><button className=' btn btn-primary'>Add Product</button></Link> */}
-                    </div>
                   </div>
-
-                  <div class="table-responsive pt-3">
-                    <table class="table table-bordered">
-                      <thead>
-                      <tr>
-                          <th>
-                            #
-                          </th>
-                          <th>Image</th>
-                          <th>Name</th>
-                          <th>Category</th>
-                          <th>Subcategory</th>
-                          <th>Vendor Name</th>
-                          <th>Price</th>
-                          <th>Status</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-                        <tr>
-                          <td>
-                            1
-                          </td>
-                          <td><img src={chair} alt="" /></td>
-                          <td>Chair</td>
-                          <td>Chair</td>
-                          <td>Office Chair</td>
-                          <td>Satyam</td>
-                          <td>2000</td>
-                        
-                          <td>
-                            {" "}
-                            <FormControlLabel
-                              control={<Android12Switch defaultChecked />}
-                            />
-                          </td>
-                          <td>
-                            <Link>
-                              <RemoveRedEyeIcon />
-                            </Link>
-                            {/* <Link>
-                              <DeleteIcon  className="text-danger"/>
-                            </Link> */}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  <div style={{ height: '100%', width: '300' }}>
+                  <DataGrid
+                    autoHeight
+                    rows={rows}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                  />
                   </div>
                 </div>
               </div>

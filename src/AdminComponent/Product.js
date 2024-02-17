@@ -15,6 +15,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import InnerHeader from "./InnerHeader";
+
 const Product = () => {
   const [cat, setCatData] = useState([]);
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
