@@ -66,7 +66,7 @@ app.listen('8081', () => {
 app.use(
   cors({
     origin: '*',
-    credentials :true
+    credentials: true
   })
 );
 
@@ -129,20 +129,20 @@ app.post('/login', (req, res) => {
         const id = data[0].id;
         req.session.id = id
         console.log(req.session.id)
-        return res.json({data,id :req.session.id,id : id})
+        return res.json({ data, keyid: req.session.id, id: id })
       }
-      
+
 
     }
   })
 })
 
 
-app.get('/checkauth',(req,res)=>{
-  if(req.session.id){
-    return res.json({valid : true , id :req.session.id})
-  }else{
-    return res.json({valid :false})
+app.get('/checkauth', (req, res) => {
+  if (req.session.id) {
+    return res.json({ valid: true, id: req.session.id })
+  } else {
+    return res.json({ valid: false })
   }
 })
 
@@ -157,13 +157,16 @@ app.post('/add_vendor', upload.fields([
   { name: 'gstupload', maxCount: 1 },
   { name: 'panupload', maxCount: 1 },
   { name: 'agreementupload', maxCount: 1 }
+
 ]), (req, res) => {
 
   let username = req.body.username;
   let email = req.body.email;
   let mobile = req.body.mobile;
   let password = req.body.password;
-  let address = req.body.address;
+  let vendor_name = req.body.vendor_name;
+
+  let address = req.body.address
   let state = req.body.state;
   let city = req.body.city;
   let pincode = req.body.pincode;
@@ -175,9 +178,50 @@ app.post('/add_vendor', upload.fields([
   let account_name = req.body.account_name;
   let account_no = req.body.account_no;
   let ifsc_code = req.body.ifsc_code;
+
   let created_date = new Date()
   let u_id = req.body.u_id;
-  let user_id = req.body.user_id
+  let user_id = req.body.user_id;
+
+  console.log(vendor_name, "name")
+
+  if (address == "undefined") {
+    address = null;
+  }
+  if (state == "undefined") {
+    state = null;
+  }
+  if (city == "undefined") {
+    city = null;
+  }
+  if (pincode == "undefined") {
+    pincode = null;
+  }
+  if (personemail == "undefined") {
+    personemail = null;
+  }
+  if (personmobile == "undefined") {
+    personmobile = null;
+  }
+  if (personname == "undefined") {
+    personname = null;
+  }
+  if (gst == "undefined") {
+    gst = null;
+  }
+  if (pancard == "undefined") {
+    pancard = null;
+  }
+  if (account_name == "undefined") {
+    account_name = null;
+  }
+  if (account_no == "undefined") {
+    account_no = null;
+  }
+  if (ifsc_code == "undefined") {
+    ifsc_code = null;
+  }
+
 
 
   let sql;
@@ -194,24 +238,26 @@ app.post('/add_vendor', upload.fields([
   const image2 = req.files['panupload'];
   const image3 = req.files['agreementupload'];
 
-  let gstupload = image1[0].filename
-  let panupload = image2[0].filename
-  let agreementupload = image3[0].filename
+  console.log(image1, "new")
+
+  let gstupload = image1 ? image1[0].filename : "";
+  let panupload = image2 ? image2[0].filename : "";
+  let agreementupload = image3 ? image3[0].filename : "";
 
 
 
   if (u_id == "undefined") {
 
-    sql = "insert into awt_vendor(`username`,`mobile`,`emailid`,`password`,`address`,`state`,`city`,`pincode`,`gstno`,`vendor_pan`,`created_date`,`created_by`,`gst_upload`,`pan_upload`,`aggrement_upload`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    sql = "insert into awt_vendor(`vendor_name`,`username`,`mobile`,`emailid`,`password`,`address`,`state`,`city`,`pincode`,`gstno`,`vendor_pan`,`created_date`,`created_by`,`gst_upload`,`pan_upload`,`aggrement_upload`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 
-    param = [username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload]
+    param = [vendor_name, username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload]
   }
   else {
 
-    sql = "update awt_vendor set username = ? , mobile = ?, emailid = ?, password = ?, address = ?,state = ?, city = ?,pincode = ?,gstno =?,vendor_pan = ?, updated_date = ?, updated_by = ? ,gst_upload = ?, pan_upload = ?,aggrement_upload =? where id = ?";
-    console.log("update")
-    param = [username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload, u_id]
+    sql = "update awt_vendor set vendor_name= ? ,  username = ? , mobile = ?, emailid = ?, password = ?, address = ?,state = ?, city = ?,pincode = ?,gstno =?,vendor_pan = ?, updated_date = ?, updated_by = ? ,gst_upload = ?, pan_upload = ?,aggrement_upload =? where id = ?";
+
+    param = [vendor_name, username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload, u_id]
   }
 
 
@@ -270,12 +316,54 @@ app.post('/add_vendor', upload.fields([
   })
 })
 
+app.post('/vendor_approve', (req, res) => {
+
+  let vendor_id = req.body.vendor_id;
+
+
+  const sql = "update awt_vendor set approve = 1, active = 1 where id = ?"
+
+  con.query(sql, [vendor_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/vendor_status', (req, res) => {
+
+  let vendor_id = req.body.vendor_id;
+  let status = req.body.status;
+
+
+  const sql = "update awt_vendor set  active = ? where id = ?"
+
+  con.query(sql, [status, vendor_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+
+      return res.json(data)
+    }
+  })
+
+})
+
+
+
+
 app.post('/vendor_update', (req, res) => {
 
   let u_id = req.body.u_id;
 
 
-  const sql = "select av.id,av.emailid,av.username,av.mobile,av.password,av.gstno,av.address,av.state,av.city,av.pincode,av.vendor_pan,av.gst_upload,av.pan_upload,av.aggrement_upload,av.created_date,avd.person_email,avd.person_mobile,avd.person_name,avb.Account_name,avb.Account_no,avb.ifsc from awt_vendor as av left join awt_vendorcontact as avd on av.id = avd.v_id left join awt_vendorbank as avb on av.id = avb.v_id where av.id = ?"
+  const sql = "select av.id,av.vendor_name,av.emailid,av.username,av.mobile,av.password,av.gstno,av.address,av.state,av.city,av.pincode,av.vendor_pan,av.gst_upload,av.pan_upload,av.aggrement_upload,av.created_date,avd.person_email,avd.person_mobile,avd.person_name,avb.Account_name,avb.Account_no,avb.ifsc from awt_vendor as av left join awt_vendorcontact as avd on av.id = avd.v_id left join awt_vendorbank as avb on av.id = avb.v_id where av.id = ?"
 
   con.query(sql, [u_id], (err, data) => {
     if (err) {
