@@ -7,6 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import Cookies from 'js-cookie';
+import { DataGrid } from '@mui/x-data-grid';
 
 const AdminUser = () => {
 
@@ -182,6 +183,48 @@ const AdminUser = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
+        const rows = admindata.map((item, index) => {
+        return (
+        {
+            index : index + 1,
+            id : item.id,
+            username : item.firstname,
+            email : item.email
+        })
+
+      });
+
+    const columns = [
+        {
+            field: 'index',
+            headerName: 'ID',
+            type: 'number',
+            align: 'left',
+            headerAlign: 'left',
+            flex: 1,
+            
+        },
+        { field: 'username', headerName: 'Name' , flex : 1},
+        {
+          field: 'email',
+          headerName: 'Email',
+          flex: 3
+        },
+        {
+          field: 'actions',
+          type: 'actions',
+          headerName: 'Actions',
+          flex: 1,
+          renderCell: (params)=>{
+            return (
+              <div>
+                <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
+              </div>
+            )
+          } 
+        },
+      ];
     return (
 
         <div class="container-fluid page-body-wrapper">
@@ -247,61 +290,10 @@ const AdminUser = () => {
                                     </div>
 
                                     <div class="table-responsive pt-3">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        #
-                                                    </th>
-                                                    <th>
-                                                        User Name
-                                                    </th>
-
-                                                    <th>
-                                                        Email
-                                                    </th>
-
-                                                    <th>
-                                                        Action
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                {admindata.map((item, index) => {
-                                                    return (
-                                                        <tr key={index}>
-                                                            <td>
-                                                                {index + 1}
-                                                            </td>
-                                                            <td>
-                                                                {item.firstname}
-                                                            </td>
-                                                            <td>
-                                                                {item.email}
-                                                            </td>
-
-                                                            <td>
-                                                                <EditIcon onClick={() => handleUpdate(item.id)} />
-                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
-                                                                {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
-                                                            </td>
-                                                            {confirmationVisibleMap[item.id] && (
-                                                                <div className='confirm-delete'>
-                                                                    <p>Are you sure you want to delete?</p>
-                                                                    <button onClick={() => handleDelete(item.id)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() => handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
-                                                                </div>
-                                                            )}
-                                                        </tr>
-
-                                                    )
-                                                })}
-
-
-                                            </tbody>
-                                        </table>
-
+                                        <DataGrid
+                                            rows={rows}
+                                            columns={columns}
+                                        />
                                     </div>
                                 </div>
                             </div>
