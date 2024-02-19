@@ -15,14 +15,14 @@ import InnerHeader from './InnerHeader';
 
 const Banner = () => {
 
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+
     const [errors, setErrors] = useState({})
-    const [admindata, setData] = useState([])
+
     const [value, setValue] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
+        title: "",
+        banner: "",
+        target: "",
+        link: "",
 
     })
 
@@ -30,29 +30,23 @@ const Banner = () => {
         let isValid = true;
         const newErrors = { ...errors };
 
-        if (!value.email) {
+        if (!value.title) {
             isValid = false;
-            newErrors.email = "Email is required";
+            newErrors.title = "Title is required";
         }
-        if (!value.firstname) {
+        if (!value.banner) {
             isValid = false;
-            newErrors.firstname = "FirstName is required"
+            newErrors.banner = "Banner is required"
         }
-        if (!value.lastname) {
+        if (!value.link) {
             isValid = false;
-            newErrors.lastname = "Lastname is required"
+            newErrors.link = "Link is required"
         }
-        if (!value.password) {
+        if (!value.target) {
             isValid = false;
-            newErrors.password = "Password is required"
+            newErrors.lastname = "Target is required"
         }
-        const passwordPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
-
-        if (!passwordPattern.test(value.password)) {
-            isValid = false;
-            newErrors.password = "Password requirements: 8-20 characters, 1 number, 1 letter, 1 symbol."
-        }
-
+      
 
 
         setErrors(newErrors);
@@ -70,7 +64,7 @@ const Banner = () => {
         axios.get(`${BASE_URL}/adminuser_data`)
             .then((res) => {
                 console.log(res.data)
-                setData(res.data)
+           
             })
             .catch((err) => {
                 console.log(err)
@@ -81,56 +75,24 @@ const Banner = () => {
         getAdminuserData()
     }, [])
 
-    const handleClick = (id) => {
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
+ 
 
 
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
-
-    const handleDelete = (id) => {
-
-
-        const data = {
-            adminuser_id: id
-        }
-
-
-        axios.post(`${BASE_URL}/adminuser_delete`, data)
-            .then((res) => {
-                getAdminuserData()
-
-            })
-
-            .catch((err) => {
-                console.log(err)
-            })
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
+ 
 
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        
         if (validateForm()) {
-            const hashpassword = md5(value.password)
+          
 
             const data = {
-                firstname: value.firstname,
-                lastname: value.lastname,
-                email: value.email,
-                password: hashpassword,
+                title: value.firstname,
+                banner: value.lastname,
+                link: value.email,
+                target: value.target,
 
             }
 

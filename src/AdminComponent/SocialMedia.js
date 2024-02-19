@@ -10,19 +10,29 @@ import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsAct
 import img1 from "../assets/images/prof.png";
 
 const SocialMedia = () => {
-  const [cat, setCatData] = useState([]);
-  const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+  const [social, setSocial] = useState([]);
+  const [uid, setUpdateId] = useState([])
+
   const [value, setValue] = useState({
-    title: "",
-    description: "",
+    title: "" || uid.title,
+    link: "" || uid.link,
+    colorcode: "" || uid.colorcode,
   });
 
-  async function getcatData() {
+  useEffect(() => {
+    setValue({
+      title: uid.title,
+      link: uid.link,
+      colorcode: uid.colorcode
+    })
+  }, [uid])
+
+  async function getsocialData() {
     axios
-      .get(`${BASE_URL}/category_data`)
+      .get(`${BASE_URL}/social_data`)
       .then((res) => {
         console.log(res.data);
-        setCatData(res.data);
+        setSocial(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -30,57 +40,45 @@ const SocialMedia = () => {
   }
 
   useEffect(() => {
-    getcatData();
+    getsocialData();
   }, []);
 
-  const handleClick = (id) => {
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: true,
-    }));
-  };
-  const handleCancel = (id) => {
-    // Hide the confirmation dialog without performing the delete action
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
 
-  const handleDelete = (id) => {
+  const handleUpdate = (id) => {
     const data = {
-      cat_id: id,
-    };
+      social_id: id
+    }
 
-    axios
-      .post(`${BASE_URL}/category_delete`, data)
+    axios.post(`${BASE_URL}/social_update_data`, data)
       .then((res) => {
-        getcatData();
+        console.log(res)
+        setUpdateId(res.data[0])
       })
       .catch((err) => {
-        console.log(err);
-      });
+        console.log(err)
+      })
+  }
 
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
+  console.log(uid.title)
 
-  const handleSubmit = (e) => {
+
+
+  const handleSubmit = (e,uid) => {
     e.preventDefault();
 
     const data = {
       title: value.title,
-      description: value.description,
+      link: value.description,
+      colorcode: value.colorcode,
       user_id: localStorage.getItem("userid"),
+      uid :uid
     };
 
     axios
-      .post(`${BASE_URL}/add_category`, data)
+      .post(`${BASE_URL}/update_social`, data)
       .then((res) => {
         alert(res.data);
-        getcatData();
+
       })
       .catch((err) => {
         console.log(err);
@@ -94,39 +92,39 @@ const SocialMedia = () => {
   return (
     <div class="container-fluid page-body-wrapper">
       <div class="main-panel">
-      <header class="main-header">
-                <div class="container-fluid">
-                    <div class="main-header-inner">
-                        <div class="page-title">
-                            <h1>Social Media Links</h1>
-                        </div>
-                        <div class="main-header-toolbar">
-                            <div class="header-action">
-                                <div class="header-action__item">
-                                    <Link class="link"><DesktopWindowsRoundedIcon style={{fontSize : "17px"}}/></Link>
-                                </div>
-                                <div class="header-action__item">
-                                    <Link class="link"><SearchRoundedIcon style={{fontSize : "17px"}}/></Link>
-                                </div>
-                                <div class="header-action__item">
-                                    <Link class="link"><StorefrontOutlinedIcon style={{fontSize : "17px"}}/></Link>
-                                </div>
-                                <div class="header-action__item">
-                                    <Link class="link"><NotificationsActiveTwoToneIcon style={{fontSize : "17px"}}/></Link>
-                                </div>
+        <header class="main-header">
+          <div class="container-fluid">
+            <div class="main-header-inner">
+              <div class="page-title">
+                <h1>Social Media Links</h1>
+              </div>
+              <div class="main-header-toolbar">
+                <div class="header-action">
+                  <div class="header-action__item">
+                    <Link class="link"><DesktopWindowsRoundedIcon style={{ fontSize: "17px" }} /></Link>
+                  </div>
+                  <div class="header-action__item">
+                    <Link class="link"><SearchRoundedIcon style={{ fontSize: "17px" }} /></Link>
+                  </div>
+                  <div class="header-action__item">
+                    <Link class="link"><StorefrontOutlinedIcon style={{ fontSize: "17px" }} /></Link>
+                  </div>
+                  <div class="header-action__item">
+                    <Link class="link"><NotificationsActiveTwoToneIcon style={{ fontSize: "17px" }} /></Link>
+                  </div>
 
-                                <div class="header-action__item header-acc">
-                                    <span class="header-account__img"><Link class="link"><img  src={img1} alt="" /></Link></span>
-                                    
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
+                  <div class="header-action__item header-acc">
+                    <span class="header-account__img"><Link class="link"><img src={img1} alt="" /></Link></span>
+
+                  </div>
+
                 </div>
-            </header>
+              </div>
+            </div>
+          </div>
+        </header>
         <div class="content-wrapper">
-        <div class="breadcrumb-wrap">
+          <div class="breadcrumb-wrap">
             <ul class="breadcrumb ">
               <li class="breadcrumb-item">
                 <a href="/admin">Home </a>
@@ -134,10 +132,104 @@ const SocialMedia = () => {
               <li class="breadcrumb-item">
                 <a href="/admin/subscription-orders">Social Media Links </a>
               </li>
-            
+
             </ul>
           </div>
           <div class="row">
+            <div class="col-md-6 ">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Add Links</h4>
+                  <form class="forms-sample py-3" onSubmit={(e) =>handleSubmit(e,uid.id) }>
+                    <div class="form-group">
+                      <label for="title">Title </label>
+                      {
+                        uid.title ?
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="title"
+                            onChange={onhandleChange}
+                            value={value.title}
+                            placeholder="Title"
+                            name="title"
+
+                          /> : <input
+                            type="text"
+                            class="form-control"
+                            id="title"
+
+                            placeholder="Title"
+                            name="title"
+                            disabled
+
+                          />}
+                    </div>
+                    <div class="form-group">
+                      <label for="link">Link </label>
+                      {
+                        uid.title ? <input
+                          type="text"
+                          class="form-control"
+                          value={value.link}
+                          id="link"
+                          onChange={onhandleChange}
+                          placeholder="Enter Link"
+                          name="link"
+
+
+                        /> : <input
+                          type="text"
+                          class="form-control"
+
+                          id="link"
+
+                          placeholder="Enter Link"
+                          name="link"
+                          disabled
+
+
+                        />
+                      }
+
+                    </div>
+                    <div class="form-group">
+                      <label for="insta">Colorcode </label>
+                      {
+                        uid.title ? <input
+                          type="text"
+                          class="form-control"
+                          value={value.colorcode}
+                          onChange={onhandleChange}
+                          id="colorcode"
+                          placeholder="Enter Color Code"
+                          name="colorcode"
+
+                        /> : <input
+                          type="text"
+                          class="form-control"
+
+                          id="link"
+
+                          placeholder="Enter Color Code"
+                          name="link"
+                          disabled
+
+
+                        />
+                      }
+
+                    </div>
+
+
+                    {uid.title ? <button type="submit" class="btn btn-sm btn-primary mr-2">
+                      Update
+                    </button> : null}
+
+                  </form>
+                </div>
+              </div>
+            </div>
             <div class="col-lg-6 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -153,107 +245,27 @@ const SocialMedia = () => {
                       </thead>
 
                       <tbody>
-                        <tr>
-                          <td>1</td>
-                          <td>Facebook</td>
-                          <td>
-                            <Link>
-                              <EditIcon />
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>2</td>
-                          <td>LinkedIn</td>
-                          <td>
-                            <Link>
-                              <EditIcon />
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>3</td>
-                          <td>Instagram</td>
-                          <td>
-                            <Link>
-                              <EditIcon />
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>4</td>
-                          <td>Twitter</td>
-                          <td>
-                            <Link>
-                              <EditIcon />
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>5</td>
-                          <td>Youtube</td>
-                          <td>
-                            <Link>
-                              <EditIcon />
-                            </Link>
-                          </td>
-                        </tr>
+                        {social.map((item, index) => {
+                          return (
+                            <tr>
+                              <td>{index + 1}</td>
+                              <td>{item.title}</td>
+                              <td>
+                                <Link>
+                                  <EditIcon onClick={() => handleUpdate(item.id)} />
+                                </Link>
+                              </td>
+                            </tr>
+                          )
+                        })}
+
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-6 ">
-              <div class="card">
-                <div class="card-body">
-                <h4 class="card-title">Add Links</h4>
-                  <form class="forms-sample py-3" onSubmit={handleSubmit}>
-                    <div class="form-group">
-                      <label for="title">Title </label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="title"
-                        placeholder="Title"
-                        name="title"
-                        
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label for="link">Link </label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="link"
-                        placeholder="Enter Link"
-                        name="link"
-                        
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label for="insta">Colorcode </label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="colorcode"
-                        placeholder="Enter Color Code"
-                        name="colorcode"
-                        
-                      />
-                    </div>
-                   
 
-                    <button type="submit" class="btn btn-sm btn-primary mr-2">
-                      Update
-                    </button>
-                    <Link to="/webapp/socialmedia">
-                      <button class="btn btn-sm btn-light">Cancel</button>
-                    </Link>
-                  </form>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

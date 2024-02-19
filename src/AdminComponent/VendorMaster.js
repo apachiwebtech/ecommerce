@@ -220,7 +220,7 @@ const VendorMaster = () => {
                                                             </td>
                                                             <td>
                                                                 <Link to={`/webapp/vendorform/${item.id}`}><EditIcon /></Link>
-                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
+                                                                {/* <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} /> */}
                                                                 {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (

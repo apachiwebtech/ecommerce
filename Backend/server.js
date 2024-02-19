@@ -727,3 +727,50 @@ app.post('/Brand_delete', (req, res) => {
   })
 
 })
+
+app.get('/social_data', (req, res) => {
+
+  const sql = 'select * from awt_social_links'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+app.post('/social_update_data', (req, res) => {
+
+  let social_id = req.body.social_id;
+
+  const sql = 'select * from awt_social_links where id = ?'
+
+  con.query(sql,[social_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+app.post('/update_social', (req, res) => {
+
+  let title = req.body.title;
+  let link = req.body.link;
+  let colorcode = req.body.colorcode;
+  let user_id = req.body.user_id
+  let date = new Date()
+  let uid = req.body.uid
+
+
+  const sql = 'update awt_social_links set title = ?,link = ?,colorcode = ?,updated_date = ?,updated_by = ? where id = ?'
+
+  con.query(sql,[title,link,colorcode,date,user_id,uid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})

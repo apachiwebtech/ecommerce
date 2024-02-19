@@ -6,6 +6,7 @@ import md5 from 'js-md5'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import logo from '../assets/images/logo/ecomlogo.png'
+import CryptoJS from 'crypto-js';
 
 const WebLogin = () => {
   const [value, setValue] = useState({
@@ -77,6 +78,8 @@ const WebLogin = () => {
   //   }
   // }
 
+  const encryptionKey = 'secret-key';
+
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -95,7 +98,9 @@ const WebLogin = () => {
         .then((res) => {
           console.log(res.data.err)
           if (res.data.id) {
-            localStorage.setItem("userid", res.data.id)
+            // localStorage.setItem("userid", res.data.id)
+            const ciphertext = CryptoJS.AES.encrypt(res.data.id.toString(), encryptionKey).toString();
+            Cookies.set('userid', ciphertext, { expires: 1 }); 
             navigate('/webapp')
           }
           else {

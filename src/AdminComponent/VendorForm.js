@@ -479,17 +479,17 @@ const VendorForm = () => {
                                                 Bank Details
                                             </p>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Account holder Name<span className='text-danger'>*</span></label>
+                                                <label for="exampleInputUsername1">Account holder Name</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.account_name} placeholder="Enter Name" name='account_name' onChange={onhandleChange} />
                                                 {errors.account_name && <div className="text-danger">{errors.account_name}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Account Number<span className='text-danger'>*</span></label>
+                                                <label for="exampleInputUsername1">Account Number</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.account_no} placeholder="Enter Number" name='account_no' onChange={onhandleChange} />
                                                 {errors.account_no && <div className="text-danger">{errors.account_no}</div>}
                                             </div>
                                             <div class="form-group col-lg-3">
-                                                <label for="exampleInputUsername1">Ifsc Code<span className='text-danger'>*</span></label>
+                                                <label for="exampleInputUsername1">Ifsc Code</label>
                                                 <input type="text" class="form-control" id="exampleInputUsername1" value={value.ifsc_code} placeholder="Enter Code" name='ifsc_code' onChange={onhandleChange} />
                                                 {errors.ifsc_code && <div className="text-danger">{errors.ifsc_code}</div>}
                                             </div>

@@ -9,20 +9,9 @@ import axios from 'axios';
 import { BASE_URL } from './BaseUrl';
 
 const AdminDashBoard = () => {
-const navigate = useNavigate()
-
-async function logout(){
-  axios.get(`${BASE_URL}/logout`)
-  .then((res)=>{
-    console.log(res)
-    // navigate('/weblog')
-  })
-}
 
 
-useEffect(()=>{
-  // logout()
-},[])
+
 
   return (
 

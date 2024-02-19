@@ -19,9 +19,10 @@ const AdminUser = () => {
         firstname: "" || uid.firstname,
         lastname: "" || uid.lastname,
         email: "" || uid.email,
+        mobile: "" || uid.mobile,
         password: "",
-        cnf_password:"",
-        mobile : "",
+        cnf_password: "",
+        mobile: "",
     })
 
     useEffect(() => {
@@ -29,6 +30,7 @@ const AdminUser = () => {
             firstname: uid.firstname,
             lastname: uid.lastname,
             email: uid.email,
+            mobile: uid.mobile,
             password: "",
         })
     }, [uid])
@@ -60,10 +62,10 @@ const AdminUser = () => {
             newErrors.password = "Password requirements: 8-20 characters, 1 number, 1 letter, 1 symbol."
         }
 
-        if(value.password !== value.cnf_password) {
+        if (value.password !== value.cnf_password) {
             isValid = false;
             newErrors.cnf_password = "Password & Confirm Password dont match"
-   
+
         }
         const mobileNumberRegex = /^\d{10}$/;
         if (!mobileNumberRegex.test(value.mobile)) {
@@ -114,6 +116,8 @@ const AdminUser = () => {
             ...prevMap,
             [id]: true,
         }));
+
+        handleDelete(id)
     };
 
 
@@ -158,8 +162,9 @@ const AdminUser = () => {
                 firstname: value.firstname,
                 lastname: value.lastname,
                 email: value.email,
+                mobile: value.mobile,
                 password: hashpassword,
-                u_id : uid.id,
+                u_id: uid.id,
                 user_id: Cookies.get('userid')
 
             }
@@ -183,16 +188,16 @@ const AdminUser = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
-        const rows = admindata.map((item, index) => {
+    const rows = admindata.map((item, index) => {
         return (
-        {
-            index : index + 1,
-            id : item.id,
-            username : item.firstname,
-            email : item.email
-        })
+            {
+                index: index + 1,
+                id: item.id,
+                username: item.firstname,
+                email: item.email
+            })
 
-      });
+    });
 
     const columns = [
         {
@@ -202,29 +207,38 @@ const AdminUser = () => {
             align: 'left',
             headerAlign: 'left',
             flex: 1,
-            
+
         },
-        { field: 'username', headerName: 'Name' , flex : 1},
+        { field: 'username', headerName: 'Name', flex: 1 },
         {
-          field: 'email',
-          headerName: 'Email',
-          flex: 3
+            field: 'email',
+            headerName: 'Email',
+            flex: 3
         },
         {
-          field: 'actions',
-          type: 'actions',
-          headerName: 'Actions',
-          flex: 1,
-          renderCell: (params)=>{
-            return (
-              <div>
-                <EditIcon onClick={() => handleUpdate(params.row.id)} />
-                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
-              </div>
-            )
-          } 
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Actions',
+            flex: 1,
+            renderCell: (params) => {
+                return (
+                    <>
+                        <div>
+                            <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                            <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
+                        </div>
+                        {confirmationVisibleMap[params.row.id] && (
+                            <div className='confirm-delete'>
+                                <p>Are you sure you want to delete?</p>
+                                <button onClick={() => handleDelete(params.row.id)} className='btn btn-sm btn-primary'>OK</button>
+                                <button onClick={() => handleCancel(params.row.id)} className='btn btn-sm btn-danger'>Cancel</button>
+                            </div>
+                        )}
+                    </>
+                )
+            }
         },
-      ];
+    ];
     return (
 
         <div class="container-fluid page-body-wrapper">
@@ -295,6 +309,7 @@ const AdminUser = () => {
                                             columns={columns}
                                         />
                                     </div>
+
                                 </div>
                             </div>
                         </div>
