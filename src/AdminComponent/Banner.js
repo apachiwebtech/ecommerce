@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import md5 from 'js-md5';
 import { Link, useNavigate } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DesktopWindowsRoundedIcon from '@mui/icons-material/DesktopWindowsRounded';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
-import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
+
 import img1 from "../assets/images/prof.png";
 import InnerHeader from './InnerHeader';
 
@@ -84,7 +78,7 @@ const Banner = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        
+
         if (validateForm()) {
           
 
@@ -96,10 +90,10 @@ const Banner = () => {
 
             }
 
-            axios.post(`${BASE_URL}/add_adminuser`, data)
+            axios.post(`${BASE_URL}/add_banner`, data)
                 .then((res) => {
                     alert(res.data)
-                    getAdminuserData()
+               
                     if (res.data) {
                         //    navigate('/vendormaster')
                     }
