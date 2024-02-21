@@ -191,7 +191,9 @@ const SubCategory = () => {
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' class="btn btn-light">Cancel</button>
+                                        <button type='button' onClick={()=>{
+                                            window.location.reload()
+                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>

@@ -8,7 +8,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import Cookies from 'js-cookie';
 import { DataGrid } from '@mui/x-data-grid';
-
+import CryptoJS from 'crypto-js';
+import decryptedUserId from '../Utils/UserID';
 const AdminUser = () => {
 
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -22,7 +23,7 @@ const AdminUser = () => {
         mobile: "" || uid.mobile,
         password: "",
         cnf_password: "",
-        mobile: "",
+       
     })
 
     useEffect(() => {
@@ -151,6 +152,7 @@ const AdminUser = () => {
             [id]: false,
         }));
     }
+  
 
 
     const handleSubmit = (e) => {
@@ -165,7 +167,7 @@ const AdminUser = () => {
                 mobile: value.mobile,
                 password: hashpassword,
                 u_id: uid.id,
-                user_id: Cookies.get('userid')
+                user_id: decryptedUserId()
 
             }
 
@@ -285,7 +287,9 @@ const AdminUser = () => {
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' class="btn btn-light" onClick={() => setValue()}>Cancel</button>
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>

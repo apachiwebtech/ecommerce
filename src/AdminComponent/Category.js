@@ -5,6 +5,7 @@ import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
+import decryptedUserId from '../Utils/UserID';
 
 
 
@@ -16,6 +17,7 @@ const Category = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [value, setValue] = useState({
         title: "" || uid.title,
+        slug: "" || uid.slug,
         description: "" || uid.description,
     })
 
@@ -23,6 +25,7 @@ const Category = () => {
         setValue({
             title: uid.title,
             description: uid.description,
+            slug: uid.slug,
         })
     }, [uid])
 
@@ -34,9 +37,10 @@ const Category = () => {
             isValid = false;
             newErrors.title = "title is require"
         }
-        if (!value.description) {
+      
+        if (!value.slug) {
             isValid = false
-            newErrors.description = "description is require"
+            newErrors.slug = "slug is require"
         }
 
         setError(newErrors)
@@ -119,7 +123,8 @@ const Category = () => {
             const data = {
                 title: value.title,
                 description: value.description,
-                user_id: localStorage.getItem("userid"),
+                slug: value.slug,
+                user_id: decryptedUserId(),
                 u_id: uid.id
             }
 
@@ -161,17 +166,20 @@ const Category = () => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.."  />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug}  onChange={onhandleChange} />
+                                            {error.slug && <span className='text-danger'>{error.slug}</span>}
                                           
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
-                                            {error.description && <span className='text-danger'>{error.description}</span>}
+                                         
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <Link to="/webapp/adminuser"><button class="btn btn-light">Cancel</button></Link>
+                                        <button type='button' onClick={()=>{
+                                            window.location.reload()
+                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>

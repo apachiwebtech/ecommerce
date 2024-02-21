@@ -143,7 +143,9 @@ const Brand = () => {
                                       
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <Link to="/webapp/adminuser"><button class="btn btn-light">Cancel</button></Link>
+                                        <button type='button' onClick={()=>{
+                                            window.location.reload()
+                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>

@@ -11,41 +11,35 @@ const Gallery = () => {
 
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [errors, setErrors] = useState({})
-    const [admindata, setData] = useState([])
+    const [image, setImage] = useState()
+    const [uid , setUpdateData] = useState([])
+    const [gallery, setGallery] = useState([])
     const [value, setValue] = useState({
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
+        title: "" || uid.title,
+        image: '',
+
 
     })
+
+    useEffect(()=>{
+    setValue({
+        title : uid.title
+    })
+    },[uid])
 
     const validateForm = () => {
         let isValid = true;
         const newErrors = { ...errors };
 
-        if (!value.email) {
+        if (!value.title) {
             isValid = false;
             newErrors.email = "Email is required";
         }
-        if (!value.firstname) {
+        if (!image) {
             isValid = false;
             newErrors.firstname = "FirstName is required"
         }
-        if (!value.lastname) {
-            isValid = false;
-            newErrors.lastname = "Lastname is required"
-        }
-        if (!value.password) {
-            isValid = false;
-            newErrors.password = "Password is required"
-        }
-        const passwordPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
 
-        if (!passwordPattern.test(value.password)) {
-            isValid = false;
-            newErrors.password = "Password requirements: 8-20 characters, 1 number, 1 letter, 1 symbol."
-        }
 
 
 
@@ -60,11 +54,11 @@ const Gallery = () => {
 
 
 
-    async function getAdminuserData() {
-        axios.get(`${BASE_URL}/adminuser_data`)
+    async function getGalleryData() {
+        axios.get(`${BASE_URL}/gallery_data`)
             .then((res) => {
-                console.log(res.data)
-                setData(res.data)
+
+                setGallery(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -72,7 +66,7 @@ const Gallery = () => {
     }
 
     useEffect(() => {
-        getAdminuserData()
+        getGalleryData()
     }, [])
 
     const handleClick = (id) => {
@@ -91,18 +85,28 @@ const Gallery = () => {
         }));
     };
 
+    const handleupdateId = (id) =>{
+        const data = {
+            gallery_id : id
+        }
+        axios.post(`${BASE_URL}/gallery_update_data`,data)
+        .then((res)=>{
+            console.log(res)
+            setUpdateData(res.data[0])
+        })
+    }
+
     const handleDelete = (id) => {
 
 
         const data = {
-            adminuser_id: id
+            gallery_id: id
         }
 
 
-        axios.post(`${BASE_URL}/adminuser_delete`, data)
+        axios.post(`${BASE_URL}/gallery_delete`, data)
             .then((res) => {
-                getAdminuserData()
-
+                getGalleryData()
             })
 
             .catch((err) => {
@@ -118,20 +122,18 @@ const Gallery = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         if (validateForm()) {
-            const hashpassword = md5(value.password)
 
-            const data = {
-                firstname: value.firstname,
-                lastname: value.lastname,
-                email: value.email,
-                password: hashpassword,
 
-            }
+            const formdata = new FormData()
 
-            axios.post(`${BASE_URL}/add_adminuser`, data)
+            formdata.append("title", value.title)
+            formdata.append('image', image)
+            formdata.append('u_id', uid.id)
+
+            axios.post(`${BASE_URL}/add_gallery`, formdata)
                 .then((res) => {
                     alert(res.data)
-                    getAdminuserData()
+                    getGalleryData()
                     if (res.data) {
                         //    navigate('/vendormaster')
                     }
@@ -146,6 +148,13 @@ const Gallery = () => {
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
+
+
+    const handleUpload = async (e) => {
+        const file = e.target.files[0];
+        setImage(file);
+
+    };
 
     return (
 
@@ -162,16 +171,18 @@ const Gallery = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
                                             <label for="brand">Title</label>
-                                            <input type="text" class="form-control" id="title" placeholder="Brand Name" name='brand' onChange={onhandleChange} />
-                                            {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
+                                            <input type="text" class="form-control" id="image" placeholder="Enter title" value={value.title} name='title' onChange={onhandleChange} />
+                                            {errors.title && <div className="text-danger">{errors.title}</div>}
                                         </div>
                                         <div class="form-group">
                                             <label for="image">Image / Video</label>
-                                            <input type="file" class="form-control" id="image" placeholder="" name='image' onChange={onhandleChange} />
-                                            {errors.firstname && <div className="text-danger">{errors.firstname}</div>}
+                                            <input type="file" class="form-control" id="image" placeholder="" name='image' onChange={handleUpload} />
+                                            {errors.image && <div className="text-danger">{errors.image}</div>}
                                         </div>
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <Link to="/webapp/gallery"><button class="btn btn-light">Cancel</button></Link>
+                                        <button type='button' onClick={()=>{
+                                            window.location.reload()
+                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -190,6 +201,7 @@ const Gallery = () => {
                                     <div class="table-responsive pt-3">
                                         <table class="table table-bordered">
                                             <thead>
+
                                                 <tr>
                                                     <th>
                                                         #
@@ -198,33 +210,46 @@ const Gallery = () => {
                                                         Title
                                                     </th>
 
-                                                    <th width="17%">
+                                                    <th width="30%">
                                                         Action
                                                     </th>
                                                 </tr>
+
+
                                             </thead>
                                             <tbody>
 
-
-                                                <tr >
-                                                    <td>
-                                                        1
-                                                    </td>
-                                                    <td>
-                                                        bed
-                                                    </td>
-
-
-                                                    <td>
-                                                        <Link><EditIcon /></Link>
-                                                        <Link style={{ color: "red" }}><DeleteIcon /></Link>
-                                                        {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
-                                                    </td>
-
-                                                </tr>
+                                                {
+                                                    gallery.map((item, index) => {
+                                                        return (
+                                                            <tr >
+                                                                <td>
+                                                                    {index + 1}
+                                                                </td>
+                                                                <td>
+                                                                    {item.title}
+                                                                </td>
 
 
+                                                                <td>
+                                                                    <Link><EditIcon  onClick={() =>handleupdateId(item.id)}/></Link>
+                                                                    <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
 
+                                                                </td>
+                                                                {confirmationVisibleMap[item.id] && (
+                                                                    <div className='confirm-delete'>
+                                                                        <p>Are you sure you want to delete?</p>
+                                                                        <button onClick={() => handleDelete(item.id)} className='btn btn-sm btn-primary'>OK</button>
+                                                                        <button onClick={() => handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                                    </div>
+                                                                )}
+
+                                                            </tr>
+
+
+                                                        )
+                                                    })
+                                                }
 
                                             </tbody>
                                         </table>
@@ -233,6 +258,7 @@ const Gallery = () => {
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

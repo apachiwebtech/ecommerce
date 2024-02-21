@@ -223,9 +223,9 @@ const VendorForm = () => {
         // Add more validation for other fields as needed
 
         setErrors(newErrors);
-        // setTimeout(() => {
-        //     setErrors("")
-        // }, 5000);
+        setTimeout(() => {
+            setErrors("")
+        }, 5000);
         return isValid;
     };
 
@@ -297,7 +297,7 @@ const VendorForm = () => {
                     console.error('Error:', error);
                 });
 
-                
+
 
             // axios.post(`${BASE_URL}/add_vendor`, data)
             //     .then((res) => {
@@ -496,7 +496,9 @@ const VendorForm = () => {
                                         </div>
                                         <div className='mt-3 text-right'>
                                             <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                            <button class="btn btn-light">Cancel</button>
+                                            <button type='button' onClick={() => {
+                                                window.location.reload()
+                                            }} class="btn btn-light">Cancel</button>
                                         </div>
 
                                     </form>

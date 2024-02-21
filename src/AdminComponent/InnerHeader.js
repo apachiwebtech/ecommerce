@@ -36,6 +36,8 @@ const InnerHeader = () => {
                 return 'Social Media';
             case '/webapp/gallery':
                 return 'Gallery';
+            case '/webapp/settings':
+                return 'Settings';
             case location.pathname.match(/^\/addservice\/\d+$/) ? location.pathname : '':
                 return 'Add Service'
 

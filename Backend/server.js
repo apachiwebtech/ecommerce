@@ -15,7 +15,22 @@ const storage = multer.diskStorage({
   },
 });
 
+const storage2 = multer.diskStorage({
+  destination: 'uploads/banner', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
+const storage3 = multer.diskStorage({
+  destination: 'uploads/gallery', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
+
 const upload = multer({ storage: storage });
+const upload2 = multer({ storage: storage2 });
+const upload3 = multer({ storage: storage3 });
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -414,25 +429,26 @@ app.post('/add_adminuser', (req, res) => {
 
   let firstname = req.body.firstname;
   let lastname = req.body.lastname;
+  let mobile = req.body.mobile;
   let email = req.body.email;
   let password = req.body.password;
   let role = "2";
   let created_date = new Date()
   let u_id = req.body.u_id;
-
   let user_id = req.body.user_id
+
   let sql;
   let param;
 
   if (u_id == undefined) {
 
 
-    sql = "insert into awt_adminuser(`firstname`,`lastname`,`email`,`password`,`role`,`created_date`,`created_by`) values(?,?,?,?,?,?,?)"
-    param = [firstname, lastname, email, password, role, created_date, user_id]
+    sql = "insert into awt_adminuser(`firstname`,`lastname`,`mobile`,`email`,`password`,`role`,`created_date`,`created_by`) values(?,?,?,?,?,?,?,?)"
+    param = [firstname, lastname, mobile, email, password, role, created_date, user_id]
 
   } else {
-    sql = "update awt_adminuser set firstname = ?, lastname = ?, email = ?, password = ?, role = ?,updated_date = ?, updated_by = ? where id = ?"
-    param = [firstname, lastname, email, password, role, created_date, user_id, u_id]
+    sql = "update awt_adminuser set firstname = ?, lastname = ?,mobile = ?, email = ?, password = ?, role = ?,updated_date = ?, updated_by = ? where id = ?"
+    param = [firstname, lastname, mobile, email, password, role, created_date, user_id, u_id]
   }
 
   con.query(sql, param, (err, data) => {
@@ -499,6 +515,7 @@ app.post('/adminuser_delete', (req, res) => {
 app.post('/add_category', (req, res) => {
   let user_id = req.body.user_id
   let title = req.body.title;
+  let slug = req.body.slug;
   let description = req.body.description;
   let created_date = new Date()
   let u_id = req.body.u_id;
@@ -508,12 +525,12 @@ app.post('/add_category', (req, res) => {
   let param;
 
   if (u_id == undefined) {
-    sql = "insert into awt_category(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
-    param = [title, description, user_id, created_date]
+    sql = "insert into awt_category(`title`,`slug`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
+    param = [title, slug, description, user_id, created_date]
 
   } else {
-    sql = "update awt_category set title = ? , description = ? , updated_by = ? ,updated_date = ? where id = ?"
-    param = [title, description, user_id, created_date, u_id]
+    sql = "update awt_category set title = ? ,slug = ?, description = ? , updated_by = ? ,updated_date = ? where id = ?"
+    param = [title, slug, description, user_id, created_date, u_id]
   }
 
 
@@ -746,7 +763,7 @@ app.post('/social_update_data', (req, res) => {
 
   const sql = 'select * from awt_social_links where id = ?'
 
-  con.query(sql,[social_id], (err, data) => {
+  con.query(sql, [social_id], (err, data) => {
     if (err) {
       return res.json(err)
     } else {
@@ -766,11 +783,159 @@ app.post('/update_social', (req, res) => {
 
   const sql = 'update awt_social_links set title = ?,link = ?,colorcode = ?,updated_date = ?,updated_by = ? where id = ?'
 
-  con.query(sql,[title,link,colorcode,date,user_id,uid], (err, data) => {
+  con.query(sql, [title, link, colorcode, date, user_id, uid], (err, data) => {
     if (err) {
       return res.json(err)
     } else {
       return res.json(data)
     }
   })
+})
+
+app.post('/add_banner', upload2.single('image'), (req, res) => {
+
+  let title = req.body.title;
+  let banner = req.file.filename;
+  let link = req.body.link;
+  let target = req.body.target;
+  let view = req.body.viewid;
+  let uid = req.body.uid;
+
+  let sql;
+  let param;
+
+  console.log(uid, "uid")
+
+
+
+  if (uid == "undefined") {
+
+    sql = 'insert into awt_banner(`title`,`upload_image`,`link`,`target`,`view`) values(?,?,?,?,?)'
+
+    param = [title, banner, link, target, view]
+  } else {
+    sql = 'update awt_banner set title = ? , upload_image = ? , link = ? ,target = ?, view = ? where  id = ?'
+    param = [title, banner, link, target, view, uid]
+  }
+
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.get(`/banner_data`, (req, res) => {
+
+  const sql = 'select * from awt_banner '
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/banner_updateid', (req, res) => {
+
+  let bannerid = req.body.bannerid;
+
+  const sql = 'select * from awt_banner where id = ?'
+
+  con.query(sql, [bannerid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+
+app.get('/gallery_data', (req, res) => {
+
+  const sql = 'select * from awt_gallery where deleted = 0'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/add_gallery', upload3.single('image'), (req, res) => {
+
+  let title = req.body.title;
+  let image = req.file.filename;
+  let created_date = new Date()
+  let user_id = "2"
+  let u_id = req.body.u_id;
+
+
+  let sql;
+  let param;
+
+
+  if (u_id == 'undefined') {
+    sql = "insert into awt_gallery(`title`,`upload_image`,`created_by`,`created_date`) values(?,?,?,?)"
+    param = [title, image, user_id, created_date]
+  } else {
+    sql = "update awt_gallery set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = ?"
+    param = [title, image, user_id, created_date, u_id]
+  }
+
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+
+      return res.json(err)
+    }
+    else {
+
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+app.post('/gallery_delete', (req, res) => {
+
+  let gallery_id = req.body.gallery_id;
+
+  const sql = "update awt_gallery set deleted = 1 where id = ?"
+
+  con.query(sql, [gallery_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/gallery_update_data', (req, res) => {
+
+  let gallery_id = req.body.gallery_id;
+
+  const sql = "select * from  awt_gallery  where id = ?"
+
+  con.query(sql, [gallery_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
 })
