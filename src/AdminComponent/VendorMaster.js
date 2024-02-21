@@ -8,6 +8,7 @@ import InnerHeader from './InnerHeader';
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
+import { DataGrid } from '@mui/x-data-grid';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
     padding: 8,
@@ -137,7 +138,82 @@ const VendorMaster = () => {
 
     }
 
+    const rows = vendordata.map((item, index) => {
+        return (
+            {
+                index: index + 1,
+                id: item.id,
+                username: item.vendor_name,
+                number: item.mobile,
+                email: item.emailid,
+                address: item.address,
+            })
+    });
 
+    const columns = [
+        {
+            field: 'index',
+            headerName: 'ID',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+        },
+        { field: 'username', headerName: 'Vendor Name', flex: 2 },
+        {
+            field: 'mobile',
+            headerName: 'Contact',
+            type: 'number',
+            align: 'left',
+            headerAlign: 'left',
+            flex: 2,
+        },
+        {
+            field: 'emailid',
+            headerName: 'Email',
+            flex: 2
+        },
+        {
+            field: 'address',
+            headerName: 'address',
+            flex: 3
+        },
+        {
+            field: 'status',
+            headerName: 'Status',
+            flex: 1,
+            renderCell: (params) => {
+                return (
+                    <>
+                        {params.row.address !== null && params.row.aggrement_upload !== "" && params.row.city !== null && params.row.emailid !== null && params.row.gst_upload !== "" && params.row.gstno !== null && params.row.mobile !== null && params.row.panupload !== "" && params.row.picode !== null && params.row.state !== null && params.row.username && params.row.username && params.row.vendor_pan ? <div>{params.row.approve == 0 ? <button className='btn btn-sm btn-danger' onClick={() => handleConfirmation(params.row.id)}>Approve</button> : <>{params.row.active == 1 ? <FormControlLabel
+                            control={<Android12Switch value="0" onChange={(e) => handlestatus(e, params.row.id)} defaultChecked />}
+                        /> : <FormControlLabel
+                            control={<Android12Switch value="1" onChange={(e) => handlestatus(e, params.row.id)} />}
+                        />} </>} </div> :
+                            <FormControlLabel
+                                control={<Android12Switch disabled />}
+                            />}
+                    </>
+                )
+            }
+        },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Action',
+            flex: 1,
+            renderCell: (params) => {
+                console.log(params , ">>>")
+                return (
+                    <>
+                         <Link to={`/webapp/vendorform/${params.row.id}`}><EditIcon /></Link>
+                    </>
+                )
+            }
+        },
+    ];
+    const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
     return (
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
@@ -158,8 +234,14 @@ const VendorMaster = () => {
                                             <Link to="/webapp/vendorform/:id"><button className=' btn btn-primary'>Add Vendor</button></Link>
                                         </div>
                                     </div>
-
                                     <div class="table-responsive pt-3">
+                                        <DataGrid
+                                            rows= {rowsWithIds}
+                                            columns={columns}
+                                            getRowId={(row) => row.id}
+                                        />
+                                    </div>
+                                    {/* <div class="table-responsive pt-3">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
@@ -220,8 +302,8 @@ const VendorMaster = () => {
                                                             </td>
                                                             <td>
                                                                 <Link to={`/webapp/vendorform/${item.id}`}><EditIcon /></Link>
-                                                                {/* <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} /> */}
-                                                                {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
+                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
+                                                                <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button>
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>
@@ -241,7 +323,7 @@ const VendorMaster = () => {
 
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
