@@ -138,18 +138,6 @@ const VendorMaster = () => {
 
     }
 
-    const rows = vendordata.map((item, index) => {
-        return (
-            {
-                index: index + 1,
-                id: item.id,
-                username: item.vendor_name,
-                number: item.mobile,
-                email: item.emailid,
-                address: item.address,
-            })
-    });
-
     const columns = [
         {
             field: 'index',
