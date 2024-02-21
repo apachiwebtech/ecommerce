@@ -27,10 +27,17 @@ const storage3 = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
+const storage4 = multer.diskStorage({
+  destination: 'uploads/brand', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
 
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
 const upload3 = multer({ storage: storage3 });
+const upload4 = multer({ storage: storage4 });
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -600,6 +607,7 @@ app.post('/add_subcategory', (req, res) => {
   let cat_id = req.body.cat_id;
   let user_id = req.body.user_id
   let title = req.body.title;
+  let slug = req.body.slug;
   let description = req.body.description;
   let created_date = new Date()
   let u_id = req.body.u_id;
@@ -609,11 +617,11 @@ app.post('/add_subcategory', (req, res) => {
   let param;
 
   if (u_id == undefined) {
-    sql = "insert into awt_subcategory(`cat_id`,`title`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
-    param = [cat_id, title, description, user_id, created_date]
+    sql = "insert into awt_subcategory(`cat_id`,`title`,`slug`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
+    param = [cat_id, title, slug, description, user_id, created_date]
   } else {
-    sql = "update awt_subcategory set cat_id = ?, title = ? , description = ? , updated_by = ?, updated_date = ? where id = ?"
-    param = [cat_id, title, description, user_id, created_date, u_id]
+    sql = "update awt_subcategory set cat_id = ?, title = ?,slug = ? , description = ? , updated_by = ?, updated_date = ? where id = ?"
+    param = [cat_id, title, slug, description, user_id, created_date, u_id]
   }
 
   con.query(sql, param, (err, data) => {
@@ -675,16 +683,26 @@ app.post('/subcategory_delete', (req, res) => {
 
 })
 
-app.post('/add_brand', (req, res) => {
+app.post('/add_brand', upload4.single('logo'), (req, res) => {
   let user_id = req.body.user_id
+  let image = req.file.filename
   let title = req.body.title;
   let description = req.body.description;
   let created_date = new Date()
+  let uid = req.body.uid
 
+  let sql;
+  let param;
+  if (uid == "undefined") {
+    sql = "insert into awt_brand(`title`,`logo`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
+    param = [title, image, description, user_id, created_date]
+  } else {
 
-  const sql = "insert into awt_brand(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
+    sql = "update awt_brand set title = ?, logo = ?,description = ?,updated_by = ?, updated_date = ? where id =?";
+    param = [title, image, description, user_id, created_date, uid]
+  }
 
-  con.query(sql, [title, description, user_id, created_date], (err, data) => {
+  con.query(sql, param, (err, data) => {
     if (err) {
       return res.json(err)
     }
@@ -938,4 +956,17 @@ app.post('/gallery_update_data', (req, res) => {
     }
   })
 
+})
+
+app.get(`/order_detail`, (req, res) => {
+
+  const sql = 'select * from `order` where deleted = 0'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
 })

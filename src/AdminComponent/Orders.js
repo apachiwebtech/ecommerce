@@ -7,14 +7,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 const Orders = () => {
-    const [vendordata, setVendorData] = useState([])
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const [order, setOrderData] = useState([])
 
-    async function getVendordata() {
-        axios.get(`${BASE_URL}/brand_data`)
+    async function getOrderdata() {
+        axios.get(`${BASE_URL}/order_detail`)
             .then((res) => {
                 console.log(res.data)
-                setVendorData(res.data)
+                setOrderData(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -22,42 +21,12 @@ const Orders = () => {
     }
 
     useEffect(() => {
-        getVendordata()
+        getOrderdata()
     }, [])
 
-    const handleClick = (id) => {
-        setConfirmationVisibleMap((prev) => ({
-            ...prev,
-            [id]: true
-        }))
-    }
 
-    const handleCancel = (id) => {
-        setConfirmationVisibleMap((prev) => ({
-            ...prev,
-            [id]: false
-        }))
-    }
 
-    const handleDelete = (id) => {
-        const data = {
-            vendor_id: id
-        }
 
-        axios.post(`${BASE_URL}/vendor_delete`, data)
-            .then((res) => {
-                console.log(res)
-                getVendordata()
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prev) => ({
-            ...prev,
-            [id]: false
-        }))
-    }
 
 
     return (
@@ -149,6 +118,7 @@ const Orders = () => {
                                     <div class="table-responsive pt-3">
                                         <table class="table table-bordered">
                                             <thead>
+
                                                 <tr>
                                                     <th>
                                                         Order Id
@@ -178,42 +148,47 @@ const Orders = () => {
                                                         View
                                                     </th>
                                                 </tr>
+
+
                                             </thead>
 
 
                                             <tbody>
 
+                                                {order.map((item) => {
+                                                    return (
+                                                        <tr >
+                                                            <td>
+                                                                {item.orderno}
+                                                            </td>
+                                                            <td>
+                                                                {item.order_date}
+                                                            </td>
+                                                            <td>
+                                                                {item.invoiceNo}
+                                                            </td>
+                                                            <td>
+                                                                {item.firstname} {item.lastname}
+                                                            </td>
+                                                            <td>
+                                                                {item.transacamount}
+                                                            </td>
+                                                            <td>
+                                                                {item.paystatus == 0 ? "pending" : "paid"}
+                                                            </td>
+                                                            <td>
+                                                                {item.status}
+                                                            </td>
+                                                            <td>
 
-                                                <tr >
-                                                    <td>
-                                                        RST-231004-10
-                                                    </td>
-                                                    <td>
-                                                        04-10-2023
-                                                    </td>
-                                                    <td>
-                                                        RST-WS/23-24/001
-                                                    </td>
-                                                    <td>
-                                                        Abhishek Pangerkar
-                                                    </td>
-                                                    <td>
-                                                        15110
-                                                    </td>
-                                                    <td>
-                                                        paid
-                                                    </td>
-                                                    <td>
-                                                        Confirm
-                                                    </td>
-                                                    <td>
-
-                                                        <button className='bt btn-sm btn-primary'>Print Invoice</button>
-                                                    </td>
-                                                    <td>
-                                                        <Link to="/webapp/view"><RemoveRedEyeIcon className='text-primary' /></Link>
-                                                    </td>
-                                                </tr>
+                                                                <button className='bt btn-sm btn-primary'>Print Invoice</button>
+                                                            </td>
+                                                            <td>
+                                                                <Link to="/webapp/view"><RemoveRedEyeIcon className='text-primary' /></Link>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })}
                                                 <tr >
                                                     <td>
                                                         RST-231004-11

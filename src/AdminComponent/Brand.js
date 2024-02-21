@@ -5,6 +5,7 @@ import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
+import decryptedUserId from '../Utils/UserID';
 
 
 
@@ -12,6 +13,8 @@ const Brand = () => {
 
     const [brand, setBrand] = useState([])
     const [uid, setUid] = useState([])
+    const [image, setImage] = useState()
+    const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [value, setValue] = useState({
         title: "" || uid.title,
@@ -25,6 +28,26 @@ const Brand = () => {
             description: "" || uid.description,
         })
     }, [uid])
+
+
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
+
+
+        if (!value.title) {
+            isValid = false;
+            newErrors.title = "title is require"
+        }
+
+        if (!image) {
+            isValid = false
+            newErrors.logo = "logo is require"
+        }
+
+        setError(newErrors)
+        return isValid
+    }
 
     const handleUpdate = (id) => {
         axios.post(`${BASE_URL}/brand_update`, { u_id: id })
@@ -90,23 +113,29 @@ const Brand = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
+        if (validateForm()) {
+            const formdata = new FormData();
+
+            formdata.append('title', value.title)
+            formdata.append('logo', image)
+            formdata.append('description', value.description)
+            formdata.append('user_id', decryptedUserId())
+            formdata.append('uid', uid.id)
 
 
-        const data = {
-            title: value.title,
-            description: value.description,
-            user_id: localStorage.getItem("userid")
+
+            axios.post(`${BASE_URL}/add_brand`, formdata)
+                .then((res) => {
+                    alert(res.data)
+                    getBrandData()
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
         }
 
-        axios.post(`${BASE_URL}/add_brand`, data)
-            .then((res) => {
-                alert(res.data)
-                getBrandData()
 
-            })
-            .catch((err) => {
-                console.log(err)
-            })
     }
 
 
@@ -114,10 +143,15 @@ const Brand = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
+    const handleUpload = async (e) => {
+        const file = e.target.files[0]
+        setImage(file)
+    }
+
     return (
 
         <div class="container-fluid page-body-wrapper">
-            <InnerHeader/>
+            <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
@@ -130,20 +164,22 @@ const Brand = () => {
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Title <span className='text-danger'>*</span></label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
+                                            {error.title && <span className='text-danger'>{error.title}</span>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Logo<span className='text-danger'>*</span></label>
-                                            <input type="file" class="form-control" id="exampleInputUsername1" placeholder="Enter.."  />
-                                          
+                                            <input type="file" class="form-control" id="exampleInputUsername1" onChange={handleUpload} name="image" placeholder="Enter.." />
+                                            {error.logo && <span className='text-danger'>{error.logo}</span>}
+
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
                                         </div>
-                                      
+
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={()=>{
+                                        <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
                                     </form>
@@ -193,7 +229,7 @@ const Brand = () => {
 
 
                                                             <td>
-                                                                <EditIcon onClick={() => handleUpdate(item.id)}/>
+                                                                <EditIcon onClick={() => handleUpdate(item.id)} />
                                                                 <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
                                                                 {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
                                                             </td>
