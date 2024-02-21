@@ -6,7 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-
+import { DataGrid } from '@mui/x-data-grid';
 
 
 const Brand = () => {
@@ -14,6 +14,7 @@ const Brand = () => {
     const [brand, setBrand] = useState([])
     const [uid, setUid] = useState([])
     const [image, setImage] = useState()
+    const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [value, setValue] = useState({
@@ -75,6 +76,7 @@ const Brand = () => {
     }, [])
 
     const handleClick = (id) => {
+        setCid(id)
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: true,
@@ -148,6 +150,35 @@ const Brand = () => {
         setImage(file)
     }
 
+    
+    const columns = [
+        {
+            field: 'index',
+            headerName: '#',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+        },
+        { field: 'title', headerName: 'Title', flex: 2 },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Action',
+            flex: 1,
+            renderCell: (params) => {
+                return (
+                    <>
+                       <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                       <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
+                    </>
+                )
+            }
+        },
+    ];
+    const rowsWithIds = brand.map((row, index) => ({ index: index + 1, ...row }));
+
     return (
 
         <div class="container-fluid page-body-wrapper">
@@ -198,8 +229,24 @@ const Brand = () => {
                                         </div>
 
                                     </div>
+                                    
+                                    <div>
+                                    <DataGrid
+                                            rows= {rowsWithIds}
+                                            columns={columns}
+                                            getRowId={(row) => row.id}
+                                        />
 
-                                    <div class="table-responsive pt-3">
+                                        {confirmationVisibleMap[cid] && (
+                                                                <div className='confirm-delete'>
+                                                                    <p>Are you sure you want to delete?</p>
+                                                                    <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                                    <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                                </div>
+                                                            )}
+                                    </div>
+
+                                    {/* <div class="table-responsive pt-3">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
@@ -231,7 +278,7 @@ const Brand = () => {
                                                             <td>
                                                                 <EditIcon onClick={() => handleUpdate(item.id)} />
                                                                 <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
-                                                                {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
+                                                                <button className='btn btn-sm btn-danger' >Delete</button>
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>
@@ -247,7 +294,7 @@ const Brand = () => {
 
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </div> */}
 
                                 </div>
                             </div>

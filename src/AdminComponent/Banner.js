@@ -145,7 +145,7 @@ const Banner = () => {
             axios.post(`${BASE_URL}/add_banner`, formdata)
                 .then((res) => {
                     alert("Data Submitted Successfully")
-
+                    bannerdata()
                     if (res.data) {
                         //    navigate('/vendormaster')
                     }

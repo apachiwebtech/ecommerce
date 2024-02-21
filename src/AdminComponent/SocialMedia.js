@@ -8,6 +8,7 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
 import img1 from "../assets/images/prof.png";
+import decryptedUserId from "../Utils/UserID";
 
 const SocialMedia = () => {
   const [social, setSocial] = useState([]);
@@ -68,9 +69,9 @@ const SocialMedia = () => {
 
     const data = {
       title: value.title,
-      link: value.description,
+      link: value.link,
       colorcode: value.colorcode,
-      user_id: localStorage.getItem("userid"),
+      user_id: decryptedUserId(),
       uid :uid
     };
 

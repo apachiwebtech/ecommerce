@@ -33,11 +33,18 @@ const storage4 = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
+const storage5 = multer.diskStorage({
+  destination: 'uploads/sizechart', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
 
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
 const upload3 = multer({ storage: storage3 });
 const upload4 = multer({ storage: storage4 });
+const upload5 = multer({ storage: storage5 });
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -149,6 +156,8 @@ app.post('/login', (req, res) => {
     } else {
       if (data.length > 0) {
         const id = data[0].id;
+
+
         req.session.id = id
         console.log(req.session.id)
         return res.json({ data, keyid: req.session.id, id: id })
@@ -805,7 +814,7 @@ app.post('/update_social', (req, res) => {
     if (err) {
       return res.json(err)
     } else {
-      return res.json(data)
+      return res.json("Data Added Successfully")
     }
   })
 })
@@ -966,6 +975,59 @@ app.get(`/order_detail`, (req, res) => {
     if (err) {
       return res.json(err)
     } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post(`/getsubcategory`, (req, res) => {
+  let catid = req.body.catid;
+
+  const sql = 'select * from `awt_subcategory` where cat_id = ?'
+
+  con.query(sql, [catid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+
+app.post(`/add_product`, upload5.single('sizeimage'), (req, res) => {
+
+  let v_id = req.body.v_id;
+  let user_id = req.body.user_id;
+  let catid = req.body.catid;
+  let title = req.body.title;
+  let b_id = req.body.b_id;
+  let subcatid = req.body.subcatid;
+  let price = req.body.price;
+  let d_price = req.body.d_price;
+  let description = req.body.description;
+  let sizeimage = req.file.filename;
+  let date = new Date()
+
+  const sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`catid`,`scatid`,`description`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`) values(?,?,?,?,?,?,?,?,?,?,?)'
+
+  con.query(sql, [title,v_id, b_id, catid, subcatid, description, price, d_price, sizeimage, date, user_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.get(`/product_data` , (req,res)=>{
+
+  const sql = 'select * from `awt_add_product` where deleted = 0';
+
+  con.query(sql, (err,data)=>{
+    if(err){
+      return res.json(err)
+    }else{
       return res.json(data)
     }
   })

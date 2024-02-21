@@ -14,6 +14,7 @@ const AdminUser = () => {
 
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [errors, setErrors] = useState({})
+    const [cid, setCid] = useState("")
     const [admindata, setData] = useState([])
     const [uid, setUid] = useState([])
     const [value, setValue] = useState({
@@ -112,14 +113,15 @@ const AdminUser = () => {
         getAdminuserData()
     }, [])
 
+  
     const handleClick = (id) => {
+        setCid(id)
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: true,
         }));
-
-        handleDelete(id)
     };
+    
 
 
     const handleCancel = (id) => {
@@ -229,13 +231,7 @@ const AdminUser = () => {
                             <EditIcon onClick={() => handleUpdate(params.row.id)} />
                             <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
                         </div>
-                        {confirmationVisibleMap[params.row.id] && (
-                            <div className='confirm-delete'>
-                                <p>Are you sure you want to delete?</p>
-                                <button onClick={() => handleDelete(params.row.id)} className='btn btn-sm btn-primary'>OK</button>
-                                <button onClick={() => handleCancel(params.row.id)} className='btn btn-sm btn-danger'>Cancel</button>
-                            </div>
-                        )}
+                     
                     </>
                 )
             }
@@ -312,6 +308,13 @@ const AdminUser = () => {
                                             rows={rows}
                                             columns={columns}
                                         />
+                                           {confirmationVisibleMap[cid] && (
+                                                                <div className='confirm-delete'>
+                                                                    <p>Are you sure you want to delete?</p>
+                                                                    <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                                    <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                                </div>
+                                                            )}
                                     </div>
 
                                 </div>

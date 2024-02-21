@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
+import { DataGrid } from '@mui/x-data-grid';
 
 
 
@@ -15,6 +16,7 @@ const Category = () => {
     const [error, setError] = useState({})
     const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const [cid, setCid] = useState("")
     const [value, setValue] = useState({
         title: "" || uid.title,
         slug: "" || uid.slug,
@@ -67,6 +69,7 @@ const Category = () => {
 
 
     const handleClick = (id) => {
+        setCid(id)
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: true,
@@ -146,6 +149,34 @@ const Category = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
+    const columns = [
+        {
+            field: 'index',
+            headerName: 'ID',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+        },
+        { field: 'title', headerName: 'Title', flex: 2 },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Action',
+            flex: 1,
+            renderCell: (params) => {
+                return (
+                    <>
+                       <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                       <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
+                    </>
+                )
+            }
+        },
+    ];
+    const rowsWithIds = cat.map((row, index) => ({ index: index + 1, ...row }));
+
     return (
 
         <div class="container-fluid page-body-wrapper">
@@ -196,8 +227,23 @@ const Category = () => {
                                         </div>
 
                                     </div>
+                                    <div>
+                                    <DataGrid
+                                            rows= {rowsWithIds}
+                                            columns={columns}
+                                            getRowId={(row) => row.id}
+                                        />
 
-                                    <div class="table-responsive pt-3">
+                                        {confirmationVisibleMap[cid] && (
+                                                                <div className='confirm-delete'>
+                                                                    <p>Are you sure you want to delete?</p>
+                                                                    <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                                    <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                                </div>
+                                                            )}
+                                    </div>
+
+                                    {/* <div class="table-responsive pt-3">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
@@ -228,7 +274,6 @@ const Category = () => {
                                                             <td>
                                                                 <EditIcon onClick={() => handleUpdate(item.id)} />
                                                                 <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
-                                                                {/* <button className='btn btn-sm btn-danger' >Delete</button> */}
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>
@@ -244,7 +289,7 @@ const Category = () => {
 
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </div> */}
 
                                 </div>
                             </div>

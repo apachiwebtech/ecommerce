@@ -13,19 +13,15 @@ import InnerHeader from "./InnerHeader";
 import chair from '../assets/images/chair.jpg'
 
 const ProductCatalog = () => {
-  const [cat, setCatData] = useState([]);
-  const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-  const [value, setValue] = useState({
-    title: "",
-    description: "",
-  });
+  const [product, setProductData] = useState([]);
+
 
   async function getcatData() {
     axios
-      .get(`${BASE_URL}/category_data`)
+      .get(`${BASE_URL}/product_data`)
       .then((res) => {
         console.log(res.data);
-        setCatData(res.data);
+        setProductData(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -36,63 +32,11 @@ const ProductCatalog = () => {
     getcatData();
   }, []);
 
-  const handleClick = (id) => {
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: true,
-    }));
-  };
-  const handleCancel = (id) => {
-    // Hide the confirmation dialog without performing the delete action
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
 
-  const handleDelete = (id) => {
-    const data = {
-      cat_id: id,
-    };
 
-    axios
-      .post(`${BASE_URL}/category_delete`, data)
-      .then((res) => {
-        getcatData();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
 
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
-    const data = {
-      title: value.title,
-      description: value.description,
-      user_id: localStorage.getItem("userid"),
-    };
-
-    axios
-      .post(`${BASE_URL}/add_category`, data)
-      .then((res) => {
-        alert(res.data);
-        getcatData();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const onhandleChange = (e) => {
-    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
 
   const Android12Switch = styled(Switch)(({ theme }) => ({
     padding: 8,
@@ -129,7 +73,7 @@ const ProductCatalog = () => {
 
   return (
     <div class="container-fluid page-body-wrapper">
-      <InnerHeader/>
+      <InnerHeader />
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
@@ -142,10 +86,7 @@ const ProductCatalog = () => {
                       <p class="card-description">List Of Products</p>
                     </div>
                     <div>
-                      {/* <Link to="/webapp/product">
-                        <button className=" btn btn-primary">Add Product</button>
-                        <Button variant="outlined" size="medium"><AddCircleOutlineIcon  style={{fontSize : "16px"}}/> Add Product</Button>
-                      </Link> */}
+
                       <Link to="/webapp/product" ><button className=' btn btn-primary'>Add Product</button></Link>
                     </div>
                   </div>
@@ -169,32 +110,39 @@ const ProductCatalog = () => {
                       </thead>
 
                       <tbody>
-                        <tr>
-                          <td>
-                            1
-                          </td>
-                          <td><img src={chair} alt="" /></td>
-                          <td>Chair</td>
-                          <td>Chair</td>
-                          <td>Office Chair</td>
-                          <td>Satyam</td>
-                          <td>2000</td>
-                        
-                          <td>
-                            {" "}
-                            <FormControlLabel
-                              control={<Android12Switch defaultChecked />}
-                            />
-                          </td>
-                          <td>
-                            <Link to="/webapp/product">
-                              <EditIcon />
-                            </Link>
-                            {/* <Link>
-                              <DeleteIcon  className="text-danger"/>
-                            </Link> */}
-                          </td>
-                        </tr>
+                        {product.map((item) => {
+                          return (
+                            <tr>
+
+                              <td>
+                                1
+                              </td>
+                              <td><img src={chair} alt="" /></td>
+                              <td>Chair</td>
+                              <td>Chair</td>
+                              <td>Office Chair</td>
+                              <td>Satyam</td>
+                              <td>2000</td>
+
+                              <td>
+                                {" "}
+                                <FormControlLabel
+                                  control={<Android12Switch defaultChecked />}
+                                />
+                              </td>
+                              <td>
+                                <Link to="/webapp/product">
+                                  <EditIcon />
+                                </Link>
+                                {/* <Link>
+                                  <DeleteIcon  className="text-danger"/>
+                                </Link> */}
+                              </td>
+                            </tr>
+                          )
+                        })}
+
+
                       </tbody>
                     </table>
                   </div>
