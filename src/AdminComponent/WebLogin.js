@@ -100,7 +100,7 @@ const WebLogin = () => {
           if (res.data.id) {
             // localStorage.setItem("userid", res.data.id)
             const ciphertext = CryptoJS.AES.encrypt(res.data.id.toString(), encryptionKey).toString();
-            Cookies.set('userid', ciphertext, { expires: 1 }); 
+            Cookies.set('userid', ciphertext, { expires: 1 });
             navigate('/webapp')
           }
           else {
@@ -118,17 +118,7 @@ const WebLogin = () => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const apitoken = () =>{
-   
-    axios.get(`${BASE_URL}/gettoken`)
 
-    .then((res)=>{
-      console.log(res)
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
-  }
 
   return (
     <div className="container-scroller d-flex">
@@ -194,9 +184,9 @@ const WebLogin = () => {
                   </div>
                   <p className='text-danger'>{err}</p>
                 </form>
-               
-                <button onClick={apitoken} className='btn btn-danger'>Get</button>
-             
+
+
+
               </div>
             </div>
           </div>

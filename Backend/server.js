@@ -271,79 +271,121 @@ app.post('/add_vendor', upload.fields([
 
   console.log(image1, "new")
 
-  let gstupload = image1 ? image1[0].filename : "";
-  let panupload = image2 ? image2[0].filename : "";
-  let agreementupload = image3 ? image3[0].filename : "";
+  const imagesql = "select gst_upload,pan_upload,aggrement_upload from awt_vendor where id = ?"
 
-
-
-  if (u_id == "undefined") {
-
-    sql = "insert into awt_vendor(`vendor_name`,`username`,`mobile`,`emailid`,`password`,`address`,`state`,`city`,`pincode`,`gstno`,`vendor_pan`,`created_date`,`created_by`,`gst_upload`,`pan_upload`,`aggrement_upload`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-
-    param = [vendor_name, username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload]
-  }
-  else {
-
-    sql = "update awt_vendor set vendor_name= ? ,  username = ? , mobile = ?, emailid = ?, password = ?, address = ?,state = ?, city = ?,pincode = ?,gstno =?,vendor_pan = ?, updated_date = ?, updated_by = ? ,gst_upload = ?, pan_upload = ?,aggrement_upload =? where id = ?";
-
-    param = [vendor_name, username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload, u_id]
-  }
-
-
-  con.query(sql, param, (err, data) => {
+  con.query(imagesql,[u_id], (err, data) => {
     if (err) {
+      return res.json("error")
+    } else {
+      const gstimage = data[0] && data[0].gst_upload !== undefined ? data[0].gst_upload : '';
+      const panimage = data[0] && data[0].pan_upload !== undefined ? data[0].pan_upload : '';
+      const agreementimg = data[0] && data[0].aggrement_upload !== undefined ? data[0].aggrement_upload : '';
+      
+      
 
-      return res.json(err)
-    }
+      console.log(gstimage,"gst")
 
 
+      let gstupload;
+      let panupload;
+      let agreementupload;
 
-    const insertedId = data.insertId;
-    console.log(insertedId)
-
-    if (u_id == "undefined") {
-
-      sql2 = "insert into awt_vendorbank(`Account_name`,`Account_no`,`ifsc`,`created_date`,`created_by`,`v_id`) values(?,?,?,?,?,?)"
-      param2 = [account_name, account_no, ifsc_code, created_date, user_id, insertedId,]
-    }
-    else {
-      sql2 = "update awt_vendorbank set Account_name = ? ,Account_no = ?, ifsc = ?, updated_date = ?, updated_by = ? where v_id = ?"
-      param2 = [account_name, account_no, ifsc_code, created_date, user_id, u_id]
-    }
-    con.query(sql2, param2, (err, data) => {
-      if (err) {
-        return res.json(err)
+      if(gstimage == undefined){
+        
+        gstupload = image1 ? image1[0].filename : '';
+      }else{
+        gstupload = image1 ? image1[0].filename : gstimage;
+        
       }
+
+      if(panimage == undefined){
+        panupload = image2 ? image2[0].filename : '';
+        
+      }else{
+        
+        panupload = image2 ? image2[0].filename : panimage;
+      }
+
+      if(agreementimg == undefined){
+        agreementupload = image3 ? image3[0].filename : "";
+        
+      }else{
+        agreementupload = image3 ? image3[0].filename : agreementimg;
+        
+      }
+      
+
+
 
       if (u_id == "undefined") {
 
-        sql3 = "insert into awt_vendorcontact(`person_email`,`person_mobile`,`person_name`,`created_date`,`created_by`,`v_id`) values(?,?,?,?,?,?)"
+        sql = "insert into awt_vendor(`vendor_name`,`username`,`mobile`,`emailid`,`password`,`address`,`state`,`city`,`pincode`,`gstno`,`vendor_pan`,`created_date`,`created_by`,`gst_upload`,`pan_upload`,`aggrement_upload`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-        param3 = [personemail, personmobile, personname, created_date, user_id, insertedId]
-      } else {
-        sql3 = "update awt_vendorcontact set person_email = ?,person_mobile = ?,person_name = ?,updated_date = ?, updated_by = ? where v_id = ?"
 
-        param3 = [personemail, personmobile, personname, created_date, user_id, u_id]
+        param = [vendor_name, username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload]
+      }
+      else {
+
+        sql = "update awt_vendor set vendor_name= ? ,  username = ? , mobile = ?, emailid = ?, password = ?, address = ?,state = ?, city = ?,pincode = ?,gstno =?,vendor_pan = ?, updated_date = ?, updated_by = ? ,gst_upload = ?, pan_upload = ?,aggrement_upload =? where id = ?";
+
+        param = [vendor_name, username, mobile, email, password, address, state, city, pincode, gst, pancard, created_date, user_id, gstupload, panupload, agreementupload, u_id]
       }
 
 
-      con.query(sql3, param3, (err, data) => {
+      con.query(sql, param, (err, data) => {
         if (err) {
 
           return res.json(err)
         }
-        else {
 
-          return res.json("Data Added successfully")
+
+
+        const insertedId = data.insertId;
+        console.log(insertedId)
+
+        if (u_id == "undefined") {
+
+          sql2 = "insert into awt_vendorbank(`Account_name`,`Account_no`,`ifsc`,`created_date`,`created_by`,`v_id`) values(?,?,?,?,?,?)"
+          param2 = [account_name, account_no, ifsc_code, created_date, user_id, insertedId,]
         }
+        else {
+          sql2 = "update awt_vendorbank set Account_name = ? ,Account_no = ?, ifsc = ?, updated_date = ?, updated_by = ? where v_id = ?"
+          param2 = [account_name, account_no, ifsc_code, created_date, user_id, u_id]
+        }
+        con.query(sql2, param2, (err, data) => {
+          if (err) {
+            return res.json(err)
+          }
+
+          if (u_id == "undefined") {
+
+            sql3 = "insert into awt_vendorcontact(`person_email`,`person_mobile`,`person_name`,`created_date`,`created_by`,`v_id`) values(?,?,?,?,?,?)"
+
+            param3 = [personemail, personmobile, personname, created_date, user_id, insertedId]
+          } else {
+            sql3 = "update awt_vendorcontact set person_email = ?,person_mobile = ?,person_name = ?,updated_date = ?, updated_by = ? where v_id = ?"
+
+            param3 = [personemail, personmobile, personname, created_date, user_id, u_id]
+          }
+
+
+          con.query(sql3, param3, (err, data) => {
+            if (err) {
+
+              return res.json(err)
+            }
+            else {
+
+              return res.json("Data Added successfully")
+            }
+          })
+
+
+        })
+
+
       })
-
-
-    })
-
-
+    }
   })
 })
 
@@ -1006,28 +1048,32 @@ app.post(`/add_product`, upload5.single('sizeimage'), (req, res) => {
   let price = req.body.price;
   let d_price = req.body.d_price;
   let description = req.body.description;
+  let specification = req.body.specification;
+  let activeval = req.body.activeval;
+  let featureval = req.body.featureval;
+  let trendingval = req.body.trendingval;
   let sizeimage = req.file.filename;
   let date = new Date()
 
-  const sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`catid`,`scatid`,`description`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`) values(?,?,?,?,?,?,?,?,?,?,?)'
+  const sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`catid`,`scatid`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`active`,`trending`,`featured`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
-  con.query(sql, [title,v_id, b_id, catid, subcatid, description, price, d_price, sizeimage, date, user_id], (err, data) => {
+  con.query(sql, [title, v_id, b_id, catid, subcatid, description,specification, price, d_price, sizeimage, date, user_id,activeval,trendingval,featureval], (err, data) => {
     if (err) {
-      return res.json(err)
+      return res.json("Error in uploading")
     } else {
-      return res.json(data)
+      return res.json("Data Added Successfully")
     }
   })
 })
 
-app.get(`/product_data` , (req,res)=>{
+app.get(`/product_data`, (req, res) => {
 
-  const sql = 'select * from `awt_add_product` where deleted = 0';
+  const sql = 'select  aap.id,aap.active,aap.approve, aap.title,aap.description ,aap.price,ac.id as catid ,ac.title as category,av.id as vendorid,av.vendor_name as vendor,ab.id as brandid,ab.title as brand ,acs.id as scatid,acs.title as subcategory from `awt_add_product` as aap left join awt_category as ac on aap.catid = ac.id left JOIN awt_vendor as av on aap.v_id = av.id LEFT JOIN awt_brand as ab on aap.b_id = ab.id left JOIN awt_subcategory as acs on aap.scatid = acs.id where aap.deleted = 0';
 
-  con.query(sql, (err,data)=>{
-    if(err){
+  con.query(sql, (err, data) => {
+    if (err) {
       return res.json(err)
-    }else{
+    } else {
       return res.json(data)
     }
   })

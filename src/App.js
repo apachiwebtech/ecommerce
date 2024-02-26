@@ -165,7 +165,7 @@ const Router = createBrowserRouter([
 ])
 
 function checkLocalStorageAndRedirect(navigate) {
-  const user_id = localStorage.getItem('userid');
+  const user_id = Cookies.get('userid');
   if (user_id == null) {
     navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
   }
@@ -194,7 +194,7 @@ function WebApp() {
 
   const navigate = useNavigate();
   useEffect(() => {
-    // checkLocalStorageAndRedirect(navigate);
+    checkLocalStorageAndRedirect(navigate);
     accessSession()
   }, [navigate]);
 

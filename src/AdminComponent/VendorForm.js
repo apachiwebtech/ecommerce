@@ -80,6 +80,7 @@ const VendorForm = () => {
             email: vendor.emailid,
             mobile: vendor.mobile,
             username: vendor.username,
+            password: vendor.password,
             address: vendor.address,
             state: vendor.state,
             city: vendor.city,
@@ -128,10 +129,10 @@ const VendorForm = () => {
         let isValid = true;
         const newErrors = { ...errors };
 
-        // if (!value.vendor_name) {
-        //     isValid = false;
-        //     newErrors.vendor_name = "Name is required"; 
-        // }
+        if (!value.vendor_name) {
+            isValid = false;
+            newErrors.vendor_name = "Name is required";
+        }
         // Validate email
         if (!value.email) {
             isValid = false;
@@ -150,10 +151,22 @@ const VendorForm = () => {
         }
         const passwordPattern = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
 
-        if (!passwordPattern.test(value.password)) {
-            isValid = false;
+
+        if (!value.password && !passwordPattern.test(value.password)) {
+            if(vendor.id == undefined){
+                isValid = false;
+                
+            }
+            else {
+                isValid = true;
+            }
             newErrors.password = "Password requirements: 8-20 characters, 1 number, 1 letter, 1 symbol."
         }
+
+
+
+
+
         // if (!value.address) {
         //     isValid = false;
         //     newErrors.address = "address is required";
@@ -253,8 +266,14 @@ const VendorForm = () => {
         e.preventDefault()
 
         if (validateForm()) {
+            let hashpassword
 
-            const hashpassword = md5(value.password)
+            if (value.password == "") {
+                hashpassword = md5(value.password)
+
+            } else {
+                hashpassword = vendor.password
+            }
 
 
             const formData = new FormData();
@@ -263,6 +282,7 @@ const VendorForm = () => {
             formData.append('email', value.email);
             formData.append('mobile', value.mobile);
             formData.append('username', value.username);
+
             formData.append('password', hashpassword);
             formData.append('address', value.address);
             formData.append('state', value.state);
@@ -373,7 +393,8 @@ const VendorForm = () => {
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputConfirmPassword1">Password<span className='text-danger'>*</span></label>
-                                                <input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password" name="password" onChange={onhandleChange} />
+                                                {vendor.id == undefined ? <input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password" name="password" onChange={onhandleChange} /> : <input type="password" class="form-control" id="exampleInputConfirmPassword1" onChange={onhandleChange} placeholder="Password" name="password" disabled />}
+
                                                 {errors.password && <div className="text-danger">{errors.password}</div>}
                                             </div>
                                             {/* <hr width="100%"></hr> */}

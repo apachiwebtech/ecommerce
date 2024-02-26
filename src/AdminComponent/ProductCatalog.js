@@ -110,19 +110,19 @@ const ProductCatalog = () => {
                       </thead>
 
                       <tbody>
-                        {product.map((item) => {
+                        {product.map((item,index) => {
                           return (
                             <tr>
 
                               <td>
-                                1
+                                {index + 1}
                               </td>
                               <td><img src={chair} alt="" /></td>
-                              <td>Chair</td>
-                              <td>Chair</td>
-                              <td>Office Chair</td>
-                              <td>Satyam</td>
-                              <td>2000</td>
+                              <td>{item.title}</td>
+                              <td>{item.category}</td>
+                              <td>{item.subcategory}</td>
+                              <td>{item.vendor}</td>
+                              <td>{item.price}</td>
 
                               <td>
                                 {" "}

@@ -207,8 +207,8 @@ const VendorMaster = () => {
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
-                    <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="">
+                        <div class="grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
@@ -224,8 +224,9 @@ const VendorMaster = () => {
 
                                     </div>
                                   
-                                        <div className='col-lg-12'>
+                                        <div className=''>
                                             <DataGrid
+                                                sx={{width:"98%"}}
                                                 rows={rowsWithIds}
                                                 columns={columns}
                                                 getRowId={(row) => row.id}

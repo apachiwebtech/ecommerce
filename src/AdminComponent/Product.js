@@ -65,8 +65,15 @@ const Product = () => {
     price: "",
     discountedprice: "",
     description: "",
+   
   });
   const [sizeimage, setSizeImage] = useState()
+  const [specification , setSpecification] = useState()
+  const [activeValue , setactiveVal] = useState()
+  const [featureValue , setfeatureVal] = useState()
+  const [trendingValue , settrendingVal] = useState()
+
+
 
 
   const validateForm = () => {
@@ -181,6 +188,21 @@ const Product = () => {
     }
   };
 
+  const handleactive = (e) =>{
+    const value = e.target.value
+    setactiveVal(value)
+  }
+  const handletrending = (e) =>{
+    const value = e.target.value
+    settrendingVal(value)
+  }
+
+
+  const handlefeature = (e) =>{
+    const value = e.target.value
+    setfeatureVal(value)
+  }
+
 
   const HandleCatChange = (selectedValue) => {
     console.log(selectedValue, "catvalue")
@@ -240,11 +262,16 @@ const Product = () => {
       formdata.append('d_price', value.discountedprice)
       formdata.append('description', value.description)
       formdata.append('sizeimage', sizeimage)
+      formdata.append('specification', specification)
+      formdata.append('activeval', activeValue)
+      formdata.append('featureval', featureValue)
+      formdata.append('trendingval', trendingValue)
       formdata.append('user_id', decryptedUserId())
 
       axios.post(`${BASE_URL}/add_product`, formdata)
         .then((res) => {
-          console.log(res)
+          console.log(res.data)
+          alert(res.data)
         })
     }
 
@@ -395,16 +422,35 @@ const Product = () => {
 
                             />
                           </div>
-                        </div>
-                      </div>
 
-                      <div class="row ">
+
+                        </div>
+                        <div class="col-md-6 ">
+                          <div class="form-group ">
+                            <label for="prod_id">
+                              Product title
+                              <span class="text-danger">*</span>
+                            </label>
+
+                
+                            <div>
+                              <TextField id="outlined-basic" label="Enter product title.." sx={{ width: "100%" }} variant="outlined" name="title"
+                                onChange={onhandleChange} />
+                            </div>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* <div class="row ">
                         <div class="col-md-12 py-3">
                           <div class="form-group ">
                             <label for="prod_id">
                               Product identifier
                               <span class="text-danger">*</span>
                             </label>
+
                             <input
                               type="text"
                               class="form-control"
@@ -412,18 +458,17 @@ const Product = () => {
                               placeholder="Product Title"
                               name="title"
                               onChange={onhandleChange}
-                              
-                            />
-                            {/* <p class="para" style={{ fontSize: "12px" }}>
-                              Enter a unique identifier associated with the
-                              product name.{" "}
-                            </p> */}
-                          </div>
-                        </div>
-                      </div>
 
-                      <div class="row">
-                        <div class="col-md-6 py-3">
+                            />
+                        
+                          </div>
+
+                        </div>
+
+                       </div> */}
+
+
+                        <div class="col-md-6 ">
                           <div class="form-group ">
                             <label for="category">
                               Brand<span class="text-danger">*</span>
@@ -444,7 +489,7 @@ const Product = () => {
                             />
                           </div>
                         </div>
-                        <div class="col-md-6 py-3">
+                        <div class="col-md-6 ">
                           <div class="form-group ">
                             <label for="category">
                               Category<span class="text-danger">*</span>
@@ -466,20 +511,22 @@ const Product = () => {
                             />
                           </div>
                         </div>
-                      </div>
 
-                      <div class="row ">
-                        <div class="col-md-6 py-3">
+
+
+                        <div class="col-md-6 " style={{paddingTop :"30px"}}>
                           <div class="form-group ">
                             <label for="prod_id">
                               SubCategory<span class="text-danger">*</span>
                               {error.subcategory && <span className="text-danger">{error.subcategory}</span>}
                             </label>
+                            <div>
+
+                            </div>
                             <Autocomplete
                               disablePortal
                               id="combo-box-demo"
                               options={subcat}
-
                               getOptionLabel={(option) => option.title}
                               getOptionSelected={(option, value) => option.id === value.id}
                               sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
@@ -491,45 +538,39 @@ const Product = () => {
                           </div>
                         </div>
 
-                        <div class="col-md-6 py-3">
+                        <div class="col-md-6 " style={{paddingTop :"30px"}}>
                           <div class="form-group ">
                             <label for="name">
-                              Price{" "}
+                              Price
                               <span class="text-danger">*</span>
                               {error.price && <span className="text-danger">{error.price}</span>}
                             </label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="min_sell"
-                              placeholder="Enter.."
-                              name="price"
-                              onChange={onhandleChange}
-                            />
+                         
+                            <div>
+                              <TextField id="outlined-basic" label="Enter price.." sx={{ width: "100%" }} variant="outlined" name="price"
+                                onChange={onhandleChange} />
+                            </div>
                           </div>
                         </div>
 
-                      </div>
 
-                      <div className="row">
-                        <div class="col-md-6 py-3">
+
+
+                        <div class="col-md-6">
                           <div class="form-group ">
                             <label for="slug">Discounted Price </label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="youtub"
-                              placeholder="Enter.."
-                              name="discountedprice"
-                              onChange={onhandleChange}
-                            />
+                       
+                            <div>
+
+                            <TextField label="Enter price.." variant="outlined" sx={{width:"100%"}} name="discountedprice" />
+                            </div>
                           </div>
                         </div>
-                      </div>
 
 
 
-                      <div class="row">
+
+
                         <div class="col-md-12">
                           <div class="form-group ">
                             <label for="description">Description</label>
@@ -542,7 +583,9 @@ const Product = () => {
                             ></textarea>
                           </div>
                         </div>
+
                       </div>
+
                     </div>
 
                   </div>
@@ -754,7 +797,7 @@ const Product = () => {
                       }}
                       onChange={(event, editor) => {
                         const data = editor.getData();
-                        console.log({ event, editor, data });
+                         setSpecification(data)
                       }}
                       onBlur={(event, editor) => {
                         console.log('Blur.', editor);
@@ -951,7 +994,7 @@ const Product = () => {
                             </div>
                             <div>
                               <FormControlLabel
-                                control={<Android12Switch defaultChecked />}
+                                control={<Android12Switch  onChange={(e) => handleactive(e)} value="1"  />}
                               />
                             </div>
                           </div>
@@ -967,7 +1010,7 @@ const Product = () => {
                               Approval status
                             </label>
                             <FormControlLabel
-                              control={<Android12Switch defaultChecked />}
+                              control={<Android12Switch  />}
                             />
                           </div>
                         </div>
@@ -994,7 +1037,7 @@ const Product = () => {
                             </div>
                             <div>
                               <FormControlLabel
-                                control={<Android12Switch defaultChecked />}
+                                control={<Android12Switch value='1' onChange={(e) =>handlefeature(e)}  />}
                               />
                             </div>
                           </div>
@@ -1022,7 +1065,7 @@ const Product = () => {
                             </div>
                             <div>
                               <FormControlLabel
-                                control={<Android12Switch defaultChecked />}
+                                control={<Android12Switch value="1" onChange={(e) =>handletrending(e)}  />}
                               />
                             </div>
                           </div>
