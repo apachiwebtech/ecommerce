@@ -970,3 +970,24 @@ app.get(`/order_detail`, (req, res) => {
     }
   })
 })
+
+app.post(`/change_password`,(req,res)=>{
+
+  let uid = req.body.user_id;
+  let password = req.body.password;
+  let updated_date = new Date();
+
+  const sql = "update awt_adminuser set password = ? , updated_date = ? where id = ?"
+  
+  con.query(sql, [password , updated_date , uid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      console.log(data)
+      return res.json("Data Successfully added");
+    }
+  })
+
+
+})
