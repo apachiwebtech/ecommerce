@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import { DataGrid } from "@mui/x-data-grid";
 
 
 const Banner = () => {
@@ -172,6 +173,35 @@ const Banner = () => {
 
     var viewid = String(value.view);
     
+    const columns = [
+        {
+            field: 'index',
+            headerName: '#',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+        },
+        { field: 'title', headerName: 'Title', flex: 2 },
+        { field: 'target', headerName: 'Target', type: 'number', flex: 2 },
+        { field: 'view', headerName: 'View', flex: 1 },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Action',
+            flex: 1,
+            renderCell: (params) => {
+                return (
+                    <>
+                       <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                    </>
+                )
+            }
+        },
+    ];
+
+    const rowsWithIds = banner.map((row, index) => ({ index: index + 1, ...row }));
 
     return (
 
@@ -249,7 +279,13 @@ const Banner = () => {
 
                                     </div>
 
-                                    <div className="table-responsive pt-3">
+                                    <DataGrid
+                                            rows= {rowsWithIds}
+                                            columns={columns}
+                                            getRowId={(row) => row.id}
+                                        />
+
+                                    {/* <div className="table-responsive pt-3">
                                         <table className="table table-bordered">
                                             <thead>
                                                 <tr>
@@ -291,8 +327,8 @@ const Banner = () => {
 
                                                             <td>
                                                                <Link><EditIcon onClick={() => handleUpdate(item.id)} /></Link> 
-                                                                {/* <Link style={{ color: "red" }}><DeleteIcon /></Link> */}
-                                                                {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
+                                                                <Link style={{ color: "red" }}><DeleteIcon /></Link>
+                                                                <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button>
                                                             </td>
 
                                                         </tr>
@@ -307,7 +343,7 @@ const Banner = () => {
                                             </tbody>
                                         </table>
 
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>

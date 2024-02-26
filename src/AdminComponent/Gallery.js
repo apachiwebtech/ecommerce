@@ -6,6 +6,7 @@ import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
+import { DataGrid } from '@mui/x-data-grid';
 
 const Gallery = () => {
 
@@ -156,6 +157,36 @@ const Gallery = () => {
 
     };
 
+    const columns = [
+        {
+            field: 'index',
+            headerName: '#',
+            type: 'number',
+            align: 'center',
+            headerAlign: 'center',
+            flex: 1,
+            filterable: false,
+        },
+        { field: 'title', headerName: 'Title', flex: 2 },
+        {
+            field: 'actions',
+            type: 'actions',
+            headerName: 'Action',
+            flex: 1,
+            renderCell: (params) => {
+                return (
+                    <>
+                       <EditIcon style={{ color: "blue" }} onClick={() => handleupdateId(params.row.id)} />
+                       <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
+                    </>
+                )
+            }
+        },
+    ];
+
+    const rowsWithIds = gallery.map((row, index) => ({ index: index + 1, ...row }));
+
+
     return (
 
         <div class="container-fluid page-body-wrapper">
@@ -199,7 +230,12 @@ const Gallery = () => {
                                     </div>
 
                                     <div class="table-responsive pt-3">
-                                        <table class="table table-bordered">
+                                    <DataGrid
+                                            rows= {rowsWithIds}
+                                            columns={columns}
+                                            getRowId={(row) => row.id}
+                                        />
+                                        {/* <table class="table table-bordered">
                                             <thead>
 
                                                 <tr>
@@ -252,7 +288,7 @@ const Gallery = () => {
                                                 }
 
                                             </tbody>
-                                        </table>
+                                        </table> */}
 
                                     </div>
                                 </div>
