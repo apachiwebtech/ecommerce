@@ -17,6 +17,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import InnerHeader from "./InnerHeader";
 import { Autocomplete, TextField } from "@mui/material";
 import decryptedUserId from "../Utils/UserID";
+import EditIcon from "@mui/icons-material/Edit";
+
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
   "& .MuiSwitch-track": {
@@ -65,13 +67,13 @@ const Product = () => {
     price: "",
     discountedprice: "",
     description: "",
-   
+
   });
   const [sizeimage, setSizeImage] = useState()
-  const [specification , setSpecification] = useState()
-  const [activeValue , setactiveVal] = useState()
-  const [featureValue , setfeatureVal] = useState()
-  const [trendingValue , settrendingVal] = useState()
+  const [specification, setSpecification] = useState()
+  const [activeValue, setactiveVal] = useState()
+  const [featureValue, setfeatureVal] = useState()
+  const [trendingValue, settrendingVal] = useState()
 
 
 
@@ -188,17 +190,17 @@ const Product = () => {
     }
   };
 
-  const handleactive = (e) =>{
+  const handleactive = (e) => {
     const value = e.target.value
     setactiveVal(value)
   }
-  const handletrending = (e) =>{
+  const handletrending = (e) => {
     const value = e.target.value
     settrendingVal(value)
   }
 
 
-  const handlefeature = (e) =>{
+  const handlefeature = (e) => {
     const value = e.target.value
     setfeatureVal(value)
   }
@@ -432,7 +434,7 @@ const Product = () => {
                               <span class="text-danger">*</span>
                             </label>
 
-                
+
                             <div>
                               <TextField id="outlined-basic" label="Enter product title.." sx={{ width: "100%" }} variant="outlined" name="title"
                                 onChange={onhandleChange} />
@@ -514,7 +516,7 @@ const Product = () => {
 
 
 
-                        <div class="col-md-6 " style={{paddingTop :"30px"}}>
+                        <div class="col-md-6 " style={{ paddingTop: "30px" }}>
                           <div class="form-group ">
                             <label for="prod_id">
                               SubCategory<span class="text-danger">*</span>
@@ -538,14 +540,14 @@ const Product = () => {
                           </div>
                         </div>
 
-                        <div class="col-md-6 " style={{paddingTop :"30px"}}>
+                        <div class="col-md-6 " style={{ paddingTop: "30px" }}>
                           <div class="form-group ">
                             <label for="name">
                               Price
                               <span class="text-danger">*</span>
                               {error.price && <span className="text-danger">{error.price}</span>}
                             </label>
-                         
+
                             <div>
                               <TextField id="outlined-basic" label="Enter price.." sx={{ width: "100%" }} variant="outlined" name="price"
                                 onChange={onhandleChange} />
@@ -559,10 +561,10 @@ const Product = () => {
                         <div class="col-md-6">
                           <div class="form-group ">
                             <label for="slug">Discounted Price </label>
-                       
+
                             <div>
 
-                            <TextField label="Enter price.." variant="outlined" sx={{width:"100%"}} name="discountedprice" />
+                              <TextField label="Enter price.." variant="outlined" sx={{ width: "100%" }} name="discountedprice" />
                             </div>
                           </div>
                         </div>
@@ -708,6 +710,39 @@ const Product = () => {
                     </div>
 
                   </div>
+                  <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                      <div class="card-body">
+                        <h4 class="card-title">List Of Links</h4>
+                        <div class="table-responsive pt-3">
+                          <table class="table table-bordered">
+                            <thead>
+                              <tr>
+                                <th width="18%">Sr. No.</th>
+                                <th width="60%">Image</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+
+                              <tr>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>
+                                  <Link>
+                                    <EditIcon />
+                                  </Link>
+                                </td>
+                              </tr>
+
+
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
 
@@ -797,7 +832,7 @@ const Product = () => {
                       }}
                       onChange={(event, editor) => {
                         const data = editor.getData();
-                         setSpecification(data)
+                        setSpecification(data)
                       }}
                       onBlur={(event, editor) => {
                         console.log('Blur.', editor);
@@ -994,7 +1029,7 @@ const Product = () => {
                             </div>
                             <div>
                               <FormControlLabel
-                                control={<Android12Switch  onChange={(e) => handleactive(e)} value="1"  />}
+                                control={<Android12Switch onChange={(e) => handleactive(e)} value="1" />}
                               />
                             </div>
                           </div>
@@ -1010,7 +1045,7 @@ const Product = () => {
                               Approval status
                             </label>
                             <FormControlLabel
-                              control={<Android12Switch  />}
+                              control={<Android12Switch />}
                             />
                           </div>
                         </div>
@@ -1037,7 +1072,7 @@ const Product = () => {
                             </div>
                             <div>
                               <FormControlLabel
-                                control={<Android12Switch value='1' onChange={(e) =>handlefeature(e)}  />}
+                                control={<Android12Switch value='1' onChange={(e) => handlefeature(e)} />}
                               />
                             </div>
                           </div>
@@ -1065,7 +1100,7 @@ const Product = () => {
                             </div>
                             <div>
                               <FormControlLabel
-                                control={<Android12Switch value="1" onChange={(e) =>handletrending(e)}  />}
+                                control={<Android12Switch value="1" onChange={(e) => handletrending(e)} />}
                               />
                             </div>
                           </div>

@@ -33,6 +33,7 @@ import { BASE_URL } from './AdminComponent/BaseUrl';
 import SettingPages from './AdminComponent/SettingPages';
 import Cookies from 'js-cookie';
 import PageNotFound from './AdminComponent/PageNotFound';
+import Color from './AdminComponent/Color';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -158,6 +159,10 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/settings',
         element: <SettingPages />
+      },
+      {
+        path: '/webapp/color',
+        element: <Color />
       },
 
     ]

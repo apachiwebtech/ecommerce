@@ -814,6 +814,87 @@ app.post('/Brand_delete', (req, res) => {
 
 })
 
+
+app.post('/add_color', (req, res) => {
+  let title = req.body.title;
+  let description = req.body.description;
+  let created_date = new Date()
+  let uid = req.body.uid
+  let user_id = req.body.user_id
+
+  let sql;
+  let param;
+  if (uid == undefined) {
+    sql = "insert into awt_color(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
+    param = [title,  description, user_id, created_date]
+  } else {
+
+    sql = "update awt_color set title = ?, description = ?,updated_by = ?, updated_date = ? where id =?";
+    param = [title,  description, user_id, created_date, uid]
+  }
+
+  con.query(sql, param, (err, data) => {
+    console.log(sql)
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+app.post('/color_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+
+  const sql = "select * from awt_brand where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+
+app.get('/color_data', (req, res) => {
+
+  const sql = "select * from awt_color where deleted = 0 "
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+app.post('/color_delete', (req, res) => {
+
+  let cat_id = req.body.cat_id;
+
+  const sql = "update awt_brand set deleted = 1 where id = ?"
+
+  con.query(sql, [cat_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
 app.get('/social_data', (req, res) => {
 
   const sql = 'select * from awt_social_links'
