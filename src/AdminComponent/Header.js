@@ -27,6 +27,7 @@ const Header = () => {
     order: false,
     product: false,
     home: false,
+    admin: false,
     // Add more menu items as needed
   });
 
@@ -70,12 +71,37 @@ const Header = () => {
             <span className="menu-title">Vendor Master</span>
           </Link>
         </li>
+
+        <li className="nav-item" onClick={() => handleToggle('admin')}>
+          <div className="nav-link" >
+
+            <Icon path={mdiHome} size={1} className='mx-3' />
+            <span className="menu-title">User Management</span>
+            {openStates.admin ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </div>
+          </li>
+          <Collapse in={openStates.admin} timeout="auto" unmountOnExit>
+          <ul className='inner-item'>
         <li className="nav-item">
           <Link className="nav-link" to='/webapp/adminuser'>
             <Icon path={mdiAccountOutline} size={1} className='mx-3' />
             <span className="menu-title">Admin User</span>
           </Link>
         </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/productrole'>
+            <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+            <span className="menu-title">Product Role</span>
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to='/webapp/roleassignment'>
+            <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+            <span className="menu-title">Role Right Assignment</span>
+          </Link>
+        </li>
+        </ul>
+        </Collapse>
 
 
         {/* <li className="nav-item">

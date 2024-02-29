@@ -33,6 +33,8 @@ import { BASE_URL } from './AdminComponent/BaseUrl';
 import SettingPages from './AdminComponent/SettingPages';
 import Cookies from 'js-cookie';
 import PageNotFound from './AdminComponent/PageNotFound';
+import ProductRole from './AdminComponent/ProductRole';
+import RoleAssignment from './AdminComponent/RoleAssignment';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -75,6 +77,14 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/adminuser',
         element: <AdminUser />
+      },
+      {
+        path: '/webapp/productrole',
+        element: <ProductRole />
+      },
+      {
+        path: '/webapp/roleassignment',
+        element: <RoleAssignment />
       },
       {
         path: '/webapp/category/',

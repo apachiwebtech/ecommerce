@@ -1078,3 +1078,103 @@ app.get(`/product_data`, (req, res) => {
     }
   })
 })
+
+app.get('/role_data', (req, res) => {
+
+  const sql = 'select * from role where role.delete = 0'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/role_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+
+  const sql = "select * from role where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/role_delete', (req, res) => {
+
+  let role_id = req.body.role_id;
+
+  const sql = "update role set role.delete = 1 where id = ?"
+
+  con.query(sql, [role_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/add_role', (req, res) => {
+  let user_id = req.body.user_id
+  let title = req.body.title;
+  let description = req.body.description;
+  let created_date = new Date()
+  let u_id = req.body.u_id;
+
+
+
+  let sql;
+  let param;
+
+  if (u_id == undefined) {
+    sql = "insert into role(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
+    param = [title, description, user_id, created_date]
+
+  } else {
+    sql = "update role set title = ? , description = ? , updated_by = ? ,updated_date = ? where id = ? "
+    param = [title, description, user_id, created_date, u_id]
+  }
+
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+
+      return res.json(err)
+    }
+    else {
+
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+app.post('/role_pages', (req, res) => {
+
+  let u_id = req.body.role_id;
+
+  const sql = "select * from pagerole where roleid = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
