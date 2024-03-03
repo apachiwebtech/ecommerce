@@ -1,25 +1,9 @@
-import React, { useState } from 'react'
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { mdiAccountGroupOutline, mdiAccountOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiHome, mdiImageArea, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiStarBox, mdiViewGallery } from '@mdi/js';
 import Icon from '@mdi/react';
-import { mdiApps, mdiCheckDecagram, mdiLandPlotsCircle, mdiMagnifyPlusOutline, mdiMenu } from '@mdi/js';
-import { mdiAccountGroupOutline } from '@mdi/js';
-import { mdiAccountOutline } from '@mdi/js'
-import { ExpandLess, ExpandMore, Star } from '@mui/icons-material';
+import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
-import { mdiFormatListBulletedSquare } from '@mdi/js';
-import { mdiStore } from '@mdi/js';
-import { mdiTagTextOutline } from '@mdi/js';
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
-import { mdiMap } from '@mdi/js';
-import { mdiCartOutline } from '@mdi/js';
-import { mdiArrowUUpRight } from '@mdi/js';
-import { mdiMessageDraw } from '@mdi/js';
-import { mdiArchive } from '@mdi/js';
-import { mdiHome } from '@mdi/js';
-import { mdiLinkVariant } from '@mdi/js';
-import { mdiViewGallery } from '@mdi/js';
-import { mdiImageArea } from '@mdi/js';
-import { mdiStarBox } from '@mdi/js';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
 
@@ -113,6 +97,13 @@ const Header = () => {
                 {/* <Icon path={mdiMagnifyPlusOutline} size={1}  /> */}
                 <Icon path={mdiStarBox} size={1} className='mx-3' />
                 <span className="menu-title">Brand</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/color'>
+                {/* <Icon path={mdiMagnifyPlusOutline} size={1}  /> */}
+                <Icon path={mdiFormatColorFill} size={1} className='mx-3' />
+                <span className="menu-title">Color</span>
               </Link>
             </li>
             <li className="nav-item">

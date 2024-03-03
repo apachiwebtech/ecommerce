@@ -269,7 +269,7 @@ app.post('/add_vendor', upload.fields([
   const image2 = req.files['panupload'];
   const image3 = req.files['agreementupload'];
 
-  console.log(image1, "new")
+
 
   const imagesql = "select gst_upload,pan_upload,aggrement_upload from awt_vendor where id = ?"
 
@@ -283,7 +283,6 @@ app.post('/add_vendor', upload.fields([
       
       
 
-      console.log(gstimage,"gst")
 
 
       let gstupload;
@@ -817,20 +816,22 @@ app.post('/Brand_delete', (req, res) => {
 
 app.post('/add_color', (req, res) => {
   let title = req.body.title;
-  let description = req.body.description;
+  let colorcode = req.body.colorcode;
   let created_date = new Date()
   let uid = req.body.uid
   let user_id = req.body.user_id
 
+  console.log(user_id, "id")
+
   let sql;
   let param;
   if (uid == undefined) {
-    sql = "insert into awt_color(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
-    param = [title,  description, user_id, created_date]
+    sql = "insert into awt_color(`title`,`colorcode`,`created_by`,`created_date`) values(?,?,?,?)"
+    param = [title,  colorcode, user_id, created_date]
   } else {
 
-    sql = "update awt_color set title = ?, description = ?,updated_by = ?, updated_date = ? where id =?";
-    param = [title,  description, user_id, created_date, uid]
+    sql = "update awt_color set title = ?, colorcode = ?,updated_by = ?, updated_date = ? where id =?";
+    param = [title,  colorcode, user_id, created_date, uid]
   }
 
   con.query(sql, param, (err, data) => {
@@ -850,7 +851,7 @@ app.post('/color_update', (req, res) => {
 
   let u_id = req.body.u_id;
 
-  const sql = "select * from awt_brand where id = ?"
+  const sql = "select * from awt_color where id = ?"
 
   con.query(sql, [u_id], (err, data) => {
     if (err) {
@@ -882,7 +883,7 @@ app.post('/color_delete', (req, res) => {
 
   let cat_id = req.body.cat_id;
 
-  const sql = "update awt_brand set deleted = 1 where id = ?"
+  const sql = "update awt_color set deleted = 1 where id = ?"
 
   con.query(sql, [cat_id], (err, data) => {
     if (err) {

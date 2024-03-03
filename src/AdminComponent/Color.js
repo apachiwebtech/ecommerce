@@ -18,14 +18,14 @@ const Color = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [value, setValue] = useState({
         title: "" || uid.title,
-        description: "" || uid.description,
+        colorcode: ""  || uid.colorcode,
 
     })
 
     useEffect(() => {
         setValue({
             title: "" || uid.title,
-            description: "" || uid.description,
+            colorcode: "" || uid.colorcode,
         })
     }, [uid])
 
@@ -55,7 +55,7 @@ const Color = () => {
             })
     }
 
-    async function getBrandData() {
+    async function getColorData() {
         axios.get(`${BASE_URL}/color_data`)
             .then((res) => {
                 console.log(res.data)
@@ -67,7 +67,7 @@ const Color = () => {
     }
 
     useEffect(() => {
-        getBrandData()
+        getColorData()
     }, [])
 
     const handleClick = (id) => {
@@ -94,7 +94,7 @@ const Color = () => {
 
         axios.post(`${BASE_URL}/color_delete`, data)
             .then((res) => {
-                getBrandData()
+                getColorData()
 
             })
             .catch((err) => {
@@ -111,19 +111,20 @@ const Color = () => {
         e.preventDefault()
 
         if (validateForm()) {
-            const formdata = new FormData();
+            
 
-            formdata.append('title', value.title)
-            formdata.append('description', value.description)
-            formdata.append('user_id', decryptedUserId())
-            formdata.append('uid', uid.id)
+            const data ={
+            title : value.title,
+            colorcode : value.colorcode,
+            user_id : decryptedUserId(),
+            uid : uid.id
+            }
 
 
-
-            axios.post(`${BASE_URL}/add_color`, formdata)
+            axios.post(`${BASE_URL}/add_color`, data)
                 .then((res) => {
                     alert(res.data)
-                  
+                    getColorData()
 
                 })
                 .catch((err) => {
@@ -192,8 +193,9 @@ const Color = () => {
                                         </div>
                                    
                                         <div class="form-group ">
-                                            <label for="exampleTextarea1">Description</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
+                                            <label for="exampleTextarea1">Color code <span className='text-danger'>*</span></label>
+                                            {/* <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.colorcode} name='colorcode' onChange={onhandleChange}></textarea> */}
+                                            <input type="color" class="form-control"  value={value.colorcode}  name='colorcode' onChange={onhandleChange} />
                                         </div>
 
 
