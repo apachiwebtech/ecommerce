@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+import './Responsive.css';
+import './Style.css';
 import { Outlet, createBrowserRouter, useNavigate } from 'react-router-dom'
 import Header from './AdminComponent/Header';
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -11,7 +13,7 @@ import { useEffect, useState } from 'react';
 import Category from './AdminComponent/Category';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import WebLogin from './AdminComponent/WebLogin';
-import DashBoard from './MainComponent/DashBoard';
+import DashBoard from './MainComponent/Pages/DashBoard';
 import Product from './AdminComponent/Product';
 import ProductCatalog from './AdminComponent/ProductCatalog';
 import SellersProductInventory from './AdminComponent/SellersProductInventory';
