@@ -9,67 +9,67 @@ import blog3 from '../../assets/frontimg/blog/3.jpg';
 const SiteHeader = () => {
   return (
     <div>
-        	<header id="site-header" class="site-header header-v1">
-				<div class="header-mobile">
-					<div class="section-padding">
-						<div class="section-container">
-							<div class="row">
-								<div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-left">
-									<div class="navbar-header">
-										<button type="button" id="show-megamenu" class="navbar-toggle"></button>
+        	<header id="site-header" className="site-header header-v1">
+				<div className="header-mobile">
+					<div className="section-padding">
+						<div className="section-container">
+							<div className="row">
+								<div className="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-left">
+									<div className="navbar-header">
+										<button type="button" id="show-megamenu" className="navbar-toggle"></button>
 									</div>
 								</div>
-								<div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 header-center">
-									<div class="site-logo">
+								<div className="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 header-center">
+									<div className="site-logo">
 										<Link href="index.html">
 											<img  width="400" height="79" src={logo} alt="Ruper – Furniture HTML Theme" />
 										</Link>
 									</div>
 								</div>
-								<div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-right">
-									<div class="ruper-topcart dropdown">
-										<div class="dropdown mini-cart top-cart">
-											<div class="remove-cart-shadow"></div>
-											<Link class="dropdown-toggle cart-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<div class="icons-cart"><i class="icon-large-paper-bag"></i><span class="cart-count">2</span></div>
+								<div className="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-right">
+									<div className="ruper-topcart dropdown">
+										<div className="dropdown mini-cart top-cart">
+											<div className="remove-cart-shadow"></div>
+											<Link className="dropdown-toggle cart-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">2</span></div>
 											</Link>
-											<div class="dropdown-menu cart-popup">
-												<div class="cart-empty-wrap">
-													<ul class="cart-list">
-														<li class="empty">
+											<div className="dropdown-menu cart-popup">
+												<div className="cart-empty-wrap">
+													<ul className="cart-list">
+														<li className="empty">
 															<span>No products in the cart.</span>
-															<Link class="go-shop" href="shop-grid-left.html">GO TO SHOP<i aria-hidden="true" class="arrow_right"></i></Link>
+															<Link className="go-shop" href="shop-grid-left.html">GO TO SHOP<i aria-hidden="true" className="arrow_right"></i></Link>
 														</li>
 													</ul>
 												</div>
-												<div class="cart-list-wrap">
-													<ul class="cart-list ">
-														<li class="mini-cart-item">
-															<Link href="#" class="remove" title="Remove this item"><i class="icon_close"></i></Link>
-															<Link href="shop-details.html" class="product-image"><img width="600" height="600" src={product3} alt="" /></Link>
-															<Link href="shop-details.html" class="product-name">Chair Oak Matt Lacquered</Link>		
-															<div class="quantity">Qty: 1</div>
-															<div class="price">$150.00</div>
+												<div className="cart-list-wrap">
+													<ul className="cart-list ">
+														<li className="mini-cart-item">
+															<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>
+															<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product3} alt="" /></Link>
+															<Link href="shop-details.html" className="product-name">Chair Oak Matt Lacquered</Link>		
+															<div className="quantity">Qty: 1</div>
+															<div className="price">$150.00</div>
 														</li>
-														<li class="mini-cart-item">
-															<Link href="#" class="remove" title="Remove this item"><i class="icon_close"></i></Link>													
-															<Link href="shop-details.html" class="product-image"><img width="600" height="600" src={product1} alt="" /></Link>
-															<Link href="shop-details.html" class="product-name">Zunkel Schwarz</Link>
-															<div class="quantity">Qty: 1</div>
-															<div class="price">$100.00</div>						
+														<li className="mini-cart-item">
+															<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>													
+															<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product1} alt="" /></Link>
+															<Link href="shop-details.html" className="product-name">Zunkel Schwarz</Link>
+															<div className="quantity">Qty: 1</div>
+															<div className="price">$100.00</div>						
 														</li>
 													</ul>
-													<div class="total-cart">
-														<div class="title-total">Total: </div>
-														<div class="total-price"><span>$100.00</span></div>
+													<div className="total-cart">
+														<div className="title-total">Total: </div>
+														<div className="total-price"><span>$100.00</span></div>
 													</div>
-													<div class="free-ship">
-														<div class="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
-														<div class="total-percent"><div class="percent" style={{width:"20%"}}></div></div>
+													<div className="free-ship">
+														<div className="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
+														<div className="total-percent"><div className="percent" style={{width:"20%"}}></div></div>
 													</div>
-													<div class="buttons">
-														<Link href="shop-cart.html" class="button btn view-cart btn-primary">View cart</Link>
-														<Link href="shop-checkout.html" class="button btn checkout btn-default">Check out</Link>
+													<div className="buttons">
+														<Link href="shop-cart.html" className="button btn view-cart btn-primary">View cart</Link>
+														<Link href="shop-checkout.html" className="button btn checkout btn-default">Check out</Link>
 													</div>
 												</div>
 											</div>
@@ -80,107 +80,107 @@ const SiteHeader = () => {
 						</div>
 					</div>
 
-					<div class="header-mobile-fixed">
+					<div className="header-mobile-fixed">
 					
-						<div class="shop-page">
-							<Link href="shop-grid-left.html"><i class="wpb-icon-shop"></i></Link>
+						<div className="shop-page">
+							<Link href="shop-grid-left.html"><i className="wpb-icon-shop"></i></Link>
 						</div>
 
 						
-						<div class="my-account">
-							<div class="login-header">
-								<Link href="page-my-account.html"><i class="wpb-icon-user"></i></Link>
+						<div className="my-account">
+							<div className="login-header">
+								<Link href="page-my-account.html"><i className="wpb-icon-user"></i></Link>
 							</div>
 						</div>
 
 					
-						<div class="search-box">
-							<div class="search-toggle"><i class="wpb-icon-magnifying-glass"></i></div>
+						<div className="search-box">
+							<div className="search-toggle"><i className="wpb-icon-magnifying-glass"></i></div>
 						</div>
 
 					
-						<div class="wishlist-box">
-							<Link href="shop-wishlist.html"><i class="wpb-icon-heart"></i></Link>
+						<div className="wishlist-box">
+							<Link href="shop-wishlist.html"><i className="wpb-icon-heart"></i></Link>
 						</div>
 					</div>
 				</div>
 
-				<div class="header-desktop">
-					<div class="header-wrapper">
-						<div class="section-padding">
-							<div class="section-container p-l-r">
-								<div class="row">
-									<div class="col-xl-3 col-lg-2 col-md-12 col-sm-12 col-12 header-left">
-										<div class="site-logo">
+				<div className="header-desktop">
+					<div className="header-wrapper">
+						<div className="section-padding">
+							<div className="section-container p-l-r">
+								<div className="row">
+									<div className="col-xl-3 col-lg-2 col-md-12 col-sm-12 col-12 header-left">
+										<div className="site-logo">
 											<Link href="index.html">
 												<img width="400" height="79" src={logo} alt="Ruper – Furniture HTML Theme" />
 											</Link>
 										</div>
 									</div>
 
-									<div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 text-center header-center">
-										<div class="site-navigation">
+									<div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 text-center header-center">
+										<div className="site-navigation">
 											<nav id="main-navigation">
-												<ul id="menu-main-menu" class="menu">
-													<li class="level-0 menu-item menu-item-has-children mega-menu current-menu-item">
-														<Link href="index.html"><span class="menu-item-text">Home</span></Link>
-														<div class="sub-menu">
-															<div class="row">
-																<div class="col-md-6">
-																	<div class="menu-section">
-																		<h2 class="sub-menu-title">Furniture 1</h2>
-																		<ul class="menu-list">
+												<ul id="menu-main-menu" className="menu">
+													<li className="level-0 menu-item menu-item-has-children mega-menu current-menu-item">
+														<Link href="index.html"><span className="menu-item-text">Home</span></Link>
+														<div className="sub-menu">
+															<div className="row">
+																<div className="col-md-6">
+																	<div className="menu-section">
+																		<h2 className="sub-menu-title">Furniture 1</h2>
+																		<ul className="menu-list">
 																			<li>
-																				<Link href="index.html"><span class="menu-item-text">Home Categories</span></Link>
+																				<Link href="index.html"><span className="menu-item-text">Home Categories</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index2.html"><span class="menu-item-text">Home Clean</span></Link>
+																				<Link href="index2.html"><span className="menu-item-text">Home Clean</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index3.html"><span class="menu-item-text">Home Collection</span></Link>
+																				<Link href="index3.html"><span className="menu-item-text">Home Collection</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index4.html"><span class="menu-item-text">Home Grid</span></Link>
+																				<Link href="index4.html"><span className="menu-item-text">Home Grid</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index5.html"><span class="menu-item-text">Home Minimal</span></Link>
+																				<Link href="index5.html"><span className="menu-item-text">Home Minimal</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index6.html"><span class="menu-item-text">Home Modern</span></Link>
+																				<Link href="index6.html"><span className="menu-item-text">Home Modern</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index7.html"><span class="menu-item-text">Home Stylish</span></Link>
+																				<Link href="index7.html"><span className="menu-item-text">Home Stylish</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index8.html"><span class="menu-item-text">Home Unique</span></Link>
+																				<Link href="index8.html"><span className="menu-item-text">Home Unique</span></Link>
 																			</li>
 																		</ul>
 																	</div>
 																</div>
-																<div class="col-md-6">
-																	<div class="menu-section">
-																		<h2 class="sub-menu-title">Furniture 2</h2>
-																		<ul class="menu-list">
+																<div className="col-md-6">
+																	<div className="menu-section">
+																		<h2 className="sub-menu-title">Furniture 2</h2>
+																		<ul className="menu-list">
 																			<li>
-																				<Link href="index9.html"><span class="menu-item-text">Home Split</span></Link>
+																				<Link href="index9.html"><span className="menu-item-text">Home Split</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index10.html"><span class="menu-item-text">Home Gothic</span></Link>
+																				<Link href="index10.html"><span className="menu-item-text">Home Gothic</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index11.html"><span class="menu-item-text">Home Luxury</span></Link>
+																				<Link href="index11.html"><span className="menu-item-text">Home Luxury</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index12.html"><span class="menu-item-text">Home Scandinavian</span></Link>
+																				<Link href="index12.html"><span className="menu-item-text">Home Scandinavian</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index13.html"><span class="menu-item-text">Home Mid-Century</span></Link>
+																				<Link href="index13.html"><span className="menu-item-text">Home Mid-Century</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index14.html"><span class="menu-item-text">Home Retro</span></Link>
+																				<Link href="index14.html"><span className="menu-item-text">Home Retro</span></Link>
 																			</li>
 																			<li>
-																				<Link href="index15.html"><span class="menu-item-text">Home Color Block</span></Link>
+																				<Link href="index15.html"><span className="menu-item-text">Home Color Block</span></Link>
 																			</li>
 																		</ul>
 																	</div>
@@ -188,134 +188,134 @@ const SiteHeader = () => {
 															</div>
 														</div>
 													</li>
-													<li class="level-0 menu-item menu-item-has-children">
-														<Link href="shop-grid-left.html"><span class="menu-item-text">Shop</span></Link>
-														<ul class="sub-menu">
-															<li class="level-1 menu-item menu-item-has-children">
-																<Link href="shop-grid-left.html"><span class="menu-item-text">Shop - Products</span></Link>
-																<ul class="sub-menu">
+													<li className="level-0 menu-item menu-item-has-children">
+														<Link href="shop-grid-left.html"><span className="menu-item-text">Shop</span></Link>
+														<ul className="sub-menu">
+															<li className="level-1 menu-item menu-item-has-children">
+																<Link href="shop-grid-left.html"><span className="menu-item-text">Shop - Products</span></Link>
+																<ul className="sub-menu">
 																	<li>
-																		<Link href="shop-grid-left.html"><span class="menu-item-text">Shop Grid - Left Sidebar</span></Link>
+																		<Link href="shop-grid-left.html"><span className="menu-item-text">Shop Grid - Left Sidebar</span></Link>
 																	</li>
 																	<li>
-																		<Link href="shop-list-left.html"><span class="menu-item-text">Shop List - Left Sidebar</span></Link>
+																		<Link href="shop-list-left.html"><span className="menu-item-text">Shop List - Left Sidebar</span></Link>
 																	</li>
 																	<li>
-																		<Link href="shop-grid-right.html"><span class="menu-item-text">Shop Grid - Right Sidebar</span></Link>
+																		<Link href="shop-grid-right.html"><span className="menu-item-text">Shop Grid - Right Sidebar</span></Link>
 																	</li>
 																	<li>
-																		<Link href="shop-list-right.html"><span class="menu-item-text">Shop List - Right Sidebar</span></Link>
+																		<Link href="shop-list-right.html"><span className="menu-item-text">Shop List - Right Sidebar</span></Link>
 																	</li>
 																	<li>
-																		<Link href="shop-grid-fullwidth.html"><span class="menu-item-text">Shop Grid - No Sidebar</span></Link>
+																		<Link href="shop-grid-fullwidth.html"><span className="menu-item-text">Shop Grid - No Sidebar</span></Link>
 																	</li>
 																</ul>
 															</li>
 															<li>
-																<Link href="shop-details.html"><span class="menu-item-text">Shop Details</span></Link>
+																<Link href="shop-details.html"><span className="menu-item-text">Shop Details</span></Link>
 															</li>
 															<li>
-																<Link href="shop-cart.html"><span class="menu-item-text">Shop - Cart</span></Link>
+																<Link href="shop-cart.html"><span className="menu-item-text">Shop - Cart</span></Link>
 															</li>
 															<li>
-																<Link href="shop-checkout.html"><span class="menu-item-text">Shop - Checkout</span></Link>
+																<Link href="shop-checkout.html"><span className="menu-item-text">Shop - Checkout</span></Link>
 															</li>
 															<li>
-																<Link href="shop-wishlist.html"><span class="menu-item-text">Shop - Wishlist</span></Link>
+																<Link href="shop-wishlist.html"><span className="menu-item-text">Shop - Wishlist</span></Link>
 															</li>
 														</ul>
 													</li>
-													<li class="level-0 menu-item menu-item-has-children mega-menu mega-menu-fullwidth align-center">
-														<Link href="blog-grid-left.html"><span class="menu-item-text">Blog</span></Link>
-														<div class="sub-menu">
-															<div class="row">
-																<div class="col-md-5">
-																	<div class="menu-section">
-																		<h2 class="sub-menu-title">Blog Category</h2>
-																		<ul class="menu-list">
+													<li className="level-0 menu-item menu-item-has-children mega-menu mega-menu-fullwidth align-center">
+														<Link href="blog-grid-left.html"><span className="menu-item-text">Blog</span></Link>
+														<div className="sub-menu">
+															<div className="row">
+																<div className="col-md-5">
+																	<div className="menu-section">
+																		<h2 className="sub-menu-title">Blog Category</h2>
+																		<ul className="menu-list">
 																			<li>
-																				<Link href="blog-grid-left.html"><span class="menu-item-text">Blog Grid - Left Sidebar</span></Link>
+																				<Link href="blog-grid-left.html"><span className="menu-item-text">Blog Grid - Left Sidebar</span></Link>
 																			</li>
 																			<li>
-																				<Link href="blog-grid-right.html"><span class="menu-item-text">Blog Grid - Right Sidebar</span></Link>
+																				<Link href="blog-grid-right.html"><span className="menu-item-text">Blog Grid - Right Sidebar</span></Link>
 																			</li>
 																			<li>
-																				<Link href="blog-list-left.html"><span class="menu-item-text">Blog List - Left Sidebar</span></Link>
+																				<Link href="blog-list-left.html"><span className="menu-item-text">Blog List - Left Sidebar</span></Link>
 																			</li>
 																			<li>
-																				<Link href="blog-list-right.html"><span class="menu-item-text">Blog List - Right Sidebar</span></Link>
+																				<Link href="blog-list-right.html"><span className="menu-item-text">Blog List - Right Sidebar</span></Link>
 																			</li>
 																			<li>
-																				<Link href="blog-grid-fullwidth.html"><span class="menu-item-text">Blog Grid - No Sidebar</span></Link>
+																				<Link href="blog-grid-fullwidth.html"><span className="menu-item-text">Blog Grid - No Sidebar</span></Link>
 																			</li>
 																		</ul>
 																	</div>
 
-																	<div class="menu-section">
-																		<h2 class="sub-menu-title">Blog Details</h2>
-																		<ul class="menu-list">
+																	<div className="menu-section">
+																		<h2 className="sub-menu-title">Blog Details</h2>
+																		<ul className="menu-list">
 																			<li>
-																				<Link href="blog-details-left.html"><span class="menu-item-text">Blog Details - Left Sidebar</span></Link>
+																				<Link href="blog-details-left.html"><span className="menu-item-text">Blog Details - Left Sidebar</span></Link>
 																			</li>
 																			<li>
-																				<Link href="blog-details-right.html"><span class="menu-item-text">Blog Details - Right Sidebar</span></Link>
+																				<Link href="blog-details-right.html"><span className="menu-item-text">Blog Details - Right Sidebar</span></Link>
 																			</li>
 																			<li>
-																				<Link href="blog-details-fullwidth.html"><span class="menu-item-text">Blog Details - No Sidebar</span></Link>
+																				<Link href="blog-details-fullwidth.html"><span className="menu-item-text">Blog Details - No Sidebar</span></Link>
 																			</li>
 																		</ul>
 																	</div>
 																</div>
-																<div class="col-md-7">
-																	<div class="menu-section">
-																		<h2 class="sub-menu-title">Recent Posts</h2>
-																		<div class="block block-posts recent-posts p-t-5">
-																			<ul class="posts-list">
-																				<li class="post-item">
-																					<Link href="blog-details-right.html" class="post-image">
+																<div className="col-md-7">
+																	<div className="menu-section">
+																		<h2 className="sub-menu-title">Recent Posts</h2>
+																		<div className="block block-posts recent-posts p-t-5">
+																			<ul className="posts-list">
+																				<li className="post-item">
+																					<Link href="blog-details-right.html" className="post-image">
 																						<img src={blog1} alt='blog' />
 																					</Link>
-																					<div class="post-content">
-																						<h2 class="post-title">
+																					<div className="post-content">
+																						<h2 className="post-title">
 																							<Link href="blog-details-right.html">
 																								Easy Fixes For Home Decor
 																							</Link>
 																						</h2>
-																						<div class="post-time">
-																							<span class="post-date">May 30, 2022</span>
-																							<span class="post-comment">4 Comments</span>
+																						<div className="post-time">
+																							<span className="post-date">May 30, 2022</span>
+																							<span className="post-comment">4 Comments</span>
 																						</div>
 																					</div>
 																				</li>
-																				<li class="post-item">
-																					<Link href="blog-details-right.html" class="post-image">
+																				<li className="post-item">
+																					<Link href="blog-details-right.html" className="post-image">
 																						<img src={blog2} alt='blog2' />
 																					</Link>
-																					<div class="post-content">
-																						<h2 class="post-title">
+																					<div className="post-content">
+																						<h2 className="post-title">
 																							<Link href="blog-details-right.html">
 																								How To Make Your Home A Showplace
 																							</Link>
 																						</h2>
-																						<div class="post-time">
-																							<span class="post-date">Aug 24, 2022</span>
-																							<span class="post-comment">2 Comments</span>
+																						<div className="post-time">
+																							<span className="post-date">Aug 24, 2022</span>
+																							<span className="post-comment">2 Comments</span>
 																						</div>
 																					</div>
 																				</li>
-																				<li class="post-item">
-																					<Link href="blog-details-right.html" class="post-image">
+																				<li className="post-item">
+																					<Link href="blog-details-right.html" className="post-image">
 																						<img src={blog3} alt='blog3' />
 																					</Link>
-																					<div class="post-content">
-																						<h2 class="post-title">
+																					<div className="post-content">
+																						<h2 className="post-title">
 																							<Link href="blog-details-right.html">
 																								Stunning Furniture With Aesthetic Appeal
 																							</Link>
 																						</h2>
-																						<div class="post-time">
-																							<span class="post-date">Dec 06, 2022</span>
-																							<span class="post-comment">1 Comment</span>
+																						<div className="post-time">
+																							<span className="post-date">Dec 06, 2022</span>
+																							<span className="post-comment">1 Comment</span>
 																						</div>
 																					</div>
 																				</li>
@@ -326,90 +326,90 @@ const SiteHeader = () => {
 															</div>
 														</div>
 													</li>
-													<li class="level-0 menu-item menu-item-has-children">
-														<Link href="#"><span class="menu-item-text">Pages</span></Link>
-														<ul class="sub-menu">
+													<li className="level-0 menu-item menu-item-has-children">
+														<Link href="#"><span className="menu-item-text">Pages</span></Link>
+														<ul className="sub-menu">
 															<li>
-																<Link href="page-login.html"><span class="menu-item-text">Login / Register</span></Link>
+																<Link href="page-login.html"><span className="menu-item-text">Login / Register</span></Link>
 															</li>
 															<li>
-																<Link href="page-forgot-password.html"><span class="menu-item-text">Forgot Password</span></Link>
+																<Link href="page-forgot-password.html"><span className="menu-item-text">Forgot Password</span></Link>
 															</li>
 															<li>
-																<Link href="page-my-account.html"><span class="menu-item-text">My Account</span></Link>
+																<Link href="page-my-account.html"><span className="menu-item-text">My Account</span></Link>
 															</li>
 															<li>
-																<Link href="page-about.html"><span class="menu-item-text">About Us</span></Link>
+																<Link href="page-about.html"><span className="menu-item-text">About Us</span></Link>
 															</li>
 															<li>
-																<Link href="page-contact.html"><span class="menu-item-text">Contact</span></Link>
+																<Link href="page-contact.html"><span className="menu-item-text">Contact</span></Link>
 															</li>
 															<li>
-																<Link href="page-faq.html"><span class="menu-item-text">FAQ</span></Link>
+																<Link href="page-faq.html"><span className="menu-item-text">FAQ</span></Link>
 															</li>
 															<li>
-																<Link href="page-404.html"><span class="menu-item-text">Page 404</span></Link>
+																<Link href="page-404.html"><span className="menu-item-text">Page 404</span></Link>
 															</li>
 														</ul>
 													</li>
-													<li class="level-0 menu-item">
-														<Link href="page-contact.html"><span class="menu-item-text">Contact</span></Link>
+													<li className="level-0 menu-item">
+														<Link href="page-contact.html"><span className="menu-item-text">Contact</span></Link>
 													</li>
 												</ul>
 											</nav>
 										</div>
 									</div>
 
-									<div class="col-xl-3 col-lg-4 col-md-12 col-sm-12 col-12 header-right">
-										<div class="header-page-link">
+									<div className="col-xl-3 col-lg-4 col-md-12 col-sm-12 col-12 header-right">
+										<div className="header-page-link">
 										
-											<div class="login-header">
-												<Link class="active-login" href="#">Login</Link>
-												<div class="form-login-register">
-													<div class="box-form-login">
-														<div class="active-login"></div>
-														<div class="box-content">
-															<div class="form-login active">
-																<form id="login_ajax" method="post" class="login">
+											<div className="login-header">
+												<Link className="active-login" href="#">Login</Link>
+												<div className="form-login-register">
+													<div className="box-form-login">
+														<div className="active-login"></div>
+														<div className="box-content">
+															<div className="form-login active">
+																<form id="login_ajax" method="post" className="login">
 																	<h2>Sign in</h2>
-																	<p class="status"></p>
-																	<div class="content">
-																		<div class="username">
-																			<input type="text" required="required" class="input-text" name="username" id="username" placeholder="Your name"/>
+																	<p className="status"></p>
+																	<div className="content">
+																		<div className="username">
+																			<input type="text" required="required" className="input-text" name="username" id="username" placeholder="Your name"/>
 																		</div>
-																		<div class="password">
-																			<input class="input-text" required="required" type="password" name="password" id="password" placeholder="Password"/>
+																		<div className="password">
+																			<input className="input-text" required="required" type="password" name="password" id="password" placeholder="Password"/>
 																		</div>
-																		<div class="rememberme-lost">
-																			<div class="rememberme">
+																		<div className="rememberme-lost">
+																			<div className="rememberme">
 																				<input name="rememberme" type="checkbox" id="rememberme" value="forever"/>
-																				<label for="rememberme" class="inline">Remember me</label>
+																				<label htmlFor="rememberme" className="inline">Remember me</label>
 																			</div>
-																			<div class="lost_password">
+																			<div className="lost_password">
 																				<Link href="forgot-password.html">Lost your password?</Link>
 																			</div>
 																		</div>
-																		<div class="button-login">
-																			<input type="submit" class="button" name="login" value="Login"/>
+																		<div className="button-login">
+																			<input type="submit" className="button" name="login" value="Login"/>
 																		</div>
-																		<div class="button-next-reregister">Create An Account</div>
+																		<div className="button-next-reregister">Create An Account</div>
 																	</div>						
 																</form>
 															</div>
-															<div class="form-register">
-																<form method="post" class="register">
+															<div className="form-register">
+																<form method="post" className="register">
 																	<h2>REGISTER</h2>
-																	<div class="content">
-																		<div class="email">
-																			<input type="email" class="input-text" placeholder="Email" name="email" id="reg_email" value=""/>
+																	<div className="content">
+																		<div className="email">
+																			<input type="email" className="input-text" placeholder="Email" name="email" id="reg_email" value=""/>
 																		</div>
-																		<div class="password">
-																			<input type="password" class="input-text" placeholder="Password" name="password" id="reg_password"/>
+																		<div className="password">
+																			<input type="password" className="input-text" placeholder="Password" name="password" id="reg_password"/>
 																		</div>															
-																		<div class="button-register">
-																			<input type="submit" class="button" name="register" value="Register"/>
+																		<div className="button-register">
+																			<input type="submit" className="button" name="register" value="Register"/>
 																		</div>
-																		<div class="button-next-login">Already has an account</div>
+																		<div className="button-next-login">Already has an account</div>
 																	</div>
 																</form>
 															</div>
@@ -419,59 +419,59 @@ const SiteHeader = () => {
 											</div>
 
 										
-											<div class="search-box">
-												<div class="search-toggle"><i class="icon-search"></i></div>
+											<div className="search-box">
+												<div className="search-toggle"><i className="icon-search"></i></div>
 											</div>
 											
 											
-											<div class="wishlist-box">
-												<Link href="shop-wishlist.html"><i class="icon-heart"></i></Link>
-												<span class="count-wishlist">1</span>
+											<div className="wishlist-box">
+												<Link href="shop-wishlist.html"><i className="icon-heart"></i></Link>
+												<span className="count-wishlist">1</span>
 											</div>
 										
-											<div class="ruper-topcart dropdown light">
-												<div class="dropdown mini-cart top-cart">
-													<div class="remove-cart-shadow"></div>
-													<Link class="dropdown-toggle cart-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														<div class="icons-cart"><i class="icon-large-paper-bag"></i><span class="cart-count">2</span></div>
+											<div className="ruper-topcart dropdown light">
+												<div className="dropdown mini-cart top-cart">
+													<div className="remove-cart-shadow"></div>
+													<Link className="dropdown-toggle cart-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+														<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">2</span></div>
 													</Link>
-													<div class="dropdown-menu cart-popup">
-														<div class="cart-empty-wrap">
-															<ul class="cart-list">
-																<li class="empty">
+													<div className="dropdown-menu cart-popup">
+														<div className="cart-empty-wrap">
+															<ul className="cart-list">
+																<li className="empty">
 																	<span>No products in the cart.</span>
-																	<Link class="go-shop" href="shop-grid-left.html">GO TO SHOP<i aria-hidden="true" class="arrow_right"></i></Link>
+																	<Link className="go-shop" href="shop-grid-left.html">GO TO SHOP<i aria-hidden="true" className="arrow_right"></i></Link>
 																</li>
 															</ul>
 														</div>
-														<div class="cart-list-wrap">
-															<ul class="cart-list ">
-																<li class="mini-cart-item">
-																	<Link href="#" class="remove" title="Remove this item"><i class="icon_close"></i></Link>
-																	<Link href="shop-details.html" class="product-image"><img width="600" height="600" src={product3} alt="pro" /></Link>
-																	<Link href="shop-details.html" class="product-name">Chair Oak Matt Lacquered</Link>		
-																	<div class="quantity">Qty: 1</div>
-																	<div class="price">$150.00</div>
+														<div className="cart-list-wrap">
+															<ul className="cart-list ">
+																<li className="mini-cart-item">
+																	<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>
+																	<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product3} alt="pro" /></Link>
+																	<Link href="shop-details.html" className="product-name">Chair Oak Matt Lacquered</Link>		
+																	<div className="quantity">Qty: 1</div>
+																	<div className="price">$150.00</div>
 																</li>
-																<li class="mini-cart-item">
-																	<Link href="#" class="remove" title="Remove this item"><i class="icon_close"></i></Link>													
-																	<Link href="shop-details.html" class="product-image"><img width="600" height="600" src={product1} alt="pro" /></Link>
-																	<Link href="shop-details.html" class="product-name">Zunkel Schwarz</Link>
-																	<div class="quantity">Qty: 1</div>
-																	<div class="price">$100.00</div>						
+																<li className="mini-cart-item">
+																	<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>													
+																	<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product1} alt="pro" /></Link>
+																	<Link href="shop-details.html" className="product-name">Zunkel Schwarz</Link>
+																	<div className="quantity">Qty: 1</div>
+																	<div className="price">$100.00</div>						
 																</li>
 															</ul>
-															<div class="total-cart">
-																<div class="title-total">Total: </div>
-																<div class="total-price"><span>$100.00</span></div>
+															<div className="total-cart">
+																<div className="title-total">Total: </div>
+																<div className="total-price"><span>$100.00</span></div>
 															</div>
-															<div class="free-ship">
-																<div class="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
-																<div class="total-percent"><div class="percent" style={{width:"20%"}}></div></div>
+															<div className="free-ship">
+																<div className="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
+																<div className="total-percent"><div className="percent" style={{width:"20%"}}></div></div>
 															</div>
-															<div class="buttons">
-																<Link href="shop-cart.html" class="button btn view-cart btn-primary">View cart</Link>
-																<Link href="shop-checkout.html" class="button btn checkout btn-default">Check out</Link>
+															<div className="buttons">
+																<Link href="shop-cart.html" className="button btn view-cart btn-primary">View cart</Link>
+																<Link href="shop-checkout.html" className="button btn checkout btn-default">Check out</Link>
 															</div>
 														</div>
 													</div>

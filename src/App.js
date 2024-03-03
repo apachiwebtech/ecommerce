@@ -1,42 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
-import './Responsive.css';
-import './Style.css';
-import { Outlet, createBrowserRouter, useNavigate } from 'react-router-dom'
-import Header from './AdminComponent/Header';
+import axios from 'axios';
 import "bootstrap-icons/font/bootstrap-icons.css";
-import VendorMaster from './AdminComponent/VendorMaster';
-import VendorForm from './AdminComponent/VendorForm';
-import AdminUser from './AdminComponent/AdminUser';
-import SubCatetgory from './AdminComponent/SubCategory';
+import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
-import Category from './AdminComponent/Category';
+import { Outlet, createBrowserRouter, useNavigate } from 'react-router-dom';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
-import WebLogin from './AdminComponent/WebLogin';
-import DashBoard from './MainComponent/Pages/DashBoard';
-import Product from './AdminComponent/Product';
-import ProductCatalog from './AdminComponent/ProductCatalog';
-import SellersProductInventory from './AdminComponent/SellersProductInventory';
+import AdminUser from './AdminComponent/AdminUser';
+import Banner from './AdminComponent/Banner';
+import { BASE_URL } from './AdminComponent/BaseUrl';
 import Brand from './AdminComponent/Brand';
-import Shop from './AdminComponent/Shop';
+import Category from './AdminComponent/Category';
+import Color from './AdminComponent/Color';
+import Gallery from './AdminComponent/Gallery';
+import Header from './AdminComponent/Header';
+import Orders from './AdminComponent/Orders';
+import PageNotFound from './AdminComponent/PageNotFound';
+import Product from './AdminComponent/Product';
+import ProductApproval from './AdminComponent/ProductApproval';
+import ProductCatalog from './AdminComponent/ProductCatalog';
 import ProductOption from './AdminComponent/ProductOption';
 import ProductTag from './AdminComponent/ProductTag';
-import ThresholdProduct from './AdminComponent/ThresholdProduct';
-import Orders from './AdminComponent/Orders';
-import View from './AdminComponent/View';
-import Banner from './AdminComponent/Banner';
 import ReviewComment from './AdminComponent/ReviewComment';
-import Testimonial from './AdminComponent/Testimonials';
-import SocialMedia from './AdminComponent/SocialMedia';
-import ProductApproval from './AdminComponent/ProductApproval';
-import Gallery from './AdminComponent/Gallery';
-import axios from 'axios';
-import { BASE_URL } from './AdminComponent/BaseUrl';
+import SellersProductInventory from './AdminComponent/SellersProductInventory';
 import SettingPages from './AdminComponent/SettingPages';
-import Cookies from 'js-cookie';
-import PageNotFound from './AdminComponent/PageNotFound';
-import Color from './AdminComponent/Color';
+import Shop from './AdminComponent/Shop';
+import SocialMedia from './AdminComponent/SocialMedia';
+import SubCatetgory from './AdminComponent/SubCategory';
+import Testimonial from './AdminComponent/Testimonials';
+import ThresholdProduct from './AdminComponent/ThresholdProduct';
+import VendorForm from './AdminComponent/VendorForm';
+import VendorMaster from './AdminComponent/VendorMaster';
+import View from './AdminComponent/View';
+import WebLogin from './AdminComponent/WebLogin';
+import './App.css';
 import SiteHeader from './MainComponent/Layout/SiteHeader';
+import SiteFooter from './MainComponent/Layout/SiteFooter';
+import DashBoard from './MainComponent/Pages/Home';
+import './Responsive.css';
+import './Style.css';
+import '../src/MainComponent/Library/Fontawsome/Font-awsome.css'
+import '../src/MainComponent/Library/Icomoonfont/icomoon.css'
+import '../src/MainComponent/Library/elegant-icons/css/elegant.css'
+import '../src/MainComponent/Library/feather-font/css/iconfont.css'
+import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
+
+
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -258,6 +265,7 @@ function App() {
       {/* <div id="page" class="hfeed page-wrapper"> */}
         <SiteHeader/>
         <Outlet />
+        <SiteFooter/>
       {/* </div> */}
     </>
 
