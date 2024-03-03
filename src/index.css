@@ -18828,7 +18828,7 @@ code {
 
 /* Footer */
 .footer {
-  background: #f6f7fb;
+  /* background: #f6f7fb; */
   padding: 0 1.437rem 1.937rem 1.437rem;
   transition: all 0.25s ease;
   -moz-transition: all 0.25s ease;
