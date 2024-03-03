@@ -36,6 +36,7 @@ import SettingPages from './AdminComponent/SettingPages';
 import Cookies from 'js-cookie';
 import PageNotFound from './AdminComponent/PageNotFound';
 import Color from './AdminComponent/Color';
+import SiteHeader from './MainComponent/Layout/SiteHeader';
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -254,9 +255,10 @@ function WebApp() {
 function App() {
   return (
     <>
-      <div className="container-scroller d-flex">
+      {/* <div id="page" class="hfeed page-wrapper"> */}
+        <SiteHeader/>
         <Outlet />
-      </div>
+      {/* </div> */}
     </>
 
   );

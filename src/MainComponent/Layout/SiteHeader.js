@@ -6,7 +6,7 @@ import product1 from '../../assets/frontimg/product/1.jpg'
 import blog1 from '../../assets/frontimg/blog/1.jpg';
 import blog2 from '../../assets/frontimg/blog/2.jpg';
 import blog3 from '../../assets/frontimg/blog/3.jpg';
-const Header = () => {
+const SiteHeader = () => {
   return (
     <div>
         	<header id="site-header" class="site-header header-v1">
@@ -65,7 +65,7 @@ const Header = () => {
 													</div>
 													<div class="free-ship">
 														<div class="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
-														<div class="total-percent"><div class="percent" style="width:20%"></div></div>
+														<div class="total-percent"><div class="percent" style={{width:"20%"}}></div></div>
 													</div>
 													<div class="buttons">
 														<Link href="shop-cart.html" class="button btn view-cart btn-primary">View cart</Link>
@@ -467,7 +467,7 @@ const Header = () => {
 															</div>
 															<div class="free-ship">
 																<div class="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
-																<div class="total-percent"><div class="percent" style="width:20%"></div></div>
+																<div class="total-percent"><div class="percent" style={{width:"20%"}}></div></div>
 															</div>
 															<div class="buttons">
 																<Link href="shop-cart.html" class="button btn view-cart btn-primary">View cart</Link>
@@ -489,4 +489,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default SiteHeader

@@ -6855,13 +6855,13 @@ html {
     min-width: 52px;
     min-height: 52px;
     background-color: #eee;
-    background-image: url(../src/assets/frontimg/);
+    /* background-image: url(../img/remove-dark.svg); */
     background-repeat: no-repeat;
     background-position: center;
     cursor: pointer;
   }
   .compare-popup .compare-popup-inner .compare-table .compare-table-settings {
-    background-image: url(../img/checkbox-dark.svg);
+    /* background-image: url(../img/checkbox-dark.svg); */
     background-size: 16px 16px;
     background-repeat: no-repeat;
     background-position: center left;
