@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // import logo from '../assets/images/logo.svg'
 import axios from 'axios'
 import { BASE_URL } from './BaseUrl'
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
 import logo from '../assets/images/logo/ecomlogo.png'
 import CryptoJS from 'crypto-js';
+import decryptedRoleId from '../Utils/Role'
 
 const WebLogin = () => {
   const [value, setValue] = useState({
@@ -98,10 +99,16 @@ const WebLogin = () => {
         .then((res) => {
           console.log(res.data.err)
           if (res.data.id) {
+            console.log("here")
+            
+          console.log(res.data.role , "??")
             // localStorage.setItem("userid", res.data.id)
             const ciphertext = CryptoJS.AES.encrypt(res.data.id.toString(), encryptionKey).toString();
+            const cipherRole = CryptoJS.AES.encrypt(res.data.role.toString(), encryptionKey).toString();
             Cookies.set('userid', ciphertext, { expires: 1 });
+            Cookies.set('role' , cipherRole, {expires : 1});
             navigate('/webapp')
+            console.log(decryptedRoleId() , "<<<<")
           }
           else {
             setErr('/weblog')

@@ -156,11 +156,12 @@ app.post('/login', (req, res) => {
     } else {
       if (data.length > 0) {
         const id = data[0].id;
+        const role = data[0].role;
 
 
         req.session.id = id
         console.log(req.session.id)
-        return res.json({ data, keyid: req.session.id, id: id })
+        return res.json({ data, keyid: req.session.id, id: id , role: role })
       }
 
 
