@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { Link } from 'react-router-dom'
 import logo from '../../assets/frontimg/logo.png'
 import product3 from '../../assets/frontimg/product/3.jpg'
@@ -6,10 +6,59 @@ import product1 from '../../assets/frontimg/product/1.jpg'
 import blog1 from '../../assets/frontimg/blog/1.jpg';
 import blog2 from '../../assets/frontimg/blog/2.jpg';
 import blog3 from '../../assets/frontimg/blog/3.jpg';
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 const SiteHeader = () => {
-  return (
-    <div>
-        	<header id="site-header" className="site-header header-v1">
+	const [banner, setBanner] = useState([])
+	const [cat, setCatData] = useState([])
+	const [subcat, setsubCatData] = useState([])
+
+	async function getTrendingData() {
+		axios.get(`${BASE_URL}/group_data`)
+			.then((res) => {
+				console.log(res)
+				setBanner(res.data)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
+
+	async function getcatData() {
+		axios.get(`${BASE_URL}/category_data`)
+			.then((res) => {
+				console.log(res.data)
+				setCatData(res.data)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
+
+
+	async function getsubcatData() {
+		axios.get(`${BASE_URL}/subcategory_data`)
+			.then((res) => {
+				setsubCatData(res.data)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
+
+
+
+	useEffect(() => {
+		getsubcatData()
+		getcatData()
+		getTrendingData()
+	}, [])
+
+
+	return (
+		<div>
+			<header id="site-header" className="site-header header-v1">
 				<div className="header-mobile">
 					<div className="section-padding">
 						<div className="section-container">
@@ -22,7 +71,7 @@ const SiteHeader = () => {
 								<div className="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 header-center">
 									<div className="site-logo">
 										<Link href="index.html">
-											<img  width="400" height="79" src={logo} alt="Ruper – Furniture HTML Theme" />
+											<img width="400" height="79" src={logo} alt="Ruper – Furniture HTML Theme" />
 										</Link>
 									</div>
 								</div>
@@ -47,16 +96,16 @@ const SiteHeader = () => {
 														<li className="mini-cart-item">
 															<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>
 															<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product3} alt="" /></Link>
-															<Link href="shop-details.html" className="product-name">Chair Oak Matt Lacquered</Link>		
+															<Link href="shop-details.html" className="product-name">Chair Oak Matt Lacquered</Link>
 															<div className="quantity">Qty: 1</div>
 															<div className="price">$150.00</div>
 														</li>
 														<li className="mini-cart-item">
-															<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>													
+															<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>
 															<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product1} alt="" /></Link>
 															<Link href="shop-details.html" className="product-name">Zunkel Schwarz</Link>
 															<div className="quantity">Qty: 1</div>
-															<div className="price">$100.00</div>						
+															<div className="price">$100.00</div>
 														</li>
 													</ul>
 													<div className="total-cart">
@@ -65,7 +114,7 @@ const SiteHeader = () => {
 													</div>
 													<div className="free-ship">
 														<div className="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
-														<div className="total-percent"><div className="percent" style={{width:"20%"}}></div></div>
+														<div className="total-percent"><div className="percent" style={{ width: "20%" }}></div></div>
 													</div>
 													<div className="buttons">
 														<Link href="shop-cart.html" className="button btn view-cart btn-primary">View cart</Link>
@@ -81,24 +130,24 @@ const SiteHeader = () => {
 					</div>
 
 					<div className="header-mobile-fixed">
-					
+
 						<div className="shop-page">
 							<Link href="shop-grid-left.html"><i className="wpb-icon-shop"></i></Link>
 						</div>
 
-						
+
 						<div className="my-account">
 							<div className="login-header">
 								<Link href="page-my-account.html"><i className="wpb-icon-user"></i></Link>
 							</div>
 						</div>
 
-					
+
 						<div className="search-box">
 							<div className="search-toggle"><i className="wpb-icon-magnifying-glass"></i></div>
 						</div>
 
-					
+
 						<div className="wishlist-box">
 							<Link href="shop-wishlist.html"><i className="wpb-icon-heart"></i></Link>
 						</div>
@@ -110,7 +159,7 @@ const SiteHeader = () => {
 						<div className="section-padding">
 							<div className="section-container p-l-r">
 								<div className="row">
-									<div className="col-xl-3 col-lg-2 col-md-12 col-sm-12 col-12 header-left">
+									<div className="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12 header-left">
 										<div className="site-logo">
 											<Link href="index.html">
 												<img width="400" height="79" src={logo} alt="Ruper – Furniture HTML Theme" />
@@ -118,7 +167,7 @@ const SiteHeader = () => {
 										</div>
 									</div>
 
-									<div className="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12 text-center header-center">
+									<div className="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12 text-center header-center">
 										<div className="site-navigation">
 											<nav id="main-navigation">
 												<ul id="menu-main-menu" className="menu">
@@ -189,45 +238,57 @@ const SiteHeader = () => {
 														</div>
 													</li>
 													<li className="level-0 menu-item menu-item-has-children">
-														<Link href="shop-grid-left.html"><span className="menu-item-text">Shop</span></Link>
+														<Link to={`https://ecom.thetalentclub.co.in/${banner[0]?.slug}`}><span className="menu-item-text">{banner[0]?.title}</span></Link>
 														<ul className="sub-menu">
-															<li className="level-1 menu-item menu-item-has-children">
-																<Link href="shop-grid-left.html"><span className="menu-item-text">Shop - Products</span></Link>
-																<ul className="sub-menu">
-																	<li>
-																		<Link href="shop-grid-left.html"><span className="menu-item-text">Shop Grid - Left Sidebar</span></Link>
+															{cat.filter((item) => (item.group_id == banner[0]?.id)).map((item) => {
+																return (
+																	<li className="level-1 menu-item menu-item-has-children">
+																		<Link to={`https://ecom.thetalentclub.co.in/${item.slug}`}><span className={ item.title == "" ?"menu-item-text" : ""}>{item.title}</span></Link>
+																		<ul className="sub-menu">
+																			{subcat.filter((ele) => ele.cat_id == item.id).map((item) => {
+																				return  (
+																					< li >
+																						<Link href="shop-grid-left.html"><span className={ item.title !== null ?"menu-item-text" : ""}>{item.title}</span></Link>
+																					</li>
+																				)
+
+																			})}
+
+
+																		</ul>
 																	</li>
-																	<li>
-																		<Link href="shop-list-left.html"><span className="menu-item-text">Shop List - Left Sidebar</span></Link>
-																	</li>
-																	<li>
-																		<Link href="shop-grid-right.html"><span className="menu-item-text">Shop Grid - Right Sidebar</span></Link>
-																	</li>
-																	<li>
-																		<Link href="shop-list-right.html"><span className="menu-item-text">Shop List - Right Sidebar</span></Link>
-																	</li>
-																	<li>
-																		<Link href="shop-grid-fullwidth.html"><span className="menu-item-text">Shop Grid - No Sidebar</span></Link>
-																	</li>
-																</ul>
-															</li>
-															<li>
-																<Link href="shop-details.html"><span className="menu-item-text">Shop Details</span></Link>
-															</li>
-															<li>
-																<Link href="shop-cart.html"><span className="menu-item-text">Shop - Cart</span></Link>
-															</li>
-															<li>
-																<Link href="shop-checkout.html"><span className="menu-item-text">Shop - Checkout</span></Link>
-															</li>
-															<li>
-																<Link href="shop-wishlist.html"><span className="menu-item-text">Shop - Wishlist</span></Link>
-															</li>
+																)
+															})}
+
+
 														</ul>
 													</li>
-													<li className="level-0 menu-item menu-item-has-children mega-menu mega-menu-fullwidth align-center">
-														<Link href="blog-grid-left.html"><span className="menu-item-text">Blog</span></Link>
-														<div className="sub-menu">
+													<li className="level-0 menu-item menu-item-has-children">
+														<Link to={`https://ecom.thetalentclub.co.in/${banner[1]?.slug}`}><span className="menu-item-text">{banner[1]?.title}</span></Link>
+														<ul className="sub-menu">
+															{cat.filter((item) => (item.group_id == banner[1]?.id)).map((item) => {
+																return (
+																	<li className="level-1 menu-item menu-item-has-children">
+																		<Link to={`https://ecom.thetalentclub.co.in/${item.slug}`}><span className="menu-item-text">{item.title}</span></Link>
+																		<ul className="sub-menu">
+																			{subcat.filter((ele) => ele.cat_id == item.id).map((item) => {
+																				return  (
+																					< li >
+																						<Link href="shop-grid-left.html"><span className={ item.title !== null ?"menu-item-text" : ""}>{item.title}</span></Link>
+																					</li>
+																				)
+
+																			})}
+
+
+																		</ul>
+																	</li>
+																)
+															})}
+
+
+														</ul>
+														{/* <div className="sub-menu">
 															<div className="row">
 																<div className="col-md-5">
 																	<div className="menu-section">
@@ -324,32 +385,33 @@ const SiteHeader = () => {
 																	</div>
 																</div>
 															</div>
-														</div>
+														</div> */}
 													</li>
 													<li className="level-0 menu-item menu-item-has-children">
-														<Link href="#"><span className="menu-item-text">Pages</span></Link>
+														<Link href="#"><span className="menu-item-text">{banner[2]?.title}</span></Link>
+
 														<ul className="sub-menu">
-															<li>
-																<Link href="page-login.html"><span className="menu-item-text">Login / Register</span></Link>
-															</li>
-															<li>
-																<Link href="page-forgot-password.html"><span className="menu-item-text">Forgot Password</span></Link>
-															</li>
-															<li>
-																<Link href="page-my-account.html"><span className="menu-item-text">My Account</span></Link>
-															</li>
-															<li>
-																<Link href="page-about.html"><span className="menu-item-text">About Us</span></Link>
-															</li>
-															<li>
-																<Link href="page-contact.html"><span className="menu-item-text">Contact</span></Link>
-															</li>
-															<li>
-																<Link href="page-faq.html"><span className="menu-item-text">FAQ</span></Link>
-															</li>
-															<li>
-																<Link href="page-404.html"><span className="menu-item-text">Page 404</span></Link>
-															</li>
+															{cat.filter((item) => (item.group_id == banner[2]?.id)).map((item) => {
+																return (
+																	<li className="level-1 menu-item menu-item-has-children">
+																		<Link to={`https://ecom.thetalentclub.co.in/${item.slug}`}><span className="menu-item-text">{item.title}</span></Link>
+																		<ul className="sub-menu">
+																			{subcat.filter((ele) => ele.cat_id == item.id).map((item) => {
+																				return  (
+																					< li >
+																						<Link href="shop-grid-left.html"><span className={ item.title !== null ?"menu-item-text" : ""}>{item.title}</span></Link>
+																					</li>
+																				)
+
+																			})}
+
+
+																		</ul>
+																	</li>
+																)
+															})}
+
+
 														</ul>
 													</li>
 													<li className="level-0 menu-item">
@@ -360,9 +422,9 @@ const SiteHeader = () => {
 										</div>
 									</div>
 
-									<div className="col-xl-3 col-lg-4 col-md-12 col-sm-12 col-12 header-right">
+									<div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12 header-right">
 										<div className="header-page-link">
-										
+
 											<div className="login-header">
 												<Link className="active-login" href="#">Login</Link>
 												<div className="form-login-register">
@@ -375,14 +437,14 @@ const SiteHeader = () => {
 																	<p className="status"></p>
 																	<div className="content">
 																		<div className="username">
-																			<input type="text" required="required" className="input-text" name="username" id="username" placeholder="Your name"/>
+																			<input type="text" required="required" className="input-text" name="username" id="username" placeholder="Your name" />
 																		</div>
 																		<div className="password">
-																			<input className="input-text" required="required" type="password" name="password" id="password" placeholder="Password"/>
+																			<input className="input-text" required="required" type="password" name="password" id="password" placeholder="Password" />
 																		</div>
 																		<div className="rememberme-lost">
 																			<div className="rememberme">
-																				<input name="rememberme" type="checkbox" id="rememberme" value="forever"/>
+																				<input name="rememberme" type="checkbox" id="rememberme" value="forever" />
 																				<label htmlFor="rememberme" className="inline">Remember me</label>
 																			</div>
 																			<div className="lost_password">
@@ -390,10 +452,10 @@ const SiteHeader = () => {
 																			</div>
 																		</div>
 																		<div className="button-login">
-																			<input type="submit" className="button" name="login" value="Login"/>
+																			<input type="submit" className="button" name="login" value="Login" />
 																		</div>
 																		<div className="button-next-reregister">Create An Account</div>
-																	</div>						
+																	</div>
 																</form>
 															</div>
 															<div className="form-register">
@@ -401,13 +463,13 @@ const SiteHeader = () => {
 																	<h2>REGISTER</h2>
 																	<div className="content">
 																		<div className="email">
-																			<input type="email" className="input-text" placeholder="Email" name="email" id="reg_email" value=""/>
+																			<input type="email" className="input-text" placeholder="Email" name="email" id="reg_email" value="" />
 																		</div>
 																		<div className="password">
-																			<input type="password" className="input-text" placeholder="Password" name="password" id="reg_password"/>
-																		</div>															
+																			<input type="password" className="input-text" placeholder="Password" name="password" id="reg_password" />
+																		</div>
 																		<div className="button-register">
-																			<input type="submit" className="button" name="register" value="Register"/>
+																			<input type="submit" className="button" name="register" value="Register" />
 																		</div>
 																		<div className="button-next-login">Already has an account</div>
 																	</div>
@@ -418,17 +480,17 @@ const SiteHeader = () => {
 												</div>
 											</div>
 
-										
+
 											<div className="search-box">
 												<div className="search-toggle"><i className="icon-search"></i></div>
 											</div>
-											
-											
+
+
 											<div className="wishlist-box">
 												<Link href="shop-wishlist.html"><i className="icon-heart"></i></Link>
 												<span className="count-wishlist">1</span>
 											</div>
-										
+
 											<div className="ruper-topcart dropdown light">
 												<div className="dropdown mini-cart top-cart">
 													<div className="remove-cart-shadow"></div>
@@ -449,16 +511,16 @@ const SiteHeader = () => {
 																<li className="mini-cart-item">
 																	<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>
 																	<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product3} alt="pro" /></Link>
-																	<Link href="shop-details.html" className="product-name">Chair Oak Matt Lacquered</Link>		
+																	<Link href="shop-details.html" className="product-name">Chair Oak Matt Lacquered</Link>
 																	<div className="quantity">Qty: 1</div>
 																	<div className="price">$150.00</div>
 																</li>
 																<li className="mini-cart-item">
-																	<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>													
+																	<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>
 																	<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product1} alt="pro" /></Link>
 																	<Link href="shop-details.html" className="product-name">Zunkel Schwarz</Link>
 																	<div className="quantity">Qty: 1</div>
-																	<div className="price">$100.00</div>						
+																	<div className="price">$100.00</div>
 																</li>
 															</ul>
 															<div className="total-cart">
@@ -467,7 +529,7 @@ const SiteHeader = () => {
 															</div>
 															<div className="free-ship">
 																<div className="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
-																<div className="total-percent"><div className="percent" style={{width:"20%"}}></div></div>
+																<div className="total-percent"><div className="percent" style={{ width: "20%" }}></div></div>
 															</div>
 															<div className="buttons">
 																<Link href="shop-cart.html" className="button btn view-cart btn-primary">View cart</Link>
@@ -483,10 +545,10 @@ const SiteHeader = () => {
 							</div>
 						</div>
 					</div>
-				</div>
-			</header>
-    </div>
-  )
+				</div >
+			</header >
+		</div >
+	)
 }
 
 export default SiteHeader

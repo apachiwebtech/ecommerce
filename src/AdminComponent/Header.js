@@ -81,6 +81,12 @@ const Header = () => {
           <ul className='inner-item'>
 
             <li className="nav-item">
+              <Link className="nav-link" to='/webapp/group'>
+                <Icon path={mdiLandPlotsCircle} size={1} className='mx-3' />
+                <span className="menu-title">Group</span>
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link className="nav-link" to='/webapp/category'>
                 <Icon path={mdiLandPlotsCircle} size={1} className='mx-3' />
                 <span className="menu-title">Category</span>

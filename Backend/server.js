@@ -40,11 +40,19 @@ const storage5 = multer.diskStorage({
   },
 });
 
+const storage6 = multer.diskStorage({
+  destination: '../public_html/ecomuploads/category', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
+
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
 const upload3 = multer({ storage: storage3 });
 const upload4 = multer({ storage: storage4 });
 const upload5 = multer({ storage: storage5 });
+const upload6 = multer({ storage: storage6 });
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -569,36 +577,40 @@ app.post('/adminuser_delete', (req, res) => {
 
 })
 
-app.post('/add_category', (req, res) => {
+app.post('/add_category',upload6.single('image'), (req, res) => {
   let user_id = req.body.user_id
   let title = req.body.title;
+  let image = req.file.filename;
   let slug = req.body.slug;
   let description = req.body.description;
   let created_date = new Date()
   let u_id = req.body.u_id;
 
 
+
+
   let sql;
   let param;
 
-  if (u_id == undefined) {
-    sql = "insert into awt_category(`title`,`slug`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
-    param = [title, slug, description, user_id, created_date]
+  if (u_id == 'undefined') {
+    sql = "insert into awt_category(`title`,`slug`,`description`,`image`,`created_by`,`created_date`) values(?,?,?,?,?,?)"
+    param = [title, slug, description,image, user_id, created_date]
 
   } else {
-    sql = "update awt_category set title = ? ,slug = ?, description = ? , updated_by = ? ,updated_date = ? where id = ?"
-    param = [title, slug, description, user_id, created_date, u_id]
+    sql = "update awt_category set title = ? ,slug = ?, description = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?"
+    param = [title, slug, description,image, user_id, created_date, u_id]
   }
 
 
   con.query(sql, param, (err, data) => {
+   
     if (err) {
 
       return res.json(err)
     }
     else {
 
-      return res.json("Data Added Successfully!")
+      return res.json(data)
     }
 
 

@@ -1,22 +1,32 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
+import { BASE_URL, IMG_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
+import { param } from 'jquery';
+import Loader from './Loader';
+import { Hidden } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 
 
 const Category = () => {
 
     const [cat, setCatData] = useState([])
+    const [group, setGroupData] = useState([])
     const [error, setError] = useState({})
+    const [selectedOption, setSelectedOption] = useState(null); 
+    const [image, setImage] = useState()
     const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [cid, setCid] = useState("")
+    const [loader , setLoader] = useState(false)
+    const [group_id, setId] = useState("")
     const [value, setValue] = useState({
         title: "" || uid.title,
         slug: "" || uid.slug,
@@ -37,12 +47,20 @@ const Category = () => {
 
         if (!value.title) {
             isValid = false;
-            newErrors.title = "title is require"
+            newErrors.title = "title is required"
         }
-      
+
         if (!value.slug) {
             isValid = false
-            newErrors.slug = "slug is require"
+            newErrors.slug = "slug is required"
+        }
+        if (!image) {
+            isValid = false
+            newErrors.logo = "Image is required"
+        }
+        if (!group_id) {
+            isValid = false;
+            newErrors.group = "group is required"
         }
 
         setError(newErrors)
@@ -61,8 +79,19 @@ const Category = () => {
                 console.log(err)
             })
     }
+    async function getgroupData() {
+        axios.get(`${BASE_URL}/group_data`)
+            .then((res) => {
+                console.log(res.data)
+                setGroupData(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
 
     useEffect(() => {
+        getgroupData()
         getcatData()
     }, [])
 
@@ -82,6 +111,12 @@ const Category = () => {
             [id]: false,
         }));
     };
+
+
+    const handleUpload = async (e) => {
+        const file = e.target.files[0]
+        setImage(file)
+    }
 
 
     const handleDelete = (id) => {
@@ -105,9 +140,14 @@ const Category = () => {
     }
 
     const handleUpdate = (id) => {
+        setValue({
+            description :""
+        })
+        setLoader(true)
         axios.post(`${BASE_URL}/category_update`, { u_id: id })
             .then((res) => {
                 setUid(res.data[0])
+                setLoader(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -123,18 +163,31 @@ const Category = () => {
 
         if (validateForm()) {
 
-            const data = {
-                title: value.title,
-                description: value.description,
-                slug: value.slug,
-                user_id: decryptedUserId(),
-                u_id: uid.id
-            }
+            // const data = {
+            //     title: value.title,
+            //     description: value.description,
+            //     slug: value.slug,
+            //     user_id: decryptedUserId(),
+            //     u_id: uid.id,
+            //     image :
+            // }
 
-            axios.post(`${BASE_URL}/add_category`, data)
+            const formdata = new FormData();
+
+            setLoader(true)
+            formdata.append('title', value.title)
+            formdata.append('description', value.description)
+            formdata.append('slug', value.slug)
+            formdata.append('image', image)
+            formdata.append('group_id', group_id)
+            formdata.append('user_id', decryptedUserId())
+            formdata.append('u_id', uid.id)
+
+            axios.post(`${BASE_URL}/add_category`, formdata)
                 .then((res) => {
                     alert(res.data)
                     getcatData()
+                    setLoader(false)
 
                 })
                 .catch((err) => {
@@ -160,6 +213,14 @@ const Category = () => {
             filterable: false,
         },
         { field: 'title', headerName: 'Title', flex: 2 },
+        { field: 'image', headerName: 'image', flex: 2,renderCell :(param) =>{
+            return(
+            <div style={{width :"40px" , height :"40px", borderRadius :"50%" , display:"flex" , overflow:"hidden",alignItems:"center",justifyContent:"center"}}>
+
+                <img src={`${IMG_URL}/category/${param.row.image}`}  alt='' />
+            </div>
+            )
+        } },
         {
             field: 'actions',
             type: 'actions',
@@ -168,8 +229,8 @@ const Category = () => {
             renderCell: (params) => {
                 return (
                     <>
-                       <EditIcon onClick={() => handleUpdate(params.row.id)} />
-                       <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
+                        <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                        <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
                     </>
                 )
             }
@@ -177,10 +238,21 @@ const Category = () => {
     ];
     const rowsWithIds = cat.map((row, index) => ({ index: index + 1, ...row }));
 
+    const HandleChange = (selectedValue) => {
+        if (selectedValue) {
+            console.log(selectedValue , "::::")
+            const selectedId = selectedValue.id;
+            setSelectedOption(selectedValue);
+            // Now you have the selected id, you can use it in your application logic
+            setId(selectedId)
+        }
+    };
+
     return (
 
-        <div class="container-fluid page-body-wrapper">
-            <InnerHeader/>
+        <div class="container-fluid page-body-wrapper position-relative" >
+            <InnerHeader />
+           {loader && <Loader/>}
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
@@ -196,19 +268,42 @@ const Category = () => {
                                             {error.title && <span className='text-danger'>{error.title}</span>}
                                         </div>
                                         <div class="form-group">
+                                            <label for="exampleInputUsername1">Group<span className='text-danger'>*</span></label>
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                options={group}
+                                                value={selectedOption}  
+                                                getOptionLabel={(option) => option.title}
+                                                getOptionSelected={(option, value) => option.id === value.id}
+                                                sx={{ width: "100%", border: "none", borderRadius: "5px" }}
+                                                renderInput={(params) => <TextField {...params} />}
+                                                onChange={(event, value) => HandleChange(value)}
+                                                name="category"
+
+                                            />
+                                              {error.group && <span className='text-danger'>{error.group}</span>}
+                                        </div>
+                                        <div class="form-group">
                                             <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug}  onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onChange={onhandleChange} />
                                             {error.slug && <span className='text-danger'>{error.slug}</span>}
-                                          
+
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputUsername1">Image<span className='text-danger'>*</span></label>
+                                            <input type="file" class="form-control" id="exampleInputUsername1" onChange={handleUpload} name="image" placeholder="Enter.." />
+                                            {error.logo && <span className='text-danger'>{error.logo}</span>}
+
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
-                                         
+
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={()=>{
+                                        <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
                                     </form>
@@ -228,19 +323,19 @@ const Category = () => {
 
                                     </div>
                                     <div>
-                                    <DataGrid
-                                            rows= {rowsWithIds}
+                                        <DataGrid
+                                            rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                         />
 
                                         {confirmationVisibleMap[cid] && (
-                                                                <div className='confirm-delete'>
-                                                                    <p>Are you sure you want to delete?</p>
-                                                                    <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                                                </div>
-                                                            )}
+                                            <div className='confirm-delete'>
+                                                <p>Are you sure you want to delete?</p>
+                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* <div class="table-responsive pt-3">

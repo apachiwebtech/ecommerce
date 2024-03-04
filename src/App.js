@@ -42,6 +42,7 @@ import '../src/MainComponent/Library/Icomoonfont/icomoon.css'
 import '../src/MainComponent/Library/elegant-icons/css/elegant.css'
 import '../src/MainComponent/Library/feather-font/css/iconfont.css'
 import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
+import Group from './AdminComponent/Group';
 
 
 const Router = createBrowserRouter([
@@ -90,6 +91,10 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/category/',
         element: <Category />
+      },
+      {
+        path: '/webapp/group/',
+        element: <Group />
       },
       {
         path: '/webapp/productapproval',
@@ -263,9 +268,10 @@ function App() {
   return (
     <>
       {/* <div id="page" class="hfeed page-wrapper"> */}
-        <SiteHeader/>
-        <Outlet />
-        <SiteFooter/>
+    
+      <SiteHeader />
+      <Outlet />
+      <SiteFooter />
       {/* </div> */}
     </>
 

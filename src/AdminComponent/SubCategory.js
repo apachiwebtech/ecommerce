@@ -31,18 +31,18 @@ const SubCategory = () => {
         let isValid = true
         const newErrors = {}
 
-        if (!setSelectedOption) {
+        if (!cat_id) {
             isValid = false;
-            newErrors.category = "category is require"
+            newErrors.category = "category is required"
         }
         if (!value.title) {
             isValid = false;
-            newErrors.title = "title is require"
+            newErrors.title = "title is required"
         }
 
         if (!value.slug) {
             isValid = false
-            newErrors.slug = "slug is require"
+            newErrors.slug = "slug is required"
         }
 
         setError(newErrors)

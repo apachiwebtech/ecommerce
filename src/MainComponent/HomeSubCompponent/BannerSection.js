@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import Slider from 'react-slick';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import slider1 from '../../assets/frontimg/slider/1.jpg'
-import slider2 from '../../assets/frontimg/slider/2.jpg'
-import slider3 from '../../assets/frontimg/slider/3.jpg'
-import { BASE_URL } from '../../AdminComponent/BaseUrl';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 const BannerSection = () => {
-    const [data, setData] = useState([])
+    const [banner, setBanner] = useState([])
 
     var settings = {
         dots: true,
@@ -22,8 +19,8 @@ const BannerSection = () => {
     async function getTrendingData() {
         axios.get(`${BASE_URL}/main_Banner`)
             .then((res) => {
-                console.log(res)
-                setData(res.data)
+                console.log(res.data)
+                setBanner(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -41,21 +38,21 @@ const BannerSection = () => {
             <div class="block block-sliders">
                 <Slider {...settings}>
 
-                    {data.map((item) => {
+                    {banner?.map((item) => {
                         return (
                             <div class="item slick-slide">
                                 <div class="item-content">
                                     <div class="content-image">
-                                        <img width="1920" height="1080" src={slider2} alt="Slider" />
+                                        <img width="1920" height="1080" src={`${IMG_URL}/banner/${item.upload_image}`}  alt="Slider" />
                                     </div>
                                     <div class="section-padding">
                                         <div class="section-container">
                                             <div class="item-info horizontal-start vertical-middle">
                                                 <div class="content">
-                                                    <div class="subtitle-slider">20%OFF.END MONDAY</div>
-                                                    <h2 class="title-slider">Interior lighting</h2>
-                                                    <div class="description-slider">Save up to $500 on outdoor packages </div>
-                                                    <a class="button-slider button-white" href="shop-grid-left.html">SHOP NOW</a>
+                                                    {/* <div class="subtitle-slider">20%OFF.END MONDAY</div> */}
+                                                    <h2 class="title-slider">{item.title}</h2>
+                                                    <div class="description-slider">{item.description} </div>
+                                                    <a class="button-slider button-white" target={item.target} href={item.link}>SHOP NOW</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -67,47 +64,7 @@ const BannerSection = () => {
 
                     })}
 
-                    <div class="item slick-slide">
-                        <div class="item-content">
-                            <div class="content-image">
-                                <img width="1920" height="1080" src={slider1} alt="Slider" />
-                            </div>
-                            <div class="section-padding">
-                                <div class="section-container">
-                                    <div class="item-info horizontal-start vertical-middle">
-                                        <div class="content">
-                                            <div class="subtitle-slider">20%OFF.END MONDAY</div>
-                                            <h2 class="title-slider">Chair Collection</h2>
-                                            <div class="description-slider">Save up to $500 on outdoor packages </div>
-                                            <a class="button-slider button-white" href="shop-grid-left.html">SHOP NOW</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                    <div class="item slick-slide">
-                        <div class="item-content">
-                            <div class="content-image">
-                                <img width="1920" height="1080" src={slider3} alt="Slider" />
-                            </div>
-                            <div class="section-padding">
-                                <div class="section-container">
-                                    <div class="item-info horizontal-start vertical-middle">
-                                        <div class="content">
-                                            <div class="subtitle-slider">20%OFF.END MONDAY</div>
-                                            <h2 class="title-slider">Home office</h2>
-                                            <div class="description-slider">Save up to $500 on outdoor packages </div>
-                                            <a class="button-slider button-white" href="shop-grid-left.html">SHOP NOW</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                
                 </Slider>
 
 

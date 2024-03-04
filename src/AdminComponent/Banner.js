@@ -5,8 +5,9 @@ import RadioGroup from '@mui/material/RadioGroup';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
+import { BASE_URL, IMG_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
+import Loader from "./Loader";
 
 
 const Banner = () => {
@@ -16,12 +17,14 @@ const Banner = () => {
     const [image, setImage] = useState()
     const [uid, setupdateDate] = useState([])
     const [banner, setBanner] = useState([])
+    const [loader , setLoader] = useState(false)
     const [value, setValue] = useState({
         title: "" || uid.title,
         banner: "" || uid.banner,
         target: "" || uid.target,
         link: "" || uid.link,
-        view:"" || uid.view
+        view: "" || uid.view,
+        description: "" || uid.description,
 
     })
 
@@ -29,14 +32,15 @@ const Banner = () => {
 
     useEffect(() => {
         setValue({
-            title:  uid.title,
-            banner:  uid.banner,
-            target:  uid.target,
-            link:  uid.link,
-            view: uid.view
-           
+            title: uid.title,
+            banner: uid.banner,
+            target: uid.target,
+            link: uid.link,
+            view: uid.view,
+            description: uid.description,
+
         })
-    },[uid])
+    }, [uid])
 
     const validateForm = () => {
         let isValid = true;
@@ -92,6 +96,11 @@ const Banner = () => {
 
 
     const handleUpdate = (id) => {
+        setValue({
+            description: ""
+        })
+
+        setLoader(true)
 
         const data = {
             bannerid: id
@@ -100,6 +109,7 @@ const Banner = () => {
             .then((res) => {
                 console.log(res)
                 setupdateDate(res.data[0])
+                setLoader(false)
             })
 
 
@@ -132,6 +142,8 @@ const Banner = () => {
 
         if (validateForm()) {
 
+            setLoader(true)
+
             const formdata = new FormData()
             formdata.append('title', value.title)
             formdata.append('image', image)
@@ -139,16 +151,18 @@ const Banner = () => {
             formdata.append('target', value.target)
             formdata.append('viewid', value.view)
             formdata.append('uid', uid.id)
+            formdata.append('description', value.description)
 
 
 
             axios.post(`${BASE_URL}/add_banner`, formdata)
                 .then((res) => {
-                    alert("Data Submitted Successfully")
                     bannerdata()
                     if (res.data) {
                         //    navigate('/vendormaster')
                     }
+                    setLoader(false)
+                    alert("Data Submitted Successfully")
                 })
                 .catch((err) => {
                     console.log(err)
@@ -171,12 +185,13 @@ const Banner = () => {
     }
 
     var viewid = String(value.view);
-    
+
 
     return (
 
-        <div className="container-fluid page-body-wrapper">
+        <div className="container-fluid page-body-wrapper" style={{position :"relative"}}>
             <InnerHeader />
+            {loader &&  <Loader />}
             <div className="main-panel">
 
                 <div className="content-wrapper">
@@ -198,6 +213,9 @@ const Banner = () => {
                                             <input type="file" className="form-control" id="ban_img" placeholder="" name='banner' onChange={handleUpload} />
                                             {errors.banner && <div className="text-danger">{errors.banner}</div>}
                                         </div>
+                                        <div>
+                                            <img style={{ width: "200px" }} src={`${IMG_URL}/banner/${uid.upload_image}`} alt="" />
+                                        </div>
                                         <div className="form-group ">
                                             <label htmlFor="exampleFormControlSelect1">Target<span className='text-danger'>*</span></label>
                                             <select className="form-control form-control-lg" id="exampleFormControlSelect1" name='target' value={value.target} onChange={onhandleChange}>
@@ -213,6 +231,10 @@ const Banner = () => {
                                             <input type="text" className="form-control" id="link1" placeholder="Link" value={value.link} name='link' onChange={onhandleChange} />
                                             {errors.link && <div className="text-danger">{errors.link}</div>}
                                         </div>
+                                        <div class="form-group ">
+                                            <label for="exampleTextarea1">Description</label>
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
+                                        </div>
                                         <div className="form-group">
                                             <RadioGroup
                                                 row
@@ -221,15 +243,18 @@ const Banner = () => {
                                                 onChange={onhandleChange}
                                                 value={viewid}
                                                 defaultValue={viewid}
-                                                >
+                                            >
                                                 <FormControlLabel value="1" control={<Radio />} label="Mobile View" />
                                                 <FormControlLabel value="2" control={<Radio />} label="Desktop View" />
 
                                             </RadioGroup>
-                                                {errors.view && <div className="text-danger">{errors.view}</div>}
+                                            {errors.view && <div className="text-danger">{errors.view}</div>}
 
                                         </div>
                                         <button type="submit" className="btn btn-sm btn-primary mr-2">Submit</button>
+                                        <button type='button' onClick={() => {
+                                            window.location.reload()
+                                        }} class="btn btn-light">Cancel</button>
                                         {/* <Link to="/webapp/banner"><button className="btn btn-sm btn-light">Cancel</button></Link> */}
                                     </form>
                                 </div>
@@ -275,7 +300,7 @@ const Banner = () => {
 
                                                 {banner.map((item, index) => {
                                                     return (
-                                                        <tr  key={index}>
+                                                        <tr key={index}>
                                                             <td>
                                                                 {index + 1}
                                                             </td>
@@ -286,11 +311,11 @@ const Banner = () => {
                                                                 {item.target}
                                                             </td>
                                                             <td>
-                                                                {item.view}
+                                                                {item.view == 2 ? "Desktop" : "Mobile"}
                                                             </td>
 
                                                             <td>
-                                                               <Link><EditIcon onClick={() => handleUpdate(item.id)} /></Link> 
+                                                                <Link><EditIcon onClick={() => handleUpdate(item.id)} /></Link>
                                                                 {/* <Link style={{ color: "red" }}><DeleteIcon /></Link> */}
                                                                 {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
                                                             </td>
