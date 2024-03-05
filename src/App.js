@@ -37,6 +37,14 @@ import Cookies from 'js-cookie';
 import PageNotFound from './AdminComponent/PageNotFound';
 import Color from './AdminComponent/Color';
 import SiteHeader from './MainComponent/Layout/SiteHeader';
+import SiteFooter from './MainComponent/Layout/SiteFooter';
+import '../src/MainComponent/Library/Fontawsome/Font-awsome.css'
+import '../src/MainComponent/Library/Icomoonfont/icomoon.css'
+import '../src/MainComponent/Library/elegant-icons/css/elegant.css'
+import '../src/MainComponent/Library/feather-font/css/iconfont.css'
+import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
+import ShopProducts from './MainComponent/Pages/ShopProducts';
+
 const Router = createBrowserRouter([
   {
     path: '/weblog',
@@ -53,6 +61,10 @@ const Router = createBrowserRouter([
       {
         path: '/',
         element: <DashBoard />
+      },
+      {
+        path: '/shopproducts',
+        element: <ShopProducts />
       },
     ]
   },
@@ -258,6 +270,7 @@ function App() {
       {/* <div id="page" class="hfeed page-wrapper"> */}
         <SiteHeader/>
         <Outlet />
+        <SiteFooter/>
       {/* </div> */}
     </>
 

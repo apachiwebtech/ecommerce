@@ -1160,3 +1160,21 @@ app.get(`/product_data`, (req, res) => {
     }
   })
 })
+
+app.get('/products', async (req, res, next) => {
+  try {
+    const sql = 'SELECT v_id, b_id, title, description, specification, price, disc_price, size_image, approve, active, trending, featured FROM awt_add_product';
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, (error, data) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+    res.json(data);
+  } catch (error) {
+    res.json(error);
+  }
+});
