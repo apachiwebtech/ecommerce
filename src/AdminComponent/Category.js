@@ -248,6 +248,16 @@ const Category = () => {
         }
     };
 
+    useEffect(() => {
+        // If you have received the ID from the API, find the option that matches the ID
+        if (uid.group_id) {
+            
+          const selected = group.find(option => option.id === uid.group_id);
+          console.log(selected, "dadad")
+          setSelectedOption(selected);
+        }
+      }, [uid, group]);
+
     return (
 
         <div class="container-fluid page-body-wrapper position-relative" >

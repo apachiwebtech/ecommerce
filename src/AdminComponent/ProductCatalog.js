@@ -28,6 +28,8 @@ const ProductCatalog = () => {
       });
   }
 
+
+
   useEffect(() => {
     getcatData();
   }, []);
@@ -87,7 +89,7 @@ const ProductCatalog = () => {
                     </div>
                     <div>
 
-                      <Link to="/webapp/product" ><button className=' btn btn-primary'>Add Product</button></Link>
+                      <Link to="/webapp/product/:update_id" ><button className=' btn btn-primary'>Add Product</button></Link>
                     </div>
                   </div>
 
@@ -110,7 +112,7 @@ const ProductCatalog = () => {
                       </thead>
 
                       <tbody>
-                        {product.map((item,index) => {
+                        {product.map((item, index) => {
                           return (
                             <tr>
 
@@ -131,8 +133,8 @@ const ProductCatalog = () => {
                                 />
                               </td>
                               <td>
-                                <Link to="/webapp/product">
-                                  <EditIcon />
+                                <Link to={`/webapp/product/${item.id}`}>
+                                  <EditIcon  />
                                 </Link>
                                 {/* <Link>
                                   <DeleteIcon  className="text-danger"/>

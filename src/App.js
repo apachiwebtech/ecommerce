@@ -106,7 +106,7 @@ const Router = createBrowserRouter([
       },
 
       {
-        path: '/webapp/product',
+        path: '/webapp/product/:update_id',
         element: <Product />
       },
 

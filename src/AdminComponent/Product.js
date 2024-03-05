@@ -1,23 +1,21 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { BASE_URL } from "./BaseUrl";
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import Button from "@mui/material/Button";
-import img1 from "../assets/images/product_default_image.jpg";
-import Switch, { SwitchProps } from "@mui/material/Switch";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { styled } from "@mui/material/styles";
+import EditIcon from "@mui/icons-material/Edit";
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import MenuIcon from '@mui/icons-material/Menu';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import InnerHeader from "./InnerHeader";
 import { Autocomplete, TextField } from "@mui/material";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import { styled } from "@mui/material/styles";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import decryptedUserId from "../Utils/UserID";
-import EditIcon from "@mui/icons-material/Edit";
+import img1 from "../assets/images/product_default_image.jpg";
+import { BASE_URL } from "./BaseUrl";
+import InnerHeader from "./InnerHeader";
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -54,8 +52,13 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 const Product = () => {
   const [cat, setCatData] = useState([])
   const [error, setError] = useState({})
+  const [selectedOption, setSelectedCat] = useState(null); 
+  const [selectedOptionvendor, setSelectedVendor] = useState(null); 
+  const [selectedOptionBrand, setSelectedBrand] = useState(null); 
+  const [selectedOptionSub, setSelectedSub] = useState(null); 
   const [vendor, setVendorData] = useState([])
   const [subcat, setsubcategory] = useState([])
+  const [uid, setUid] = useState([])
   const [brand, setBrand] = useState([])
   const [catid, selectedId] = useState("")
   const [subcatid, selectedsubcatId] = useState("")
@@ -63,18 +66,27 @@ const Product = () => {
   const [vendorid, selectedVendorId] = useState("")
   const [value, setValue] = useState({
     sizeimage: "",
-    title: "",
-    price: "",
-    discountedprice: "",
-    description: "",
+    title: "" || uid.title,
+    price: "" || uid.price,
+    discountedprice: "" || uid.discountedprice,
+    description: "" || uid.description,
 
   });
+
+  useEffect(()=>{
+    setValue({
+     title : uid.title,
+     price :uid.price,
+     discountedprice : uid.discountedprice,
+     description : uid.description
+    })
+  },[uid])
   const [sizeimage, setSizeImage] = useState()
   const [specification, setSpecification] = useState()
   const [activeValue, setactiveVal] = useState()
   const [featureValue, setfeatureVal] = useState()
   const [trendingValue, settrendingVal] = useState()
-
+  const { update_id } = useParams()
 
 
 
@@ -117,6 +129,20 @@ const Product = () => {
     return isValid
   }
 
+  async function getUpdateData() {
+
+    axios.post(`${BASE_URL}/product_update`, { u_id: update_id })
+      .then((res) => {
+        setUid(res.data[0])
+
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+
+
 
   async function getcatData() {
     axios.get(`${BASE_URL}/category_data`)
@@ -154,11 +180,16 @@ const Product = () => {
 
 
 
+
+
   useEffect(() => {
+    if (update_id !== ":update_id") {
+      getUpdateData()
+    }
     getcatData()
     getBrandData()
     getVendordata()
-  }, [])
+  }, [update_id])
 
 
 
@@ -173,22 +204,54 @@ const Product = () => {
   const HandleVendorChange = (selectedValue) => {
     if (selectedValue) {
       const vendorid = selectedValue.id
+      setSelectedVendor(selectedValue)
       selectedVendorId(vendorid);
     }
   };
+
+  useEffect(() => {
+    if (uid.v_id) {
+      const selected = vendor.find(option => option.id === uid.v_id);
+      setSelectedVendor(selected);
+    }
+
+  }, [uid, vendor]);
+
   const HandleBrandChange = (selectedValue) => {
     if (selectedValue) {
       const brandid = selectedValue.id
       selectedBrandId(brandid);
+      setSelectedBrand(selectedValue)
     }
   };
+
+  useEffect(() => {
+    if (uid.b_id) {
+      const selected = brand.find(option => option.id === uid.b_id);
+      setSelectedBrand(selected);
+    }
+
+  }, [uid, brand]);
 
   const HandlesubcatChange = (selectedValue) => {
     if (selectedValue) {
       const subcatid = selectedValue.id
       selectedsubcatId(subcatid);
+      setSelectedSub(selectedValue);
     }
   };
+
+  useEffect(() => {
+    if (uid.scatid) {
+      const selected = subcat.find(option => option.id === uid.scatid);
+      setSelectedSub(selected);
+    }
+
+  }, [uid, subcat]);
+
+  
+
+
 
   const handleactive = (e) => {
     const value = e.target.value
@@ -209,6 +272,7 @@ const Product = () => {
   const HandleCatChange = (selectedValue) => {
     console.log(selectedValue, "catvalue")
     const val = selectedValue.id
+    setSelectedCat(selectedValue)
     selectedId(val)
     const data = {
       catid: val
@@ -223,6 +287,14 @@ const Product = () => {
         console.log(err)
       })
   };
+
+  useEffect(() => {
+    // If you have received the ID from the API, find the option that matches the ID
+    if (uid.catid) {
+      const selected = cat.find(option => option.id === uid.catid);
+      setSelectedCat(selected);
+    }
+  }, [uid, cat]);
 
   async function ImageBase64(file) {
     const reader = new FileReader();
@@ -414,6 +486,7 @@ const Product = () => {
                               disablePortal
                               id="combo-box-demo"
                               options={vendor}
+                              value={selectedOptionvendor}
                               placeholder="brand"
                               getOptionLabel={(option) => option.vendor_name}
                               getOptionSelected={(option, value) => option.id === value.id}
@@ -436,7 +509,7 @@ const Product = () => {
 
 
                             <div>
-                              <TextField id="outlined-basic" label="Enter product title.." sx={{ width: "100%" }} variant="outlined" name="title"
+                              <TextField id="outlined-basic" label="Enter product title.." value={value.title} sx={{ width: "100%" }} variant="outlined" name="title"
                                 onChange={onhandleChange} />
                             </div>
 
@@ -480,6 +553,7 @@ const Product = () => {
                               disablePortal
                               id="combo-box-demo"
                               options={brand}
+                              value={selectedOptionBrand}
                               placeholder="brand"
                               getOptionLabel={(option) => option.title}
                               getOptionSelected={(option, value) => option.id === value.id}
@@ -502,7 +576,7 @@ const Product = () => {
                               disablePortal
                               id="combo-box-demo"
                               options={cat}
-
+                              value={selectedOption}
                               getOptionLabel={(option) => option.title}
                               getOptionSelected={(option, value) => option.id === value.id}
                               sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
@@ -529,6 +603,7 @@ const Product = () => {
                               disablePortal
                               id="combo-box-demo"
                               options={subcat}
+                              value={selectedOptionSub}
                               getOptionLabel={(option) => option.title}
                               getOptionSelected={(option, value) => option.id === value.id}
                               sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
@@ -549,7 +624,7 @@ const Product = () => {
                             </label>
 
                             <div>
-                              <TextField id="outlined-basic" label="Enter price.." sx={{ width: "100%" }} variant="outlined" name="price"
+                              <TextField id="outlined-basic" label="Enter price.." value={value.price} sx={{ width: "100%" }} variant="outlined" name="price"
                                 onChange={onhandleChange} />
                             </div>
                           </div>
@@ -564,7 +639,7 @@ const Product = () => {
 
                             <div>
 
-                              <TextField label="Enter price.." variant="outlined" sx={{ width: "100%" }} name="discountedprice" />
+                              <TextField label="Enter price.." value={value.discountedprice} variant="outlined" sx={{ width: "100%" }} name="discountedprice" />
                             </div>
                           </div>
                         </div>
@@ -580,6 +655,7 @@ const Product = () => {
                               class="form-control"
                               id="description"
                               rows="4"
+                              value={value.description}
                               name="description"
                               onChange={onhandleChange}
                             ></textarea>
@@ -594,156 +670,158 @@ const Product = () => {
                 </div>
 
 
-
-                <div class="card mt-3" id="media">
-                  <div class="card-head" style={{ padding: "20px 22px 0px" }}>
-                    <h5
-                      style={{
-                        color: "#000000DE",
-                        fontSize: "20px",
-                        margin: "0",
-                      }}
-                    >
-                      Media
-                    </h5>
-                    <p class="para">Manage your product's image gallery.</p>
-                  </div>
-
-                  <div class="card-body" style={{ padding: "20px 10px" }}>
-
-
-                    <div class="col-md-12">
-                      <ul
-                        class="uploaded-stocks ui-sortable"
-                        id="productDefaultImagesJs"
+                {update_id !== ":update_id" ?
+                  <div class="card mt-3" id="media">
+                    <div class="card-head" style={{ padding: "20px 22px 0px" }}>
+                      <h5
+                        style={{
+                          color: "#000000DE",
+                          fontSize: "20px",
+                          margin: "0",
+                        }}
                       >
-                        <li class="browse unsortableJs">
-                          <button
-                            type="button"
-                            class="browse-button"
-
-                          >
-                            <strong> Upload images(s)</strong>
-                            <span class="text-muted form-text">
-                              Png,jpeg accepted
-                            </span>
-                          </button>
-                        </li>
-                        <li class="unsortableJs">
-                          <div class="uploaded-stocks-item" data-ratio="1:1">
-                            <img
-                              class="uploaded-stocks-img"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              src={img1}
-                              title=""
-                              alt=""
-                              data-bs-original-title=""
-                            ></img>
-                            <div class="uploaded-stocks-actions"></div>
-                          </div>
-                        </li>
-                        <li class="unsortableJs">
-                          <div class="uploaded-stocks-item" data-ratio="1:1">
-                            <img
-                              class="uploaded-stocks-img"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              src={img1}
-                              title=""
-                              alt=""
-                              data-bs-original-title=""
-                            ></img>
-                            <div class="uploaded-stocks-actions"></div>
-                          </div>
-                        </li>
-                        <li class="unsortableJs">
-                          <div class="uploaded-stocks-item" data-ratio="1:1">
-                            <img
-                              class="uploaded-stocks-img"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              src={img1}
-                              title=""
-                              alt=""
-                              data-bs-original-title=""
-                            ></img>
-                            <div class="uploaded-stocks-actions"></div>
-                          </div>
-                        </li>
-                        <li class="unsortableJs">
-                          <div class="uploaded-stocks-item" data-ratio="1:1">
-                            <img
-                              class="uploaded-stocks-img"
-                              data-bs-toggle="tooltip"
-                              data-placement="top"
-                              src={img1}
-                              title=""
-                              alt=""
-                              data-bs-original-title=""
-                            ></img>
-                            <div class="uploaded-stocks-actions"></div>
-                          </div>
-                        </li>
-                      </ul>
-                      <p class="para">Preferred Dimensions 1500 x 1500</p>
+                        Media
+                      </h5>
+                      <p class="para">Manage your product's image gallery.</p>
                     </div>
 
-                    <div className="row align-items-center">
-                      <div class="m-3 col-lg-4
-                  ">
-                        <select
-                          type="text"
-                          class="form-control"
-                          id="option"
-                          placeholder="Select Option"
-                          name="option"
+                    <div class="card-body" style={{ padding: "20px 10px" }}>
+
+
+                      <div class="col-md-12">
+                        <ul
+                          class="uploaded-stocks ui-sortable"
+                          id="productDefaultImagesJs"
                         >
-                          <option value="0">Select Colour</option>
-                          <option value="1">Red</option>
-                          <option value="2">Blue</option>
-                        </select>
+                          <li class="browse unsortableJs">
+                            <button
+                              type="button"
+                              class="browse-button"
+
+                            >
+                              <strong> Upload images(s)</strong>
+                              <span class="text-muted form-text">
+                                Png,jpeg accepted
+                              </span>
+                            </button>
+                          </li>
+                          <li class="unsortableJs">
+                            <div class="uploaded-stocks-item" data-ratio="1:1">
+                              <img
+                                class="uploaded-stocks-img"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                src={img1}
+                                title=""
+                                alt=""
+                                data-bs-original-title=""
+                              ></img>
+                              <div class="uploaded-stocks-actions"></div>
+                            </div>
+                          </li>
+                          <li class="unsortableJs">
+                            <div class="uploaded-stocks-item" data-ratio="1:1">
+                              <img
+                                class="uploaded-stocks-img"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                src={img1}
+                                title=""
+                                alt=""
+                                data-bs-original-title=""
+                              ></img>
+                              <div class="uploaded-stocks-actions"></div>
+                            </div>
+                          </li>
+                          <li class="unsortableJs">
+                            <div class="uploaded-stocks-item" data-ratio="1:1">
+                              <img
+                                class="uploaded-stocks-img"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                src={img1}
+                                title=""
+                                alt=""
+                                data-bs-original-title=""
+                              ></img>
+                              <div class="uploaded-stocks-actions"></div>
+                            </div>
+                          </li>
+                          <li class="unsortableJs">
+                            <div class="uploaded-stocks-item" data-ratio="1:1">
+                              <img
+                                class="uploaded-stocks-img"
+                                data-bs-toggle="tooltip"
+                                data-placement="top"
+                                src={img1}
+                                title=""
+                                alt=""
+                                data-bs-original-title=""
+                              ></img>
+                              <div class="uploaded-stocks-actions"></div>
+                            </div>
+                          </li>
+                        </ul>
+                        <p class="para">Preferred Dimensions 1500 x 1500</p>
                       </div>
-                      <div className="col-lg-3">
-                        <button className="btn btn btn-primary">Add</button>
+
+                      <div className="row align-items-center">
+                        <div class="m-3 col-lg-4
+ ">
+                          <select
+                            type="text"
+                            class="form-control"
+                            id="option"
+                            placeholder="Select Option"
+                            name="option"
+                          >
+                            <option value="0">Select Colour</option>
+                            <option value="1">Red</option>
+                            <option value="2">Blue</option>
+                          </select>
+                        </div>
+                        <div className="col-lg-3">
+                          <button className="btn btn btn-primary">Add</button>
+                        </div>
                       </div>
+
                     </div>
+                    <div class="col-lg-12 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title">List Of Links</h4>
+                          <div class="table-responsive pt-3">
+                            <table class="table table-bordered">
+                              <thead>
+                                <tr>
+                                  <th width="18%">Sr. No.</th>
+                                  <th width="60%">Image</th>
+                                  <th>Action</th>
+                                </tr>
+                              </thead>
 
-                  </div>
-                  <div class="col-lg-12 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="card-body">
-                        <h4 class="card-title">List Of Links</h4>
-                        <div class="table-responsive pt-3">
-                          <table class="table table-bordered">
-                            <thead>
-                              <tr>
-                                <th width="18%">Sr. No.</th>
-                                <th width="60%">Image</th>
-                                <th>Action</th>
-                              </tr>
-                            </thead>
+                              <tbody>
 
-                            <tbody>
-
-                              <tr>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>
-                                  <Link>
-                                    <EditIcon />
-                                  </Link>
-                                </td>
-                              </tr>
+                                <tr>
+                                  <td>1</td>
+                                  <td>1</td>
+                                  <td>
+                                    <Link>
+                                      <EditIcon />
+                                    </Link>
+                                  </td>
+                                </tr>
 
 
-                            </tbody>
-                          </table>
+                              </tbody>
+                            </table>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
+                  </div> : null
+                }
+
 
 
                 <div class="card mt-3" id="varients">
