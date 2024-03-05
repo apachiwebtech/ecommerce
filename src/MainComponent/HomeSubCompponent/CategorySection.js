@@ -5,6 +5,7 @@ import procat4 from '../../assets/frontimg/banner/product-cat-4.jpg'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 const CategorySection = () => {
   const [banner, setBanner] = useState([])
 
@@ -38,14 +39,14 @@ const CategorySection = () => {
                     <div class="bg-banner">
                       <div class="banner-wrapper banners">
                         <div class="banner-image">
-                          <a href="shop-grid-left.html">
+                          <Link to="/shoproduct">
                             <img width="571" height="622" src={`${IMG_URL}/group/${banner[0]?.image}`} alt="Banner" />
-                          </a>
+                          </Link>
                         </div>
                         <div class="banner-wrapper-infor">
                           <div class="info">
                             <div class="content">
-                              <a class="button button-white" href={`https://ecom.thetalentclub.co.in/${banner[0]?.slug}`}>{banner[0]?.title}</a>
+                              <Link class="button button-white" to="/shoproduct">{banner[0]?.title}</Link>
                             </div>
                           </div>
                         </div>
@@ -58,7 +59,8 @@ const CategorySection = () => {
             <div class="section-column right">
               <div class="section-column-wrap">
                 <div class="block-widget-wrap p-0">
-                  <div class="block-section m-b-15">
+
+                  {/* <div class="block-section m-b-15">
                     <div class="section-container">
                       <div class="section-row">
                         <div class="section-column column-50 sm-m-b">
@@ -67,14 +69,14 @@ const CategorySection = () => {
                               <div class="bg-banner">
                                 <div class="banner-wrapper banners">
                                   <div class="banner-image">
-                                    <a href="shop-grid-left.html">
+                                    <Link href="shop-grid-left.html">
                                       <img width="406" height="304" src={`${IMG_URL}/group/${banner[1]?.image}`}  alt="Banner" />
-                                    </a>
+                                    </Link>
                                   </div>
                                   <div class="banner-wrapper-infor">
                                     <div class="info">
                                       <div class="content">
-                                        <a class="button button-white"  href={`https://ecom.thetalentclub.co.in/${banner[1]?.slug}`}>{banner[1]?.title}</a>
+                                        <Link class="button button-white"  href={`https://ecom.thetalentclub.co.in/${banner[1]?.slug}`}>{banner[1]?.title}</Link>
                                       </div>
                                     </div>
                                   </div>
@@ -89,14 +91,43 @@ const CategorySection = () => {
                               <div class="bg-banner">
                                 <div class="banner-wrapper banners">
                                   <div class="banner-image">
-                                    <a href="shop-grid-left.html">
+                                    <Link href="shop-grid-left.html">
                                       <img width="406" height="304" src={`${IMG_URL}/group/${banner[2]?.image}`} alt="Banner" />
-                                    </a>
+                                    </Link>
                                   </div>
                                   <div class="banner-wrapper-infor">
                                     <div class="info">
                                       <div class="content">
-                                        <a class="button button-white"  href={`https://ecom.thetalentclub.co.in/${banner[2]?.slug}`}>{banner[2]?.title}</a>
+                                        <Link class="button button-white"  href={`https://ecom.thetalentclub.co.in/${banner[2]?.slug}`}>{banner[2]?.title}</Link>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> */}
+
+                  <div class="block-section m-b-15">
+                    <div class="section-container">
+                      <div class="section-row">
+                        <div class="section-column">
+                          <div class="block-widget-wrap">
+                            <div class="block-widget-banner layout-1">
+                              <div class="bg-banner">
+                                <div class="banner-wrapper banners">
+                                  <div class="banner-image">
+                                    <Link to="/shoproduct">
+                                      <img width="406" height="304" src={`${IMG_URL}/group/${banner[1]?.image}`} alt="Banner" />
+                                    </Link>
+                                  </div>
+                                  <div class="banner-wrapper-infor">
+                                    <div class="info">
+                                      <div class="content">
+                                        <Link class="button button-white"  to="/shoproduct">{banner[1]?.title}</Link>
                                       </div>
                                     </div>
                                   </div>
@@ -117,14 +148,14 @@ const CategorySection = () => {
                               <div class="bg-banner">
                                 <div class="banner-wrapper banners">
                                   <div class="banner-image">
-                                    <a href="shop-grid-left.html">
-                                      <img width="406" height="304" src={`${IMG_URL}/group/${banner[3]?.image}`} alt="Banner" />
-                                    </a>
+                                    <Link to="/shoproduct">
+                                      <img width="406" height="304" src={`${IMG_URL}/group/${banner[2]?.image}`} alt="Banner" />
+                                    </Link>
                                   </div>
                                   <div class="banner-wrapper-infor">
                                     <div class="info">
                                       <div class="content">
-                                        <a class="button button-white"  href={`https://ecom.thetalentclub.co.in/${banner[3]?.slug}`}>{banner[3]?.title}</a>
+                                        <Link class="button button-white"  to="/shoproduct">{banner[2]?.title}</Link>
                                       </div>
                                     </div>
                                   </div>
@@ -136,6 +167,7 @@ const CategorySection = () => {
                       </div>
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>

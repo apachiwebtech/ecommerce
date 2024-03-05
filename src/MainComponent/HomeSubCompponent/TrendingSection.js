@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import axios from 'axios'
 import { BASE_URL } from '../../AdminComponent/BaseUrl'
+import { Link } from 'react-router-dom'
 
 var settings = {
     dots: false,
@@ -56,14 +57,14 @@ const TrendingSection = () => {
                                                     <div class="items">
                                                         <div class="products-entry clearfix product-wapper">
                                                             <div class="products-thumb">
-                                                                <div class="product-lable">
+                                                                {/* <div class="product-lable">
                                                                     <div class=""><i className='icon-heart'/></div>
-                                                                </div>
+                                                                </div> */}
                                                                 <div class="product-thumb-hover">
-                                                                    <a href="shop-details.html" >
+                                                                    <Link to="/detailpage" >
                                                                         <img width="600" height="600" src={product1} class="post-image" alt="" />
                                                                         <img width="600" height="600" src={product2} class="hover-image back" alt="" />
-                                                                    </a>
+                                                                    </Link>
                                                                 </div>
                                                                 <div class="product-button">
                                                                     <div class="btn-wishlist" data-title="Wishlist">
@@ -73,17 +74,17 @@ const TrendingSection = () => {
                                                                         <button class="product-btn">Compare</button>
                                                                     </div>
                                                                     <span class="product-quickview" data-title="Quick View">
-                                                                        <a href="#" class="quickview quickview-button">Quick View <i class="icon-search"></i></a>
+                                                                        <Link href="#" class="quickview quickview-button">Quick View <i class="icon-search"></i></Link>
                                                                     </span> */}
                                                                 </div>
                                                             </div>
                                                             <div class="products-content">
                                                                 <div class="contents">
-                                                                    <h3 class="product-title"><a href="shop-details.html">{item.title}</a></h3>
+                                                                    <h3 class="product-title"><Link to="/detailpage">{item.title}</Link></h3>
                                                                     <span class="price">₹{item.price}</span>
                                                                     <div class="btn-add-to-cart">
                                                                         <div data-title="Add to cart">
-                                                                            <a href="#" class="button">Add to cart</a>
+                                                                            <Link to="/shopcart" class="button">Add to cart</Link>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -95,15 +96,15 @@ const TrendingSection = () => {
                                         })}
 
 
-                                   
-
-                                     
 
 
-                                    
 
-                                   
-                                        
+
+
+
+
+
+
                                     </Slider>
 
 

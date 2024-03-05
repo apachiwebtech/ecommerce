@@ -106,6 +106,7 @@ const ProductCatalog = () => {
                           <th>Subcategory</th>
                           <th>Vendor Name</th>
                           <th>Price</th>
+                          <th>Images</th>
                           <th>Status</th>
                           <th>Action</th>
                         </tr>
@@ -125,7 +126,12 @@ const ProductCatalog = () => {
                               <td>{item.subcategory}</td>
                               <td>{item.vendor}</td>
                               <td>{item.price}</td>
-
+                              <td><Link to={`/webapp/addimages/${item.id}`}><Button
+                                color="primary"
+                                disabled={false}
+                                size="medium"
+                                variant="outlined"
+                              >Add</Button></Link></td>
                               <td>
                                 {" "}
                                 <FormControlLabel
@@ -134,7 +140,7 @@ const ProductCatalog = () => {
                               </td>
                               <td>
                                 <Link to={`/webapp/product/${item.id}`}>
-                                  <EditIcon  />
+                                  <EditIcon />
                                 </Link>
                                 {/* <Link>
                                   <DeleteIcon  className="text-danger"/>

@@ -35,14 +35,19 @@ import './App.css';
 import SiteHeader from './MainComponent/Layout/SiteHeader';
 import SiteFooter from './MainComponent/Layout/SiteFooter';
 import DashBoard from './MainComponent/Pages/Home';
-import './Responsive.css';
-import './Style.css';
+import ShopProduct from './MainComponent/Pages/ShopProduct'
 import '../src/MainComponent/Library/Fontawsome/Font-awsome.css'
 import '../src/MainComponent/Library/Icomoonfont/icomoon.css'
 import '../src/MainComponent/Library/elegant-icons/css/elegant.css'
 import '../src/MainComponent/Library/feather-font/css/iconfont.css'
 import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
+import './Responsive.css';
+import './Style.css';
 import Group from './AdminComponent/Group';
+import AddProductImg from './AdminComponent/AddProductImg';
+import ShopCart from './MainComponent/Pages/ShopCart';
+import ShopWishlist from './MainComponent/Pages/ShopWishlist';
+import DetailPage from './MainComponent/Pages/DetailPage';
 
 
 const Router = createBrowserRouter([
@@ -61,6 +66,22 @@ const Router = createBrowserRouter([
       {
         path: '/',
         element: <DashBoard />
+      },
+      {
+        path: '/shopcart',
+        element: <ShopCart />
+      },
+      {
+        path: '/shopwishlist',
+        element: <ShopWishlist />
+      },
+      {
+        path: '/detailpage',
+        element: <DetailPage />
+      },
+      {
+        path: '/shoproduct',
+        element: <ShopProduct/>
       },
     ]
   },
@@ -178,6 +199,10 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/color',
         element: <Color />
+      },
+      {
+        path: '/webapp/addimages/:proid',
+        element: <AddProductImg />
       },
 
     ]

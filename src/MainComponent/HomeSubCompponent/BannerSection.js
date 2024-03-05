@@ -4,6 +4,7 @@ import Slider from 'react-slick';
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
+import { Link } from 'react-router-dom';
 const BannerSection = () => {
     const [banner, setBanner] = useState([])
 
@@ -52,7 +53,7 @@ const BannerSection = () => {
                                                     {/* <div class="subtitle-slider">20%OFF.END MONDAY</div> */}
                                                     <h2 class="title-slider">{item.title}</h2>
                                                     <div class="description-slider">{item.description} </div>
-                                                    <a class="button-slider button-white" target={item.target} href={item.link}>SHOP NOW</a>
+                                                    <Link to="/shoproduct" class="button-slider button-white" target={item.target} href={item.link}>SHOP NOW</Link>
                                                 </div>
                                             </div>
                                         </div>

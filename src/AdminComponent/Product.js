@@ -1,7 +1,6 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import EditIcon from "@mui/icons-material/Edit";
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import MenuIcon from '@mui/icons-material/Menu';
 import PermMediaIcon from '@mui/icons-material/PermMedia';
@@ -11,10 +10,10 @@ import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import decryptedUserId from "../Utils/UserID";
 import img1 from "../assets/images/product_default_image.jpg";
-import { BASE_URL } from "./BaseUrl";
+import { BASE_URL, IMG_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
@@ -52,10 +51,10 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 const Product = () => {
   const [cat, setCatData] = useState([])
   const [error, setError] = useState({})
-  const [selectedOption, setSelectedCat] = useState(null); 
-  const [selectedOptionvendor, setSelectedVendor] = useState(null); 
-  const [selectedOptionBrand, setSelectedBrand] = useState(null); 
-  const [selectedOptionSub, setSelectedSub] = useState(null); 
+  const [selectedOption, setSelectedCat] = useState(null);
+  const [selectedOptionvendor, setSelectedVendor] = useState(null);
+  const [selectedOptionBrand, setSelectedBrand] = useState(null);
+  const [selectedOptionSub, setSelectedSub] = useState(null);
   const [vendor, setVendorData] = useState([])
   const [subcat, setsubcategory] = useState([])
   const [uid, setUid] = useState([])
@@ -65,22 +64,23 @@ const Product = () => {
   const [brandid, selectedBrandId] = useState("")
   const [vendorid, selectedVendorId] = useState("")
   const [value, setValue] = useState({
-    sizeimage: "",
+    sizeimage: "" ||  `${IMG_URL}/sizechart/` + uid.size_image,
     title: "" || uid.title,
     price: "" || uid.price,
-    discountedprice: "" || uid.discountedprice,
+    discountedprice: "" || uid.disc_price,
     description: "" || uid.description,
 
   });
 
-  useEffect(()=>{
+  useEffect(() => {
     setValue({
-     title : uid.title,
-     price :uid.price,
-     discountedprice : uid.discountedprice,
-     description : uid.description
+      sizeimage :  `${IMG_URL}/sizechart/` +  uid.size_image,
+      title: uid.title,
+      price: uid.price,
+      discountedprice: uid.disc_price,
+      description: uid.description
     })
-  },[uid])
+  }, [uid])
   const [sizeimage, setSizeImage] = useState()
   const [specification, setSpecification] = useState()
   const [activeValue, setactiveVal] = useState()
@@ -89,40 +89,36 @@ const Product = () => {
   const { update_id } = useParams()
 
 
-
+console.log(value.sizeimage , "000")
   const validateForm = () => {
     let isValid = true
     const newErrors = {}
 
-    if (!catid) {
+    if (!selectedOption) {
       isValid = false;
-      newErrors.category = "category is require"
+      newErrors.category = "category is required"
     }
 
     if (!value.title) {
       isValid = false;
-      newErrors.category = "category is require"
+      newErrors.title = "title is required"
     }
 
-    // if (!subcatid) {
-    //   isValid = false
-    //   newErrors.subcategory = "subcategory is require"
-    // }
-    if (!brandid) {
+    if (!selectedOptionBrand) {
       isValid = false
-      newErrors.brand = "brand is require"
+      newErrors.brand = "brand is required"
     }
-    if (!vendorid) {
+    if (!selectedOptionvendor) {
       isValid = false
-      newErrors.vendor = "vendor is require"
+      newErrors.vendor = "vendor is required"
     }
     if (!value.price) {
       isValid = false
-      newErrors.price = "price is require"
+      newErrors.price = "price is required"
     }
     if (!sizeimage) {
       isValid = false
-      newErrors.sizeimage = "sizechart is require"
+      newErrors.sizeimage = "sizechart is required"
     }
 
     setError(newErrors)
@@ -249,7 +245,7 @@ const Product = () => {
 
   }, [uid, subcat]);
 
-  
+
 
 
 
@@ -270,7 +266,7 @@ const Product = () => {
 
 
   const HandleCatChange = (selectedValue) => {
-    console.log(selectedValue, "catvalue")
+
     const val = selectedValue.id
     setSelectedCat(selectedValue)
     selectedId(val)
@@ -486,6 +482,9 @@ const Product = () => {
                               disablePortal
                               id="combo-box-demo"
                               options={vendor}
+                              InputLabelProps={{
+                                shrink: true,  // This makes the label move up when there's a value
+                              }}
                               value={selectedOptionvendor}
                               placeholder="brand"
                               getOptionLabel={(option) => option.vendor_name}
@@ -505,12 +504,16 @@ const Product = () => {
                             <label for="prod_id">
                               Product title
                               <span class="text-danger">*</span>
+                              {error.title && <span className="text-danger">{error.title}</span>}
                             </label>
 
 
                             <div>
-                              <TextField id="outlined-basic" label="Enter product title.." value={value.title} sx={{ width: "100%" }} variant="outlined" name="title"
+                              <TextField id="outlined-basic" InputLabelProps={{
+                                shrink: true,  // This makes the label move up when there's a value
+                              }} label="Enter product title.." value={value.title} sx={{ width: "100%" }} variant="outlined" name="title"
                                 onChange={onhandleChange} />
+
                             </div>
 
                           </div>
@@ -624,7 +627,9 @@ const Product = () => {
                             </label>
 
                             <div>
-                              <TextField id="outlined-basic" label="Enter price.." value={value.price} sx={{ width: "100%" }} variant="outlined" name="price"
+                              <TextField id="outlined-basic" InputLabelProps={{
+                                shrink: true,  // This makes the label move up when there's a value
+                              }} label="Enter price.." value={value.price} sx={{ width: "100%" }} variant="outlined" name="price"
                                 onChange={onhandleChange} />
                             </div>
                           </div>
@@ -639,7 +644,9 @@ const Product = () => {
 
                             <div>
 
-                              <TextField label="Enter price.." value={value.discountedprice} variant="outlined" sx={{ width: "100%" }} name="discountedprice" />
+                              <TextField label="Enter price.." InputLabelProps={{
+                                shrink: true,  // This makes the label move up when there's a value
+                              }} value={value.discountedprice} variant="outlined" sx={{ width: "100%" }} name="discountedprice" onChange={onhandleChange} />
                             </div>
                           </div>
                         </div>
@@ -670,157 +677,7 @@ const Product = () => {
                 </div>
 
 
-                {update_id !== ":update_id" ?
-                  <div class="card mt-3" id="media">
-                    <div class="card-head" style={{ padding: "20px 22px 0px" }}>
-                      <h5
-                        style={{
-                          color: "#000000DE",
-                          fontSize: "20px",
-                          margin: "0",
-                        }}
-                      >
-                        Media
-                      </h5>
-                      <p class="para">Manage your product's image gallery.</p>
-                    </div>
-
-                    <div class="card-body" style={{ padding: "20px 10px" }}>
-
-
-                      <div class="col-md-12">
-                        <ul
-                          class="uploaded-stocks ui-sortable"
-                          id="productDefaultImagesJs"
-                        >
-                          <li class="browse unsortableJs">
-                            <button
-                              type="button"
-                              class="browse-button"
-
-                            >
-                              <strong> Upload images(s)</strong>
-                              <span class="text-muted form-text">
-                                Png,jpeg accepted
-                              </span>
-                            </button>
-                          </li>
-                          <li class="unsortableJs">
-                            <div class="uploaded-stocks-item" data-ratio="1:1">
-                              <img
-                                class="uploaded-stocks-img"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                src={img1}
-                                title=""
-                                alt=""
-                                data-bs-original-title=""
-                              ></img>
-                              <div class="uploaded-stocks-actions"></div>
-                            </div>
-                          </li>
-                          <li class="unsortableJs">
-                            <div class="uploaded-stocks-item" data-ratio="1:1">
-                              <img
-                                class="uploaded-stocks-img"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                src={img1}
-                                title=""
-                                alt=""
-                                data-bs-original-title=""
-                              ></img>
-                              <div class="uploaded-stocks-actions"></div>
-                            </div>
-                          </li>
-                          <li class="unsortableJs">
-                            <div class="uploaded-stocks-item" data-ratio="1:1">
-                              <img
-                                class="uploaded-stocks-img"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                src={img1}
-                                title=""
-                                alt=""
-                                data-bs-original-title=""
-                              ></img>
-                              <div class="uploaded-stocks-actions"></div>
-                            </div>
-                          </li>
-                          <li class="unsortableJs">
-                            <div class="uploaded-stocks-item" data-ratio="1:1">
-                              <img
-                                class="uploaded-stocks-img"
-                                data-bs-toggle="tooltip"
-                                data-placement="top"
-                                src={img1}
-                                title=""
-                                alt=""
-                                data-bs-original-title=""
-                              ></img>
-                              <div class="uploaded-stocks-actions"></div>
-                            </div>
-                          </li>
-                        </ul>
-                        <p class="para">Preferred Dimensions 1500 x 1500</p>
-                      </div>
-
-                      <div className="row align-items-center">
-                        <div class="m-3 col-lg-4
- ">
-                          <select
-                            type="text"
-                            class="form-control"
-                            id="option"
-                            placeholder="Select Option"
-                            name="option"
-                          >
-                            <option value="0">Select Colour</option>
-                            <option value="1">Red</option>
-                            <option value="2">Blue</option>
-                          </select>
-                        </div>
-                        <div className="col-lg-3">
-                          <button className="btn btn btn-primary">Add</button>
-                        </div>
-                      </div>
-
-                    </div>
-                    <div class="col-lg-12 grid-margin stretch-card">
-                      <div class="card">
-                        <div class="card-body">
-                          <h4 class="card-title">List Of Links</h4>
-                          <div class="table-responsive pt-3">
-                            <table class="table table-bordered">
-                              <thead>
-                                <tr>
-                                  <th width="18%">Sr. No.</th>
-                                  <th width="60%">Image</th>
-                                  <th>Action</th>
-                                </tr>
-                              </thead>
-
-                              <tbody>
-
-                                <tr>
-                                  <td>1</td>
-                                  <td>1</td>
-                                  <td>
-                                    <Link>
-                                      <EditIcon />
-                                    </Link>
-                                  </td>
-                                </tr>
-
-
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> : null
-                }
+               
 
 
 
@@ -865,7 +722,7 @@ const Product = () => {
                               class="uploaded-stocks-img"
                               data-bs-toggle="tooltip"
                               data-placement="top"
-                              src={value.sizeimage == "" ? img1 : value.sizeimage}
+                              src={uid.size_image == undefined ? img1 : value.sizeimage }
                               title=""
                               alt=""
                               data-bs-original-title=""

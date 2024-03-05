@@ -164,7 +164,7 @@ const SubCategory = () => {
 
     }
 
-    console.log(cat_id, "new")
+  
 
 
     const onhandleChange = (e) => {
