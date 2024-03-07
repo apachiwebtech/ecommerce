@@ -44,13 +44,17 @@ const DetailPage = () => {
 									<a href="index.html">Home</a><span class="delimiter"></span><a href="shop-grid-left.html">Shop</a><span class="delimiter"></span>Bora Armchair
 								</div>
 							</div>
+
+
 						</div>
+
 
 						<div id="content" class="site-content" role="main">
 							<div class="shop-details zoom" data-product_layout_thumb="scroll" data-zoom_scroll="true" data-zoom_contain_lens="true" data-zoomtype="inner" data-lenssize="200" data-lensshape="square" data-lensborder="" data-bordersize="2" data-bordercolour="#f9b61e" data-popup="false">
 								<div class="product-top-info">
 									<div class="section-padding">
 										<div class="section-container p-l-r">
+										
 											<div class="row">
 												<div class="product-images col-lg-7 col-md-12 col-12">
 													<div class="row">

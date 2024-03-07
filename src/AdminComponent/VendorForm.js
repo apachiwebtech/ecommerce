@@ -12,6 +12,7 @@ import { BASE_URL } from './BaseUrl';
 import md5 from 'js-md5'
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import Loader from './Loader';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -26,6 +27,7 @@ const VendorForm = () => {
     const [image, setImage] = useState(null);
     const [image2, setImage2] = useState(null);
     const [image3, setImage3] = useState(null);
+    const [loader , setLoader] = useState(false)
     const [errors, setErrors] = useState({
         email: "",
         mobile: "",
@@ -266,6 +268,7 @@ const VendorForm = () => {
         e.preventDefault()
 
         if (validateForm()) {
+            setLoader(true)
             let hashpassword
 
             if (value.password == "") {
@@ -311,6 +314,7 @@ const VendorForm = () => {
                     // Handle the response from the backend
                     console.log(data);
                     alert(data)
+                    setLoader(false)
                 })
                 .catch(error => {
                     // Handle errors
@@ -331,6 +335,7 @@ const VendorForm = () => {
 
         } else {
             alert("Please fill all the field")
+            setLoader(false)
         }
     }
 
@@ -360,6 +365,7 @@ const VendorForm = () => {
             <div class="main-panel">
                 <div class="content-wrapper">
                     <CustomHeder />
+                    {loader && <Loader/>}
                     <div class="row">
                         <div class="col-md-12 grid-margin stretch-card">
                             <div class="card">
@@ -516,7 +522,7 @@ const VendorForm = () => {
                                             </div>
                                         </div>
                                         <div className='mt-3 text-right'>
-                                            <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type="submit" class="btn btn-primary mr-2">{loader ? "Submitting.." : "Submit"}</button>
                                             <button type='button' onClick={() => {
                                                 window.location.reload()
                                             }} class="btn btn-light">Cancel</button>

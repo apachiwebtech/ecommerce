@@ -2,11 +2,12 @@ import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { mdiMenu } from '@mdi/js';
 import Icon from '@mdi/react';
-import logo from '../assets/images/logo.svg'
+import logo from '../assets/images/logo/ecomlogo.png'
 import InnerHeader from './InnerHeader';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { BASE_URL } from './BaseUrl';
+
 
 const AdminDashBoard = () => {
 
@@ -24,7 +25,7 @@ const AdminDashBoard = () => {
             <Icon path={mdiMenu} size={1} />
           </button>
           <div className="navbar-brand-wrapper">
-            <a className="navbar-brand brand-logo" href="index.html"><img src={logo} alt="logo" /></a>
+            <a className="navbar-brand brand-logo" href="index.html"><img src={logo} width="200px" alt="logo" /></a>
             {/* <a className="navbar-brand brand-logo-mini" href="index.html"><img src="images/logo-mini.svg" alt="logo" /></a> */}
           </div>
           <h4 className="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, Brandon Haynes</h4>

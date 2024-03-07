@@ -1,4 +1,4 @@
-import { mdiAccountGroupOutline, mdiAccountOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiHome, mdiImageArea, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiStarBox, mdiViewGallery } from '@mdi/js';
+import { mdiAccountGroupOutline, mdiAccountOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiHome, mdiImageArea,mdiNut, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiStarBox, mdiViewGallery } from '@mdi/js';
 import Icon from '@mdi/react';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
@@ -282,7 +282,7 @@ const Header = () => {
 
         <li className="nav-item">
           <Link className="nav-link" to="/webapp/settings">
-            <Icon path={mdiAccountGroupOutline} size={1} className='mx-3' />
+            <Icon path={mdiNut} size={1} className='mx-3' />
             <span className="menu-title">Settings</span>
           </Link>
         </li>

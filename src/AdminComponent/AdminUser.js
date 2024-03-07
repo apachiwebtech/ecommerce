@@ -10,10 +10,12 @@ import Cookies from 'js-cookie';
 import { DataGrid } from '@mui/x-data-grid';
 import CryptoJS from 'crypto-js';
 import decryptedUserId from '../Utils/UserID';
+import Loader from './Loader';
 const AdminUser = () => {
 
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [errors, setErrors] = useState({})
+    const [loader , setLoader] = useState(false)
     const [cid, setCid] = useState("")
     const [admindata, setData] = useState([])
     const [uid, setUid] = useState([])
@@ -88,9 +90,11 @@ const AdminUser = () => {
 
 
     const handleUpdate = (id) => {
+        setLoader(true)
         axios.post(`${BASE_URL}/adminuser_update`, { u_id: id })
             .then((res) => {
                 setUid(res.data[0])
+                setLoader(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -160,6 +164,7 @@ const AdminUser = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
         if (validateForm()) {
+            setLoader(true)
             const hashpassword = md5(value.password)
 
             const data = {
@@ -176,10 +181,12 @@ const AdminUser = () => {
             axios.post(`${BASE_URL}/add_adminuser`, data)
                 .then((res) => {
                     alert(res.data)
+                    setLoader(false)
                     getAdminuserData()
-                    if (res.data) {
-                        //    navigate('/vendormaster')
-                    }
+                     window.location.pathname = '/webapp/adminuser'
+
+
+
                 })
                 .catch((err) => {
                     console.log(err)
@@ -228,8 +235,8 @@ const AdminUser = () => {
                 return (
                     <>
                         <div>
-                            <EditIcon onClick={() => handleUpdate(params.row.id)} />
-                            <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
+                            <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
+                            <DeleteIcon sx={{cursor :"pointer"}} style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
                         </div>
                      
                     </>
@@ -241,7 +248,7 @@ const AdminUser = () => {
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-
+            {loader && <Loader/>}
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
@@ -283,7 +290,7 @@ const AdminUser = () => {
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
+                                        <button type='button'  onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
                                     </form>
@@ -307,6 +314,11 @@ const AdminUser = () => {
                                         <DataGrid
                                             rows={rows}
                                             columns={columns}
+                                            initialState={{
+                                                pagination: {
+                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                },
+                                              }}
                                         />
                                            {confirmationVisibleMap[cid] && (
                                                                 <div className='confirm-delete'>

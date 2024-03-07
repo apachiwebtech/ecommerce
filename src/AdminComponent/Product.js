@@ -64,7 +64,7 @@ const Product = () => {
   const [brandid, selectedBrandId] = useState("")
   const [vendorid, selectedVendorId] = useState("")
   const [value, setValue] = useState({
-    sizeimage: "" ||  `${IMG_URL}/sizechart/` + uid.size_image,
+    sizeimage: "" || `${IMG_URL}/sizechart/` + uid.size_image,
     title: "" || uid.title,
     price: "" || uid.price,
     discountedprice: "" || uid.disc_price,
@@ -74,7 +74,7 @@ const Product = () => {
 
   useEffect(() => {
     setValue({
-      sizeimage :  `${IMG_URL}/sizechart/` +  uid.size_image,
+      sizeimage: `${IMG_URL}/sizechart/` + uid.size_image,
       title: uid.title,
       price: uid.price,
       discountedprice: uid.disc_price,
@@ -89,7 +89,7 @@ const Product = () => {
   const { update_id } = useParams()
 
 
-console.log(value.sizeimage , "000")
+  // console.log(value.sizeimage, "000")
   const validateForm = () => {
     let isValid = true
     const newErrors = {}
@@ -137,13 +137,29 @@ console.log(value.sizeimage , "000")
       })
   }
 
+  const handlestatus = (e,id,column) => {
+    const value = e.target.value
+
+    const data = {
+        product_id: id,
+        status: value,
+        column:column
+    }
+
+    axios.post(`${BASE_URL}/product_status`, data)
+        .then((res) => {
+            console.log(res)
+            // setProductData()
+        })
+
+}
+
 
 
 
   async function getcatData() {
     axios.get(`${BASE_URL}/category_data`)
       .then((res) => {
-        // console.log(res.data)
         setCatData(res.data)
       })
       .catch((err) => {
@@ -178,10 +194,13 @@ console.log(value.sizeimage , "000")
 
 
 
+
+
   useEffect(() => {
     if (update_id !== ":update_id") {
       getUpdateData()
     }
+
     getcatData()
     getBrandData()
     getVendordata()
@@ -238,8 +257,10 @@ console.log(value.sizeimage , "000")
   };
 
   useEffect(() => {
+ 
     if (uid.scatid) {
       const selected = subcat.find(option => option.id === uid.scatid);
+      console.log(selected , "///")
       setSelectedSub(selected);
     }
 
@@ -249,20 +270,6 @@ console.log(value.sizeimage , "000")
 
 
 
-  const handleactive = (e) => {
-    const value = e.target.value
-    setactiveVal(value)
-  }
-  const handletrending = (e) => {
-    const value = e.target.value
-    settrendingVal(value)
-  }
-
-
-  const handlefeature = (e) => {
-    const value = e.target.value
-    setfeatureVal(value)
-  }
 
 
   const HandleCatChange = (selectedValue) => {
@@ -276,7 +283,7 @@ console.log(value.sizeimage , "000")
 
     axios.post(`${BASE_URL}/getsubcategory`, data)
       .then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         setsubcategory(res.data)
       })
       .catch((err) => {
@@ -285,6 +292,7 @@ console.log(value.sizeimage , "000")
   };
 
   useEffect(() => {
+    
     // If you have received the ID from the API, find the option that matches the ID
     if (uid.catid) {
       const selected = cat.find(option => option.id === uid.catid);
@@ -340,7 +348,7 @@ console.log(value.sizeimage , "000")
 
       axios.post(`${BASE_URL}/add_product`, formdata)
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           alert(res.data)
         })
     }
@@ -677,7 +685,7 @@ console.log(value.sizeimage , "000")
                 </div>
 
 
-               
+
 
 
 
@@ -722,7 +730,7 @@ console.log(value.sizeimage , "000")
                               class="uploaded-stocks-img"
                               data-bs-toggle="tooltip"
                               data-placement="top"
-                              src={uid.size_image == undefined ? img1 : value.sizeimage }
+                              src={uid.size_image == undefined ? img1 : value.sizeimage}
                               title=""
                               alt=""
                               data-bs-original-title=""
@@ -759,8 +767,10 @@ console.log(value.sizeimage , "000")
                   <div style={{ width: "600px", padding: "20px 22px " }} >
                     <CKEditor
 
+                     
+
                       editor={ClassicEditor}
-                      data=""
+                      data={uid.specification}
                       onReady={editor => {
                         // Allows you to store the editor instance and use it later.
                         // console.log('Editor is ready to use!', editor);
@@ -770,10 +780,10 @@ console.log(value.sizeimage , "000")
                         setSpecification(data)
                       }}
                       onBlur={(event, editor) => {
-                        console.log('Blur.', editor);
+                        // console.log('Blur.', editor);
                       }}
                       onFocus={(event, editor) => {
-                        console.log('Focus.', editor);
+                        // console.log('Focus.', editor);
                       }}
                     />
                   </div>
@@ -963,9 +973,14 @@ console.log(value.sizeimage , "000")
                               </label>
                             </div>
                             <div>
-                              <FormControlLabel
-                                control={<Android12Switch onChange={(e) => handleactive(e)} value="1" />}
-                              />
+                            {isNaN(update_id) &&  <FormControlLabel
+                                control={<Android12Switch disabled />}
+                            />}
+                              {uid.active == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"active") } value="0" defaultChecked />} />}
+                              {uid.active == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"active") } value="1" />} />}
+
+
+
                             </div>
                           </div>
                         </div>
@@ -977,11 +992,16 @@ console.log(value.sizeimage , "000")
                               htmlFor=""
                               class="switch switch-sm switch-icon"
                             >
+
                               Approval status
                             </label>
-                            <FormControlLabel
-                              control={<Android12Switch />}
-                            />
+                            {isNaN(update_id) &&  <FormControlLabel
+                                control={<Android12Switch disabled />}
+                            />}
+                            
+                            {uid.approve == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"approve") } value="0" defaultChecked />} />}
+                            {uid.approve == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"approve") } value="1" />} />}
+
                           </div>
                         </div>
                       </div>
@@ -1006,9 +1026,11 @@ console.log(value.sizeimage , "000")
                               </label>
                             </div>
                             <div>
-                              <FormControlLabel
-                                control={<Android12Switch value='1' onChange={(e) => handlefeature(e)} />}
-                              />
+                            {isNaN(update_id) &&  <FormControlLabel
+                                control={<Android12Switch disabled />}
+                            />}
+                              {uid.featured == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"featured") } value="0" defaultChecked />} />}
+                              {uid.featured == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"featured") } value="1" />} />}
                             </div>
                           </div>
                           <p
@@ -1034,9 +1056,11 @@ console.log(value.sizeimage , "000")
                               </label>
                             </div>
                             <div>
-                              <FormControlLabel
-                                control={<Android12Switch value="1" onChange={(e) => handletrending(e)} />}
-                              />
+                            {isNaN(update_id) &&  <FormControlLabel
+                                control={<Android12Switch disabled />}
+                            />}
+                            {uid.trending == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"trending") } value="0" defaultChecked />} />}
+                              {uid.trending == 0 && <FormControlLabel control={<Android12Switch  onChange={(e) => handlestatus(e,uid.id,"trending") } value="1" />} />}
                             </div>
                           </div>
                           <p

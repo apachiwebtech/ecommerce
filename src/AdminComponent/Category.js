@@ -58,7 +58,7 @@ const Category = () => {
             isValid = false
             newErrors.logo = "Image is required"
         }
-        if (!group_id) {
+        if (!selectedOption) {
             isValid = false;
             newErrors.group = "group is required"
         }
@@ -66,8 +66,6 @@ const Category = () => {
         setError(newErrors)
         return isValid
     }
-
-
 
     async function getcatData() {
         axios.get(`${BASE_URL}/category_data`)
@@ -188,6 +186,7 @@ const Category = () => {
                     alert(res.data)
                     getcatData()
                     setLoader(false)
+                    window.location.pathname = '/webapp/category'
 
                 })
                 .catch((err) => {
@@ -229,7 +228,7 @@ const Category = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                        <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
                         <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
                     </>
                 )
@@ -282,6 +281,7 @@ const Category = () => {
                                             <Autocomplete
                                                 disablePortal
                                                 id="combo-box-demo"
+                                                size='small'
                                                 options={group}
                                                 value={selectedOption}  
                                                 getOptionLabel={(option) => option.title}
@@ -337,6 +337,11 @@ const Category = () => {
                                             rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
+                                            initialState={{
+                                                pagination: {
+                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                },
+                                              }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (

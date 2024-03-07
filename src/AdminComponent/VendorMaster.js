@@ -230,6 +230,11 @@ const VendorMaster = () => {
                                                 rows={rowsWithIds}
                                                 columns={columns}
                                                 getRowId={(row) => row.id}
+                                                initialState={{
+                                                    pagination: {
+                                                      paginationModel: { pageSize: 10, page: 0 },
+                                                    },
+                                                  }}
                                             />
                                         </div>
                                    

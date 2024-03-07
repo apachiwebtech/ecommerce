@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BASE_URL } from "./BaseUrl";
+import { BASE_URL, IMG_URL } from "./BaseUrl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
@@ -10,10 +10,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import InnerHeader from "./InnerHeader";
-import chair from '../assets/images/chair.jpg'
+import noimg from '../assets/images/noimg.jpg'
 
 const ProductCatalog = () => {
   const [product, setProductData] = useState([]);
+  const [image, setImg] = useState([]);
 
 
   async function getcatData() {
@@ -27,12 +28,40 @@ const ProductCatalog = () => {
         console.log(err);
       });
   }
+  async function getSigleImg() {
+    axios
+      .get(`${BASE_URL}/product_single_img`)
+      .then((res) => {
+        setImg(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
 
 
   useEffect(() => {
+    getSigleImg()
     getcatData();
   }, []);
+
+  const handlestatus = (e,id,column) => {
+    const value = e.target.value
+
+    const data = {
+        product_id: id,
+        status: value,
+        column:column
+    }
+
+    axios.post(`${BASE_URL}/product_status`, data)
+        .then((res) => {
+            console.log(res)
+            // setProductData()
+        })
+
+}
 
 
 
@@ -113,30 +142,37 @@ const ProductCatalog = () => {
                       </thead>
 
                       <tbody>
-                        {product.map((item, index) => {
+                        {product?.map((item, index) => {
                           return (
                             <tr>
 
                               <td>
                                 {index + 1}
                               </td>
-                              <td><img src={chair} alt="" /></td>
+                              <td>{image.filter((ele) => ele.product_id == item.id).map((item) => { return (<img src={`${IMG_URL}/productimg/` + item.image1} alt="" />) })}  {image.filter((ele) => ele.product_id === item.id).length === 0 && (
+                                <img src={noimg} alt="No" />
+                              )}</td>
+
                               <td>{item.title}</td>
                               <td>{item.category}</td>
                               <td>{item.subcategory}</td>
                               <td>{item.vendor}</td>
                               <td>{item.price}</td>
-                              <td><Link to={`/webapp/addimages/${item.id}`}><Button
+                              <td><Link to={`/webapp/addimages/${item.id}/${item.title}`}><Button
                                 color="primary"
                                 disabled={false}
                                 size="medium"
                                 variant="outlined"
                               >Add</Button></Link></td>
                               <td>
-                                {" "}
-                                <FormControlLabel
-                                  control={<Android12Switch defaultChecked />}
-                                />
+                                {item.active == 1 ? <FormControlLabel
+                                  control={<Android12Switch value="0" onChange={(e) =>handlestatus(e,item.id,"active") } defaultChecked />}
+                                /> : <FormControlLabel
+                                onChange={(e) =>handlestatus(e,item.id,"active") }
+                                  value="1"
+                                  control={<Android12Switch />}
+                                />}
+
                               </td>
                               <td>
                                 <Link to={`/webapp/product/${item.id}`}>

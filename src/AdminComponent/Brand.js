@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
+import Loader from './Loader';
 
 
 const Brand = () => {
@@ -14,6 +15,7 @@ const Brand = () => {
     const [brand, setBrand] = useState([])
     const [uid, setUid] = useState([])
     const [image, setImage] = useState()
+    const [loader , setLoader] = useState(false)
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -51,9 +53,11 @@ const Brand = () => {
     }
 
     const handleUpdate = (id) => {
+        setLoader(true)
         axios.post(`${BASE_URL}/brand_update`, { u_id: id })
             .then((res) => {
                 setUid(res.data[0])
+                setLoader(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -116,6 +120,7 @@ const Brand = () => {
         e.preventDefault()
 
         if (validateForm()) {
+            setLoader(true)
             const formdata = new FormData();
 
             formdata.append('title', value.title)
@@ -130,6 +135,8 @@ const Brand = () => {
                 .then((res) => {
                     alert(res.data)
                     getBrandData()
+                    setLoader(false)
+                    window.location.pathname = "/webapp/brand"
 
                 })
                 .catch((err) => {
@@ -170,7 +177,7 @@ const Brand = () => {
             renderCell: (params) => {
                 return (
                     <>
-                       <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                       <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
                        <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
                     </>
                 )
@@ -183,6 +190,7 @@ const Brand = () => {
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
+            {loader && <Loader/>}
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
@@ -235,6 +243,11 @@ const Brand = () => {
                                             rows= {rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
+                                            initialState={{
+                                                pagination: {
+                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                },
+                                              }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (

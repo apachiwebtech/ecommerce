@@ -60,6 +60,10 @@ const Router = createBrowserRouter([
     element: <VendorForm />
   },
   {
+    path: '/webapp/addimages/:product_id/:product_name',
+    element: <AddProductImg />
+  },
+  {
     path: '/',
     element: <App />,
     children: [
@@ -200,10 +204,10 @@ const Router = createBrowserRouter([
         path: '/webapp/color',
         element: <Color />
       },
-      {
-        path: '/webapp/addimages/:proid',
-        element: <AddProductImg />
-      },
+      // {
+      //   path: '/webapp/addimages/:product_id',
+      //   element: <AddProductImg />
+      // },
 
     ]
   }
@@ -282,7 +286,7 @@ function WebApp() {
     <>
       <div className="container-scroller d-flex">
         <Header />
-        <Outlet />
+        <Outlet  />
       </div>
     </>
 

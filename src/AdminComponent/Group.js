@@ -166,7 +166,9 @@ const Group = () => {
                 .then((res) => {
                     alert(res.data)
                     getcatData()
+
                     setLoader(false)
+                    window.location.pathname = '/webapp/group'
 
                 })
                 .catch((err) => {
@@ -208,7 +210,7 @@ const Group = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                        <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
                         <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
                     </>
                 )
@@ -279,6 +281,11 @@ const Group = () => {
                                             rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
+                                            initialState={{
+                                                pagination: {
+                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                },
+                                              }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (

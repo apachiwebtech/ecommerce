@@ -9,6 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
+import Loader from './Loader';
 
 const SubCategory = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -19,6 +20,7 @@ const SubCategory = () => {
     const [selectedOption, setSelectedOption] = useState(null); 
     const [uid, setUid] = useState([])
 
+    const [loader , setLoader] = useState(false)
     const [cat_id, setId] = useState("")
     const [value, setValue] = useState({
         title: "" || uid.title,
@@ -31,7 +33,7 @@ const SubCategory = () => {
         let isValid = true
         const newErrors = {}
 
-        if (!cat_id) {
+        if (!selectedOption) {
             isValid = false;
             newErrors.category = "category is required"
         }
@@ -90,9 +92,11 @@ const SubCategory = () => {
     }, [])
 
     const handleUpdate = (id) => {
+        setLoader(true)
         axios.post(`${BASE_URL}/subcategory_update`, { u_id: id })
             .then((res) => {
                 setUid(res.data[0])
+                setLoader(false)
             })
             .catch((err) => {
                 console.log(err)
@@ -141,6 +145,7 @@ const SubCategory = () => {
         e.preventDefault()
 
         if (validateForm()) {
+            setLoader(true)
             const data = {
                 title: value.title,
                 description: value.description,
@@ -154,7 +159,8 @@ const SubCategory = () => {
                 .then((res) => {
                     alert(res.data)
                     getsubcatData()
-
+                    setLoader(false)
+                    window.location.pathname = '/webapp/subcategory'
                 })
                 .catch((err) => {
                     console.log(err)
@@ -210,7 +216,7 @@ const SubCategory = () => {
             renderCell: (params) => {
                 return (
                     <>
-                       <EditIcon onClick={() => handleUpdate(params.row.id)} />
+                       <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
                        <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
                     </>
                 )
@@ -219,11 +225,14 @@ const SubCategory = () => {
     ];
     const rowsWithIds = subcat.map((row, index) => ({ index: index + 1, ...row }));
 
+    
+
 
     return (
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
+            {loader && <Loader/>}
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
@@ -239,6 +248,7 @@ const SubCategory = () => {
                                                 disablePortal
                                                 id="combo-box-demo"
                                                 options={cat}
+                                                size='small'
                                                 value={selectedOption}  
                                                 getOptionLabel={(option) => option.title}
                                                 getOptionSelected={(option, value) => option.id === value.id}
@@ -294,6 +304,13 @@ const SubCategory = () => {
                                             rows= {rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
+                                            initialState={{
+                                                pagination: {
+                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                },
+                                              }}
+                                            
+                                            
                                         />
                                         {confirmationVisibleMap[cid] && (
                                                                 <div className='confirm-delete'>
