@@ -1,8 +1,9 @@
 import axios from 'axios';
 import "bootstrap-icons/font/bootstrap-icons.css";
+import 'bootstrap/dist/js/bootstrap.min.js';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
-import { Outlet, createBrowserRouter, useNavigate } from 'react-router-dom';
+import { Outlet, createBrowserRouter, useNavigate ,useLocation  } from 'react-router-dom';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import AdminUser from './AdminComponent/AdminUser';
 import Banner from './AdminComponent/Banner';
@@ -48,6 +49,7 @@ import AddProductImg from './AdminComponent/AddProductImg';
 import ShopCart from './MainComponent/Pages/ShopCart';
 import ShopWishlist from './MainComponent/Pages/ShopWishlist';
 import DetailPage from './MainComponent/Pages/DetailPage';
+import SiteLoader from './MainComponent/Ui/SiteLoader';
 
 
 const Router = createBrowserRouter([
@@ -80,12 +82,12 @@ const Router = createBrowserRouter([
         element: <ShopWishlist />
       },
       {
-        path: '/detailpage',
+        path: '/detailpage/:productslug',
         element: <DetailPage />
       },
       {
         path: '/shoproduct',
-        element: <ShopProduct/>
+        element: <ShopProduct />
       },
     ]
   },
@@ -284,20 +286,41 @@ function WebApp() {
 
   return (
     <>
+
       <div className="container-scroller d-flex">
         <Header />
-        <Outlet  />
+        <Outlet />
       </div>
     </>
 
   );
 }
 
+
+
 function App() {
+  const [loader, setLoader] = useState(true)
+
+
+  const location = useLocation();
+
+
+  useEffect(() => {
+    // This effect will run every time the component mounts or updates
+    setLoader(true);
+
+    const timeoutId = setTimeout(() => {
+      setLoader(false);
+    }, 1000);
+
+    // Clean up the timeout when the component unmounts or updates
+    return () => clearTimeout(timeoutId);
+  }, [location.pathname]);
+
   return (
     <>
       {/* <div id="page" class="hfeed page-wrapper"> */}
-    
+      {loader && <SiteLoader />}
       <SiteHeader />
       <Outlet />
       <SiteFooter />

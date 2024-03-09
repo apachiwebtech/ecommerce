@@ -51,7 +51,8 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 const Product = () => {
   const [cat, setCatData] = useState([])
   const [error, setError] = useState({})
-  const [selectedOption, setSelectedCat] = useState(null);
+  const [group ,setGroupData] = useState([])
+  // const [selectedOption, setSelectedCat] = useState(null);
   const [selectedOptionvendor, setSelectedVendor] = useState(null);
   const [selectedOptionBrand, setSelectedBrand] = useState(null);
   const [selectedOptionSub, setSelectedSub] = useState(null);
@@ -60,16 +61,17 @@ const Product = () => {
   const [uid, setUid] = useState([])
   const [brand, setBrand] = useState([])
   const [catid, selectedId] = useState("")
+  const [groupid, selectedgroupId] = useState("")
   const [subcatid, selectedsubcatId] = useState("")
-  const [brandid, selectedBrandId] = useState("")
-  const [vendorid, selectedVendorId] = useState("")
+  const [brand_id, selectedBrandId] = useState("")
+  const [vendor_id, selectedVendorId] = useState("")
   const [value, setValue] = useState({
     sizeimage: "" || `${IMG_URL}/sizechart/` + uid.size_image,
     title: "" || uid.title,
     price: "" || uid.price,
     discountedprice: "" || uid.disc_price,
     description: "" || uid.description,
-
+    slug : "" || uid.slug,
   });
 
   useEffect(() => {
@@ -78,14 +80,13 @@ const Product = () => {
       title: uid.title,
       price: uid.price,
       discountedprice: uid.disc_price,
-      description: uid.description
+      description: uid.description,
+      slug : uid.slug
     })
   }, [uid])
+
   const [sizeimage, setSizeImage] = useState()
   const [specification, setSpecification] = useState()
-  const [activeValue, setactiveVal] = useState()
-  const [featureValue, setfeatureVal] = useState()
-  const [trendingValue, settrendingVal] = useState()
   const { update_id } = useParams()
 
 
@@ -94,14 +95,22 @@ const Product = () => {
     let isValid = true
     const newErrors = {}
 
-    if (!selectedOption) {
+    if (!catid) {
       isValid = false;
       newErrors.category = "category is required"
+    }
+    if (!groupid) {
+      isValid = false;
+      newErrors.group = "group is required"
     }
 
     if (!value.title) {
       isValid = false;
       newErrors.title = "title is required"
+    }
+    if (!value.slug) {
+      isValid = false;
+      newErrors.slug = "slug is required"
     }
 
     if (!selectedOptionBrand) {
@@ -116,10 +125,10 @@ const Product = () => {
       isValid = false
       newErrors.price = "price is required"
     }
-    if (!sizeimage) {
-      isValid = false
-      newErrors.sizeimage = "sizechart is required"
-    }
+    // if (!sizeimage) {
+    //   isValid = false
+    //   newErrors.sizeimage = "sizechart is required"
+    // }
 
     setError(newErrors)
     return isValid
@@ -137,35 +146,38 @@ const Product = () => {
       })
   }
 
-  const handlestatus = (e,id,column) => {
+  const handlestatus = (e, id, column) => {
     const value = e.target.value
 
     const data = {
-        product_id: id,
-        status: value,
-        column:column
+      product_id: id,
+      status: value,
+      column: column
     }
 
     axios.post(`${BASE_URL}/product_status`, data)
-        .then((res) => {
-            console.log(res)
-            // setProductData()
-        })
-
-}
-
-
-
-
-  async function getcatData() {
-    axios.get(`${BASE_URL}/category_data`)
       .then((res) => {
-        setCatData(res.data)
+        console.log(res)
+        // setProductData()
+      })
+
+  }
+
+
+  async function getGroupData() {
+    axios.get(`${BASE_URL}/group_data`)
+      .then((res) => {
+        console.log(res.data)
+        setGroupData(res.data)
       })
       .catch((err) => {
         console.log(err)
       })
   }
+
+
+
+
 
   async function getBrandData() {
     axios.get(`${BASE_URL}/Brand_data`)
@@ -200,8 +212,7 @@ const Product = () => {
     if (update_id !== ":update_id") {
       getUpdateData()
     }
-
-    getcatData()
+    getGroupData() 
     getBrandData()
     getVendordata()
   }, [update_id])
@@ -228,15 +239,18 @@ const Product = () => {
     if (uid.v_id) {
       const selected = vendor.find(option => option.id === uid.v_id);
       setSelectedVendor(selected);
+      selectedVendorId(selected)
     }
 
-  }, [uid, vendor]);
+  }, [uid, vendor,vendor_id]);
+
+  // console.log(vendor_id,"dd")
 
   const HandleBrandChange = (selectedValue) => {
     if (selectedValue) {
       const brandid = selectedValue.id
-      selectedBrandId(brandid);
       setSelectedBrand(selectedValue)
+      selectedBrandId(brandid);
     }
   };
 
@@ -244,9 +258,12 @@ const Product = () => {
     if (uid.b_id) {
       const selected = brand.find(option => option.id === uid.b_id);
       setSelectedBrand(selected);
+      selectedBrandId(selected)
     }
 
-  }, [uid, brand]);
+  }, [uid, brand,brand_id]);
+
+  console.log(brand_id,"juu")
 
   const HandlesubcatChange = (selectedValue) => {
     if (selectedValue) {
@@ -256,18 +273,38 @@ const Product = () => {
     }
   };
 
-  useEffect(() => {
- 
-    if (uid.scatid) {
-      const selected = subcat.find(option => option.id === uid.scatid);
-      console.log(selected , "///")
-      setSelectedSub(selected);
+  // useEffect(() => {
+
+  //   if (uid.scatid) {
+  //     const selected = subcat.find(option => option.id === uid.scatid);
+  //     console.log(selected, "///")
+  //     setSelectedSub(selected);
+  //   }
+
+  // }, [uid, subcat]);
+
+
+  const HandleGroupChange = (selectedValue) => {
+
+    const val = selectedValue.id 
+   
+    selectedgroupId(val)
+
+    const data = {
+      groupid: val
     }
 
-  }, [uid, subcat]);
+    axios.post(`${BASE_URL}/getcategory_data`, data)
+      .then((res) => {
+        // console.log(res.data)
+        setCatData(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
 
-
-
+   
+  };
 
 
 
@@ -275,7 +312,7 @@ const Product = () => {
   const HandleCatChange = (selectedValue) => {
 
     const val = selectedValue.id
-    setSelectedCat(selectedValue)
+    // setSelectedCat(selectedValue)
     selectedId(val)
     const data = {
       catid: val
@@ -291,14 +328,14 @@ const Product = () => {
       })
   };
 
-  useEffect(() => {
-    
-    // If you have received the ID from the API, find the option that matches the ID
-    if (uid.catid) {
-      const selected = cat.find(option => option.id === uid.catid);
-      setSelectedCat(selected);
-    }
-  }, [uid, cat]);
+  // useEffect(() => {
+
+  //   // If you have received the ID from the API, find the option that matches the ID
+  //   if (uid.catid) {
+  //     const selected = cat.find(option => option.id === uid.catid);
+  //     setSelectedCat(selected);
+  //   }
+  // }, [uid, cat]);
 
   async function ImageBase64(file) {
     const reader = new FileReader();
@@ -331,20 +368,34 @@ const Product = () => {
     e.preventDefault()
     if (validateForm()) {
       const formdata = new FormData()
-      formdata.append('v_id', vendorid)
+      formdata.append('uid', uid.id)
+      if (update_id == ":update_id") {
+        formdata.append('v_id', vendor_id)
+        
+      }else{
+        formdata.append('v_id', vendor_id.id)
+        
+      }
       formdata.append('title', value.title)
+      formdata.append('slug', value.slug)
       formdata.append('catid', catid)
-      formdata.append('b_id', brandid)
+      formdata.append('groupid', groupid)
+
+      if (update_id == ":update_id") {
+
+        formdata.append('b_id', brand_id)
+      }else{
+        formdata.append('b_id', brand_id.id)
+        
+      }
       formdata.append('subcatid', subcatid)
       formdata.append('price', value.price)
       formdata.append('d_price', value.discountedprice)
       formdata.append('description', value.description)
       formdata.append('sizeimage', sizeimage)
       formdata.append('specification', specification)
-      formdata.append('activeval', activeValue)
-      formdata.append('featureval', featureValue)
-      formdata.append('trendingval', trendingValue)
       formdata.append('user_id', decryptedUserId())
+
 
       axios.post(`${BASE_URL}/add_product`, formdata)
         .then((res) => {
@@ -527,6 +578,26 @@ const Product = () => {
                           </div>
 
                         </div>
+                        <div class="col-md-6 ">
+                          <div class="form-group ">
+                            <label for="prod_id">
+                              slug
+                              <span class="text-danger">*</span>
+                              {error.slug && <span className="text-danger">{error.slug}</span>}
+                            </label>
+
+
+                            <div>
+                              <TextField id="outlined-basic" InputLabelProps={{
+                                shrink: true,  // This makes the label move up when there's a value
+                              }} label="Enter product title.." value={value.slug} sx={{ width: "100%" }} variant="outlined" name="slug"
+                                onChange={onhandleChange} />
+
+                            </div>
+
+                          </div>
+
+                        </div>
 
 
                         {/* <div class="row ">
@@ -579,6 +650,28 @@ const Product = () => {
                         <div class="col-md-6 ">
                           <div class="form-group ">
                             <label for="category">
+                              Group<span class="text-danger">*</span>
+                              {error.group && <span className="text-danger">{error.group}</span>}
+                            </label>
+                            <Autocomplete
+                              disablePortal
+                              id="combo-box-demo"
+                              options={group}
+                              // value={selectedOption}
+                              placeholder="Group"
+                              getOptionLabel={(option) => option.title}
+                              getOptionSelected={(option, value) => option.id === value.id}
+                              sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
+                              renderInput={(params) => <TextField {...params} label="Select Group" />}
+                              onChange={(event, value) => HandleGroupChange(value)}
+                              name="group"
+
+                            />
+                          </div>
+                        </div>
+                        <div class="col-md-6" >
+                          <div class="form-group ">
+                            <label for="category">
                               Category<span class="text-danger">*</span>
 
                               {error.category && <span className="text-danger">{error.category}</span>}
@@ -587,7 +680,7 @@ const Product = () => {
                               disablePortal
                               id="combo-box-demo"
                               options={cat}
-                              value={selectedOption}
+                              // value={selectedOption}
                               getOptionLabel={(option) => option.title}
                               getOptionSelected={(option, value) => option.id === value.id}
                               sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
@@ -730,7 +823,7 @@ const Product = () => {
                               class="uploaded-stocks-img"
                               data-bs-toggle="tooltip"
                               data-placement="top"
-                              src={uid.size_image == undefined ? img1 : value.sizeimage}
+                              src={value.sizeimage == ""  ? img1 : value.sizeimage}
                               title=""
                               alt=""
                               data-bs-original-title=""
@@ -767,7 +860,7 @@ const Product = () => {
                   <div style={{ width: "600px", padding: "20px 22px " }} >
                     <CKEditor
 
-                     
+
 
                       editor={ClassicEditor}
                       data={uid.specification}
@@ -973,11 +1066,11 @@ const Product = () => {
                               </label>
                             </div>
                             <div>
-                            {isNaN(update_id) &&  <FormControlLabel
+                              {isNaN(update_id) && <FormControlLabel
                                 control={<Android12Switch disabled />}
-                            />}
-                              {uid.active == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"active") } value="0" defaultChecked />} />}
-                              {uid.active == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"active") } value="1" />} />}
+                              />}
+                              {uid.active == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="0" defaultChecked />} />}
+                              {uid.active == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="1" />} />}
 
 
 
@@ -995,12 +1088,12 @@ const Product = () => {
 
                               Approval status
                             </label>
-                            {isNaN(update_id) &&  <FormControlLabel
-                                control={<Android12Switch disabled />}
+                            {isNaN(update_id) && <FormControlLabel
+                              control={<Android12Switch disabled />}
                             />}
-                            
-                            {uid.approve == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"approve") } value="0" defaultChecked />} />}
-                            {uid.approve == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"approve") } value="1" />} />}
+
+                            {uid.approve == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="0" defaultChecked />} />}
+                            {uid.approve == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="1" />} />}
 
                           </div>
                         </div>
@@ -1026,11 +1119,11 @@ const Product = () => {
                               </label>
                             </div>
                             <div>
-                            {isNaN(update_id) &&  <FormControlLabel
+                              {isNaN(update_id) && <FormControlLabel
                                 control={<Android12Switch disabled />}
-                            />}
-                              {uid.featured == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"featured") } value="0" defaultChecked />} />}
-                              {uid.featured == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"featured") } value="1" />} />}
+                              />}
+                              {uid.featured == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "featured")} value="0" defaultChecked />} />}
+                              {uid.featured == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "featured")} value="1" />} />}
                             </div>
                           </div>
                           <p
@@ -1056,11 +1149,11 @@ const Product = () => {
                               </label>
                             </div>
                             <div>
-                            {isNaN(update_id) &&  <FormControlLabel
+                              {isNaN(update_id) && <FormControlLabel
                                 control={<Android12Switch disabled />}
-                            />}
-                            {uid.trending == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e,uid.id,"trending") } value="0" defaultChecked />} />}
-                              {uid.trending == 0 && <FormControlLabel control={<Android12Switch  onChange={(e) => handlestatus(e,uid.id,"trending") } value="1" />} />}
+                              />}
+                              {uid.trending == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "trending")} value="0" defaultChecked />} />}
+                              {uid.trending == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "trending")} value="1" />} />}
                             </div>
                           </div>
                           <p

@@ -134,7 +134,7 @@ const Group = () => {
             })
     }
 
-    console.log(uid)
+  
 
 
 
@@ -240,7 +240,7 @@ const Group = () => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') || value.slug} onChange={onhandleChange} />
                                             {error.slug && <span className='text-danger'>{error.slug}</span>}
 
                                         </div>

@@ -15,12 +15,7 @@ const DashBoard = () => {
 
   return (
     <div id="site-main" class="site-main">
-      {/* <div class="page-preloader">
-        <div class="loader">
-          <div></div>
-          <div></div>
-        </div>
-      </div> */}
+    
       <div id="main-content" class="main-content">
         <div id="primary" class="content-area">
           <div id="content" class="site-content" role="main">

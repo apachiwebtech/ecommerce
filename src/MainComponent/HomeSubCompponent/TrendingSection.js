@@ -3,11 +3,11 @@ import product1 from '../../assets/frontimg/product/1.jpg'
 import product2 from '../../assets/frontimg/product/2.jpg'
 import product3 from '../../assets/frontimg/product/3.jpg'
 import product4 from '../../assets/frontimg/product/4.jpg'
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
 import axios from 'axios'
-import { BASE_URL } from '../../AdminComponent/BaseUrl'
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { Link } from 'react-router-dom'
 
 var settings = {
@@ -16,7 +16,8 @@ var settings = {
     infinite: true,
     speed: 500,
     slidesToShow: 4,
-    
+    autoplay :true
+       
 };
 
 
@@ -61,9 +62,11 @@ const TrendingSection = () => {
                                                                     <div class=""><i className='icon-heart'/></div>
                                                                 </div> */}
                                                                 <div class="product-thumb-hover">
-                                                                    <Link to="/detailpage" >
-                                                                        <img width="600" height="600" src={product1} class="post-image" alt="" />
-                                                                        <img width="600" height="600" src={product2} class="hover-image back" alt="" />
+                                                                    <Link to={`/detailpage/${item.slug}`} >
+                                                                        <img width="600" height="600" src={`${IMG_URL}/productimg/` +item.image1} class="post-image" alt="" />
+
+                                                                        <img width="600" height="600" src={`${IMG_URL}/productimg/` +item.image2} class="hover-image back" alt="" />
+
                                                                     </Link>
                                                                 </div>
                                                                 <div class="product-button">
@@ -80,7 +83,7 @@ const TrendingSection = () => {
                                                             </div>
                                                             <div class="products-content">
                                                                 <div class="contents">
-                                                                    <h3 class="product-title"><Link to="/detailpage">{item.title}</Link></h3>
+                                                                    <h3 class="product-title"><Link to={`/detailpage/${item.slug}`}>{item.title}</Link></h3>
                                                                     <span class="price">₹{item.price}</span>
                                                                     <div class="btn-add-to-cart">
                                                                         <div data-title="Add to cart">

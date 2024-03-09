@@ -248,10 +248,10 @@ const SiteHeader = () => {
 																	<li className="level-1 menu-item menu-item-has-children">
 																		<Link to="/shoproduct"><span className="menu-item-text">{item.title}</span></Link>
 																		<ul className="sub-menu">
-																			{subcat.filter((ele) => ele.cat_id == item.id).map((item) => {
+																			{subcat.filter((ele) => ele.cat_id == item.id).map((ele) => {
 																				return (
 																					< li >
-																						<Link to="/shoproduct"><span className={item.title !== null ? "menu-item-text" : ""}>{item.title}</span></Link>
+																						<Link to="/shoproduct"><span className={ele.title !== null ? "menu-item-text" : ""}>{ele.title}</span></Link>
 																					</li>
 																				)
 
@@ -278,10 +278,11 @@ const SiteHeader = () => {
 										<div className="header-page-link">
 
 											<div className="login-header">
-												{console.log(Cookies.get('userid'), "???")}
-												{Cookies.get('userid') == undefined ?
-													<Link className="active-login" onClick={handleToggle}>Login</Link> : <Link className="active-login" onClick={handleLogout}>Logout</Link>}
+												{/* {console.log(Cookies.get('userid'), "???")} */}
+												{/* {Cookies.get('userid') == undefined ?
+													<Link className="active-login" onClick={handleToggle}>Login</Link> : <Link className="active-login" onClick={handleLogout}>Logout</Link>} */}
 												{open && <LoginForm setOpen={setOpen} open={open} />}
+												<Link className="active-login" onClick={handleToggle}>Login</Link>
 
 											
 											</div>

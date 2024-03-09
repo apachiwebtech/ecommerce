@@ -2267,9 +2267,9 @@ html {
   .form-login-register .box-content {
     position: relative;
     border: 1px solid #e5e5e5;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
     height: 100%;
-    overflow-y: auto;
+    /* overflow-y: auto; */
   }
   .form-login-register .box-content > div {
     position: relative;
@@ -8288,7 +8288,7 @@ html {
   .shop-details .product-images .content-thumbnail-scroll .img-item.slick-current .img-thumbnail-scroll {
     border-color: #000;
   }
-  .shop-details .product-images .content-thumbnail-scroll .slick-arrow {
+  /* .shop-details .product-images .content-thumbnail-scroll .slick-arrow {
     right: calc(50% - 15px);
     left: auto;
     width: 30px;
@@ -8301,7 +8301,7 @@ html {
     color: #fff;
     font-family: FontAwesome;
     text-align: center;
-  }
+  } */
   .shop-details .product-images .content-thumbnail-scroll .slick-arrow.fa-angle-left {
     top: 0;
   }
@@ -8336,7 +8336,7 @@ html {
     vertical-align: top;
     width: 100%;
   }
-  .shop-details .product-images .main-image .slick-arrow {
+  /* .shop-details .product-images .main-image .slick-arrow {
     width: 30px;
     height: 30px;
     line-height: 30px;
@@ -8354,7 +8354,7 @@ html {
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
-  }
+  } */
   .shop-details .product-images .main-image .slick-arrow:hover {
     background: #000;
     color: #fff;
@@ -10517,3 +10517,15 @@ html {
     flex: 0 0 32.5%;
     max-width: 32.5%;
   }
+  .otp-box input{
+    text-align: center;
+    width: 50px;
+    height: 50px;
+    margin: 15px;
+    border-radius: 6px;
+    border: 1px solid lightslategrey;
+    font-size: 20px;
+    }
+    .otp-text {
+      font-size: 13px;
+    }

@@ -28,6 +28,8 @@ const ProductCatalog = () => {
         console.log(err);
       });
   }
+
+  
   async function getSigleImg() {
     axios
       .get(`${BASE_URL}/product_single_img`)

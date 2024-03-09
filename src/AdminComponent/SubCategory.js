@@ -160,7 +160,7 @@ const SubCategory = () => {
                     alert(res.data)
                     getsubcatData()
                     setLoader(false)
-                    window.location.pathname = '/webapp/subcategory'
+                    // window.location.pathname = '/webapp/subcategory'
                 })
                 .catch((err) => {
                     console.log(err)

@@ -9,32 +9,33 @@ var session = require('express-session')
 var cookieParser = require('cookie-parser')
 
 const storage = multer.diskStorage({
-  destination: 'uploads/', // 
+  destination: '../public_html/ecomuploads/', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage2 = multer.diskStorage({
-  destination: 'uploads/banner', // 
+  destination: '../public_html/ecomuploads/banner', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage3 = multer.diskStorage({
-  destination: 'uploads/gallery', // 
+  destination: '../public_html/ecomuploads/gallery', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage4 = multer.diskStorage({
-  destination: 'uploads/brand', // 
+  destination: '../public_html/ecomuploads/brand', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
+
 const storage5 = multer.diskStorage({
-  destination: 'uploads/sizechart', // 
+  destination: '../public_html/ecomuploads/sizechart', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
@@ -46,6 +47,19 @@ const storage6 = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
+const storage7 = multer.diskStorage({
+  destination: '../public_html/ecomuploads/group', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
+
+const storage8 = multer.diskStorage({
+  destination: '../public_html/ecomuploads/productimg', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
 
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
@@ -53,6 +67,8 @@ const upload3 = multer({ storage: storage3 });
 const upload4 = multer({ storage: storage4 });
 const upload5 = multer({ storage: storage5 });
 const upload6 = multer({ storage: storage6 });
+const upload7 = multer({ storage: storage7 });
+const upload8 = multer({ storage: storage8 });
 
 app.use(express.json());
 app.use(bodyParser.json());
@@ -164,11 +180,9 @@ app.post('/login', (req, res) => {
     } else {
       if (data.length > 0) {
         const id = data[0].id;
-
-
         req.session.id = id
         console.log(req.session.id)
-        return res.json({ data, keyid: req.session.id, id: id })
+        return res.json({ data, id: req.session.id, id: id })
       }
 
 
@@ -184,8 +198,6 @@ app.get('/checkauth', (req, res) => {
     return res.json({ valid: false })
   }
 })
-
-
 
 
 
@@ -277,19 +289,18 @@ app.post('/add_vendor', upload.fields([
   const image2 = req.files['panupload'];
   const image3 = req.files['agreementupload'];
 
-
+  console.log(image1, "new")
 
   const imagesql = "select gst_upload,pan_upload,aggrement_upload from awt_vendor where id = ?"
 
-  con.query(imagesql,[u_id], (err, data) => {
+  con.query(imagesql, [u_id], (err, data) => {
     if (err) {
       return res.json("error")
     } else {
       const gstimage = data[0] && data[0].gst_upload !== undefined ? data[0].gst_upload : '';
       const panimage = data[0] && data[0].pan_upload !== undefined ? data[0].pan_upload : '';
       const agreementimg = data[0] && data[0].aggrement_upload !== undefined ? data[0].aggrement_upload : '';
-      
-      
+
 
 
 
@@ -297,30 +308,30 @@ app.post('/add_vendor', upload.fields([
       let panupload;
       let agreementupload;
 
-      if(gstimage == undefined){
-        
+      if (gstimage == undefined) {
+
         gstupload = image1 ? image1[0].filename : '';
-      }else{
+      } else {
         gstupload = image1 ? image1[0].filename : gstimage;
-        
+
       }
 
-      if(panimage == undefined){
+      if (panimage == undefined) {
         panupload = image2 ? image2[0].filename : '';
-        
-      }else{
-        
+
+      } else {
+
         panupload = image2 ? image2[0].filename : panimage;
       }
 
-      if(agreementimg == undefined){
+      if (agreementimg == undefined) {
         agreementupload = image3 ? image3[0].filename : "";
-        
-      }else{
+
+      } else {
         agreementupload = image3 ? image3[0].filename : agreementimg;
-        
+
       }
-      
+
 
 
 
@@ -434,9 +445,6 @@ app.post('/vendor_status', (req, res) => {
   })
 
 })
-
-
-
 
 app.post('/vendor_update', (req, res) => {
 
@@ -577,9 +585,10 @@ app.post('/adminuser_delete', (req, res) => {
 
 })
 
-app.post('/add_category',upload6.single('image'), (req, res) => {
+app.post('/add_category', upload6.single('image'), (req, res) => {
   let user_id = req.body.user_id
   let title = req.body.title;
+  let group_id = req.body.group_id;
   let image = req.file.filename;
   let slug = req.body.slug;
   let description = req.body.description;
@@ -593,24 +602,24 @@ app.post('/add_category',upload6.single('image'), (req, res) => {
   let param;
 
   if (u_id == 'undefined') {
-    sql = "insert into awt_category(`title`,`slug`,`description`,`image`,`created_by`,`created_date`) values(?,?,?,?,?,?)"
-    param = [title, slug, description,image, user_id, created_date]
+    sql = "insert into awt_category(`title`,`group_id`,`slug`,`description`,`image`,`created_by`,`created_date`) values(?,?,?,?,?,?,?)"
+    param = [title, group_id, slug, description, image, user_id, created_date]
 
   } else {
-    sql = "update awt_category set title = ? ,slug = ?, description = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?"
-    param = [title, slug, description,image, user_id, created_date, u_id]
+    sql = "update awt_category set title = ? ,group_id = ? ,slug = ?, description = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?"
+    param = [title, group_id, slug, description, image, user_id, created_date, u_id]
   }
 
 
   con.query(sql, param, (err, data) => {
-   
+
     if (err) {
 
-      return res.json(err)
+      return res.json("Error")
     }
     else {
 
-      return res.json(data)
+      return res.json("Data Added Successfully")
     }
 
 
@@ -665,6 +674,94 @@ app.post('/category_delete', (req, res) => {
 
 })
 
+app.post('/add_group', upload7.single('image'), (req, res) => {
+  let user_id = req.body.user_id
+  let title = req.body.title;
+  let image = req.file.filename;
+  let slug = req.body.slug;
+  let description = req.body.description;
+  let created_date = new Date()
+  let u_id = req.body.u_id;
+
+
+
+
+  let sql;
+  let param;
+
+  if (u_id == 'undefined') {
+    sql = "insert into awt_group(`title`,`slug`,`description`,`image`,`created_by`,`created_date`) values(?,?,?,?,?,?)"
+    param = [title, slug, description, image, user_id, created_date]
+
+  } else {
+    sql = "update awt_group set title = ? ,slug = ?, description = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?"
+    param = [title, slug, description, image, user_id, created_date, u_id]
+  }
+
+
+  con.query(sql, param, (err, data) => {
+
+    if (err) {
+
+      return res.json("Error")
+    }
+    else {
+
+      return res.json("Data Added Successfully")
+    }
+
+
+  })
+})
+
+app.post('/group_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+
+  const sql = "select * from awt_group where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.get('/group_data', (req, res) => {
+
+  const sql = "select * from awt_group where deleted = 0 "
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+app.post('/group_delete', (req, res) => {
+
+  let cat_id = req.body.cat_id;
+
+  const sql = "update awt_group set deleted = 1 where id = ?"
+
+  con.query(sql, [cat_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
 app.post('/add_subcategory', (req, res) => {
   let cat_id = req.body.cat_id;
   let user_id = req.body.user_id
@@ -679,7 +776,7 @@ app.post('/add_subcategory', (req, res) => {
   let param;
 
   if (u_id == undefined) {
-    sql = "insert into awt_subcategory(`cat_id`,`title`,`slug`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
+    sql = "insert into awt_subcategory(`cat_id`,`title`,`slug`,`description`,`created_by`,`created_date`) values(?,?,?,?,?,?)"
     param = [cat_id, title, slug, description, user_id, created_date]
   } else {
     sql = "update awt_subcategory set cat_id = ?, title = ?,slug = ? , description = ? , updated_by = ?, updated_date = ? where id = ?"
@@ -824,6 +921,22 @@ app.post('/Brand_delete', (req, res) => {
   })
 
 })
+app.post('/Brand_delete', (req, res) => {
+
+  let cat_id = req.body.cat_id;
+
+  const sql = "update awt_brand set deleted = 1 where id = ?"
+
+  con.query(sql, [cat_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
 
 
 app.post('/add_color', (req, res) => {
@@ -839,11 +952,11 @@ app.post('/add_color', (req, res) => {
   let param;
   if (uid == undefined) {
     sql = "insert into awt_color(`title`,`colorcode`,`created_by`,`created_date`) values(?,?,?,?)"
-    param = [title,  colorcode, user_id, created_date]
+    param = [title, colorcode, user_id, created_date]
   } else {
 
     sql = "update awt_color set title = ?, colorcode = ?,updated_by = ?, updated_date = ? where id =?";
-    param = [title,  colorcode, user_id, created_date, uid]
+    param = [title, colorcode, user_id, created_date, uid]
   }
 
   con.query(sql, param, (err, data) => {
@@ -963,22 +1076,23 @@ app.post('/add_banner', upload2.single('image'), (req, res) => {
   let target = req.body.target;
   let view = req.body.viewid;
   let uid = req.body.uid;
+  let description = req.body.description;
 
   let sql;
   let param;
 
-  console.log(uid, "uid")
+
 
 
 
   if (uid == "undefined") {
 
-    sql = 'insert into awt_banner(`title`,`upload_image`,`link`,`target`,`view`) values(?,?,?,?,?)'
+    sql = 'insert into awt_banner(`title`,`upload_image`,`link`,`target`,`view`,`description`) values(?,?,?,?,?,?)'
 
-    param = [title, banner, link, target, view]
+    param = [title, banner, link, target, view, description]
   } else {
-    sql = 'update awt_banner set title = ? , upload_image = ? , link = ? ,target = ?, view = ? where  id = ?'
-    param = [title, banner, link, target, view, uid]
+    sql = 'update awt_banner set title = ? , upload_image = ? , link = ? ,target = ?, view = ? ,description = ?  where  id = ?'
+    param = [title, banner, link, target, view, description, uid]
   }
 
 
@@ -1130,11 +1244,46 @@ app.post(`/getsubcategory`, (req, res) => {
   })
 })
 
+app.post(`/getcategory_data`, (req, res) => {
+  let groupid = req.body.groupid;
 
-app.post(`/add_product`, upload5.single('sizeimage'), (req, res) => {
+  const sql = 'select * from `awt_category` where group_id = ?'
+
+  con.query(sql, [groupid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/product_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+
+  const sql = "select * from awt_add_product where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+
+app.post(`/add_product`, upload.fields([
+  { name: 'sizeimage', maxCount: 1 },
+]), (req, res) => {
 
   let v_id = req.body.v_id;
   let user_id = req.body.user_id;
+  let groupid = req.body.groupid;
+  let slug = req.body.slug;
   let catid = req.body.catid;
   let title = req.body.title;
   let b_id = req.body.b_id;
@@ -1143,21 +1292,103 @@ app.post(`/add_product`, upload5.single('sizeimage'), (req, res) => {
   let d_price = req.body.d_price;
   let description = req.body.description;
   let specification = req.body.specification;
-  let activeval = req.body.activeval;
-  let featureval = req.body.featureval;
-  let trendingval = req.body.trendingval;
-  let sizeimage = req.file.filename;
+  // let sizeimage = req.file.filename;
   let date = new Date()
+  let uid = req.body.uid;
 
-  const sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`catid`,`scatid`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`active`,`trending`,`featured`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+  let sql;
+  let param;
 
-  con.query(sql, [title, v_id, b_id, catid, subcatid, description,specification, price, d_price, sizeimage, date, user_id,activeval,trendingval,featureval], (err, data) => {
+  const image1 = req.files['sizeimage'];
+
+  const imagesql = "select size_image from awt_add_product where id = ?"
+
+
+  con.query(imagesql, [uid], (err, data) => {
     if (err) {
-      return res.json("Error in uploading")
+      console.log(err)
+    } else {
+
+
+      const getimage = data[0] && data[0].size_image !== undefined ? data[0].size_image : '';
+      console.log(getimage, "dd")
+
+      let sizeupload;
+
+
+      if (getimage == undefined) {
+        sizeupload = image1 ? image1[0].filename : '';
+      } else {
+        sizeupload = image1 ? image1[0].filename : getimage;
+
+      }
+
+
+
+      if (uid == "undefined") {
+        sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+
+        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id]
+      }
+      else {
+        sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?,catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? where id = ? `;
+
+        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, uid]
+      }
+
+
+
+      con.query(sql, param, (err, data) => {
+        if (err) {
+          return res.json(err)
+        } else {
+          return res.json("Data Added Successfully")
+        }
+      })
+    }
+  })
+})
+
+app.post('/add_product_img', upload8.fields([
+  { name: 'image1', maxCount: 1 },
+  { name: 'image2', maxCount: 1 },
+  { name: 'image3', maxCount: 1 },
+  { name: 'image4', maxCount: 1 }
+]), (req, res) => {
+
+
+  const image1 = req.files['image1'];
+  const image2 = req.files['image2'];
+  const image3 = req.files['image3'];
+  const image4 = req.files['image4'];
+
+  // let img1 = image1[0].filename
+  // let img2 = image2[0].filename
+  // let img3 = image3[0].filename
+  // let img4 = image3[0].filename
+
+
+  const img1 = image1 ? image1[0].filename : '';
+  const img2 = image2 ? image2[0].filename : '';
+  const img3 = image3 ? image3[0].filename : '';
+  const img4 = image4 ? image4[0].filename : '';
+
+  let color_id = req.body.color_id;
+  let product_id = req.body.product_id;
+  let user_id = req.body.user_id;
+  let date = new Date();
+
+  const sql = "insert into awt_productimg(`image1`,`image2`,`image3`,`image4`,`product_id`,`color_id`,`created_date`,`created_by`) values(?,?,?,?,?,?,?,?)"
+
+  con.query(sql, [img1, img2, img3, img4, product_id, color_id, date, user_id], (err, data) => {
+    if (err) {
+      return res.json("err")
     } else {
       return res.json("Data Added Successfully")
     }
   })
+
+
 })
 
 app.get(`/product_data`, (req, res) => {
@@ -1172,3 +1403,113 @@ app.get(`/product_data`, (req, res) => {
     }
   })
 })
+
+app.post('/product_status', (req, res) => {
+
+  let product_id = req.body.product_id;
+  let status = req.body.status;
+  let column = req.body.column;
+
+
+  const sql = `update awt_add_product set  ${column} = ? where id = ?`
+
+  con.query(sql, [status, product_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+
+      return res.json(data)
+    }
+  })
+
+})
+
+app.get('/product_single_img', (req, res) => {
+
+  const sql = "SELECT  * FROM awt_productimg WHERE deleted = 0 GROUP BY product_id"
+
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post(`/product_img_data`, (req, res) => {
+
+  let product_id = req.body.product_id;
+
+  const sql = "select ap.id ,ap.image1, ap.image2,ap.image3,ap.image4,ac.title from awt_productimg as ap left join awt_color as ac on ac.id = ap.color_id  where ap.product_id = ? and ap.deleted = 0";
+
+  con.query(sql, [product_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post(`/product_img_delete`, (req, res) => {
+
+  let product_id = req.body.product_id;
+
+  const sql = "update awt_productimg set deleted = 1 where id = ?";
+
+  con.query(sql, [product_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+
+app.get('/trending_products', (req, res) => {
+
+  const sql = 'select * from awt_add_product where trending = 1 and active = 1 and deleted = 0'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.get('/main_Banner', (req, res) => {
+
+  const sql = 'select * from awt_banner where deleted = 0'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.get('/products', async (req, res, next) => {
+  try {
+    const sql = 'SELECT v_id, b_id, title, description, specification, price, disc_price, size_image, approve, active, trending, featured FROM awt_add_product';
+    const data = await new Promise((resolve, reject) => {
+      con.query(sql, (error, data) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+    res.json(data);
+  } catch (error) {
+    res.json(error);
+  }
+});
