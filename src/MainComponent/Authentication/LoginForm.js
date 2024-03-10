@@ -13,6 +13,10 @@ function LoginForm({ open, setOpen }) {
     const [value, setValue] = useState({
         email: "",
         password: "",
+        firstname: "",
+        lastname:"",
+        mobile: "",
+        remail: ""
     })
 
 
@@ -30,12 +34,6 @@ function LoginForm({ open, setOpen }) {
         return otp;
     };
 
-    const handleGenerateOTP = () => {
-        const generatedOTP = generateOTP(4); // Change 6 to the desired length of OTP
-        setOTP(generatedOTP);
-
-    };
-
 
     const [otpvalue, setOTPValue] = useState({
         otp1: "",
@@ -44,13 +42,18 @@ function LoginForm({ open, setOpen }) {
         otp4: "",
     })
 
-    const [otp, setOTP] = useState('');
+    
+ 
+
     const [showOtp, setShowOtp] = useState(true);
+    const [tostOtp, settostotp] = useState();
     const [errors, setErrors] = useState({});
     const [err, setErr] = useState("")
     const [error, setError] = useState(false)
     const [loader, setLoader] = useState(false)
     const [hide, setHide] = useState(false)
+    const [emailexist, setExist] = useState('')
+    const encryptionKey = 'secret-key';
 
 
 
@@ -61,20 +64,14 @@ function LoginForm({ open, setOpen }) {
     const otp3Ref = useRef(null);
     const otp4Ref = useRef(null);
 
-    useEffect(() => {
+ 
 
 
-        setOTP(localStorage.getItem('otp'));
-        // setTimeout(() => {
-        //     setShowOtp(false);
-        // }, 10000)
 
-    }, []);
-
-    const onHandleChange = (e) => {
+    const onHandleOtpChange = (e) => {
         const { name, value } = e.target;
 
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+        setOTPValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
         // Move focus to the next input if a digit is entered
         let inputValue = e.target.value;
@@ -121,65 +118,26 @@ function LoginForm({ open, setOpen }) {
         }
     };
 
-    const onhandlesubmit = (e) => {
-        const mergedOtp = Object.values(value).join('');
-        e.preventDefault();
-        setLoader(true)
-
-        const data = {
-            otp: mergedOtp,
-            email: localStorage.getItem("pet_email"),
-            value: localStorage.getItem("pet_value"),
-        }
-
-        axios.post(`${BASE_URL}/otp`, data)
-            .then((res) => {
-                console.log(res)
-
-
-                if (res.data.length == 0) {
-                    setError(true)
-
-                    // document.getElementById("err").innerHTML = "<Stack sx={{ width: '100%' }} spacing={2}><Alert variant='outlined' severity='warning'>Please enter valid otp!</Alert></Stack>"
-                    setLoader(false)
-                    setTimeout(() => {
-                        setError(false)
-
-                        // document.getElementById("err").innerHTML = ""
-                    }, 2000)
-                } else {
-                    setLoader(false)
-                    if (res.data[0].parent_name === null) {
-                        window.location.pathname = '/petprofilform';
-
-                    }
-                    else {
-                        window.location.pathname = '/';
-                    }
-                    // navigate('/')
-                    // window.location.pathname = '/';
-                    const role = res.data[0].role;
-                    const value = res.data[0].value;
-                    const id = res.data[0].id;
-
-                    localStorage.setItem("pet_role", role)
-                    localStorage.setItem("pet_value", value)
-                    localStorage.setItem('pet_id', id);
-
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-    }
 
 
     const validateForm = () => {
         let errors = {};
         let isValid = true;
 
-        if (!value.email) {
-            errors.email = 'Email is required';
+        if (!value.remail) {
+            errors.remail = 'Email is required';
+            isValid = false;
+        }
+        if (!value.firstname) {
+            errors.firstname = 'Firstname is required';
+            isValid = false;
+        }
+        if (!value.lastname) {
+            errors.lastname = 'Lastname is required';
+            isValid = false;
+        }
+        if (!value.mobile) {
+            errors.mobile = 'Mobile is required';
             isValid = false;
         }
 
@@ -187,6 +145,7 @@ function LoginForm({ open, setOpen }) {
 
         return isValid;
     };
+
     const handleToggle = (e) => {
         setOpen(false);
     }
@@ -195,40 +154,9 @@ function LoginForm({ open, setOpen }) {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
-    const encryptionKey = 'secret-key';
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-
-        if (validateForm()) {
-
-            const data = {
-                email: value.email,
-                otp: otp
-            }
 
 
-            axios.post(`${BASE_URL}/customerlogin`, data)
-                .then((res) => {
-                    console.log(res.data.err)
 
-                    if (res.data.id) {
-                        setHide(true)
-                        setOpen(!open);
-                        const ciphertext = CryptoJS.AES.encrypt(res.data.id.toString(), encryptionKey).toString();
-                        Cookies.set('custuserid', ciphertext, { expires: 1 });
-                    }
-                    else {
-                        setErr('not able to display')
-                    }
-
-                })
-                .catch((err) => {
-                    console.log(err, "??????")
-                })
-        }
-
-    }
 
     const flushdata = () => {
         setShowOtp(false);
@@ -240,6 +168,165 @@ function LoginForm({ open, setOpen }) {
         });
         setHide(false)
     }
+
+    const handleSubmit = (e) => {
+        const generatedOTP = generateOTP(4);
+      
+
+       // Change 6 to the desired length of OTP
+        e.preventDefault()
+
+
+            const data = {
+                email: value.email,
+                otp: generatedOTP
+            }
+
+
+            if (value.email !== "") {
+                setLoader(true)
+                axios.post(`${BASE_URL}/customerlogin`, data)
+                    .then((res) => {
+                        setLoader(false)
+                        console.log(res.data, "000")
+                        if (res.data[0].id) {
+                            setShowOtp(true)
+                            setHide(true)
+                            const id = res.data[0].email; // Define id here
+                            const value = res.data[0].value; // Define id here
+                            const name = res.data[0].firstname;
+                            const otp = res.data[0].otp;
+                            localStorage.setItem("ecom_email", id)
+                            localStorage.setItem("ecom_value", value)
+                            localStorage.setItem("Name", name)
+                            localStorage.setItem('otp', otp)
+                        }
+                        else {
+                            setError(true)
+                            setTimeout(() => {
+                                setError(false)
+    
+                            }, 5000);
+                        }
+    
+    
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+    
+            }
+            else {
+                // setError2(true)
+                setTimeout(() => {
+                    // setError2(false)
+                }, 5000);
+            }
+        
+     
+    }
+
+
+    const onhandleregistersubmit = (e) => {
+        const generatedOTP = generateOTP(4);
+
+        e.preventDefault();
+
+        const data = {
+            email: value.remail,
+            mobile: value.mobile,
+            firstname: value.firstname,
+            lastname: value.lastname,
+            otp: generatedOTP
+        }
+
+        if (validateForm()) {
+            setLoader(true)
+
+            axios.post(`${BASE_URL}/register`, data)
+                .then((res) => {
+                    setLoader(false)
+                    if (res.data[0].email) {
+                        setShowOtp(true)
+                        setHide(true)
+
+                        const id = res.data[0].email; // Define id here
+                        const value = res.data[0].value; // Define id here
+                        const firstname = res.data[0].firstname;
+                        const lastname = res.data[0].lastname;
+                        const Mobile = res.data[0].mobile
+                        const otp = res.data[0].otp;
+                        localStorage.setItem("ecom_email", id)
+                        localStorage.setItem("ecom_value", value)
+                        localStorage.setItem("ecom_mobile", Mobile)
+                        localStorage.setItem("firstname", firstname)
+                        localStorage.setItem("lastname", lastname)
+                        localStorage.setItem('otp', otp)
+                    } else {
+                        setExist(res.data)
+
+                        setTimeout(() => {
+                            setExist('')
+                        }, 4000);
+                    }
+
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+
+        }
+
+
+    }
+
+    const onhandleotpsubmit = (e) => {
+        const mergedOtp = Object.values(otpvalue).join('');
+        e.preventDefault();
+        setLoader(true)
+
+        const data = {
+            otp: mergedOtp,
+            email: localStorage.getItem("ecom_email"),
+            value: localStorage.getItem("ecom_value"),
+            firstname: localStorage.getItem("firstname"),
+            lastname: localStorage.getItem("lastname"),
+            mobile: localStorage.getItem("ecom_mobile"),
+        }
+
+        axios.post(`${BASE_URL}/otp`, data)
+            .then((res) => {
+                console.log(res)
+
+
+                if (res.data.length == 0) {
+                    setError(true)
+
+                    setLoader(false)
+                    setTimeout(() => {
+                        setError(false)
+
+                    }, 2000)
+                } else {
+                    setLoader(false)
+                    setOpen(false)
+                    const value = res.data[0].value;
+                    const id = res.data[0].id;
+
+                    const ciphertext = CryptoJS.AES.encrypt(res.data[0].id.toString(), encryptionKey).toString();
+                    Cookies.set('custuserid', ciphertext, { expires: 1 });
+
+                    localStorage.setItem("ecom_value", value)
+                    localStorage.setItem('ecom_id', id);
+
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
     return (
         <div className="form-login-register">
             {open && <div className="box-form-login" >
@@ -251,13 +338,13 @@ function LoginForm({ open, setOpen }) {
                                 <button class="nav-link active" id="home-tab" onClick={flushdata} data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">LOGIN</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="profile-tab" onClick={flushdata}  data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">SIGN UP</button>
+                                <button class="nav-link" id="profile-tab" onClick={flushdata} data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">SIGN UP</button>
                             </li>
 
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                <form id="login_ajax" method="post" className="login">
+                                <form onSubmit={handleSubmit} id="login_ajax" method="post" className="login">
 
                                     <h2>Sign in</h2>
                                     <p className="status"></p>
@@ -277,24 +364,39 @@ function LoginForm({ open, setOpen }) {
                                                 <Link href="forgot-password.html">Lost your password?</Link>
                                             </div>
                                         </div>
-                                        <div className="button-login" onClick={handleGenerateOTP}>
-                                            <input type="submit" className="button" name="login" value="Login" onClick={handleSubmit} />
+                                        <div className="button-login" >
+                                            <input type="submit" className="button" name="Login" value="Login"  />
                                         </div>
-                                        <div className="button-next-reregister">Create An Account</div>
                                     </div>
                                 </form>
                             </div>
 
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                <form id="login_ajax" method="post" className="login">
+                                <form onSubmit={onhandleregistersubmit} id="login_ajax" method="post" className="login">
 
                                     <h2>Register</h2>
                                     <p className="status"></p>
                                     <div className="content">
-                                        {errors.email && (<span className="text-danger">{errors.email}</span>
-                                        )}
+                                     
                                         <div className="username">
-                                            <input type="text" required="required" className="input-text" name="email" id="username" placeholder="Your Email" onChange={onhandleChange} />
+                                            <input type="text" className="input-text" name="firstname" id="username" placeholder="Firstname" onChange={onhandleChange} />
+                                        {errors.firstname && (<span className="text-danger">{errors.remail}</span>
+                                        )}
+                                        </div>
+                                        <div className="username">
+                                            <input type="text" className="input-text" name="lastname" id="username" placeholder="Lastname" onChange={onhandleChange} />
+                                        {errors.lastname && (<span className="text-danger">{errors.lastname}</span>
+                                        )}
+                                        </div>
+                                        <div className="username">
+                                            <input type="number" className="input-text" name="mobile" id="username" placeholder="Mobile" onChange={onhandleChange} />
+                                        {errors.mobile && (<span className="text-danger">{errors.mobile}</span>
+                                        )}
+                                        </div>
+                                        <div className="username">
+                                            <input type="email"  className="input-text" name="remail" id="username" placeholder="Your Email" onChange={onhandleChange} />
+                                        {errors.remail && (<span className="text-danger">{errors.remail}</span>
+                                        )}
                                         </div>
 
                                         <div className="rememberme-lost">
@@ -306,10 +408,10 @@ function LoginForm({ open, setOpen }) {
                                                 <Link href="forgot-password.html">Lost your password?</Link>
                                             </div>
                                         </div>
-                                        <div className="button-login" onClick={handleGenerateOTP}>
-                                            <input type="submit" className="button" name="login" value="Login" onClick={handleSubmit} />
+                                        <div className="button-login" >
+                                            <input type="submit" className="button" name="Register" value="Register" />
                                         </div>
-                                        <div className="button-next-reregister">Create An Account</div>
+
                                     </div>
                                 </form>
                             </div>
@@ -317,76 +419,60 @@ function LoginForm({ open, setOpen }) {
 
 
                     </div>
-                    {hide ? 
-                    <div className='form-login active'>
-                        <form onSubmit={onhandlesubmit} className="login">
-                            <div className="content">
-                                {error && <Alert style={{ position: "absolute", top: "74px" }} severity='error'>Please enter valid otp!</Alert>}
+                    {hide ?
+                        <div className='form-login active'>
+                            <form onSubmit={onhandleotpsubmit} className="login">
+                                <div className="content">
+                                    {error && <Alert style={{ position: "absolute", top: "74px" }} severity='error'>Please enter valid otp!</Alert>}
 
-                                <div className='text-center'>
-                                    <h4 className='reg-head'>OTP</h4>
-                                </div>
-
-                                <div className=' mobile-detail mob-box'>
-                                    <div className=''>
-                                        {/* <p style={{ fontWeight: "700" }}>Enter OTP</p> */}
-                                    </div>
-                                    <div className='otp-box d-flex justify-content-between'>
-                                        <input type='number' maxLength='1' name='otp1' ref={otp1Ref} onChange={onHandleChange} />
-                                        <input type='number' maxLength='1' name='otp2' ref={otp2Ref} onChange={onHandleChange} />
-                                        <input type='number' maxLength='1' name='otp3' ref={otp3Ref} onChange={onHandleChange} />
-                                        <input type='number' maxLength='1' name='otp4' ref={otp4Ref} onChange={onHandleChange} />
-                                    </div>
-                                    <div className='  align-items-center otp-text pt-2'>
-                                        {/* <p className='col-6'>1.45 secs Time remaining</p> */}
-
-
-                                    </div>
-                                </div>
-                                <div className='text-center btn-sec' >
-                                    <div className='text-center' style={{ position: "relative" }}>
-                                        <button type='submit' className='Verify-btn'>
-
-                                        </button>
-
-
-                                    </div>
-                                    <div className="button-login">
-                                        <input type="submit" className="button" name={loader ? "Processing" : " Verify"} value="Login" onClick={handleSubmit} />
+                                    <div className='text-center'>
+                                        <h4 className='reg-head'>OTP</h4>
                                     </div>
 
-                                    <p className='text-danger' id="err"></p>
-                                    <div id='msg'>
-                                        {
-                                            showOtp && <Alert severity="info" >{otp}</Alert>
-                                        }
+                                    <div className=' mobile-detail mob-box'>
+                                        <div className=''>
+                                            {/* <p style={{ fontWeight: "700" }}>Enter OTP</p> */}
+                                        </div>
+                                        <div className='otp-box d-flex justify-content-between'>
+                                            <input type='number' maxLength='1' name='otp1' ref={otp1Ref} onChange={onHandleOtpChange} />
+                                            <input type='number' maxLength='1' name='otp2' ref={otp2Ref} onChange={onHandleOtpChange} />
+                                            <input type='number' maxLength='1' name='otp3' ref={otp3Ref} onChange={onHandleOtpChange} />
+                                            <input type='number' maxLength='1' name='otp4' ref={otp4Ref} onChange={onHandleOtpChange} />
+                                        </div>
+                                        <div className='  align-items-center otp-text pt-2'>
+                                            {/* <p className='col-6'>1.45 secs Time remaining</p> */}
+
+
+                                        </div>
                                     </div>
+                                    <div className='text-center btn-sec' >
+                                        <div className='text-center' style={{ position: "relative" }}>
+                                            <button type='submit' className='Verify-btn'>
+
+                                            </button>
+
+
+                                        </div>
+                                        <div className="button-login">
+                                            <input type="submit" className="button" name={loader ? "Processing" : " Verify"} value="Login" />
+                                        </div>
+
+                                        <p className='text-danger' id="err"></p>
+                                        <div id='msg'>
+                                            {
+                                                showOtp && <Alert severity="info" >{tostOtp}</Alert>
+                                            }
+                                        </div>
 
 
 
 
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
-                    </div> : null}
+                            </form>
+                        </div> : null}
 
-                    {/* <div className="form-register">
-                        <form method="post" className="register">
-                            <h2>OTP</h2>
-                            <div className="content">
-                                <div className="email">
-                                    <input type="email" className="input-text" placeholder="Email" name="email" id="reg_email" value="" />
-                                </div>
-                                <div className="password">
-                                    <input type="password" className="input-text" placeholder="Password" name="password" id="reg_password" />
-                                </div>
-                                <div className="button-register">
-                                    <input type="submit" className="button" name="register" value="Register" />
-                                </div>
-                                <div className="button-next-login">Already has an account</div>
-                            </div>
-                        </form>
-                    </div> */}
+                
                 </div>
             </div>}
         </div>

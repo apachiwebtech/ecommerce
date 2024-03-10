@@ -89,6 +89,22 @@ const Router = createBrowserRouter([
         path: '/shoproduct',
         element: <ShopProduct />
       },
+      {
+        path: '/shoproduct/:groupslug',
+        element: <ShopProduct />
+      },
+      {
+        path: '/shoproduct/:groupslug/:catslug',
+        element: <ShopProduct />
+      },
+      {
+        path: '/shoproduct/:groupslug/:catslug/:subcatslug',
+        element: <ShopProduct />
+      },
+      {
+        path: '/profile',
+        element: <ShopProduct />
+      },
     ]
   },
 

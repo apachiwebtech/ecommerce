@@ -15,7 +15,7 @@ const SiteHeader = () => {
 	const [banner, setBanner] = useState([])
 	const [cat, setCatData] = useState([])
 	const [subcat, setsubCatData] = useState([])
-
+	const custuser_id = Cookies.get('custuserid');
 	async function getTrendingData() {
 		axios.get(`${BASE_URL}/group_data`)
 			.then((res) => {
@@ -187,17 +187,17 @@ const SiteHeader = () => {
 
 													</li>
 													<li className="level-0 menu-item menu-item-has-children">
-														<Link to="/shoproduct"><span className="menu-item-text">{banner[0]?.title}</span></Link>
+														<Link to={`/shoproduct/${banner[0]?.slug}`}><span className="menu-item-text">{banner[0]?.title}</span></Link>
 														<ul className="sub-menu">
 															{cat.filter((item) => (item.group_id == banner[0]?.id)).map((item) => {
 																return (
 																	<li className="level-1 menu-item menu-item-has-children">
-																		<Link to="/shoproduct" ><span className={item.title == "" ? "menu-item-text" : ""}>{item.title}</span></Link>
+																		<Link to={`/shoproduct/${banner[0]?.slug}/${item.slug}`} ><span className={item.title == "" ? "menu-item-text" : ""}>{item.title}</span></Link>
 																		<ul className="sub-menu">
-																			{subcat.filter((ele) => ele.cat_id == item.id).map((item) => {
+																			{subcat.filter((ele) => ele.cat_id == item.id).map((ele) => {
 																				return (
 																					< li >
-																						<Link to="/shoproduct" ><span className={item.title !== null ? "menu-item-text" : ""}>{item.title}</span></Link>
+																						<Link to={`/shoproduct/${banner[0]?.slug}/${item.slug}/${ele.slug}`} ><span className={ele.title !== null ? "menu-item-text" : ""}>{ele.title}</span></Link>
 																					</li>
 																				)
 
@@ -213,17 +213,17 @@ const SiteHeader = () => {
 														</ul>
 													</li>
 													<li className="level-0 menu-item menu-item-has-children">
-														<Link to="/shoproduct"><span className="menu-item-text">{banner[1]?.title}</span></Link>
+														<Link to={`/shoproduct/${banner[0]?.slug}`}><span className="menu-item-text">{banner[1]?.title}</span></Link>
 														<ul className="sub-menu">
 															{cat.filter((item) => (item.group_id == banner[1]?.id)).map((item) => {
 																return (
 																	<li className="level-1 menu-item menu-item-has-children">
-																		<Link to="/shoproduct" ><span className="menu-item-text">{item.title}</span></Link>
+																		<Link  to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}><span className="menu-item-text">{item.title}</span></Link>
 																		<ul className="sub-menu">
-																			{subcat.filter((ele) => ele.cat_id == item.id).map((item) => {
+																			{subcat.filter((ele) => ele.cat_id == item.id).map((ele) => {
 																				return (
 																					< li >
-																						<Link to="/shoproduct"><span className={item.title !== null ? "menu-item-text" : ""}>{item.title}</span></Link>
+																						<Link to={`/shoproduct/${banner[0]?.slug}/${item.slug}/${ele.slug}`} ><span className={ele.title !== null ? "menu-item-text" : ""}>{ele.title}</span></Link>
 																					</li>
 																				)
 
@@ -240,18 +240,18 @@ const SiteHeader = () => {
 													
 													</li>
 													<li className="level-0 menu-item menu-item-has-children">
-														<Link to="/shoproduct"><span className="menu-item-text">{banner[2]?.title}</span></Link>
+														<Link to={`/shoproduct/${banner[0]?.slug}`}><span className="menu-item-text">{banner[2]?.title}</span></Link>
 
 														<ul className="sub-menu">
 															{cat.filter((item) => (item.group_id == banner[2]?.id)).map((item) => {
 																return (
 																	<li className="level-1 menu-item menu-item-has-children">
-																		<Link to="/shoproduct"><span className="menu-item-text">{item.title}</span></Link>
+																		<Link to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}><span className="menu-item-text">{item.title}</span></Link>
 																		<ul className="sub-menu">
 																			{subcat.filter((ele) => ele.cat_id == item.id).map((ele) => {
 																				return (
 																					< li >
-																						<Link to="/shoproduct"><span className={ele.title !== null ? "menu-item-text" : ""}>{ele.title}</span></Link>
+																						<Link to={`/shoproduct/${banner[0]?.slug}/${item.slug}/${ele.slug}`}><span className={ele.title !== null ? "menu-item-text" : ""}>{ele.title}</span></Link>
 																					</li>
 																				)
 
@@ -282,7 +282,9 @@ const SiteHeader = () => {
 												{/* {Cookies.get('userid') == undefined ?
 													<Link className="active-login" onClick={handleToggle}>Login</Link> : <Link className="active-login" onClick={handleLogout}>Logout</Link>} */}
 												{open && <LoginForm setOpen={setOpen} open={open} />}
-												<Link className="active-login" onClick={handleToggle}>Login</Link>
+
+												{!custuser_id  ? <Link className="active-login" onClick={handleToggle}>Login</Link> :	<Link to="/profile" className="active-login" ><i className="icon-user"></i></Link>  }	
+											
 
 											
 											</div>
