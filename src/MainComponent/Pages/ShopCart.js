@@ -6,11 +6,10 @@ import Cookies from 'js-cookie'
 import custdecryptedUserId from '../../Utils/CustUserid'
 import { Link } from 'react-router-dom'
 
-const ShopCart = () => {
+
+const ShopCart = ({ fetchcount }) => {
   const [cart, setCart] = useState([])
   const [quantities, setQuantities] = useState({});
-
-
 
 
   const handleIncrease = (itemId) => {
@@ -45,16 +44,33 @@ const ShopCart = () => {
 
   useEffect(() => {
     getcartdata()
+   
   }, [])
 
-  const handledelete = (id) =>{
+  const handledelete = (id) => {
+    const data = {
+      cart_id: id
+    }
 
+    axios.post(`${BASE_URL}/removecartitem`, data)
+      .then((res) => {
+        console.log(res)
+        getcartdata()
+
+        if (fetchcount) {
+          fetchcount(res.data[0]);
+      }
+        
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   const totalPrice = cart.reduce((acc, item) => {
     const itemTotal = item.price * (quantities[item.id] || 1); // Use 1 as default quantity if not 
     return acc + itemTotal;
-   }, 0);
+  }, 0);
 
 
   return (

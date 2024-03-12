@@ -319,6 +319,7 @@ function WebApp() {
 function ScrollToTop() {
   const { pathname } = useLocation();
 
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -330,10 +331,24 @@ function ScrollToTop() {
 
 function App() {
   const [loader, setLoader] = useState(true)
-
-
   const location = useLocation();
   const { pathname } = useLocation();
+
+  const [cartCount, setCartCount] = useState(0);
+
+  async function fetchCartCount(){
+    try {
+      const data = {
+        order_id: Cookies.get(`orderid`),
+      };
+      const response = await axios.post(`${BASE_URL}/getcartcount`, data);
+      setCartCount(response.data[0].count); // Assuming the response has a count property
+    } catch (err) {
+
+    }
+  };
+
+
 
 
   useEffect(() => {
@@ -342,24 +357,27 @@ function App() {
 
 
   useEffect(() => {
-    // This effect will run every time the component mounts or updates
+    fetchCartCount();
+
     setLoader(true);
 
     const timeoutId = setTimeout(() => {
       setLoader(false);
     }, 1000);
 
-    // Clean up the timeout when the component unmounts or updates
+
     return () => clearTimeout(timeoutId);
   }, [location.pathname]);
+
+
 
   return (
     <>
       <ScrollToTop />
       {/* <div id="page" class="hfeed page-wrapper"> */}
       {loader && <SiteLoader />}
-      <SiteHeader />
-      <Outlet />
+      <SiteHeader cartCount={cartCount} />
+      <Outlet fetchcount={fetchCartCount} />
       <SiteFooter />
       {/* </div> */}
     </>

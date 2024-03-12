@@ -1,6 +1,30 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import product1 from '../../assets/frontimg/product/1.jpg'
+import { useDispatch, useSelector } from 'react-redux';
+import { getWishList, } from '../../Store/WishList/wishlist-actions';
+import { removeFromWishList } from '../../Store/WishList/wishlist-actions';
 const ShopWishlist = () => {
+
+    const dispatch = useDispatch();
+    const wishList = useSelector((state)=> state.wishlist.wishList);
+
+    const removeWishListItem = (data)=>{
+        // console.log(decryptedUserId());
+        const id = data;
+        const userId = 1;
+        const wishData = {
+            id, 
+            userId,
+        }
+        dispatch(removeFromWishList(wishData));
+        dispatch(getWishList(wishData));
+
+    }
+    useEffect(()=>{
+        const userId = 1;
+
+        dispatch(getWishList(userId));
+    }, [])
     return (
         <div id="page" class="hfeed page-wrapper">
             <div id="site-main" class="site-main">
@@ -25,8 +49,10 @@ const ShopWishlist = () => {
                                     <div class="shop-wishlist">
                                         <table class="wishlist-items">
                                             <tbody>
-                                                <tr class="wishlist-item">
-                                                    <td class="wishlist-item-remove"><span></span></td>
+                                               {wishList.map((wishItem)=>{
+                                                return(
+                                                    <tr class="wishlist-item">
+                                                    <td class="wishlist-item-remove" onClick={()=>removeWishListItem(wishItem.id)} ><span></span></td>
                                                     <td class="wishlist-item-image">
                                                         <a href="shop-details.html">
                                                             <img width="600" height="600" src={product1} alt="" />
@@ -34,11 +60,16 @@ const ShopWishlist = () => {
                                                     </td>
                                                     <td class="wishlist-item-info">
                                                         <div class="wishlist-item-name">
-                                                            <a href="shop-details.html">Chair Oak Matt Lacquered</a>
+                                                            <a href="shop-details.html">{wishItem.title}</a>
                                                         </div>
-                                                        <div class="wishlist-item-price">
-                                                            <span>$150.00</span>
+                                                        {wishItem.disc_price ? (<div class="wishlist-item-price">
+                                                            <del aria-hidden="true"><span><span>&#8377;</span> {wishItem.price}</span></del>
+                                                            <ins><span>{wishItem.disc_price}</span></ins>
+                                                        </div>) : (
+                                                            <div class="wishlist-item-price">
+                                                            <span><span>&#8377;</span> {wishItem.price}</span>
                                                         </div>
+                                                        )}
                                                         <div class="wishlist-item-time">June 6, 2022</div>
                                                     </td>
                                                     <td class="wishlist-item-actions">
@@ -52,7 +83,9 @@ const ShopWishlist = () => {
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <tr class="wishlist-item">
+                                                )
+                                               }) }
+                                                {/* <tr class="wishlist-item">
                                                     <td class="wishlist-item-remove"><span></span></td>
                                                     <td class="wishlist-item-image">
                                                         <a href="shop-details.html">
@@ -79,7 +112,7 @@ const ShopWishlist = () => {
                                                             </div>
                                                         </div>
                                                     </td>
-                                                </tr>
+                                                </tr> */}
                                             </tbody>
                                         </table>
                                     </div>

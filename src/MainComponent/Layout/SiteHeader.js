@@ -11,8 +11,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import LoginForm from '../Authentication/LoginForm';
 import React, { useEffect, useState } from 'react';
-import custdecryptedUserId from '../../Utils/CustUserid';
-const SiteHeader = () => {
+
+const SiteHeader = (cartCount) => {
 	const [banner, setBanner] = useState([])
 	const [cat, setCatData] = useState([])
 	const [subcat, setsubCatData] = useState([])
@@ -28,6 +28,8 @@ const SiteHeader = () => {
 			})
 	}
 
+	console.log(cartCount , "dddd")
+
 	async function getcatData() {
 		axios.get(`${BASE_URL}/category_data`)
 			.then((res) => {
@@ -38,6 +40,7 @@ const SiteHeader = () => {
 				console.log(err)
 			})
 	}
+
 
 
 	async function getsubcatData() {
@@ -97,7 +100,7 @@ const SiteHeader = () => {
 										<div className="dropdown mini-cart top-cart">
 											<div className="remove-cart-shadow"></div>
 											<Link className="dropdown-toggle cart-icon" to="/shopcart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">2</span></div>
+												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{cartCount.cartCount}</span></div>
 											</Link>
 
 											<div className="dropdown-menu cart-popup">
@@ -311,7 +314,7 @@ const SiteHeader = () => {
 												<div className="dropdown mini-cart top-cart">
 													<div className="remove-cart-shadow"></div>
 													<Link className="dropdown-toggle cart-icon" to="/shopcart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">2</span></div>
+														<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{cartCount.cartCount}</span></div>
 													</Link>
 													<div className="dropdown-menu cart-popup">
 														<div className="cart-empty-wrap">

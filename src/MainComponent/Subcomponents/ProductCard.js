@@ -17,7 +17,7 @@ const ProductCard = (props) => {
     const addWishList = (data) => {
 
         const id = data;
-        const userId = 1;
+        const userId = custdecryptedUserId();
         const wishData = {
             id,
             userId,
@@ -156,7 +156,7 @@ const ProductCard = (props) => {
                         </div>
                         <div className="btn-wishlist" data-title="Wishlist">
                             {/* <Link to="/shopwishlist"><button className="product-btn">Add to wishlist</button></Link> */}
-                            <button className="product-btn" onClick={() => { addWishList(props.prodId) }}>Add to wishlist</button>
+                            <button className="product-btn" onClick={() => { addWishList(props.proid) }}>Add to wishlist</button>
                         </div>
                     </div>
                 </div>
