@@ -1,38 +1,171 @@
 import React from 'react'
-import { IMG_URL } from '../../AdminComponent/BaseUrl'
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import product1 from '../../assets/frontimg/product/1.jpg'
 import { Link } from 'react-router-dom'
-
-
+// import UserID from '../../Utils/UserID';
+import { wishListActions } from '../../Store/WishList/wishListSlice';
+import { addToWishList } from '../../Store/WishList/wishlist-actions';
+import { useDispatch } from 'react-redux';
+import Cookies from 'js-cookie'
+import CryptoJS from 'crypto-js';
+import custdecryptedUserId from '../../Utils/CustUserid';
+import addToCart from '../../Utils/AddtoCart';
+import { ToastContainer, toast } from 'react-toastify';
 const ProductCard = (props) => {
+
+    const dispatch = useDispatch();
+    const addWishList = (data) => {
+
+        const id = data;
+        const userId = 1;
+        const wishData = {
+            id,
+            userId,
+        }
+
+        dispatch(addToWishList(wishData));
+
+    }
+
+
+    const notify = () => toast("Product added to the cart");
+
+    // const addToCart = async (pro_id) => {
+    //     console.log(pro_id, "0000")
+
+    //     if (!Cookies.get("orderid") && !Cookies.get("custuserid")) {
+    //         const randomUserId = Math.random().toString(36).substring(2);
+
+    //         const user = {
+    //             id: randomUserId,
+    //             pro_id: pro_id
+    //         }
+
+
+
+    //         const response = await fetch(`${BASE_URL}/addToCart`, {
+    //             method: "POST",
+    //             body: JSON.stringify({
+    //                 userId: user.id,
+    //                 pro_id: user.pro_id,
+    //                 pro_name: props.title,
+    //                 catid: props.catid,
+    //                 price: props.price,
+    //                 p_qty: "1"
+
+    //             }),
+    //             headers: {
+    //                 "Content-type": "application/json"
+    //             }
+    //         })
+
+    //         const apiData = await response.json();
+    //         Cookies.set("orderid", apiData[0].orderid)
+
+    //     } else if (Cookies.get("custuserid") && !Cookies.get("orderid") ) {
+
+
+    //         const user = {
+    //             id: custdecryptedUserId(),
+    //             pro_id: pro_id
+    //         }
+
+
+    //         const response = await fetch(`${BASE_URL}/addToCart`, {
+    //             method: "POST",
+    //             body: JSON.stringify({
+    //                 userId: user.id,
+    //                 pro_id: user.pro_id,
+    //                 pro_name: props.title,
+    //                 catid: props.catid,
+    //                 price: props.price,
+    //                 p_qty: "1"
+
+    //             }),
+    //             headers: {
+    //                 "Content-type": "application/json"
+    //             }
+    //         })
+
+    //         const apiData = await response.json();
+    //         Cookies.set("orderid", apiData[0].orderid)
+    //     }
+
+    //     else if ((Cookies.get("custuserid") && Cookies.get("orderid")) || Cookies.get("orderid") ) {
+
+    //         const user = {
+    //             id: custdecryptedUserId(),
+    //             orderid: Cookies.get("orderid"),
+    //             pro_id: pro_id
+    //         }
+
+
+
+    //         const response = await fetch(`${BASE_URL}/addToCart`, {
+    //             method: "POST",
+    //             body: JSON.stringify({
+    //                 userId: user.id,
+    //                 orderid: user.orderid,
+    //                 pro_id: user.pro_id,
+    //                 pro_name: props.title,
+    //                 catid: props.catid,
+    //                 price: props.price,
+    //                 p_qty: "1"
+    //             }),
+    //             headers: {
+    //                 "Content-type": "application/json"
+    //             }
+    //         })
+
+    //         const apiData = await response.json();
+
+
+    //     }
+
+    // }
+
+
+
+
+
+
+
+
+
+
     return (
         <div className="col-xl-4 col-lg-4 col-md-4 col-sm-6">
             <div className="products-entry clearfix product-wapper">
+                <ToastContainer theme="dark" />
                 <div className="products-thumb">
                     {props.trending === 1 ? <div className="product-lable">
                         <div className="hot">Hot</div>
                     </div> : <></>}
                     <div className="product-thumb-hover">
-                        <Link to="/detailpage" >
-                            <img width="600" height="600" src={product1} className="post-image" alt="" />
-                            <img width="600" height="600" src={product1} className="hover-image back" alt="" />
+                        <Link to={`/detailpage/${props.slug}`} >
+                            <img width="600" height="600" src={`${IMG_URL}/productimg/` + props.image1} className="post-image" alt="" />
+                            <img width="600" height="600" src={`${IMG_URL}/productimg/` + props.image2} className="hover-image back" alt="" />
                         </Link>
                     </div>
                     <div className="product-button">
                         <div className="btn-add-to-cart" data-title="Add to cart">
-                            <Link rel="nofollow" to="/shopcart" className="product-btn button">Add to cart</Link>
+                            <button rel="nofollow" className="product-btn button" onClick={() => {
+                                addToCart(props.proid, props.title, props.catid, props.price)
+                                notify()
+                            }} >Add to cart</button>
                         </div>
                         <div className="btn-wishlist" data-title="Wishlist">
-                            <Link to="/shopwishlist"><button className="product-btn">Add to wishlist</button></Link>
+                            {/* <Link to="/shopwishlist"><button className="product-btn">Add to wishlist</button></Link> */}
+                            <button className="product-btn" onClick={() => { addWishList(props.prodId) }}>Add to wishlist</button>
                         </div>
                     </div>
                 </div>
                 <div className="products-content">
                     <div className="contents text-center">
-                        <h3 className="product-title"><Link href="shop-details.html">{props.title}</Link></h3>
+                        <h3 className="product-title"><Link to={`/detailpage/${props.slug}`}>{props.title}</Link></h3>
                         {props.disc_price ? (<span className="price">
-                            <del aria-hidden="true"><span>{props.price}</span></del>
-                            <ins><span>{props.disc_price}</span></ins>
+                            <del aria-hidden="true"><span>₹{props.price}</span></del>
+                            <ins><span>₹{props.disc_price}</span></ins>
                         </span>) :
                             (<span className="price">{props.price}</span>)
                         }

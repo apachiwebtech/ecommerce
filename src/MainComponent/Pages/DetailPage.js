@@ -7,6 +7,8 @@ import "slick-carousel/slick/slick.css";
 import axios from 'axios';
 import { BASE_URL } from '../../AdminComponent/BaseUrl';
 import { Link, useParams } from 'react-router-dom';
+import addToCart from '../../Utils/AddtoCart';
+import { ToastContainer, toast } from 'react-toastify';
 
 const DetailPage = () => {
 
@@ -30,6 +32,8 @@ const DetailPage = () => {
 
 	const { productslug } = useParams()
 	const [productdata, setProductdata] = useState([])
+	const [value, setValue] = useState(0)
+	const notify = () => toast("Product added to the cart");
 
 
 	async function getProductDetails() {
@@ -85,23 +89,25 @@ const DetailPage = () => {
 		<div>
 			<div id="site-main" class="site-main">
 				<div id="main-content" class="main-content">
+					<ToastContainer theme="dark" />
 					<div id="primary" class="content-area">
 						{productdata?.map((item) => {
 							return (
-								<>						<div id="title" class="page-title">
-									<div class="section-container">
-										<div class="content-title-heading">
-											<h1 class="text-title-heading">
-											{item.title}
-											</h1>
+								<>
+									<div id="title" class="page-title">
+										<div class="section-container">
+											<div class="content-title-heading">
+												<h1 class="text-title-heading">
+													{item.title}
+												</h1>
+											</div>
+											<div class="breadcrumbs">
+												<Link href="index.html">Home</Link><span class="delimiter"></span><Link href="shop-grid-left.html">Shop</Link><span class="delimiter"></span>{item.title}
+											</div>
 										</div>
-										<div class="breadcrumbs">
-											<Link href="index.html">Home</Link><span class="delimiter"></span><Link href="shop-grid-left.html">Shop</Link><span class="delimiter"></span>{item.title}
-										</div>
+
+
 									</div>
-
-
-								</div>
 
 									<div id="content" class="site-content" role="main">
 										<div class="shop-details zoom" data-product_layout_thumb="scroll" data-zoom_scroll="true" data-zoom_contain_lens="true" data-zoomtype="inner" data-lenssize="200" data-lensshape="square" data-lensborder="" data-bordersize="2" data-bordercolour="#f9b61e" data-popup="false">
@@ -220,12 +226,22 @@ const DetailPage = () => {
 																<div class="buttons">
 																	<div class="add-to-cart-wrap">
 																		<div class="quantity">
-																			<button type="button" class="plus">+</button>
-																			<input type="number" class="qty" step="1" min="0" max="" name="quantity" value="1" title="Qty" size="4" placeholder="" inputmode="numeric" autocomplete="off" />
-																			<button type="button" class="minus">-</button>
+																			<button type="button" onClick={() =>{ setValue(value + 1)}} class="plus">+</button>
+
+																			<input type="number" class="qty" step="1" min="0" max="" name="quantity" value={value} title="Qty" size="4" placeholder="" inputmode="numeric" autocomplete="off" />
+
+																			<button type="button" onClick={() => {
+																				if (value > 0) {
+																					setValue(value - 1)
+																				}
+																			}
+																			} class="minus">-</button>
 																		</div>
 																		<div class="btn-add-to-cart">
-																			<Link href="#" class="button" tabindex="0">Add to cart</Link>
+																			<div class="button" onClick={() => {
+																				addToCart(item.id, item.title, item.catid, item.price)
+																				notify();
+																			}} >Add to cart</div>
 																		</div>
 																	</div>
 																	<div class="btn-quick-buy" data-title="Wishlist">

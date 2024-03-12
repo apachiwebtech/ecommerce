@@ -2,9 +2,13 @@ import { mdiAccountGroupOutline, mdiAccountOutline, mdiApps, mdiCartOutline, mdi
 import Icon from '@mdi/react';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
+import { BASE_URL } from './BaseUrl';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import decryptedUserId from '../Utils/UserID';
 
 
 const Header = () => {
@@ -15,6 +19,9 @@ const Header = () => {
     home: false,
     // Add more menu items as needed
   });
+
+
+
 
   const handleToggle = (itemName) => {
     setOpenStates((prevState) => {

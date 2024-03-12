@@ -39,14 +39,14 @@ const CategorySection = () => {
                     <div class="bg-banner">
                       <div class="banner-wrapper banners">
                         <div class="banner-image">
-                          <Link to="/shoproduct">
+                          <Link to={`/shoproduct/${banner[0]?.slug}`}>
                             <img width="571" height="622" src={`${IMG_URL}/group/${banner[0]?.image}`} alt="Banner" />
                           </Link>
                         </div>
                         <div class="banner-wrapper-infor">
                           <div class="info">
                             <div class="content">
-                              <Link class="button button-white" to="/shoproduct">{banner[0]?.title}</Link>
+                              <Link class="button button-white" to={`/shoproduct/${banner[0]?.slug}`}>{banner[0]?.title}</Link>
                             </div>
                           </div>
                         </div>
@@ -120,14 +120,14 @@ const CategorySection = () => {
                               <div class="bg-banner">
                                 <div class="banner-wrapper banners">
                                   <div class="banner-image">
-                                    <Link to="/shoproduct">
+                                    <Link to={`/shoproduct/${banner[1]?.slug}`}>
                                       <img width="406" height="304" src={`${IMG_URL}/group/${banner[1]?.image}`} alt="Banner" />
                                     </Link>
                                   </div>
                                   <div class="banner-wrapper-infor">
                                     <div class="info">
                                       <div class="content">
-                                        <Link class="button button-white"  to="/shoproduct">{banner[1]?.title}</Link>
+                                        <Link class="button button-white"  to={`/shoproduct/${banner[1]?.slug}`}>{banner[1]?.title}</Link>
                                       </div>
                                     </div>
                                   </div>
@@ -148,14 +148,14 @@ const CategorySection = () => {
                               <div class="bg-banner">
                                 <div class="banner-wrapper banners">
                                   <div class="banner-image">
-                                    <Link to="/shoproduct">
+                                    <Link to={`/shoproduct/${banner[2]?.slug}`}>
                                       <img width="406" height="304" src={`${IMG_URL}/group/${banner[2]?.image}`} alt="Banner" />
                                     </Link>
                                   </div>
                                   <div class="banner-wrapper-infor">
                                     <div class="info">
                                       <div class="content">
-                                        <Link class="button button-white"  to="/shoproduct">{banner[2]?.title}</Link>
+                                        <Link class="button button-white"  to={`/shoproduct/${banner[2]?.slug}`}>{banner[2]?.title}</Link>
                                       </div>
                                     </div>
                                   </div>

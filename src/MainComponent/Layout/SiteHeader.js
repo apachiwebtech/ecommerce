@@ -11,6 +11,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import LoginForm from '../Authentication/LoginForm';
 import React, { useEffect, useState } from 'react';
+import custdecryptedUserId from '../../Utils/CustUserid';
 const SiteHeader = () => {
 	const [banner, setBanner] = useState([])
 	const [cat, setCatData] = useState([])
@@ -67,9 +68,12 @@ const SiteHeader = () => {
 	}
 
 
+
+
 	return (
 		<div>
 			<header id="site-header" className="site-header header-v1" style={{background :"#F8E9D5"}}>
+				
 				<div className="header-mobile">
 					<div className="section-padding">
 						<div className="section-container">
@@ -79,20 +83,23 @@ const SiteHeader = () => {
 										<button type="button" id="show-megamenu" className="navbar-toggle"></button>
 									</div>
 								</div>
+
 								<div className="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6 header-center">
 									<div className="site-logo">
-										<Link href="index.html">
+										<Link to="/">
 											<img width="400" height="79" src={logo} alt="Ruper – Furniture HTML Theme" />
 										</Link>
 									</div>
 								</div>
+
 								<div className="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-right">
 									<div className="ruper-topcart dropdown">
 										<div className="dropdown mini-cart top-cart">
 											<div className="remove-cart-shadow"></div>
-											<Link className="dropdown-toggle cart-icon" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											<Link className="dropdown-toggle cart-icon" to="/shopcart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">2</span></div>
 											</Link>
+
 											<div className="dropdown-menu cart-popup">
 												<div className="cart-empty-wrap">
 													<ul className="cart-list">
@@ -213,7 +220,7 @@ const SiteHeader = () => {
 														</ul>
 													</li>
 													<li className="level-0 menu-item menu-item-has-children">
-														<Link to={`/shoproduct/${banner[0]?.slug}`}><span className="menu-item-text">{banner[1]?.title}</span></Link>
+														<Link to={`/shoproduct/${banner[1]?.slug}`}><span className="menu-item-text">{banner[1]?.title}</span></Link>
 														<ul className="sub-menu">
 															{cat.filter((item) => (item.group_id == banner[1]?.id)).map((item) => {
 																return (
@@ -240,7 +247,7 @@ const SiteHeader = () => {
 													
 													</li>
 													<li className="level-0 menu-item menu-item-has-children">
-														<Link to={`/shoproduct/${banner[0]?.slug}`}><span className="menu-item-text">{banner[2]?.title}</span></Link>
+														<Link to={`/shoproduct/${banner[2]?.slug}`}><span className="menu-item-text">{banner[2]?.title}</span></Link>
 
 														<ul className="sub-menu">
 															{cat.filter((item) => (item.group_id == banner[2]?.id)).map((item) => {

@@ -15,22 +15,53 @@ import product9 from '../../assets/frontimg/product/9.jpg'
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts } from '../../Store/Products/product-actions';
 import ProductCard from '../Subcomponents/ProductCard'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import axios from 'axios'
+import { BASE_URL } from '../../AdminComponent/BaseUrl'
+
 
 const ShopProduct = () => {
 
-    const dispatch = useDispatch();
-    const products = useSelector((state) => state.products.products);
+    const [products , setProducts] = useState([])
 
-    console.log(products, "from component");
+    // const dispatch = useDispatch();
+    // const products = useSelector((state) => state.products.products);
+
+    // useEffect(() => {
+    //     dispatch(getProducts());
+    // }, [dispatch]);
+
+    const { groupslug, catslug, subcatslug } = useParams()
+  
+
+    async function getproductdetails() {
+        const data = {
+            groupslug: groupslug,
+            catslug: catslug,
+            subcatslug: subcatslug
+        }
+
+        axios.post(`${BASE_URL}/getproductlisting`, data)
+            .then((res) => {
+                console.log(res)
+                setProducts(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+
     useEffect(() => {
-        dispatch(getProducts());
-    }, [dispatch]);
+        getproductdetails()
+    }, [groupslug,catslug,subcatslug])
+
 
 
     return (
         <div><div id="site-main" className="site-main">
             <div id="main-content" className="main-content">
+         
                 <div id="primary" className="content-area">
                     <div id="title" className="page-title">
                         <div className="section-container">
@@ -128,32 +159,32 @@ const ShopProduct = () => {
                                                     {products.filter((featured) => featured.featured === 1).map((featured) => {
                                                         return (
                                                             <Link to="/detailpage" >
-                                                            <li className="product-item">
-                                                                <a href="shop-details.html" className="product-image">
-                                                                    <img src={product1} alt='product6' />
-                                                                </a>
-                                                                <div className="product-content">
-                                                                    <h2 className="product-title">
-                                                                        <a href="shop-details.html">
-                                                                            {featured.title}
-                                                                        </a>
-                                                                    </h2>
-                                                                    <div className="rating small">
-                                                                        <div className="star star-5"></div>
-                                                                    </div>
-                                                                    {/* <span className="price">
+                                                                <li className="product-item">
+                                                                    <a href="shop-details.html" className="product-image">
+                                                                        <img src={product1} alt='product6' />
+                                                                    </a>
+                                                                    <div className="product-content">
+                                                                        <h2 className="product-title">
+                                                                            <a href="shop-details.html">
+                                                                                {featured.title}
+                                                                            </a>
+                                                                        </h2>
+                                                                        <div className="rating small">
+                                                                            <div className="star star-5"></div>
+                                                                        </div>
+                                                                        {/* <span className="price">
                                                         <del aria-hidden="true"><span>$150.00</span></del> 
                                                         <ins><span>$100.00</span></ins>
                                                     </span> */}
-                                                                    {featured.disc_price ?
-                                                                        (<span className="price">
-                                                                            <del aria-hidden="true"><span>{featured.price}</span></del>
-                                                                            <ins><span>{featured.disc_price}</span></ins>
-                                                                        </span>) :
-                                                                        (<span className="price">{featured.price}</span>)
-                                                                    }
-                                                                </div>
-                                                            </li>
+                                                                        {featured.disc_price ?
+                                                                            (<span className="price">
+                                                                                <del aria-hidden="true"><span>{featured.price}</span></del>
+                                                                                <ins><span>{featured.disc_price}</span></ins>
+                                                                            </span>) :
+                                                                            (<span className="price">{featured.price}</span>)
+                                                                        }
+                                                                    </div>
+                                                                </li>
                                                             </Link>
                                                         )
                                                     })}
@@ -261,7 +292,7 @@ const ShopProduct = () => {
                                                             // </div>
                                                             //     )
                                                             return (
-                                                                <ProductCard title={product.title} disc_price={product.disc_price} price={product.price} image1={product.size_image} image2={product4_2} trending={product.trending} />
+                                                                <ProductCard proid={product.proid} title={product.product_title} disc_price={product.disc_price} price={product.price} image1={product.image1} image2={product.image2} trending={product.trending} catid={product.catid} slug={product.slug} />
                                                             )
                                                         })
                                                         }

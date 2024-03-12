@@ -3,7 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/js/bootstrap.min.js';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
-import { Outlet, createBrowserRouter, useNavigate ,useLocation  } from 'react-router-dom';
+import { Outlet, createBrowserRouter, useNavigate, useLocation } from 'react-router-dom';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import AdminUser from './AdminComponent/AdminUser';
 import Banner from './AdminComponent/Banner';
@@ -50,6 +50,7 @@ import ShopCart from './MainComponent/Pages/ShopCart';
 import ShopWishlist from './MainComponent/Pages/ShopWishlist';
 import DetailPage from './MainComponent/Pages/DetailPage';
 import SiteLoader from './MainComponent/Ui/SiteLoader';
+import decryptedUserId from './Utils/UserID';
 
 
 const Router = createBrowserRouter([
@@ -257,12 +258,15 @@ function WebApp() {
       });
   }
 
+
+
   // axios.defaults.withCredentials = true
 
   const navigate = useNavigate();
   useEffect(() => {
     checkLocalStorageAndRedirect(navigate);
     accessSession()
+
   }, [navigate]);
 
 
@@ -312,6 +316,16 @@ function WebApp() {
   );
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 
 
 function App() {
@@ -319,6 +333,12 @@ function App() {
 
 
   const location = useLocation();
+  const { pathname } = useLocation();
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
 
   useEffect(() => {
@@ -335,6 +355,7 @@ function App() {
 
   return (
     <>
+      <ScrollToTop />
       {/* <div id="page" class="hfeed page-wrapper"> */}
       {loader && <SiteLoader />}
       <SiteHeader />

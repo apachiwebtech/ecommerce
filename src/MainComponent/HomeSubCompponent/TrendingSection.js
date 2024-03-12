@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import product1 from '../../assets/frontimg/product/1.jpg'
-import product2 from '../../assets/frontimg/product/2.jpg'
-import product3 from '../../assets/frontimg/product/3.jpg'
-import product4 from '../../assets/frontimg/product/4.jpg'
+
 // import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Slider from 'react-slick';
 import axios from 'axios'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { Link } from 'react-router-dom'
+import addToCart from '../../Utils/AddtoCart'
+import SiteLoader from '../Ui/SiteLoader'
+import { Alert } from '@mui/material';
 
 var settings = {
     dots: false,
@@ -16,14 +18,26 @@ var settings = {
     infinite: true,
     speed: 500,
     slidesToShow: 4,
-    autoplay :true
-       
+    autoplay: true,
+    responsive: [
+        {
+            breakpoint: 600, // Adjust this breakpoint according to your needs
+            settings: {
+                slidesToShow: 1
+            }
+        }
+    ]
 };
+
+const notify = () => toast("Product added to the cart");
 
 
 
 const TrendingSection = () => {
     const [data, setData] = useState([])
+
+    const [loader, setLoader] = useState(false)
+
 
     async function getTrendingData() {
         axios.get(`${BASE_URL}/trending_products`)
@@ -43,7 +57,8 @@ const TrendingSection = () => {
     return (
         <section class="section section-padding">
             <div class="section-container">
-
+                {loader && <h1>hiffjj</h1>}
+                <ToastContainer theme="dark" />
                 <div class="block block-products slider">
                     <div class="block-widget-wrap">
                         <div class="block-title"><h2>Best Seller</h2></div>
@@ -63,9 +78,9 @@ const TrendingSection = () => {
                                                                 </div> */}
                                                                 <div class="product-thumb-hover">
                                                                     <Link to={`/detailpage/${item.slug}`} >
-                                                                        <img width="600" height="600" src={`${IMG_URL}/productimg/` +item.image1} class="post-image" alt="" />
+                                                                        <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image1} class="post-image" alt="" />
 
-                                                                        <img width="600" height="600" src={`${IMG_URL}/productimg/` +item.image2} class="hover-image back" alt="" />
+                                                                        <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image2} class="hover-image back" alt="" />
 
                                                                     </Link>
                                                                 </div>
@@ -87,7 +102,15 @@ const TrendingSection = () => {
                                                                     <span class="price">₹{item.price}</span>
                                                                     <div class="btn-add-to-cart">
                                                                         <div data-title="Add to cart">
-                                                                            <Link to="/shopcart" class="button">Add to cart</Link>
+                                                                            <Link
+                                                                                class="button"
+                                                                                onClick={() => {
+                                                                                    addToCart(item.id, item.title, item.catid, item.price, setLoader);
+                                                                                    notify();
+                                                                                }}
+                                                                            >
+                                                                                Add to cart
+                                                                            </Link>
                                                                         </div>
                                                                     </div>
                                                                 </div>

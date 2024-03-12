@@ -6,6 +6,7 @@ import { BASE_URL } from '../../AdminComponent/BaseUrl'
 import Cookies from 'js-cookie'
 import CryptoJS from 'crypto-js';
 import { Alert } from '@mui/material'
+import custdecryptedUserId from '../../Utils/CustUserid'
 
 
 function LoginForm({ open, setOpen }) {
@@ -14,7 +15,7 @@ function LoginForm({ open, setOpen }) {
         email: "",
         password: "",
         firstname: "",
-        lastname:"",
+        lastname: "",
         mobile: "",
         remail: ""
     })
@@ -42,8 +43,8 @@ function LoginForm({ open, setOpen }) {
         otp4: "",
     })
 
-    
- 
+
+
 
     const [showOtp, setShowOtp] = useState(true);
     const [tostOtp, settostotp] = useState();
@@ -64,7 +65,7 @@ function LoginForm({ open, setOpen }) {
     const otp3Ref = useRef(null);
     const otp4Ref = useRef(null);
 
- 
+
 
 
 
@@ -171,59 +172,59 @@ function LoginForm({ open, setOpen }) {
 
     const handleSubmit = (e) => {
         const generatedOTP = generateOTP(4);
-      
 
-       // Change 6 to the desired length of OTP
+
+        // Change 6 to the desired length of OTP
         e.preventDefault()
 
 
-            const data = {
-                email: value.email,
-                otp: generatedOTP
-            }
+        const data = {
+            email: value.email,
+            otp: generatedOTP
+        }
 
 
-            if (value.email !== "") {
-                setLoader(true)
-                axios.post(`${BASE_URL}/customerlogin`, data)
-                    .then((res) => {
-                        setLoader(false)
-                        console.log(res.data, "000")
-                        if (res.data[0].id) {
-                            setShowOtp(true)
-                            setHide(true)
-                            const id = res.data[0].email; // Define id here
-                            const value = res.data[0].value; // Define id here
-                            const name = res.data[0].firstname;
-                            const otp = res.data[0].otp;
-                            localStorage.setItem("ecom_email", id)
-                            localStorage.setItem("ecom_value", value)
-                            localStorage.setItem("Name", name)
-                            localStorage.setItem('otp', otp)
-                        }
-                        else {
-                            setError(true)
-                            setTimeout(() => {
-                                setError(false)
-    
-                            }, 5000);
-                        }
-    
-    
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-    
-            }
-            else {
-                // setError2(true)
-                setTimeout(() => {
-                    // setError2(false)
-                }, 5000);
-            }
-        
-     
+        if (value.email !== "") {
+            setLoader(true)
+            axios.post(`${BASE_URL}/customerlogin`, data)
+                .then((res) => {
+                    setLoader(false)
+                    console.log(res.data, "000")
+                    if (res.data[0].id) {
+                        setShowOtp(true)
+                        setHide(true)
+                        const id = res.data[0].email; // Define id here
+                        const value = res.data[0].value; // Define id here
+                        const name = res.data[0].firstname;
+                        const otp = res.data[0].otp;
+                        localStorage.setItem("ecom_email", id)
+                        localStorage.setItem("ecom_value", value)
+                        localStorage.setItem("Name", name)
+                        localStorage.setItem('otp', otp)
+                    }
+                    else {
+                        setError(true)
+                        setTimeout(() => {
+                            setError(false)
+
+                        }, 5000);
+                    }
+
+
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+
+        }
+        else {
+            // setError2(true)
+            setTimeout(() => {
+                // setError2(false)
+            }, 5000);
+        }
+
+
     }
 
 
@@ -281,6 +282,28 @@ function LoginForm({ open, setOpen }) {
 
     }
 
+
+    async function updateuserid() {
+        if (Cookies.get("orderid")) {
+            const data = {
+                user_id: custdecryptedUserId(),
+                order_id: Cookies.get("orderid")
+            }
+
+            axios.post(`${BASE_URL}/updateproid`, data)
+                .then((res) => {
+                    console.log(res)
+                });
+        }
+
+    }
+
+    // useEffect(() => {
+    //     if (Cookies.get("custuserid")) {
+    //         updateuserid()
+    //     }
+    // }, [])
+
     const onhandleotpsubmit = (e) => {
         const mergedOtp = Object.values(otpvalue).join('');
         e.preventDefault();
@@ -309,6 +332,11 @@ function LoginForm({ open, setOpen }) {
 
                     }, 2000)
                 } else {
+
+                    setTimeout(() => {
+                        updateuserid()
+                        
+                    }, 1000);
                     setLoader(false)
                     setOpen(false)
                     const value = res.data[0].value;
@@ -365,7 +393,7 @@ function LoginForm({ open, setOpen }) {
                                             </div>
                                         </div>
                                         <div className="button-login" >
-                                            <input type="submit" className="button" name="Login" value="Login"  />
+                                            <input type="submit" className="button" name="Login" value="Login" />
                                         </div>
                                     </div>
                                 </form>
@@ -377,26 +405,26 @@ function LoginForm({ open, setOpen }) {
                                     <h2>Register</h2>
                                     <p className="status"></p>
                                     <div className="content">
-                                     
+
                                         <div className="username">
                                             <input type="text" className="input-text" name="firstname" id="username" placeholder="Firstname" onChange={onhandleChange} />
-                                        {errors.firstname && (<span className="text-danger">{errors.remail}</span>
-                                        )}
+                                            {errors.firstname && (<span className="text-danger">{errors.remail}</span>
+                                            )}
                                         </div>
                                         <div className="username">
                                             <input type="text" className="input-text" name="lastname" id="username" placeholder="Lastname" onChange={onhandleChange} />
-                                        {errors.lastname && (<span className="text-danger">{errors.lastname}</span>
-                                        )}
+                                            {errors.lastname && (<span className="text-danger">{errors.lastname}</span>
+                                            )}
                                         </div>
                                         <div className="username">
                                             <input type="number" className="input-text" name="mobile" id="username" placeholder="Mobile" onChange={onhandleChange} />
-                                        {errors.mobile && (<span className="text-danger">{errors.mobile}</span>
-                                        )}
+                                            {errors.mobile && (<span className="text-danger">{errors.mobile}</span>
+                                            )}
                                         </div>
                                         <div className="username">
-                                            <input type="email"  className="input-text" name="remail" id="username" placeholder="Your Email" onChange={onhandleChange} />
-                                        {errors.remail && (<span className="text-danger">{errors.remail}</span>
-                                        )}
+                                            <input type="email" className="input-text" name="remail" id="username" placeholder="Your Email" onChange={onhandleChange} />
+                                            {errors.remail && (<span className="text-danger">{errors.remail}</span>
+                                            )}
                                         </div>
 
                                         <div className="rememberme-lost">
@@ -472,7 +500,7 @@ function LoginForm({ open, setOpen }) {
                             </form>
                         </div> : null}
 
-                
+
                 </div>
             </div>}
         </div>

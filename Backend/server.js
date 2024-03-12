@@ -1513,3 +1513,126 @@ app.get('/products', async (req, res, next) => {
     res.json(error);
   }
 });
+
+app.post('/getproductDetails', (req, res) => {
+
+  let productslug = req.body.productslug;
+
+  const sql = 'select * from awt_add_product where slug = ? and deleted = 0'
+
+  con.query(sql, [productslug], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/getproductlisting', (req, res) => {
+
+  let groupslug = req.body.groupslug;
+  let catslug = req.body.catslug;
+  let subcatslug = req.body.subcatslug;
+
+
+  console.log(groupslug , "----")
+  console.log(catslug , "----")
+  console.log(subcatslug , "----")
+
+
+  let sql;
+  let param;
+
+  if (catslug == undefined && subcatslug == undefined ) {
+
+    sql = 'select * from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid  where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0'
+
+    param = [groupslug]
+  }
+  else if (subcatslug == undefined) {
+
+    sql = 'select * from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid  where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0'
+    param = [catslug]
+
+  } else {
+
+    sql = 'select * from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid  where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0'
+    param = [subcatslug]
+  }
+
+
+  con.query(sql,param, (err, data) => {
+    console.log(sql , "----")
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+app.post('/addToCart', async (req, res) => {
+  let userid = req.body.userId;
+  let orderid = req.body.orderid;
+  let date = new Date()
+
+  if (!orderid) {
+    const sql = 'INSERT INTO `order` (`userid`,`created_date`) VALUES (?,?)';
+
+    con.query(sql, [userid,date], (err, data) => {
+      if (err) {
+        res.json(err);
+      } else {
+        console.log(data.insertId);
+
+        const sql = 'INSERT INTO `awt_cart` (`orderid`,`created_date`) values (?,?)';
+
+        con.query(sql, [data.insertId , date], (err, data) => {
+
+          const insertedid = data.insertId;
+
+          const sql = 'select * from awt_cart where id = ?';
+
+          con.query(sql, [insertedid], (err, data) => {
+            if (err) {
+              return res.json(err)
+            } else {
+              return res.json(data)
+            }
+          })
+
+
+        })
+      }
+    })
+  } else if (userid && orderid) {
+    const sql = 'update order set userid = ? , updated_date = ? where order = ?';
+
+    con.query(sql, [userid,date, orderid], (err, data) => {
+      if (err) {
+        return res.json(err)
+      } else {
+        const sql = 'INSERT INTO `awt_cart`(`orderid`,`created_date`) values (?,?)';
+        con.query(sql, [orderid,date], (err, data) => {
+          if (err) {
+            return res.json(err)
+          } else {
+            return res.json(data)
+          }
+        })
+      }
+    })
+  } else {
+    const sql = 'INSERT INTO `awt_cart`(orderid) values (?)';
+    
+    con.query(sql, [orderid], (err, data) => {
+      if (err) {
+        return res.json(err)
+      } else {
+        return res.json(data)
+      }
+    })
+  }
+
+
+})
