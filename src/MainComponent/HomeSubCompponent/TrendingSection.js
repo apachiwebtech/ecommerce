@@ -11,6 +11,10 @@ import { Link } from 'react-router-dom'
 import addToCart from '../../Utils/AddtoCart'
 import SiteLoader from '../Ui/SiteLoader'
 import { Alert } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import custdecryptedUserId from '../../Utils/CustUserid';
+import { addToWishList } from '../../Store/WishList/wishlist-actions';
+import LoginForm from '../Authentication/LoginForm'
 
 var settings = {
     dots: false,
@@ -29,15 +33,20 @@ var settings = {
     ]
 };
 
-const notify = () => toast("Product added to the cart");
 
+
+const notify = () => toast("Product added to the cart");
+const wishify = () => toast("Product added to the wishlist");
 
 
 const TrendingSection = () => {
     const [data, setData] = useState([])
-
+    const [open, setOpen] = useState(false);
     const [loader, setLoader] = useState(false)
 
+    const handleToggle = (e) => {
+        setOpen(!open);
+    }
 
     async function getTrendingData() {
         axios.get(`${BASE_URL}/trending_products`)
@@ -53,6 +62,21 @@ const TrendingSection = () => {
     useEffect(() => {
         getTrendingData()
     }, [])
+
+
+    const dispatch = useDispatch();
+    const addWishList = (data) => {
+
+        const id = data;
+        const userId = custdecryptedUserId();
+        const wishData = {
+            id,
+            userId,
+        }
+
+        dispatch(addToWishList(wishData));
+
+    }
 
     return (
         <section class="section section-padding">
@@ -86,8 +110,13 @@ const TrendingSection = () => {
                                                                 </div>
                                                                 <div class="product-button">
                                                                     <div class="btn-wishlist" data-title="Wishlist">
-                                                                        <button class="product-btn">Add to wishlist</button>
+                                                                        <button class="product-btn" onClick={() => {
+                                                                            addWishList(item.id)
+                                                                            wishify()
+                                                                            handleToggle()
+                                                                        }}>Add to wishlist</button>
                                                                     </div>
+
                                                                     {/* <div class="btn-compare" data-title="Compare">
                                                                         <button class="product-btn">Compare</button>
                                                                     </div>
@@ -107,6 +136,7 @@ const TrendingSection = () => {
                                                                                 onClick={() => {
                                                                                     addToCart(item.id, item.title, item.catid, item.price, setLoader);
                                                                                     notify();
+
                                                                                 }}
                                                                             >
                                                                                 Add to cart
@@ -115,6 +145,7 @@ const TrendingSection = () => {
                                                                     </div>
                                                                 </div>
                                                             </div>
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -144,6 +175,7 @@ const TrendingSection = () => {
                                 </div>
                             </div>
                         </div>
+                        {open && <LoginForm setOpen={setOpen} open={open} />}
                     </div>
                 </div>
             </div>

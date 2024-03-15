@@ -29,6 +29,7 @@ const ProductCard = (props) => {
 
 
     const notify = () => toast("Product added to the cart");
+    const wishify = () => toast("Product added to the wishlist");
 
     // const addToCart = async (pro_id) => {
     //     console.log(pro_id, "0000")
@@ -156,7 +157,10 @@ const ProductCard = (props) => {
                         </div>
                         <div className="btn-wishlist" data-title="Wishlist">
                             {/* <Link to="/shopwishlist"><button className="product-btn">Add to wishlist</button></Link> */}
-                            <button className="product-btn" onClick={() => { addWishList(props.proid) }}>Add to wishlist</button>
+                            <button className="product-btn" onClick={() => { 
+                                addWishList(props.proid) 
+                                wishify()
+                                }}>Add to wishlist</button>
                         </div>
                     </div>
                 </div>

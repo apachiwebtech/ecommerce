@@ -21,6 +21,8 @@ export const addToWishList = (data) =>{
             const apidata = await response.json();
             console.log(apidata);
 
+            getWishList()
+
         }catch(error){
             console.log(error)
         }

@@ -51,6 +51,7 @@ import ShopWishlist from './MainComponent/Pages/ShopWishlist';
 import DetailPage from './MainComponent/Pages/DetailPage';
 import SiteLoader from './MainComponent/Ui/SiteLoader';
 import decryptedUserId from './Utils/UserID';
+import Checkout from './MainComponent/Pages/Checkout';
 
 
 const Router = createBrowserRouter([
@@ -105,6 +106,10 @@ const Router = createBrowserRouter([
       {
         path: '/profile',
         element: <ShopProduct />
+      },
+      {
+        path: '/checkout/:orderid',
+        element: <Checkout />
       },
     ]
   },

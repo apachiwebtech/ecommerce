@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import product1 from '../../assets/frontimg/product/1.jpg'
 import axios from 'axios'
-import { BASE_URL } from '../../AdminComponent/BaseUrl'
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import Cookies from 'js-cookie'
 import custdecryptedUserId from '../../Utils/CustUserid'
 import { Link } from 'react-router-dom'
-
+import empty from '../../assets/frontimg/empty.gif'
 
 const ShopCart = ({ fetchcount }) => {
   const [cart, setCart] = useState([])
   const [quantities, setQuantities] = useState({});
+
+  const orderid = Cookies.get(`orderid`)
 
 
   const handleIncrease = (itemId) => {
@@ -44,7 +46,7 @@ const ShopCart = ({ fetchcount }) => {
 
   useEffect(() => {
     getcartdata()
-   
+
   }, [])
 
   const handledelete = (id) => {
@@ -59,8 +61,8 @@ const ShopCart = ({ fetchcount }) => {
 
         if (fetchcount) {
           fetchcount(res.data[0]);
-      }
-        
+        }
+
       })
       .catch((err) => {
         console.log(err)
@@ -87,7 +89,7 @@ const ShopCart = ({ fetchcount }) => {
                     </h1>
                   </div>
                   <div class="breadcrumbs">
-                    <a href="index.html">Home</a><span class="delimiter"></span><a href="shop-grid-left.html">Shop</a><span class="delimiter"></span>Shopping Cart
+                    <Link href="index.html">Home</Link><span class="delimiter"></span><Link href="shop-grid-left.html">Shop</Link><span class="delimiter"></span>Shopping Cart
                   </div>
                 </div>
               </div>
@@ -98,6 +100,10 @@ const ShopCart = ({ fetchcount }) => {
                     <div class="shop-cart">
                       <div class="row">
                         <div class="col-xl-8 col-lg-12 col-md-12 col-12">
+                          <div className='text-center'>
+                            {cart.length == 0 && <img src={empty} alt='' />}
+                            <h3>Your cart is empty</h3>
+                          </div>
                           <form class="cart-form" action="" method="post">
                             <div class="table-responsive">
                               <table class="cart-items table" cellspacing="0">
@@ -119,11 +125,14 @@ const ShopCart = ({ fetchcount }) => {
                                     return (
                                       <tr className="cart-item">
                                         <td className="product-thumbnail">
-                                          <a href="shop-details.html">
-                                            <img width="600" height="600" src={product1} className="product-image" alt="" />
-                                          </a>
+                                          <Link href="shop-details.html">
+                                            <div style={{ width: "50px", height: "50px", overflow: "hidden", borderRadius: "50%", background: "lightgrey", display: "flex", alignItems: "center" }}>
+                                              <img style={{ height: "100%" }} src={`${IMG_URL}/productimg/` + item.image1} className="" alt="" />
+
+                                            </div>
+                                          </Link>
                                           <div className="product-name">
-                                            <a href="shop-details.html">{item.pname}</a>
+                                            <Link href="shop-details.html">{item.pname}</Link>
                                           </div>
                                         </td>
                                         <td className="product-price">
@@ -161,7 +170,7 @@ const ShopCart = ({ fetchcount }) => {
                                           <input type="text" name="coupon_code" class="input-text" id="coupon-code" value="" placeholder="Coupon code" />
                                           <button type="submit" name="apply_coupon" class="button" value="Apply coupon">Apply coupon</button>
                                         </div>
-                                        <h2><a href="shop-grid-left.html">Continue Shopping</a></h2>
+                                        <h2><Link href="shop-grid-left.html">Continue Shopping</Link></h2>
                                         <button type="submit" name="update_cart" class="button" value="Update cart">Update cart</button>
                                       </div>
                                     </td>
@@ -201,9 +210,9 @@ const ShopCart = ({ fetchcount }) => {
                               </div>
                             </div>
                             <div class="proceed-to-checkout">
-                              <a href="shop-checkout.html" class="checkout-button button">
+                              <Link to={`/checkout/${orderid}`} class="checkout-button button">
                                 Proceed to checkout
-                              </a>
+                              </Link>
                             </div>
                           </div>
                         </div>
@@ -214,9 +223,9 @@ const ShopCart = ({ fetchcount }) => {
                         <p class="cart-empty">Your cart is currently empty.</p>
                       </div>
                       <div class="return-to-shop">
-                        <a class="button" href="shop-grid-left.html">
+                        <Link class="button" href="shop-grid-left.html">
                           Return to shop
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -250,10 +259,10 @@ const ShopCart = ({ fetchcount }) => {
               <div class="content-menu_search">
                 <label>Suggested</label>
                 <ul id="menu_search" class="menu">
-                  <li><a href="#">Furniture</a></li>
-                  <li><a href="#">Home Décor</a></li>
-                  <li><a href="#">Industrial</a></li>
-                  <li><a href="#">Kitchen</a></li>
+                  <li><Link href="#">Furniture</Link></li>
+                  <li><Link href="#">Home Décor</Link></li>
+                  <li><Link href="#">Industrial</Link></li>
+                  <li><Link href="#">Kitchen</Link></li>
                 </ul>
               </div>
             </div>
@@ -276,13 +285,13 @@ const ShopCart = ({ fetchcount }) => {
                   <tr class="wishlist-item">
                     <td class="wishlist-item-remove"><span></span></td>
                     <td class="wishlist-item-image">
-                      <a href="shop-details.html">
+                      <Link href="shop-details.html">
                         <img width="600" height="600" src={product1} alt="" />
-                      </a>
+                      </Link>
                     </td>
                     <td class="wishlist-item-info">
                       <div class="wishlist-item-name">
-                        <a href="shop-details.html">Chair Oak Matt Lacquered</a>
+                        <Link href="shop-details.html">Chair Oak Matt Lacquered</Link>
                       </div>
                       <div class="wishlist-item-price">
                         <span>$150.00</span>
@@ -295,7 +304,7 @@ const ShopCart = ({ fetchcount }) => {
                       </div>
                       <div class="wishlist-item-add">
                         <div data-title="Add to cart">
-                          <a rel="nofollow" href="#" class="button">Add to cart</a>
+                          <Link rel="nofollow" href="#" class="button">Add to cart</Link>
                         </div>
                       </div>
                     </td>
@@ -303,13 +312,13 @@ const ShopCart = ({ fetchcount }) => {
                   <tr class="wishlist-item">
                     <td class="wishlist-item-remove"><span></span></td>
                     <td class="wishlist-item-image">
-                      <a href="shop-details.html">
+                      <Link href="shop-details.html">
                         <img width="600" height="600" src={product1} alt="" />
-                      </a>
+                      </Link>
                     </td>
                     <td class="wishlist-item-info">
                       <div class="wishlist-item-name">
-                        <a href="shop-details.html">Pillar Dining Table Round</a>
+                        <Link href="shop-details.html">Pillar Dining Table Round</Link>
                       </div>
                       <div class="wishlist-item-price">
                         <del aria-hidden="true"><span>$150.00</span></del>
@@ -323,7 +332,7 @@ const ShopCart = ({ fetchcount }) => {
                       </div>
                       <div class="wishlist-item-add">
                         <div data-title="Add to cart">
-                          <a rel="nofollow" href="#" class="button">Add to cart</a>
+                          <Link rel="nofollow" href="#" class="button">Add to cart</Link>
                         </div>
                       </div>
                     </td>
@@ -333,9 +342,9 @@ const ShopCart = ({ fetchcount }) => {
             </div>
             <div class="wishlist-popup-content-bot">
               <div class="wishlist-popup-content-bot-inner">
-                <a class="wishlist-page" href="shop-wishlist.html">
+                <Link class="wishlist-page" href="shop-wishlist.html">
                   Open wishlist page
-                </a>
+                </Link>
                 <span class="wishlist-continue" data-url="">
                   Continue shopping
                 </span>
@@ -351,24 +360,24 @@ const ShopCart = ({ fetchcount }) => {
         <div class="compare-popup-inner">
           <div class="compare-table">
             <div class="compare-table-inner">
-              <a href="#" id="compare-table-close" class="compare-table-close">
+              <Link href="#" id="compare-table-close" class="compare-table-close">
                 <span class="compare-table-close-icon"></span>
-              </a>
+              </Link>
               <div class="compare-table-items">
                 <table id="product-table" class="product-table">
                   <thead>
                     <tr>
                       <th>
-                        <a href="#" class="compare-table-settings">Settings</a>
+                        <Link href="#" class="compare-table-settings">Settings</Link>
                       </th>
                       <th>
-                        <a href="shop-details.html">Chair Oak Matt Lacquered</a> <span class="remove">remove</span>
+                        <Link href="shop-details.html">Chair Oak Matt Lacquered</Link> <span class="remove">remove</span>
                       </th>
                       <th>
-                        <a href="shop-details.html">Zunkel Schwarz</a> <span class="remove">remove</span>
+                        <Link href="shop-details.html">Zunkel Schwarz</Link> <span class="remove">remove</span>
                       </th>
                       <th>
-                        <a href="shop-details.html">Namaste Vase</a> <span class="remove">remove</span>
+                        <Link href="shop-details.html">Namaste Vase</Link> <span class="remove">remove</span>
                       </th>
                     </tr>
                   </thead>
@@ -376,19 +385,19 @@ const ShopCart = ({ fetchcount }) => {
                     <tr class="tr-image">
                       <td class="td-label">Image</td>
                       <td>
-                        <a href="shop-details.html">
+                        <Link href="shop-details.html">
                           <img width="600" height="600" src={product1} alt="" />
-                        </a>
+                        </Link>
                       </td>
                       <td>
-                        <a href="shop-details.html">
+                        <Link href="shop-details.html">
                           <img width="600" height="600" src="media/product/1.jpg" alt="" />
-                        </a>
+                        </Link>
                       </td>
                       <td>
-                        <a href="shop-details.html">
+                        <Link href="shop-details.html">
                           <img width="600" height="600" src="media/product/2.jpg" alt="" />
-                        </a>
+                        </Link>
                       </td>
                     </tr>
                     <tr class="tr-sku">
@@ -421,17 +430,17 @@ const ShopCart = ({ fetchcount }) => {
                       <td class="td-label">Add to cart</td>
                       <td>
                         <div data-title="Add to cart">
-                          <a href="#" class="button">Add to cart</a>
+                          <Link href="#" class="button">Add to cart</Link>
                         </div>
                       </td>
                       <td>
                         <div data-title="Add to cart">
-                          <a href="#" class="button">Add to cart</a>
+                          <Link href="#" class="button">Add to cart</Link>
                         </div>
                       </td>
                       <td>
                         <div data-title="Add to cart">
-                          <a href="#" class="button">Add to cart</a>
+                          <Link href="#" class="button">Add to cart</Link>
                         </div>
                       </td>
                     </tr>

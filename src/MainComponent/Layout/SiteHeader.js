@@ -28,7 +28,7 @@ const SiteHeader = (cartCount) => {
 			})
 	}
 
-	console.log(cartCount , "dddd")
+	console.log(cartCount, "dddd")
 
 	async function getcatData() {
 		axios.get(`${BASE_URL}/category_data`)
@@ -75,8 +75,8 @@ const SiteHeader = (cartCount) => {
 
 	return (
 		<div>
-			<header id="site-header" className="site-header header-v1" style={{background :"#F8E9D5"}}>
-				
+			<header id="site-header" className="site-header header-v1" style={{ background: "#F8E9D5" }}>
+
 				<div className="header-mobile">
 					<div className="section-padding">
 						<div className="section-container">
@@ -192,7 +192,8 @@ const SiteHeader = (cartCount) => {
 										<div className="site-navigation">
 											<nav id="main-navigation">
 												<ul id="menu-main-menu" className="menu">
-													<li className="level-0 menu-item  mega-menu current-menu-item">
+													<li className="level-0 menu-item  mega-menu">
+														{/* current-menu-item it is class for active */}
 														<Link ><span className="menu-item-text">Home</span></Link>
 
 													</li>
@@ -228,7 +229,7 @@ const SiteHeader = (cartCount) => {
 															{cat.filter((item) => (item.group_id == banner[1]?.id)).map((item) => {
 																return (
 																	<li className="level-1 menu-item menu-item-has-children">
-																		<Link  to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}><span className="menu-item-text">{item.title}</span></Link>
+																		<Link to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}><span className="menu-item-text">{item.title}</span></Link>
 																		<ul className="sub-menu">
 																			{subcat.filter((ele) => ele.cat_id == item.id).map((ele) => {
 																				return (
@@ -247,7 +248,7 @@ const SiteHeader = (cartCount) => {
 
 
 														</ul>
-													
+
 													</li>
 													<li className="level-0 menu-item menu-item-has-children">
 														<Link to={`/shoproduct/${banner[2]?.slug}`}><span className="menu-item-text">{banner[2]?.title}</span></Link>
@@ -293,10 +294,10 @@ const SiteHeader = (cartCount) => {
 													<Link className="active-login" onClick={handleToggle}>Login</Link> : <Link className="active-login" onClick={handleLogout}>Logout</Link>} */}
 												{open && <LoginForm setOpen={setOpen} open={open} />}
 
-												{!custuser_id  ? <Link className="active-login" onClick={handleToggle}>Login</Link> :	<Link to="/profile" className="active-login" ><i className="icon-user"></i></Link>  }	
-											
+												{!custuser_id ? <Link className="active-login" onClick={handleToggle}>Login</Link> : <Link to="/profile" className="active-login" ><i className="icon-user"></i></Link>}
 
-											
+
+
 											</div>
 
 
