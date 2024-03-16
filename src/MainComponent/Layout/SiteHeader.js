@@ -294,7 +294,7 @@ const SiteHeader = (cartCount) => {
 													<Link className="active-login" onClick={handleToggle}>Login</Link> : <Link className="active-login" onClick={handleLogout}>Logout</Link>} */}
 												{open && <LoginForm setOpen={setOpen} open={open} />}
 
-												{!custuser_id ? <Link className="active-login" onClick={handleToggle}>Login</Link> : <Link to="/profile" className="active-login" ><i className="icon-user"></i></Link>}
+												{!custuser_id ? <Link  to="#" className="active-login" onClick={handleToggle}>Login</Link> : <Link to="/profile" className="active-login" ><i className="icon-user"></i></Link>}
 
 
 

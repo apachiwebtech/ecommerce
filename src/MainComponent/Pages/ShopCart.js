@@ -6,13 +6,17 @@ import Cookies from 'js-cookie'
 import custdecryptedUserId from '../../Utils/CustUserid'
 import { Link } from 'react-router-dom'
 import empty from '../../assets/frontimg/empty.gif'
+import LoginForm from '../Authentication/LoginForm'
 
 const ShopCart = ({ fetchcount }) => {
   const [cart, setCart] = useState([])
   const [quantities, setQuantities] = useState({});
+  const [open, setOpen] = useState(false);
 
   const orderid = Cookies.get(`orderid`)
-
+  const handleToggle = (e) => {
+    setOpen(!open);
+}
 
   const handleIncrease = (itemId) => {
     setQuantities(prevQuantities => ({
@@ -125,14 +129,14 @@ const ShopCart = ({ fetchcount }) => {
                                     return (
                                       <tr className="cart-item">
                                         <td className="product-thumbnail">
-                                          <Link href="shop-details.html">
+                                          <Link  >
                                             <div style={{ width: "50px", height: "50px", overflow: "hidden", borderRadius: "50%", background: "lightgrey", display: "flex", alignItems: "center" }}>
                                               <img style={{ height: "100%" }} src={`${IMG_URL}/productimg/` + item.image1} className="" alt="" />
 
                                             </div>
                                           </Link>
                                           <div className="product-name">
-                                            <Link href="shop-details.html">{item.pname}</Link>
+                                            <Link >{item.pname}</Link>
                                           </div>
                                         </td>
                                         <td className="product-price">
@@ -210,9 +214,13 @@ const ShopCart = ({ fetchcount }) => {
                               </div>
                             </div>
                             <div class="proceed-to-checkout">
-                              <Link to={`/checkout/${orderid}`} class="checkout-button button">
+                            {Cookies.get(`custuserid`) ? <Link to={`/checkout/${orderid}`} class="checkout-button button">
                                 Proceed to checkout
-                              </Link>
+                              </Link>:  <Link onClick={() => handleToggle()} class="checkout-button button">
+                                Proceed to checkout
+                              </Link>}
+                            
+
                             </div>
                           </div>
                         </div>
@@ -235,7 +243,7 @@ const ShopCart = ({ fetchcount }) => {
           </div>
         </div>
 
-
+        {open && <LoginForm setOpen={setOpen} open={open} />}
       </div>
 
 

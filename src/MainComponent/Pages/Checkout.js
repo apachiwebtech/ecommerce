@@ -8,6 +8,7 @@ const Checkout = () => {
     const [cart, setCart] = useState([])
     const [subtotal  ,setSubtotal] = useState("")
     const [copy, setCopy] = useState(false)
+
     const [value, setValue] = useState({
         firstname: "",
         lastname: "",
@@ -85,6 +86,7 @@ const Checkout = () => {
             scity: value.scity,
             sstate: value.sstate,
             spostcode: value.spostcode,
+            order_id : orderid
         }
 
         axios.post(`${BASE_URL}/place_order`, data)

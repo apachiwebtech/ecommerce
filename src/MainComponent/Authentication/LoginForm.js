@@ -47,13 +47,14 @@ function LoginForm({ open, setOpen }) {
 
 
     const [showOtp, setShowOtp] = useState(true);
-    const [tostOtp, settostotp] = useState();
+    const [tostOtp, settostotp] = useState('');
     const [errors, setErrors] = useState({});
-    const [err, setErr] = useState("")
     const [error, setError] = useState(false)
     const [loader, setLoader] = useState(false)
     const [hide, setHide] = useState(false)
     const [emailexist, setExist] = useState('')
+    const [notexist, setNotExist] = useState('')
+
     const encryptionKey = 'secret-key';
 
 
@@ -172,7 +173,7 @@ function LoginForm({ open, setOpen }) {
 
     const handleSubmit = (e) => {
         const generatedOTP = generateOTP(4);
-
+        settostotp(generateOTP)
 
         // Change 6 to the desired length of OTP
         e.preventDefault()
@@ -193,6 +194,7 @@ function LoginForm({ open, setOpen }) {
                     if (res.data[0].id) {
                         setShowOtp(true)
                         setHide(true)
+                        settostotp(res.data[0].otp)
                         const id = res.data[0].email; // Define id here
                         const value = res.data[0].value; // Define id here
                         const name = res.data[0].firstname;
@@ -203,6 +205,7 @@ function LoginForm({ open, setOpen }) {
                         localStorage.setItem('otp', otp)
                     }
                     else {
+                        setNotExist(res.data)
                         setError(true)
                         setTimeout(() => {
                             setError(false)
@@ -230,7 +233,7 @@ function LoginForm({ open, setOpen }) {
 
     const onhandleregistersubmit = (e) => {
         const generatedOTP = generateOTP(4);
-
+     
         e.preventDefault();
 
         const data = {
@@ -247,10 +250,11 @@ function LoginForm({ open, setOpen }) {
             axios.post(`${BASE_URL}/register`, data)
                 .then((res) => {
                     setLoader(false)
+                   
                     if (res.data[0].email) {
                         setShowOtp(true)
                         setHide(true)
-
+                        settostotp(res.data[0].otp)
                         const id = res.data[0].email; // Define id here
                         const value = res.data[0].value; // Define id here
                         const firstname = res.data[0].firstname;
@@ -372,7 +376,8 @@ function LoginForm({ open, setOpen }) {
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                <form onSubmit={handleSubmit} id="login_ajax" method="post" className="login">
+                                
+                                <form onSubmit={handleSubmit} id="login_ajax" method="post" style={{padding :"20px 30px 30px"}} className="login">
 
                                     <h2>Sign in</h2>
                                     <p className="status"></p>
@@ -383,7 +388,7 @@ function LoginForm({ open, setOpen }) {
                                             <input type="text" required="required" className="input-text" name="email" id="username" placeholder="Your Email" onChange={onhandleChange} />
                                         </div>
 
-                                        <div className="rememberme-lost">
+                                        {/* <div className="rememberme-lost">
                                             <div className="rememberme">
                                                 <input name="rememberme" type="checkbox" id="rememberme" value="forever" />
                                                 <label htmlFor="rememberme" className="inline">Remember me</label>
@@ -391,16 +396,17 @@ function LoginForm({ open, setOpen }) {
                                             <div className="lost_password">
                                                 <Link href="forgot-password.html">Lost your password?</Link>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div className="button-login" >
                                             <input type="submit" className="button" name="Login" value="Login" />
                                         </div>
+                                        <span className='text-danger'>{notexist}</span>
                                     </div>
                                 </form>
                             </div>
 
                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                <form onSubmit={onhandleregistersubmit} id="login_ajax" method="post" className="login">
+                                <form onSubmit={onhandleregistersubmit} id="login_ajax" method="post" style={{padding :"20px 30px 30px"}} className="login">
 
                                     <h2>Register</h2>
                                     <p className="status"></p>
@@ -427,7 +433,7 @@ function LoginForm({ open, setOpen }) {
                                             )}
                                         </div>
 
-                                        <div className="rememberme-lost">
+                                        {/* <div className="rememberme-lost">
                                             <div className="rememberme">
                                                 <input name="rememberme" type="checkbox" id="rememberme" value="forever" />
                                                 <label htmlFor="rememberme" className="inline">Remember me</label>
@@ -435,10 +441,11 @@ function LoginForm({ open, setOpen }) {
                                             <div className="lost_password">
                                                 <Link href="forgot-password.html">Lost your password?</Link>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div className="button-login" >
                                             <input type="submit" className="button" name="Register" value="Register" />
                                         </div>
+                                        <span className='text-danger'>{emailexist}</span>
 
                                     </div>
                                 </form>

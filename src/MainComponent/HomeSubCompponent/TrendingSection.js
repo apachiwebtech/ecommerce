@@ -15,6 +15,8 @@ import { useDispatch } from 'react-redux';
 import custdecryptedUserId from '../../Utils/CustUserid';
 import { addToWishList } from '../../Store/WishList/wishlist-actions';
 import LoginForm from '../Authentication/LoginForm'
+import { Cookie } from '@mui/icons-material';
+import Cookies from 'js-cookie';
 
 var settings = {
     dots: false,
@@ -110,11 +112,17 @@ const TrendingSection = () => {
                                                                 </div>
                                                                 <div class="product-button">
                                                                     <div class="btn-wishlist" data-title="Wishlist">
-                                                                        <button class="product-btn" onClick={() => {
+
+                                                                        {!Cookies.get(`custuserid`)?   <button class="product-btn" onClick={() => {
+                                                                        
+                                                                            handleToggle()
+                                                                        }}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
                                                                             addWishList(item.id)
                                                                             wishify()
-                                                                            handleToggle()
-                                                                        }}>Add to wishlist</button>
+                                                                     
+                                                                        }}>Add to wishlist</button>}
+                                                                      
+
                                                                     </div>
 
                                                                     {/* <div class="btn-compare" data-title="Compare">

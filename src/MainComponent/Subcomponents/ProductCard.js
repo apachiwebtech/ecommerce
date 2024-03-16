@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import product1 from '../../assets/frontimg/product/1.jpg'
 import { Link } from 'react-router-dom'
@@ -11,9 +11,11 @@ import CryptoJS from 'crypto-js';
 import custdecryptedUserId from '../../Utils/CustUserid';
 import addToCart from '../../Utils/AddtoCart';
 import { ToastContainer, toast } from 'react-toastify';
+import LoginForm from '../Authentication/LoginForm';
 const ProductCard = (props) => {
 
     const dispatch = useDispatch();
+    const [open, setOpen] = useState(false);
     const addWishList = (data) => {
 
         const id = data;
@@ -25,6 +27,10 @@ const ProductCard = (props) => {
 
         dispatch(addToWishList(wishData));
 
+    }
+
+    const handleToggle = (e) => {
+        setOpen(!open);
     }
 
 
@@ -157,10 +163,21 @@ const ProductCard = (props) => {
                         </div>
                         <div className="btn-wishlist" data-title="Wishlist">
                             {/* <Link to="/shopwishlist"><button className="product-btn">Add to wishlist</button></Link> */}
-                            <button className="product-btn" onClick={() => { 
-                                addWishList(props.proid) 
+                            {/* <button className="product-btn" onClick={() => {
+                                addWishList(props.proid)
                                 wishify()
-                                }}>Add to wishlist</button>
+                            }}>Add to wishlist</button> */}
+
+
+                            {!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
+
+                                handleToggle()
+                            }}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
+                                addWishList(props.proid)
+                                wishify()
+
+                            }}>Add to wishlist</button>}
+                            
                         </div>
                     </div>
                 </div>
@@ -175,6 +192,8 @@ const ProductCard = (props) => {
                         }
                     </div>
                 </div>
+
+                {open && <LoginForm setOpen={setOpen} open={open} />}
             </div>
         </div>
     )

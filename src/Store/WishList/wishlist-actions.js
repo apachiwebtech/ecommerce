@@ -30,7 +30,7 @@ export const addToWishList = (data) =>{
 }
 
 export const getWishList = (data)=>{
-    console.log(data,'USERID');
+  
 
     return async (dispatch)=>{
         try{
