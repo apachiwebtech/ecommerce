@@ -52,7 +52,8 @@ const Product = () => {
   const [cat, setCatData] = useState([])
   const [error, setError] = useState({})
   const [group ,setGroupData] = useState([])
-  // const [selectedOption, setSelectedCat] = useState(null);
+  const [selectedOption, setSelectedCat] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedOptionvendor, setSelectedVendor] = useState(null);
   const [selectedOptionBrand, setSelectedBrand] = useState(null);
   const [selectedOptionSub, setSelectedSub] = useState(null);
@@ -157,7 +158,7 @@ const Product = () => {
 
     axios.post(`${BASE_URL}/product_status`, data)
       .then((res) => {
-        console.log(res)
+        // console.log(res)
         // setProductData()
       })
 
@@ -167,7 +168,7 @@ const Product = () => {
   async function getGroupData() {
     axios.get(`${BASE_URL}/group_data`)
       .then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         setGroupData(res.data)
       })
       .catch((err) => {
@@ -202,6 +203,25 @@ const Product = () => {
       })
   }
 
+  async function getCatData() {
+    axios.get(`${BASE_URL}/category_data`)
+        .then((res) => {
+            setCatData(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+async function getsubcatData() {
+  axios.get(`${BASE_URL}/subcategory_data`)
+      .then((res) => {
+        setsubcategory(res.data)
+      })
+      .catch((err) => {
+          console.log(err)
+      })
+}
 
 
 
@@ -215,6 +235,8 @@ const Product = () => {
     getGroupData() 
     getBrandData()
     getVendordata()
+    getCatData()
+    getsubcatData() 
   }, [update_id])
 
 
@@ -239,7 +261,7 @@ const Product = () => {
     if (uid.v_id) {
       const selected = vendor.find(option => option.id === uid.v_id);
       setSelectedVendor(selected);
-      selectedVendorId(selected)
+      selectedVendorId(uid.v_id)
     }
 
   }, [uid, vendor,vendor_id]);
@@ -258,12 +280,12 @@ const Product = () => {
     if (uid.b_id) {
       const selected = brand.find(option => option.id === uid.b_id);
       setSelectedBrand(selected);
-      selectedBrandId(selected)
+      selectedBrandId(uid.b_id);
     }
 
   }, [uid, brand,brand_id]);
 
-  console.log(brand_id,"juu")
+  // console.log(brand_id,"juu")
 
   const HandlesubcatChange = (selectedValue) => {
     if (selectedValue) {
@@ -273,15 +295,15 @@ const Product = () => {
     }
   };
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   if (uid.scatid) {
-  //     const selected = subcat.find(option => option.id === uid.scatid);
-  //     console.log(selected, "///")
-  //     setSelectedSub(selected);
-  //   }
+    if (uid.scatid) {
+      const selected = subcat.find(option => option.id === uid.scatid);
+      setSelectedSub(selected);
+      selectedsubcatId(uid.scatid);
+    }
 
-  // }, [uid, subcat]);
+  }, [uid, subcat]);
 
 
   const HandleGroupChange = (selectedValue) => {
@@ -289,6 +311,10 @@ const Product = () => {
     const val = selectedValue.id 
    
     selectedgroupId(val)
+    setSelectedGroup(selectedValue);
+    // setSelectedSub();
+    // setsubcategory([]);
+
 
     const data = {
       groupid: val
@@ -306,13 +332,24 @@ const Product = () => {
    
   };
 
+  useEffect(() => {
+    // console.log(uid,"??");
+    
+    if (uid.groupid) {
+      const selected = group.find(option => option.id === uid.groupid);
+      setSelectedGroup(selected);
+      selectedgroupId(uid.groupid)
+    }
+    
+  }, [uid, group]);
+
 
 
 
   const HandleCatChange = (selectedValue) => {
 
     const val = selectedValue.id
-    // setSelectedCat(selectedValue)
+    setSelectedCat(selectedValue)
     selectedId(val)
     const data = {
       catid: val
@@ -328,14 +365,15 @@ const Product = () => {
       })
   };
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   // If you have received the ID from the API, find the option that matches the ID
-  //   if (uid.catid) {
-  //     const selected = cat.find(option => option.id === uid.catid);
-  //     setSelectedCat(selected);
-  //   }
-  // }, [uid, cat]);
+    // If you have received the ID from the API, find the option that matches the ID
+    if (uid.catid) {
+      const selected = cat.find(option => option.id === uid.catid);
+      setSelectedCat(selected);
+      selectedId(uid.catid);
+    }
+  }, [uid, cat]);
 
   async function ImageBase64(file) {
     const reader = new FileReader();
@@ -369,26 +407,24 @@ const Product = () => {
     if (validateForm()) {
       const formdata = new FormData()
       formdata.append('uid', uid.id)
+      
       if (update_id == ":update_id") {
         formdata.append('v_id', vendor_id)
+        formdata.append('b_id', brand_id)
+        formdata.append('subcatid', subcatid)
+        formdata.append('catid', catid)
+        formdata.append('groupid', groupid)
         
       }else{
-        formdata.append('v_id', vendor_id.id)
+        formdata.append('v_id', vendor_id)
+        formdata.append('b_id', brand_id)
+        formdata.append('catid', catid )
+        formdata.append('groupid', groupid)
+        formdata.append('subcatid', subcatid )
         
       }
       formdata.append('title', value.title)
       formdata.append('slug', value.slug)
-      formdata.append('catid', catid)
-      formdata.append('groupid', groupid)
-
-      if (update_id == ":update_id") {
-
-        formdata.append('b_id', brand_id)
-      }else{
-        formdata.append('b_id', brand_id.id)
-        
-      }
-      formdata.append('subcatid', subcatid)
       formdata.append('price', value.price)
       formdata.append('d_price', value.discountedprice)
       formdata.append('description', value.description)
@@ -657,7 +693,7 @@ const Product = () => {
                               disablePortal
                               id="combo-box-demo"
                               options={group}
-                              // value={selectedOption}
+                              value={selectedGroup}
                               placeholder="Group"
                               getOptionLabel={(option) => option.title}
                               getOptionSelected={(option, value) => option.id === value.id}
@@ -680,7 +716,7 @@ const Product = () => {
                               disablePortal
                               id="combo-box-demo"
                               options={cat}
-                              // value={selectedOption}
+                              value={selectedOption}
                               getOptionLabel={(option) => option.title}
                               getOptionSelected={(option, value) => option.id === value.id}
                               sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
