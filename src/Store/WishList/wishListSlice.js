@@ -14,6 +14,7 @@ const wishListSlice = createSlice({
 
             console.log(newProduct);
         },
+        
         getWishList(state, action){
             const newList = action.payload;
             state.wishList = newList;

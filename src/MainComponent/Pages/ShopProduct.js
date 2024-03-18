@@ -17,12 +17,20 @@ import { getProducts } from '../../Store/Products/product-actions';
 import ProductCard from '../Subcomponents/ProductCard'
 import { Link, useParams } from 'react-router-dom'
 import axios from 'axios'
-import { BASE_URL } from '../../AdminComponent/BaseUrl'
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
+import { Slider } from '@mui/material'
 
 
 const ShopProduct = () => {
 
-    const [products , setProducts] = useState([])
+    const [products, setProducts] = useState([])
+    const [group, setGroup] = useState([])
+    const [header , SiteHeader] = useState()
+
+    function valuetext(value) {
+        return `₹${value}`;
+    }
+
 
     // const dispatch = useDispatch();
     // const products = useSelector((state) => state.products.products);
@@ -32,7 +40,7 @@ const ShopProduct = () => {
     // }, [dispatch]);
 
     const { groupslug, catslug, subcatslug } = useParams()
-  
+
 
     async function getproductdetails() {
         const data = {
@@ -45,6 +53,18 @@ const ShopProduct = () => {
             .then((res) => {
                 console.log(res)
                 setProducts(res.data)
+                SiteHeader(res.data[0].title)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    async function getGroupData() {
+        axios.get(`${BASE_URL}/group_data`)
+            .then((res) => {
+                console.log(res)
+                setGroup(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -54,24 +74,25 @@ const ShopProduct = () => {
 
     useEffect(() => {
         getproductdetails()
-    }, [groupslug,catslug,subcatslug])
+        getGroupData()
+    }, [groupslug, catslug, subcatslug])
 
 
 
     return (
         <div><div id="site-main" className="site-main">
             <div id="main-content" className="main-content">
-         
+
                 <div id="primary" className="content-area">
                     <div id="title" className="page-title">
                         <div className="section-container">
                             <div className="content-title-heading">
                                 <h1 className="text-title-heading">
-                                    Bed &amp; Bath
+                                    {header}
                                 </h1>
                             </div>
                             <div className="breadcrumbs">
-                                <a href="index.html">Home</a><span className="delimiter"></span><a href="shop-grid-left.html">Shop</a><span className="delimiter"></span>Bed &amp; Bath
+                                <a href="index.html">Home</a><span className="delimiter"></span><a href="shop-grid-left.html">Shop</a><span className="delimiter"></span> {header}
                             </div>
                         </div>
                     </div>
@@ -87,24 +108,15 @@ const ShopProduct = () => {
                                             <div className="block-content">
                                                 <div className="product-cats-list">
                                                     <ul>
-                                                        <li className="current">
-                                                            <a href="shop-grid-left.html">Bed & Bath <span className="count">9</span></a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="shop-grid-left.html">Furniture <span className="count">4</span></a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="shop-grid-left.html">Home Décor <span className="count">3</span></a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="shop-grid-left.html">Lighting <span className="count">6</span></a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="shop-grid-left.html">Office <span className="count">2</span></a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="shop-grid-left.html">Outdoor <span className="count">4</span></a>
-                                                        </li>
+                                                        {group.map((item) => {
+                                                            return (
+                                                                <li className="current">
+                                                                    <Link to={`/shoproduct/${item.slug}`}>{item.title}<span className="count">9</span></Link>
+                                                                </li>
+                                                            )
+                                                        })}
+
+
                                                     </ul>
                                                 </div>
                                             </div>
@@ -114,14 +126,18 @@ const ShopProduct = () => {
                                         <div className="block block-product-filter">
                                             <div className="block-title"><h2>Price</h2></div>
                                             <div className="block-content">
-                                                <div id="slider-range" className="price-filter-wrap">
-                                                    <div className="filter-item price-filter">
-                                                        <div className="layout-slider">
-                                                            <input id="price-filter" name="price" value="0-100" />
-                                                        </div>
-                                                        <div className="layout-slider-settings"></div>
-                                                    </div>
-                                                </div>
+
+                                                <Slider
+                                                    aria-label="Temperature"
+                                                    defaultValue={30}
+                                                    getAriaValueText={valuetext}
+                                                    valueLabelDisplay="auto"
+                                                    shiftStep={30}
+                                                    step={10}
+                                                    marks
+                                                    min={10}
+                                                    max={110}
+                                                />
                                             </div>
                                         </div>
 
@@ -142,11 +158,17 @@ const ShopProduct = () => {
                                             <div className="block-title"><h2>Brands</h2></div>
                                             <div className="block-content">
                                                 <ul className="filter-items image">
+                                                    {products.map((brand) => {  
+                                                        return (
+
+                                                            <li><span><img src={brand1} alt="Brand" /></span></li>
+                                                        )
+                                                    })}
+
+                                                    {/* <li><span><img src={brand1} alt="Brand" /></span></li>
                                                     <li><span><img src={brand1} alt="Brand" /></span></li>
                                                     <li><span><img src={brand1} alt="Brand" /></span></li>
-                                                    <li><span><img src={brand1} alt="Brand" /></span></li>
-                                                    <li><span><img src={brand1} alt="Brand" /></span></li>
-                                                    <li><span><img src={brand1} alt="Brand" /></span></li>
+                                                    <li><span><img src={brand1} alt="Brand" /></span></li> */}
                                                 </ul>
                                             </div>
                                         </div>
@@ -158,30 +180,27 @@ const ShopProduct = () => {
                                                 <ul className="products-list">
                                                     {products.filter((featured) => featured.featured === 1).map((featured) => {
                                                         return (
-                                                            <Link to="/detailpage" >
-                                                                <li className="product-item">
+                                                            <Link to={`/detailpage/${featured.slug}`} >
+                                                                <li className="product-item my-2">
                                                                     <a href="shop-details.html" className="product-image">
-                                                                        <img src={product1} alt='product6' />
+                                                                        <img src={`${IMG_URL}/productimg/` + featured.image1} alt='product6' />
                                                                     </a>
                                                                     <div className="product-content">
                                                                         <h2 className="product-title">
-                                                                            <a href="shop-details.html">
-                                                                                {featured.title}
-                                                                            </a>
+                                                                            <Link to={`/detailpage/${featured.slug}`} >
+                                                                                {featured.product_title}
+                                                                            </Link>
                                                                         </h2>
                                                                         <div className="rating small">
                                                                             <div className="star star-5"></div>
                                                                         </div>
-                                                                        {/* <span className="price">
-                                                        <del aria-hidden="true"><span>$150.00</span></del> 
-                                                        <ins><span>$100.00</span></ins>
-                                                    </span> */}
+
                                                                         {featured.disc_price ?
                                                                             (<span className="price">
-                                                                                <del aria-hidden="true"><span>{featured.price}</span></del>
-                                                                                <ins><span>{featured.disc_price}</span></ins>
+                                                                                <del aria-hidden="true"><span>₹{featured.price}</span></del>
+                                                                                <ins><span>₹{featured.disc_price}</span></ins>
                                                                             </span>) :
-                                                                            (<span className="price">{featured.price}</span>)
+                                                                            (<span className="price">₹{featured.price}</span>)
                                                                         }
                                                                     </div>
                                                                 </li>

@@ -5,7 +5,7 @@ import Slider from 'react-slick';
 // import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import axios from 'axios';
-import { BASE_URL } from '../../AdminComponent/BaseUrl';
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 import { Link, useParams } from 'react-router-dom';
 import addToCart from '../../Utils/AddtoCart';
 import { ToastContainer, toast } from 'react-toastify';
@@ -32,8 +32,12 @@ const DetailPage = () => {
 
 	const { productslug } = useParams()
 	const [productdata, setProductdata] = useState([])
+	const [image, setProductImg] = useState([])
 	const [value, setValue] = useState(0)
+	const [click, setClick] = useState('');
 	const notify = () => toast("Product added to the cart");
+
+
 
 
 	async function getProductDetails() {
@@ -67,6 +71,7 @@ const DetailPage = () => {
 		axios.post(`${BASE_URL}/product_img_data`, data)
 			.then((res) => {
 				console.log(res)
+				setProductImg(res.data)
 
 			})
 			.catch((err) => {
@@ -122,31 +127,18 @@ const DetailPage = () => {
 																		<div class="content-thumbnail-scroll">
 																			<div class="image-thumbnail slick-carousel slick-vertical" data-asnavfor=".image-additional" data-centermode="true" data-focusonselect="true" data-columns4="5" data-columns3="4" data-columns2="4" data-columns1="4" data-columns="4" data-nav="true" data-vertical="&quot;true&quot;" data-verticalswiping="&quot;true&quot;">
 																				<Slider {...settings2}>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={product2} alt="" />
-																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={product2} alt="" />
-																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={product2} alt="" />
-																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={product2} alt="" />
-																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={product2} alt="" />
-																						</span>
-																					</div>
+																					{image.filter((item) => (item.colorcode).includes(click)).map((ele) => {
+																						return (
+																							<div class="img-item slick-slide">
+																								<span class="img-thumbnail-scroll">
+																									<img width="600" height="600" src={`${IMG_URL}/productimg/` + ele.image1} alt="" />
+																								</span>
+																							</div>
+																						)
+																					})}
+
+
+
 																				</Slider>
 																			</div>
 																		</div>
@@ -158,21 +150,14 @@ const DetailPage = () => {
 																		<div class="scroll-image main-image">
 																			<div class="image-additional slick-carousel" data-asnavfor=".image-thumbnail" data-fade="true" data-columns4="1" data-columns3="1" data-columns2="1" data-columns1="1" data-columns="1" data-nav="true">
 																				<Slider {...settings}>
-																					<div class="img-item slick-slide">
-																						<img width="600" height="600" src={product2} alt="" />
-																					</div>
-																					<div class="img-item slick-slide">
-																						<img width="600" height="600" src={product2} alt="" />
-																					</div>
-																					<div class="img-item slick-slide">
-																						<img width="600" height="600" src={product2} alt="" />
-																					</div>
-																					<div class="img-item slick-slide">
-																						<img width="600" height="600" src={product2} alt="" />
-																					</div>
-																					<div class="img-item slick-slide">
-																						<img width="600" height="600" src={product2} alt="" />
-																					</div>
+																					{image.filter((item) => (item.colorcode).includes(click)).map((ele) => {
+																						return (
+																							<div class="img-item slick-slide">
+																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + ele.image1} alt="" /> 
+																							</div>
+
+																						)
+																					})}
 																				</Slider>
 																			</div>
 																		</div>
@@ -214,9 +199,23 @@ const DetailPage = () => {
 																				<td class="label">Color</td>
 																				<td class="attributes">
 																					<ul class="colors">
-																						<li><span class="color-1"></span></li>
-																						<li><span class="color-2"></span></li>
-																						<li><span class="color-3"></span></li>
+																						<div>
+																							{image.map((item, index) => (
+																								<li key={index}>
+																									<button
+																										className="color-1"
+																										style={{ background: `${item.colorcode}`, width: "50px", height: "50px" }}
+																										value={item.colorcode}
+																										onClick={(e) => {
+																											setClick(e.target.value)
+
+																										}}
+																									></button>
+																								</li>
+																							))}
+																						</div>
+
+
 																					</ul>
 																				</td>
 																			</tr>
@@ -226,7 +225,7 @@ const DetailPage = () => {
 																<div class="buttons">
 																	<div class="add-to-cart-wrap">
 																		<div class="quantity">
-																			<button type="button" onClick={() =>{ setValue(value + 1)}} class="plus">+</button>
+																			<button type="button" onClick={() => { setValue(value + 1) }} class="plus">+</button>
 
 																			<input type="number" class="qty" step="1" min="0" max="" name="quantity" value={value} title="Qty" size="4" placeholder="" inputmode="numeric" autocomplete="off" />
 

@@ -6,11 +6,13 @@ import product1 from '../../assets/frontimg/product/1.jpg'
 import blog1 from '../../assets/frontimg/blog/1.jpg';
 import blog2 from '../../assets/frontimg/blog/2.jpg';
 import blog3 from '../../assets/frontimg/blog/3.jpg';
+import { getCartCount, } from '../../Store/Cart/cart-action';
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import LoginForm from '../Authentication/LoginForm';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const SiteHeader = (cartCount) => {
 	const [banner, setBanner] = useState([])
@@ -20,7 +22,7 @@ const SiteHeader = (cartCount) => {
 	async function getTrendingData() {
 		axios.get(`${BASE_URL}/group_data`)
 			.then((res) => {
-				console.log(res)
+				// console.log(res)
 				setBanner(res.data)
 			})
 			.catch((err) => {
@@ -28,12 +30,11 @@ const SiteHeader = (cartCount) => {
 			})
 	}
 
-	console.log(cartCount, "dddd")
 
 	async function getcatData() {
 		axios.get(`${BASE_URL}/category_data`)
 			.then((res) => {
-				console.log(res.data)
+				// console.log(res.data)
 				setCatData(res.data)
 			})
 			.catch((err) => {
@@ -59,6 +60,7 @@ const SiteHeader = (cartCount) => {
 		getsubcatData()
 		getcatData()
 		getTrendingData()
+		
 	}, [])
 
 	const [open, setOpen] = useState(false);
@@ -66,10 +68,21 @@ const SiteHeader = (cartCount) => {
 		setOpen(!open);
 	}
 
-	const handleLogout = (e) => {
-		Cookies.remove('userid');
-	}
 
+
+	const dispatch = useDispatch();
+    const count = useSelector((state) => state.cartCount);
+
+	console.log(count,"6666")
+
+
+
+
+	useEffect(()=>{
+		dispatch(getCartCount())
+	},[])
+
+	
 
 
 
@@ -100,7 +113,7 @@ const SiteHeader = (cartCount) => {
 										<div className="dropdown mini-cart top-cart">
 											<div className="remove-cart-shadow"></div>
 											<Link className="dropdown-toggle cart-icon" to="/shopcart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{cartCount.cartCount}</span></div>
+												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count"></span></div>
 											</Link>
 
 											<div className="dropdown-menu cart-popup">

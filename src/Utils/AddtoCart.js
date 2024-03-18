@@ -38,7 +38,7 @@ const addToCart = async (pro_id, title, catid, price) => {
             })
 
             const apiData = await response.json();
-            Cookies.set("orderid", apiData[0].orderid)
+            Cookies.set("orderid", apiData[0].orderid , { expires: 365 })
 
         }else if (Cookies.get("custuserid") && !Cookies.get("orderid")) {
 
@@ -66,7 +66,7 @@ const addToCart = async (pro_id, title, catid, price) => {
             })
 
             const apiData = await response.json();
-            Cookies.set("orderid", apiData[0].orderid)
+            Cookies.set("orderid", apiData[0].orderid , { expires: 365 })
         }else if ((Cookies.get("custuserid") && Cookies.get("orderid")) || Cookies.get("orderid")) {
 
             const user = {
