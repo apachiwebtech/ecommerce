@@ -6,14 +6,44 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { dark } from '@mui/material/styles/createPalette';
 const Orders = () => {
     const [order, setOrderData] = useState([])
+    const [order2, setOrderData2] = useState([])
+    const [value, setValue] = useState({
+        Order : "" ,
+        Name: "" ,
+        Number: "" ,
+        from: "",
+        to: "",
+        deliveryStatus: "",
+        paymentStatus: "",
+    })
+
+    const onhandleChange = (e) => {
+        setValue((prev) => ({...prev, [e.target.name]: e.target.value }))
+    }
+
+    const handleCancel = () => {
+        setValue({
+            Order : "" ,
+            Name: "" ,
+            Number: "" ,
+            from: "",
+            to: "",
+            deliveryStatus: "",
+            paymentStatus: "",
+        })
+
+    }
 
     async function getOrderdata() {
         axios.get(`${BASE_URL}/order_detail`)
             .then((res) => {
                 console.log(res.data)
                 setOrderData(res.data)
+                
+                setOrderData2(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -24,8 +54,37 @@ const Orders = () => {
         getOrderdata()
     }, [])
 
+    const handleSubmit = (e) => {
+        console.log(value , ":::::::::");
+        console.log( "{{{{{{{{{{{{")
+        e.preventDefault();
+        const filtered = order2.filter(item => {
+            const orderMatch = value.Order === '' || item.orderno.includes(value.Order);
+            const nameMatch = value.Name ==='' || item.firstname.toLowerCase().includes(value.Name.toLowerCase());
+            const numberMatch = value.Number ==='' || item.mobileno.includes(value.Number);
+            let dateMatch = true;
+            const orderDate = item.created_date.split('T')[0];
+            const from = value.from;
+            const to = value.to;
+            if (value.from && !value.to) {
+                dateMatch = orderDate >= from;
+                console.log(dateMatch ,"????")
+              } else if (!value.from && value.to) {
+                dateMatch = orderDate <= to;
+                console.log(dateMatch ,"????")
+              } else if (value.from && value.to) {
+                dateMatch = orderDate >= from && orderDate <= to;
+                console.log(dateMatch ,"????")
+              }
+            const deliveryStatusMatch = isNaN(value.deliveryStatus) ? value.paymentStatus === 'All' : item.ostatus === value.deliveryStatus;
+            const paymentStatusMatch = isNaN(value.paymentStatus) ?  value.paymentStatus === 'All' : item.paystatus === value.paymentStatus; 
 
-
+            return orderMatch && nameMatch && numberMatch && dateMatch && deliveryStatusMatch && paymentStatusMatch ;
+    
+          });
+          console.log(filtered , "///////")
+          setOrderData(filtered);
+    }
 
 
 
@@ -44,31 +103,31 @@ const Orders = () => {
 
                                         </div>
                                     </div>
-                                    <form class="forms-sample" >
+                                    <form class="forms-sample" onSubmit={handleSubmit}>
                                         <div className='row'>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Order No</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='title' />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='Order' value={value.Order} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Customer Name</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Name" name='title' />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Name" name='Name' value={value.Name} onChange={onhandleChange}/>
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Mobile No</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Number" name='title' />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Number" name='Number' value={value.Number} onChange={onhandleChange}/>
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Order From</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='title' />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='from' value={value.from} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Order To</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='title' />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='to' value={value.to} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Delivery Status</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='state'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='deliveryStatus'  onChange={onhandleChange}>
                                                     <option selected>All</option>
                                                     <option value="1">Confirm</option>
                                                     <option value="2">Dispatch</option>
@@ -79,7 +138,7 @@ const Orders = () => {
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Payment Status</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='state'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='paymentStatus' onChange={onhandleChange}>
                                                     <option selected>All</option>
                                                     <option value="1">Paid</option>
                                                     <option value="2">Cod</option>
@@ -91,7 +150,7 @@ const Orders = () => {
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Search</button>
-                                        <Link to="/webapp/adminuser"><button class="btn btn-light">Cancel</button></Link>
+                                        <button type="button" class="btn btn-light" onClick={handleCancel}>Cancel</button>
                                     </form>
 
 
