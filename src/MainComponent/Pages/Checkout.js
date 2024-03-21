@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { useParams } from 'react-router-dom'
+import custdecryptedUserId from '../../Utils/CustUserid'
 
 const Checkout = () => {
     const [state, setState] = useState([])
@@ -31,6 +32,9 @@ const Checkout = () => {
         spostcode: "",
 
     })
+
+
+
 
     const validateForm = () => {
         let isValid = true
@@ -166,6 +170,7 @@ const Checkout = () => {
             axios.post(`${BASE_URL}/place_order`, data)
                 .then((res) => {
                     console.log(res)
+                    alert("order placed")
                 })
                 .catch((err) => {
                     console.log(err)
@@ -176,12 +181,52 @@ const Checkout = () => {
 
     }
 
+    async function fetchAddress() {
+        const data = {
+            user_id: custdecryptedUserId()
+        }
+        axios.post(`${BASE_URL}/fetch_address`, data)
+            .then((res) => {
+                console.log(res)
+                setValue({
+                    firstname: res.data[0].firstname,
+                    lastname: res.data[0].lastname,
+                    country: res.data[0].country,
+                    address: res.data[0].address,
+                    city: res.data[0].city,
+                    state: res.data[0].state,
+                    postcode: res.data[0].pincode,
+                })
+            })
+    }
+
+    useEffect(() => {
+        fetchAddress()
+    }, [])
+
     const onhandlechange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
     const handlecheckbox = () => {
-        setCopy(!copy)
+      
+        setValue({
+            firstname: value.firstname,
+            lastname: value.lastname,
+            country: value.country,
+            address: value.address,
+            city: value.city,
+            state: value.state,
+            postcode: value.postcode,
+            sfirstname: value.firstname,
+            slastname: value.lastname,
+            scountry: value.country,
+            saddress: value.address,
+            scity: value.city,
+            sstate: value.state,
+            spostcode: value.postcode,
+
+        })
     }
 
     const totalPrice = cart.reduce((acc, item) => {
@@ -227,13 +272,13 @@ const Checkout = () => {
                                                                     <div className='row'>
                                                                         <p class="form-row form-row-first validate-required col-lg-6 col-md-6 col-12">
                                                                             <label>First name <span class="required" title="required">*</span></label>
-                                                                            <span class="input-wrapper"><input type="text" class="input-text" name="firstname" onChange={onhandlechange} /></span>
-                                                                        { errors.firstname && <span className='text-danger'>{errors.firstname}</span>}
+                                                                            <span class="input-wrapper"><input type="text" class="input-text" name="firstname" value={value.firstname} onChange={onhandlechange} /></span>
+                                                                            {errors.firstname && <span className='text-danger'>{errors.firstname}</span>}
                                                                         </p>
                                                                         <p class="form-row form-row-last validate-required col-lg-6 col-md-6 col-12">
                                                                             <label>Last name <span class="required" title="required">*</span></label>
-                                                                            <span class="input-wrapper"><input type="text" class="input-text" name="lastname" onChange={onhandlechange} /></span>
-                                                                            { errors.lastname && <span className='text-danger'>{errors.lastname}</span>}
+                                                                            <span class="input-wrapper"><input type="text" class="input-text" name="lastname" value={value.lastname} onChange={onhandlechange} /></span>
+                                                                            {errors.lastname && <span className='text-danger'>{errors.lastname}</span>}
                                                                         </p>
                                                                     </div>
 
@@ -241,20 +286,20 @@ const Checkout = () => {
                                                                     <p class="form-row form-row-wide validate-required">
                                                                         <label>Country / Region <span class="required" title="required">*</span></label>
                                                                         <span class="input-wrapper">
-                                                                            <select name="country" class="country-select custom-select" onChange={onhandlechange}>
+                                                                            <select name="country"  class="country-select custom-select" onChange={onhandlechange}>
                                                                                 <option value="">Select a country / region…</option>
                                                                                 <option value="1">India</option>
 
                                                                             </select>
                                                                         </span>
-                                                                        { errors.country && <span className='text-danger'>{errors.country}</span>}
+                                                                        {errors.country && <span className='text-danger'>{errors.country}</span>}
                                                                     </p>
                                                                     <p class="form-row address-field validate-required form-row-wide">
                                                                         <label>Address <span class="required" title="required">*</span></label>
                                                                         <span class="input-wrapper">
-                                                                            <input type="text" class="input-text" name="address" placeholder="House number and street name" onChange={onhandlechange} />
+                                                                            <input type="text" value={value.address} class="input-text" name="address" placeholder="House number and street name" onChange={onhandlechange} />
                                                                         </span>
-                                                                        { errors.address && <span className='text-danger'>{errors.address}
+                                                                        {errors.address && <span className='text-danger'>{errors.address}
                                                                         </span>}
                                                                     </p>
                                                                     <p class="form-row address-field form-row-wide">
@@ -262,21 +307,21 @@ const Checkout = () => {
                                                                         <span class="input-wrapper">
                                                                             <input type="text" class="input-text" name="landmark" placeholder="Apartment, suite, unit, etc. (optional)" onChange={onhandlechange} />
                                                                         </span>
-                                                                     
+
                                                                     </p>
                                                                     <p class="form-row address-field validate-required form-row-wide">
                                                                         <label for="billing_city" class="">Town / City <span class="required" title="required">*</span></label>
                                                                         <span class="input-wrapper">
-                                                                            <input type="text" class="input-text" name="city" onChange={onhandlechange} />
+                                                                            <input type="text" class="input-text" value={value.city} name="city" onChange={onhandlechange} />
                                                                         </span>
-                                                                        { errors.city && <span className='text-danger'>{errors.city}
+                                                                        {errors.city && <span className='text-danger'>{errors.city}
                                                                         </span>}
                                                                     </p>
                                                                     <div className='row'>
                                                                         <p class="form-row address-field validate-required validate-state form-row-wide col-lg-6 col-6">
                                                                             <label>State <span class="required" title="required">*</span></label>
                                                                             <span class="input-wrapper">
-                                                                                <select name="state" class="state-select custom-select" onChange={onhandlechange}>
+                                                                                <select name="state" value={value.state} class="state-select custom-select" onChange={onhandlechange}>
                                                                                     <option value="">Select a state </option>
                                                                                     {state.map((item) => {
                                                                                         return (
@@ -287,16 +332,16 @@ const Checkout = () => {
 
                                                                                 </select>
                                                                             </span>
-                                                                            { errors.state && <span className='text-danger'>{errors.state}
-                                                                        </span>}
+                                                                            {errors.state && <span className='text-danger'>{errors.state}
+                                                                            </span>}
                                                                         </p>
                                                                         <p class="form-row address-field validate-required validate-postcode form-row-wide col-lg-6 col-6">
                                                                             <label>Postcode / ZIP <span class="required" title="required">*</span></label>
                                                                             <span class="input-wrapper">
-                                                                                <input type="text" class="input-text" name="postcode" onChange={onhandlechange} />
+                                                                                <input type="text" class="input-text" value={value.postcode} name="postcode" onChange={onhandlechange} />
                                                                             </span>
-                                                                            { errors.postcode && <span className='text-danger'>{errors.postcode}
-                                                                        </span>}
+                                                                            {errors.postcode && <span className='text-danger'>{errors.postcode}
+                                                                            </span>}
                                                                         </p>
                                                                     </div>
 
@@ -320,14 +365,14 @@ const Checkout = () => {
                                                                 <div className='row'>
                                                                     <p class="form-row form-row-first validate-required col-lg-6 col-md-6 col-12">
                                                                         <label>First name <span class="required" title="required">*</span></label>
-                                                                        <span class="input-wrapper"><input type="text" class="input-text" name="sfirstname" value={copy ? value.firstname : value.sfirstname} onChange={onhandlechange} /></span>
-                                                                        { errors.sfirstname && <span className='text-danger'>{errors.sfirstname}
+                                                                        <span class="input-wrapper"><input type="text" class="input-text" name="sfirstname" value={ value.sfirstname} onChange={onhandlechange} /></span>
+                                                                        {errors.sfirstname && <span className='text-danger'>{errors.sfirstname}
                                                                         </span>}
                                                                     </p>
                                                                     <p class="form-row form-row-last validate-required col-lg-6 col-md-6 col-12">
                                                                         <label>Last name <span class="required" title="required">*</span></label>
-                                                                        <span class="input-wrapper"><input type="text" class="input-text" name="slastname" value={copy ? value.lastname : value.slastname} onChange={onhandlechange} /></span>
-                                                                        { errors.slastname && <span className='text-danger'>{errors.slastname}
+                                                                        <span class="input-wrapper"><input type="text" class="input-text" name="slastname" value={ value.slastname} onChange={onhandlechange} /></span>
+                                                                        {errors.slastname && <span className='text-danger'>{errors.slastname}
                                                                         </span>}
                                                                     </p>
                                                                 </div>
@@ -335,41 +380,41 @@ const Checkout = () => {
                                                                 <p class="form-row form-row-wide address-field validate-required">
                                                                     <label for="shipping_country" class="">Country / Region <span class="required" title="required">*</span></label>
                                                                     <span class="input-wrapper">
-                                                                        <select name="scountry" class="state-select custom-select" value={copy ? value.country : value.scountry} onChange={onhandlechange}>
+                                                                        <select name="scountry" class="state-select custom-select" value={value.scountry} onChange={onhandlechange}>
                                                                             <option value="">Select a country / region…</option>
                                                                             <option value="1">India</option>
 
                                                                         </select>
                                                                     </span>
-                                                                    { errors.scountry && <span className='text-danger'>{errors.scountry}
-                                                                        </span>}
+                                                                    {errors.scountry && <span className='text-danger'>{errors.scountry}
+                                                                    </span>}
                                                                 </p>
                                                                 <p class="form-row address-field validate-required form-row-wide">
                                                                     <label>Address <span class="required" title="required">*</span></label>
                                                                     <span class="input-wrapper">
-                                                                        <input type="text" class="input-text" name="saddress" placeholder="House number and street name" value={copy ? value.address : value.saddress} onChange={onhandlechange} />
+                                                                        <input type="text" class="input-text" name="saddress" placeholder="House number and street name" value={value.saddress} onChange={onhandlechange} />
                                                                     </span>
-                                                                    { errors.saddress && <span className='text-danger'>{errors.saddress}
-                                                                        </span>}
+                                                                    {errors.saddress && <span className='text-danger'>{errors.saddress}
+                                                                    </span>}
                                                                 </p>
                                                                 <p class="form-row address-field form-row-wide">
                                                                     <label>Landmark &nbsp;<span class="optional">(optional)</span></label>
                                                                     <span class="input-wrapper">
-                                                                        <input type="text" class="input-text" name="slandmark" placeholder="Apartment, suite, unit, etc. (optional)" value={copy ? value.landmark : value.slandmark} onChange={onhandlechange} />
+                                                                        <input type="text" class="input-text" name="slandmark" placeholder="Apartment, suite, unit, etc. (optional)" value={ value.slandmark} onChange={onhandlechange} />
                                                                     </span>
 
                                                                 </p>
                                                                 <p class="form-row address-field validate-required form-row-wide">
                                                                     <label>Town / City <span class="required" title="required">*</span></label>
-                                                                    <span class="input-wrapper"><input type="text" class="input-text" name="scity" onChange={onhandlechange} value={copy ? value.city : value.scity} /></span>
-                                                                    { errors.scity && <span className='text-danger'>{errors.scity}
-                                                                        </span>}
+                                                                    <span class="input-wrapper"><input type="text" class="input-text" name="scity" onChange={onhandlechange} value={ value.scity} /></span>
+                                                                    {errors.scity && <span className='text-danger'>{errors.scity}
+                                                                    </span>}
                                                                 </p>
                                                                 <div className='row'>
                                                                     <p class="form-row address-field validate-required validate-state form-row-wide col-lg-6 col-6">
                                                                         <label>State <span class="required" title="required">*</span></label>
                                                                         <span class="input-wrapper">
-                                                                            <select name="sstate" class="state-select custom-select" value={copy ? value.state : value.sstate} onChange={onhandlechange}>
+                                                                            <select name="sstate" class="state-select custom-select" value={ value.sstate} onChange={onhandlechange}>
                                                                                 <option value="">Select a state </option>
                                                                                 {state.map((item) => {
                                                                                     return (
@@ -380,15 +425,15 @@ const Checkout = () => {
 
                                                                             </select>
                                                                         </span>
-                                                                        { errors.sstate && <span className='text-danger'>{errors.sstate}
+                                                                        {errors.sstate && <span className='text-danger'>{errors.sstate}
                                                                         </span>}
                                                                     </p>
                                                                     <p class="form-row address-field validate-required validate-postcode form-row-wide col-lg-6 col-6">
                                                                         <label>Postcode / ZIP <span class="required" title="required">*</span></label>
                                                                         <span class="input-wrapper">
-                                                                            <input type="text" class="input-text" name="spostcode" value={copy ? value.postcode : value.spostcode} onChange={onhandlechange} />
+                                                                            <input type="text" class="input-text" name="spostcode" value={value.spostcode} onChange={onhandlechange} />
                                                                         </span>
-                                                                        { errors.spostcode && <span className='text-danger'>{errors.spostcode}
+                                                                        {errors.spostcode && <span className='text-danger'>{errors.spostcode}
                                                                         </span>}
                                                                     </p>
                                                                 </div>

@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import brand1 from '../../assets/frontimg/brand/1.jpg'
-import brand2 from '../../assets/frontimg/brand/2.jpg'
-import brand3 from '../../assets/frontimg/brand/3.jpg'
-import brand4 from '../../assets/frontimg/brand/4.jpg'
-import brand5 from '../../assets/frontimg/brand/5.jpg'
-import product1 from '../../assets/frontimg/product/1.jpg'
 
 import product4_2 from '../../assets/frontimg/product/4-2.jpg'
 import product6_2 from '../../assets/frontimg/product/6-2.jpg'
-import product6 from '../../assets/frontimg/product/6.jpg'
-import product8 from '../../assets/frontimg/product/8.jpg'
-import product9 from '../../assets/frontimg/product/9.jpg'
 
-import { useDispatch, useSelector } from 'react-redux';
-import { getProducts } from '../../Store/Products/product-actions';
-import ProductCard from '../Subcomponents/ProductCard'
-import { Link, useParams } from 'react-router-dom'
-import axios from 'axios'
-import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { Slider } from '@mui/material'
+import axios from 'axios'
+import { Link, useParams } from 'react-router-dom'
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
+import ProductCard from '../Subcomponents/ProductCard'
 
 
 const ShopProduct = () => {
@@ -142,7 +132,7 @@ const ShopProduct = () => {
                                         </div>
 
                                         {/* <!-- Block Product Filter --> */}
-                                        <div className="block block-product-filter clearfix">
+                                        <div className="block block-product-filter clearfix my-3">
                                             <div className="block-title"><h2>Size</h2></div>
                                             <div className="block-content">
                                                 <ul className="filter-items text">
@@ -154,7 +144,7 @@ const ShopProduct = () => {
                                         </div>
 
                                         {/* <!-- Block Product Filter --> */}
-                                        <div className="block block-product-filter clearfix">
+                                        <div className="block block-product-filter clearfix my-3">
                                             <div className="block-title"><h2>Brands</h2></div>
                                             <div className="block-content">
                                                 <ul className="filter-items image">

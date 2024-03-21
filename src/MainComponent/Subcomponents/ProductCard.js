@@ -12,6 +12,7 @@ import custdecryptedUserId from '../../Utils/CustUserid';
 import addToCart from '../../Utils/AddtoCart';
 import { ToastContainer, toast } from 'react-toastify';
 import LoginForm from '../Authentication/LoginForm';
+import { getCartCount } from '../../Store/Cart/cart-action';
 const ProductCard = (props) => {
 
     const dispatch = useDispatch();
@@ -143,7 +144,7 @@ const ProductCard = (props) => {
     return (
         <div className="col-xl-4 col-lg-4 col-md-4 col-sm-6">
             <div className="products-entry clearfix product-wapper">
-                <ToastContainer theme="dark" />
+                <ToastContainer theme="dark"     position="bottom-right" />
                 <div className="products-thumb">
                     {props.trending === 1 ? <div className="product-lable">
                         <div className="hot">Hot</div>
@@ -157,8 +158,10 @@ const ProductCard = (props) => {
                     <div className="product-button">
                         <div className="btn-add-to-cart" data-title="Add to cart">
                             <button rel="nofollow" className="product-btn button" onClick={() => {
-                                addToCart(props.proid, props.title, props.catid, props.price)
+                                addToCart(props.proid, props.title, props.catid, props.price , dispatch)
                                 notify()
+
+                              
                             }} >Add to cart</button>
                         </div>
                         <div className="btn-wishlist" data-title="Wishlist">

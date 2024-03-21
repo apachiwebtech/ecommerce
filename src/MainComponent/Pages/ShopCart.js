@@ -7,6 +7,8 @@ import custdecryptedUserId from '../../Utils/CustUserid'
 import { Link } from 'react-router-dom'
 import empty from '../../assets/frontimg/empty.gif'
 import LoginForm from '../Authentication/LoginForm'
+import { getCartCount } from '../../Store/Cart/cart-action'
+import { useDispatch } from 'react-redux'
 
 const ShopCart = ({ fetchcount }) => {
   const [cart, setCart] = useState([])
@@ -53,6 +55,8 @@ const ShopCart = ({ fetchcount }) => {
 
   }, [])
 
+  const dispatch = useDispatch();
+
   const handledelete = (id) => {
     const data = {
       cart_id: id
@@ -62,6 +66,7 @@ const ShopCart = ({ fetchcount }) => {
       .then((res) => {
         console.log(res)
         getcartdata()
+        dispatch(getCartCount())
 
         if (fetchcount) {
           fetchcount(res.data[0]);
@@ -106,7 +111,8 @@ const ShopCart = ({ fetchcount }) => {
                         <div class="col-xl-8 col-lg-12 col-md-12 col-12">
                           <div className='text-center'>
                             {cart.length == 0 && <img src={empty} alt='' />}
-                            <h3>Your cart is empty</h3>
+                            {cart.length == 0 && <h3>Your cart is empty</h3>}
+                           
                           </div>
                           <form class="cart-form" action="" method="post">
                             <div class="table-responsive">
@@ -167,7 +173,7 @@ const ShopCart = ({ fetchcount }) => {
 
 
 
-                                  <tr>
+                                  {/* <tr>
                                     <td colspan="6" class="actions">
                                       <div class="bottom-cart">
                                         <div class="coupon">
@@ -178,7 +184,7 @@ const ShopCart = ({ fetchcount }) => {
                                         <button type="submit" name="update_cart" class="button" value="Update cart">Update cart</button>
                                       </div>
                                     </td>
-                                  </tr>
+                                  </tr> */}
                                 </tbody>
                               </table>
                             </div>
@@ -226,16 +232,19 @@ const ShopCart = ({ fetchcount }) => {
                         </div>
                       </div>
                     </div>
-                    <div class="shop-cart-empty">
+                    {cart.length == 0 &&    <div class="shop-cart-empty">
                       <div class="notices-wrapper">
                         <p class="cart-empty">Your cart is currently empty.</p>
                       </div>
                       <div class="return-to-shop">
-                        <Link class="button" href="shop-grid-left.html">
+                        <Link class="button" to="/">
+                          
                           Return to shop
                         </Link>
                       </div>
-                    </div>
+                    </div> }
+                 
+
                   </div>
                 </div>
               </div>

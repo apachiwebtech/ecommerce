@@ -1507,7 +1507,7 @@ html {
   .site-header {
     margin-bottom: 0;
     position: relative;
-    z-index: 999999;
+    z-index: 10;
     background: transparent;
   }
   .site-header.absolute {

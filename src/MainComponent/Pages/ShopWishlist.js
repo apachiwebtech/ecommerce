@@ -7,13 +7,16 @@ import { ToastContainer, toast } from 'react-toastify';
 import empty from '../../assets/frontimg/empty.gif'
 import custdecryptedUserId from '../../Utils/CustUserid';
 import { Link } from 'react-router-dom';
+import { getCartCount } from '../../Store/Cart/cart-action';
+import { IMG_URL } from '../../AdminComponent/BaseUrl';
+import addToCart from '../../Utils/AddtoCart';
 const ShopWishlist = () => {
 
     const dispatch = useDispatch();
     const wishList = useSelector((state) => state.wishlist.wishList);
 
     const notify = () => toast("Removing Product");
-
+    const addify = () => toast("Product added to the cart");
     const removeWishListItem = (data) => {
         // console.log(decryptedUserId());
         const id = data;
@@ -23,7 +26,8 @@ const ShopWishlist = () => {
             userId,
         }
         dispatch(removeFromWishList(wishData));
-        dispatch(getWishList(userId));
+        // dispatch(getWishList(userId));
+        // dispatch(getCartCount())
 
     }
     useEffect(() => {
@@ -32,9 +36,11 @@ const ShopWishlist = () => {
         dispatch(getWishList(userId));
     }, [])
 
+    
+
     return (
         <div id="page" class="hfeed page-wrapper">
-            <ToastContainer theme="dark" />
+            <ToastContainer theme="dark"     position="bottom-right" />
             <div id="site-main" class="site-main">
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
@@ -57,7 +63,7 @@ const ShopWishlist = () => {
                                     <div class="shop-wishlist">
                                         <div className='text-center'>
                                         {wishList.length == 0 && <img src={empty} alt='' />}
-                                        <h3>Your wishlist is empty</h3>
+                                        {wishList.length == 0 && <h3>Your wishlist is empty</h3>}
                                         </div>
                                         <table class="wishlist-items">
                                             <tbody>
@@ -70,7 +76,7 @@ const ShopWishlist = () => {
                                                             }} ><span></span></td>
                                                             <td class="wishlist-item-image">
                                                                 <Link href="shop-details.html">
-                                                                    <img width="600" height="600" src={product1} alt="" />
+                                                                    <img width="600" height="600" src={`${IMG_URL}/productimg/` + wishItem.image1} alt="" />
                                                                 </Link>
                                                             </td>
                                                             <td class="wishlist-item-info">
@@ -93,7 +99,10 @@ const ShopWishlist = () => {
                                                                 </div>
                                                                 <div class="wishlist-item-add">
                                                                     <div class="btn-add-to-cart" data-title="Add to cart">
-                                                                        <Link rel="nofollow" href="#" class="product-btn button">Add to cart</Link>
+                                                                        <Link rel="nofollow" onClick={() =>{
+                                                                                 addToCart(wishItem.prod_id, wishItem.title, wishItem.catid, wishItem.price, dispatch);
+                                                                                 addify();
+                                                                        }} href="#" class="product-btn button">Add to cart</Link>
                                                                     </div>
                                                                 </div>
                                                             </td>

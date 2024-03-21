@@ -17,6 +17,7 @@ import { addToWishList } from '../../Store/WishList/wishlist-actions';
 import LoginForm from '../Authentication/LoginForm'
 import { Cookie } from '@mui/icons-material';
 import Cookies from 'js-cookie';
+import { getCartCount } from '../../Store/Cart/cart-action';
 
 var settings = {
     dots: false,
@@ -83,8 +84,8 @@ const TrendingSection = () => {
     return (
         <section class="section section-padding">
             <div class="section-container">
-                {loader && <h1>hiffjj</h1>}
-                <ToastContainer theme="dark" />
+                {/* {loader && <h1>hiffjj</h1>} */}
+                <ToastContainer theme="dark"    position="bottom-right" />
                 <div class="block block-products slider">
                     <div class="block-widget-wrap">
                         <div class="block-title"><h2>Best Seller</h2></div>
@@ -119,6 +120,7 @@ const TrendingSection = () => {
                                                                         }}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
                                                                             addWishList(item.id)
                                                                             wishify()
+                                                                           
                                                                      
                                                                         }}>Add to wishlist</button>}
                                                                       
@@ -142,7 +144,7 @@ const TrendingSection = () => {
                                                                             <Link
                                                                                 class="button"
                                                                                 onClick={() => {
-                                                                                    addToCart(item.id, item.title, item.catid, item.price, setLoader);
+                                                                                    addToCart(item.id, item.title, item.catid, item.price, dispatch);
                                                                                     notify();
 
                                                                                 }}

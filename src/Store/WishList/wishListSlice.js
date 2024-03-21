@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     wishList : [],
     totalItems : 0,
+    wishCount :""
 }
 
 const wishListSlice = createSlice({
@@ -18,6 +19,11 @@ const wishListSlice = createSlice({
         getWishList(state, action){
             const newList = action.payload;
             state.wishList = newList;
+            // console.log(newList, "from slice");
+        },
+        getWishCount(state, action){
+            const newList = action.payload;
+            state.wishCount = newList;
             // console.log(newList, "from slice");
         }
 

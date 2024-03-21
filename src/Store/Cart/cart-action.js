@@ -21,9 +21,9 @@ export const getCartCount = ()=>{
             const apiData = await response.json();
 
 
-            dispatch(cartActions.getCartCount(apiData));
+            dispatch(cartActions.getCartCount(apiData[0].count));
 
-            console.log(apiData)
+  
 
 
 

@@ -13,6 +13,7 @@ import Cookies from 'js-cookie';
 import LoginForm from '../Authentication/LoginForm';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getWishCount } from '../../Store/WishList/wishlist-actions';
 
 const SiteHeader = (cartCount) => {
 	const [banner, setBanner] = useState([])
@@ -71,15 +72,18 @@ const SiteHeader = (cartCount) => {
 
 
 	const dispatch = useDispatch();
-    const count = useSelector((state) => state.cartCount);
+    const count = useSelector((state) => state.cartCount.cartCount);
+    const wishcount = useSelector((state) => state.wishlist.wishCount);
 
-	console.log(count,"6666")
+	console.log(wishcount , "()()())")
+
 
 
 
 
 	useEffect(()=>{
 		dispatch(getCartCount())
+		dispatch(getWishCount())
 	},[])
 
 	
@@ -321,14 +325,14 @@ const SiteHeader = (cartCount) => {
 
 											<div className="wishlist-box">
 												<Link to="/shopwishlist"><i className="icon-heart"></i></Link>
-												<span className="count-wishlist">1</span>
+												<span className="count-wishlist">{wishcount}</span>
 											</div>
 
 											<div className="ruper-topcart dropdown light">
 												<div className="dropdown mini-cart top-cart">
 													<div className="remove-cart-shadow"></div>
 													<Link className="dropdown-toggle cart-icon" to="/shopcart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{cartCount.cartCount}</span></div>
+														<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{count}</span></div>
 													</Link>
 													<div className="dropdown-menu cart-popup">
 														<div className="cart-empty-wrap">

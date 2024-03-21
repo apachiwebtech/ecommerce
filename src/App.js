@@ -52,6 +52,12 @@ import DetailPage from './MainComponent/Pages/DetailPage';
 import SiteLoader from './MainComponent/Ui/SiteLoader';
 import decryptedUserId from './Utils/UserID';
 import Checkout from './MainComponent/Pages/Checkout';
+import { getCartCount } from './Store/Cart/cart-action';
+import { useDispatch } from 'react-redux';
+import Profile from './MainComponent/Pages/ProfileComponent/Profile';
+import ProfileWish from './MainComponent/Pages/ProfileComponent/ProfileWish';
+import Address from './MainComponent/Pages/ProfileComponent/ProfileAddress';
+import ProfileOrder from './MainComponent/Pages/ProfileComponent/ProfileOrders';
 
 
 const Router = createBrowserRouter([
@@ -105,7 +111,19 @@ const Router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: <ShopProduct />
+        element: <Profile/>
+      },
+      {
+        path: '/profile/wishlist',
+        element: <ProfileWish/>
+      },
+      {
+        path: '/profile/address',
+        element: <Address/>
+      },
+      {
+        path: '/profile/order',
+        element: <ProfileOrder/>
       },
       {
         path: '/checkout/:orderid',
@@ -361,8 +379,10 @@ function App() {
   }, [pathname]);
 
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    fetchCartCount();
+    dispatch(getCartCount())
 
     setLoader(true);
 

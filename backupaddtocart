@@ -1,18 +1,29 @@
-import Cookies from 'js-cookie';
+
+import Cookies from 'js-cookie'
+
 import { BASE_URL } from '../AdminComponent/BaseUrl';
 import custdecryptedUserId from './CustUserid';
 import { useState } from 'react';
-import { getCartCount } from '../Store/Cart/cart-action';
 
-const addToCart = (pro_id, title, catid, price, dispatch) => {
+
+
+
+
+const addToCart = async (pro_id, title, catid, price, getcount) => {
+
     try {
+        
+        
+
         if (!Cookies.get("orderid") && !Cookies.get("custuserid")) {
             const randomUserId = Math.random().toString(36).substring(2);
+
             const user = {
                 id: randomUserId,
                 pro_id: pro_id
-            };
-            fetch(`${BASE_URL}/addToCart`, {
+            }
+
+            const response = await fetch(`${BASE_URL}/addToCart`, {
                 method: "POST",
                 body: JSON.stringify({
                     userId: user.id,
@@ -21,26 +32,31 @@ const addToCart = (pro_id, title, catid, price, dispatch) => {
                     catid: catid,
                     price: price,
                     p_qty: "1"
+
                 }),
                 headers: {
                     "Content-type": "application/json"
                 }
-            }).then(response => response.json())
-            .then(apiData => {
-                Cookies.set("orderid", apiData[0].orderid , { expires: 365 });
-            
-                dispatch(getCartCount());
-                
-           
-                
             })
-            .catch(error => console.error('Error:', error));
-        } else if (Cookies.get("custuserid") && !Cookies.get("orderid")) {
+
+            const apiData = await response.json();
+            Cookies.set("orderid", apiData[0].orderid , { expires: 365 })
+
+            if(apiData[0].orderid !== ""){
+                getcount()
+            }
+         
+
+        }else if (Cookies.get("custuserid") && !Cookies.get("orderid")) {
+
+
             const user = {
                 id: custdecryptedUserId(),
                 pro_id: pro_id
-            };
-            fetch(`${BASE_URL}/addToCart`, {
+            }
+
+
+            const response = await fetch(`${BASE_URL}/addToCart`, {
                 method: "POST",
                 body: JSON.stringify({
                     userId: user.id,
@@ -49,27 +65,28 @@ const addToCart = (pro_id, title, catid, price, dispatch) => {
                     catid: catid,
                     price: price,
                     p_qty: "1"
+
                 }),
                 headers: {
                     "Content-type": "application/json"
                 }
-            }).then(response => response.json())
-            .then(apiData => {
-                Cookies.set("orderid", apiData[0].orderid , { expires: 365 });
-               
-                    dispatch(getCartCount());
-                   
-              
-                
             })
-            .catch(error => console.error('Error:', error));
-        } else if ((Cookies.get("custuserid") && Cookies.get("orderid")) || Cookies.get("orderid")) {
+
+            const apiData = await response.json();
+            Cookies.set("orderid", apiData[0].orderid , { expires: 365 })
+
+         
+        }else if ((Cookies.get("custuserid") && Cookies.get("orderid")) || Cookies.get("orderid")) {
+
             const user = {
                 id: custdecryptedUserId(),
                 orderid: Cookies.get("orderid"),
                 pro_id: pro_id
-            };
-            fetch(`${BASE_URL}/addToCart`, {
+            }
+
+
+
+            const response = await fetch(`${BASE_URL}/addToCart`, {
                 method: "POST",
                 body: JSON.stringify({
                     userId: user.id,
@@ -83,21 +100,24 @@ const addToCart = (pro_id, title, catid, price, dispatch) => {
                 headers: {
                     "Content-type": "application/json"
                 }
-            }).then(response => response.json())
-            .then(apiData => {
-                // Handle response data if needed
-               
-                    dispatch(getCartCount());
-                   
-                
-                
             })
-            .catch(error => console.error('Error:', error));
+
+            const apiData = await response.json();
+
+
+
         }
+
+    
+
+        
+
+
     }
-    catch(error) {
-        console.error('Error:', error);
+    catch {
+
     }
-};
+
+}
 
 export default addToCart;

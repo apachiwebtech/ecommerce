@@ -9,6 +9,11 @@ import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 import { Link, useParams } from 'react-router-dom';
 import addToCart from '../../Utils/AddtoCart';
 import { ToastContainer, toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import custdecryptedUserId from '../../Utils/CustUserid';
+import { addToWishList } from '../../Store/WishList/wishlist-actions';
+import Cookies from 'js-cookie';
+import LoginForm from '../Authentication/LoginForm';
 
 const DetailPage = () => {
 
@@ -34,11 +39,16 @@ const DetailPage = () => {
 	const [productdata, setProductdata] = useState([])
 	const [image, setProductImg] = useState([])
 	const [value, setValue] = useState(0)
-	const [click, setClick] = useState('');
+	const [colorimg, setImgcolordata] = useState([]);
+	
+    const [open, setOpen] = useState(false);
+	const handleToggle = (e) => {
+        setOpen(!open);
+    }
 	const notify = () => toast("Product added to the cart");
 
 
-
+	const wishify = () => toast("Product added to the wishlist");
 
 	async function getProductDetails() {
 
@@ -50,8 +60,8 @@ const DetailPage = () => {
 			.then((res) => {
 				setProductdata(res.data)
 				if (res.data) {
-					console.log(res.data[0].id)
 					getProductImage(res.data[0].id)
+				
 				}
 
 				// setproductid(res.data[0].id)
@@ -72,6 +82,7 @@ const DetailPage = () => {
 			.then((res) => {
 				console.log(res)
 				setProductImg(res.data)
+				setImgcolordata(res.data[0])
 
 			})
 			.catch((err) => {
@@ -79,22 +90,47 @@ const DetailPage = () => {
 			})
 	}
 
+	const getcolorimgData = async ( colorid) => {
+		const data = {
+			colorid: colorid,
+		}
+
+
+		axios.post(`${BASE_URL}/getcolorimg`, data)
+			.then((res) => {
+				console.log(res)
+				setImgcolordata(res.data[0])
+			})
+	}
 
 	useEffect(() => {
 		getProductDetails()
+
 	}, [])
 
-	// useEffect(()=>{
-	// 	getProductImage()
 
-	// },[])
+	console.log(colorimg?.image1 , "^^^^")
+
+    const dispatch = useDispatch();
+    const addWishList = (data) => {
+
+        const id = data;
+        const userId = custdecryptedUserId();
+        const wishData = {
+            id,
+            userId,
+        }
+
+        dispatch(addToWishList(wishData));
+
+    }
 
 	return (
 
 		<div>
 			<div id="site-main" class="site-main">
 				<div id="main-content" class="main-content">
-					<ToastContainer theme="dark" />
+					<ToastContainer theme="dark"     position="bottom-right"/>
 					<div id="primary" class="content-area">
 						{productdata?.map((item) => {
 							return (
@@ -127,15 +163,30 @@ const DetailPage = () => {
 																		<div class="content-thumbnail-scroll">
 																			<div class="image-thumbnail slick-carousel slick-vertical" data-asnavfor=".image-additional" data-centermode="true" data-focusonselect="true" data-columns4="5" data-columns3="4" data-columns2="4" data-columns1="4" data-columns="4" data-nav="true" data-vertical="&quot;true&quot;" data-verticalswiping="&quot;true&quot;">
 																				<Slider {...settings2}>
-																					{image.filter((item) => (item.colorcode).includes(click)).map((ele) => {
-																						return (
-																							<div class="img-item slick-slide">
-																								<span class="img-thumbnail-scroll">
-																									<img width="600" height="600" src={`${IMG_URL}/productimg/` + ele.image1} alt="" />
-																								</span>
-																							</div>
-																						)
-																					})}
+
+
+																					<div class="img-item slick-slide">
+																						<span class="img-thumbnail-scroll">
+																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image1} alt="" />
+																						</span>
+																					</div>
+																					<div class="img-item slick-slide">
+																						<span class="img-thumbnail-scroll">
+																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image2} alt="" />
+																						</span>
+																					</div>
+																					<div class="img-item slick-slide">
+																						<span class="img-thumbnail-scroll">
+																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image3} alt="" />
+																						</span>
+																					</div>
+																					<div class="img-item slick-slide">
+																						<span class="img-thumbnail-scroll">
+																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
+																						</span>
+																					</div> 
+
+
 
 
 
@@ -150,14 +201,35 @@ const DetailPage = () => {
 																		<div class="scroll-image main-image">
 																			<div class="image-additional slick-carousel" data-asnavfor=".image-thumbnail" data-fade="true" data-columns4="1" data-columns3="1" data-columns2="1" data-columns1="1" data-columns="1" data-nav="true">
 																				<Slider {...settings}>
-																					{image.filter((item) => (item.colorcode).includes(click)).map((ele) => {
+																					{/* {colorimg.map((ele) => {
 																						return (
 																							<div class="img-item slick-slide">
-																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + ele.image1} alt="" /> 
+																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + ele.image1} alt="" />
 																							</div>
 
 																						)
-																					})}
+																					})} */}
+
+																					 <div class="img-item slick-slide">
+																						<span class="img-thumbnail-scroll">
+																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image1} alt="" />
+																						</span>
+																					</div>
+																					<div class="img-item slick-slide">
+																						<span class="img-thumbnail-scroll">
+																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image2} alt="" />
+																						</span>
+																					</div>
+																					<div class="img-item slick-slide">
+																						<span class="img-thumbnail-scroll">
+																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image3} alt="" />
+																						</span>
+																					</div>
+																					<div class="img-item slick-slide">
+																						<span class="img-thumbnail-scroll">
+																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
+																						</span>
+																					</div> 
 																				</Slider>
 																			</div>
 																		</div>
@@ -207,7 +279,7 @@ const DetailPage = () => {
 																										style={{ background: `${item.colorcode}`, width: "50px", height: "50px" }}
 																										value={item.colorcode}
 																										onClick={(e) => {
-																											setClick(e.target.value)
+																											getcolorimgData( item.id)
 
 																										}}
 																									></button>
@@ -247,11 +319,22 @@ const DetailPage = () => {
 																		<button class="product-btn">Buy It Now</button>
 																	</div>
 																	<div class="btn-wishlist" data-title="Wishlist">
-																		<button class="product-btn">Add to wishlist</button>
+																		{/* <button class="product-btn">Add to wishlist</button> */}
+																		{!Cookies.get(`custuserid`)?   <button class="product-btn" onClick={() => {
+                                                                        
+																		handleToggle()
+																	}}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
+																		addWishList(item.id)
+																		wishify()
+																	   
+																 
+																	}}>Add to wishlist</button>}
 																	</div>
-																	<div class="btn-compare" data-title="Compare">
+
+																
+																	{/* <div class="btn-compare" data-title="Compare">
 																		<button class="product-btn">Compare</button>
-																	</div>
+																	</div> */}
 																</div>
 																<div class="product-meta">
 																	<span class="sku-wrapper">SKU: <span class="sku">D2300-3-2-2</span></span>
@@ -269,7 +352,7 @@ const DetailPage = () => {
 												</div>
 											</div>
 
-
+											{open && <LoginForm setOpen={setOpen} open={open} />}
 											<div class="product-tabs">
 												<div class="section-padding">
 													<div class="section-container p-l-r">
