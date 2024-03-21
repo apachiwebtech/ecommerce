@@ -23,6 +23,7 @@ const SubCategory = () => {
     const [loader , setLoader] = useState(false)
     const [cat_id, setId] = useState("")
     const [value, setValue] = useState({
+        category: "" || uid.cat_id,
         title: "" || uid.title,
         slug: "" || uid.slug,
         description: "" || uid.description,
@@ -54,7 +55,9 @@ const SubCategory = () => {
 
 
     useEffect(() => {
+        console.log(uid , "???")
         setValue({
+            category: "" || uid.cat_id,
             title: "" || uid.title,
             slug: "" || uid.slug,
             description: "" || uid.description,
@@ -151,7 +154,7 @@ const SubCategory = () => {
                 description: value.description,
                 slug: value.slug,
                 user_id: decryptedUserId(),
-                cat_id: cat_id,
+                cat_id: value.category,
                 u_id: uid.id
             }
 
@@ -184,6 +187,11 @@ const SubCategory = () => {
             setSelectedOption(selectedValue);
             // Now you have the selected id, you can use it in your application logic
             setId(selectedId)
+            setValue(prevValue => ({
+    ...prevValue,               // Copy the existing value object
+    category: selectedId      // Update only the category property
+  }));
+
         }
     };
 
