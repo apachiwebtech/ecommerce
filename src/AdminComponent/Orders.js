@@ -230,13 +230,13 @@ const Orders = () => {
                                                                 {item.firstname} {item.lastname}
                                                             </td>
                                                             <td>
-                                                                {item.transacamount}
+                                                                {item.tamount}
                                                             </td>
                                                             <td>
                                                                 {item.paystatus == 0 ? "pending" : "paid"}
                                                             </td>
                                                             <td>
-                                                                {item.status}
+                                                                {item.ostatus}
                                                             </td>
                                                             <td>
 
@@ -248,40 +248,7 @@ const Orders = () => {
                                                         </tr>
                                                     )
                                                 })}
-                                                <tr >
-                                                    <td>
-                                                        RST-231004-11
-                                                    </td>
-                                                    <td>
-                                                        04-10-2023
-                                                    </td>
-                                                    <td>
-                                                        RST-WS/23-24/003
-                                                    </td>
-                                                    <td>
-                                                        Satyam satkar
-                                                    </td>
-                                                    <td>
-                                                        15112
-                                                    </td>
-                                                    <td>
-                                                        paid
-                                                    </td>
-                                                    <td>
-                                                        Confirm
-                                                    </td>
-                                                    <td>
-
-                                                        <button className='bt btn-sm btn-primary'>Print Invoice</button>
-                                                    </td>
-                                                    <td>
-                                                        <Link to="/webapp/view"><RemoveRedEyeIcon className='text-primary' /></Link>
-                                                    </td>
-                                                </tr>
-
-
-
-
+                                          
 
 
 

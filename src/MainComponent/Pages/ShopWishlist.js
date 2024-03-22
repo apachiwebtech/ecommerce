@@ -101,6 +101,7 @@ const ShopWishlist = () => {
                                                                     <div class="btn-add-to-cart" data-title="Add to cart">
                                                                         <Link rel="nofollow" onClick={() =>{
                                                                                  addToCart(wishItem.prod_id, wishItem.title, wishItem.catid, wishItem.price, dispatch);
+                                                                                 removeWishListItem(wishItem.id)
                                                                                  addify();
                                                                         }} href="#" class="product-btn button">Add to cart</Link>
                                                                     </div>

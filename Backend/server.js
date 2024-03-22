@@ -2182,7 +2182,7 @@ app.post(`/add_address`, (req, res) => {
     })
 
   } else {
-    const checkcount = "select COUNT(*) as count  from awt_address where uid = ?"
+    const checkcount = "select COUNT(*) as count  from awt_address where uid = ? and deleted = 0"
 
     con.query(checkcount, [user_id], (err, data) => {
       if (err) {
@@ -2265,46 +2265,52 @@ app.post('/address_delete', (req, res) => {
           if (err) {
             return res.json(err)
           } else {
-             return res.json(data)
+            return res.json(data)
           }
         })
-      }else{
+      } else {
 
         console.log("222")
         const sql = "update `awt_address` set `deleted` = 1 where `id` = ?";
 
-        con.query(sql , [address_id] , (err,data)=>{
-          if(err){
+        con.query(sql, [address_id], (err, data) => {
+          if (err) {
             return res.json(err)
-          }else{
-            
+          } else {
+
             const sql = "SELECT * FROM `awt_address` WHERE `uid` = ? and `deleted` = 0 LIMIT 1";
 
-            con.query(sql , [user_id], (err,data)=>{
-              if(err){
+            con.query(sql, [user_id], (err, data) => {
+              if (err) {
                 return res.json(err)
               }
-              else{
-                 const addid = data[0].id
+              else {
 
-                 console.log(addid ,"ass")
+                if (data.length > 0 ) {
+                  const addid = data[0].id
 
-                const sql = "update `awt_address` set `default` = 1 where `id` = ? "
 
-                con.query(sql , [addid] , (err,data)=>{
-                  if(err){
-                    return res.json(err)
-                  }else{
-                    return res.json(data)
-                  }
-                })
+                  console.log(addid, "88")
+
+                  const sql = "update `awt_address` set `default` = 1 where `id` = ? "
+
+                  con.query(sql, [addid], (err, data) => {
+                    if (err) {
+                      return res.json(err)
+                    } else {
+                      return res.json(data)
+                    }
+                  })
+                }
+                else{
+                  res.json(data)
+                }
               }
             })
 
           }
         })
       }
-
 
     }
   })

@@ -201,8 +201,8 @@ function LoginForm({ open, setOpen }) {
                         const otp = res.data[0].otp;
                         localStorage.setItem("ecom_email", id)
                         localStorage.setItem("ecom_value", value)
-                        localStorage.setItem("Name", name)
-                        localStorage.setItem('otp', otp)
+                        // localStorage.setItem("Name", name)
+                        // localStorage.setItem('otp', otp)
                     }
                     else {
                         setNotExist(res.data)
@@ -266,7 +266,6 @@ function LoginForm({ open, setOpen }) {
                         localStorage.setItem("ecom_mobile", Mobile)
                         localStorage.setItem("firstname", firstname)
                         localStorage.setItem("lastname", lastname)
-                        localStorage.setItem('otp', otp)
                     } else {
                         setExist(res.data)
 

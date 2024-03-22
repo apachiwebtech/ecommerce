@@ -231,11 +231,14 @@ const Address = () => {
 
             .catch((err) => {
                 console.log(err)
+                getAddressData()
             })
         setConfirmationVisibleMap((prevMap) => ({
             ...prevMap,
             [id]: false,
         }));
+
+        
     }
 
     const handleClick = (id) => {
