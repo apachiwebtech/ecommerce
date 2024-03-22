@@ -256,9 +256,6 @@ const ShopCart = ({ fetchcount }) => {
       </div>
 
 
-      <div class="back-top button-show">
-        <i class="arrow_carrot-up"></i>
-      </div>
 
 
       <div class="search-overlay">

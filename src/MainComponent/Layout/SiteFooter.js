@@ -3,9 +3,12 @@ import logo from '../../assets/frontimg/logo.png'
 import payments from '../../assets/frontimg/payments.png'
 import '../../Style.css'
 const SiteFooter = () => {
-  return (
-    <div>
-        <footer id="site-footer" className="site-footer">
+	const handleTop = () =>{
+		window.scrollTo(0, 0);
+	}
+	return (
+		<div>
+			<footer id="site-footer" className="site-footer">
 				<div className="footer">
 					<div className="section-padding">
 						<div className="section-container">
@@ -13,7 +16,7 @@ const SiteFooter = () => {
 								<div className="row">
 									<div className="col-lg-3 col-md-6">
 										<div className="block block-image">
-											<img width="100" src={logo} alt="logo.png"/>
+											<img width="100" src={logo} alt="logo.png" />
 										</div>
 									</div>
 									<div className="col-lg-3 col-md-6">
@@ -70,16 +73,16 @@ const SiteFooter = () => {
 											<div className="block-content">
 												<div className="newsletter-text">Enter your email below to be the first to know about new collections and product launches.</div>
 												<form action="" method="post" className="newsletter-form">
-													<input type="email" name="your-email" value="" size="40" placeholder="Email address"/>
+													<input type="email" name="your-email" value="" size="40" placeholder="Email address" />
 													<span className="btn-submit">
-														<input type="submit" value="Subscribe"/>
+														<input type="submit" value="Subscribe" />
 													</span>
 												</form>
 											</div>
 										</div>
 
 										<div className="block block-image">
-											<img width="400" height="79" src={payments} alt=""/>
+											<img width="400" height="79" src={payments} alt="" />
 										</div>
 									</div>
 								</div>
@@ -87,6 +90,13 @@ const SiteFooter = () => {
 						</div>
 					</div>
 				</div>
+
+
+				<div class="back-top button-show" onClick={handleTop}>
+					<i class="arrow_carrot-up"></i>
+				</div>
+
+
 				<div className="footer-bottom">
 					<div className="section-padding">
 						<div className="section-container">
@@ -115,8 +125,8 @@ const SiteFooter = () => {
 					</div>
 				</div>
 			</footer>
-    </div>
-  )
+		</div>
+	)
 }
 
 export default SiteFooter

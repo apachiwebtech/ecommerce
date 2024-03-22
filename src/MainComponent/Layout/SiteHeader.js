@@ -117,7 +117,7 @@ const SiteHeader = (cartCount) => {
 										<div className="dropdown mini-cart top-cart">
 											<div className="remove-cart-shadow"></div>
 											<Link className="dropdown-toggle cart-icon" to="/shopcart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count"></span></div>
+												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{count}</span></div>
 											</Link>
 
 											<div className="dropdown-menu cart-popup">
@@ -129,6 +129,7 @@ const SiteHeader = (cartCount) => {
 														</li>
 													</ul>
 												</div>
+
 												<div className="cart-list-wrap">
 													<ul className="cart-list ">
 														<li className="mini-cart-item">
@@ -334,7 +335,8 @@ const SiteHeader = (cartCount) => {
 													<Link className="dropdown-toggle cart-icon" to="/shopcart" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 														<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{count}</span></div>
 													</Link>
-													<div className="dropdown-menu cart-popup">
+
+													{/* <div className="dropdown-menu cart-popup">
 														<div className="cart-empty-wrap">
 															<ul className="cart-list">
 																<li className="empty">
@@ -343,6 +345,7 @@ const SiteHeader = (cartCount) => {
 																</li>
 															</ul>
 														</div>
+
 														<div className="cart-list-wrap">
 															<ul className="cart-list ">
 																<li className="mini-cart-item">
@@ -374,6 +377,7 @@ const SiteHeader = (cartCount) => {
 															</div>
 														</div>
 													</div>
+													 */}
 												</div>
 											</div>
 										</div>

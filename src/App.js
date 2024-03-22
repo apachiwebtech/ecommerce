@@ -58,6 +58,7 @@ import Profile from './MainComponent/Pages/ProfileComponent/Profile';
 import ProfileWish from './MainComponent/Pages/ProfileComponent/ProfileWish';
 import Address from './MainComponent/Pages/ProfileComponent/ProfileAddress';
 import ProfileOrder from './MainComponent/Pages/ProfileComponent/ProfileOrders';
+import OrderView from './MainComponent/Pages/ProfileComponent/OrderView';
 
 
 const Router = createBrowserRouter([
@@ -111,19 +112,23 @@ const Router = createBrowserRouter([
       },
       {
         path: '/profile',
-        element: <Profile/>
+        element: <Profile />
       },
       {
         path: '/profile/wishlist',
-        element: <ProfileWish/>
+        element: <ProfileWish />
       },
       {
         path: '/profile/address',
-        element: <Address/>
+        element: <Address />
       },
       {
         path: '/profile/order',
-        element: <ProfileOrder/>
+        element: <ProfileOrder />
+      },
+      {
+        path: '/profile/order/:orderid',
+        element: <OrderView />
       },
       {
         path: '/checkout/:orderid',
@@ -195,6 +200,7 @@ const Router = createBrowserRouter([
         path: '/webapp/orders',
         element: <Orders />
       },
+    
       {
         path: '/webapp/shop',
         element: <Shop />
@@ -359,7 +365,7 @@ function App() {
 
   const [cartCount, setCartCount] = useState(0);
 
-  async function fetchCartCount(){
+  async function fetchCartCount() {
     try {
       const data = {
         order_id: Cookies.get(`orderid`),

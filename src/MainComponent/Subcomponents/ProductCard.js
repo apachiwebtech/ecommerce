@@ -142,7 +142,7 @@ const ProductCard = (props) => {
 
 
     return (
-        <div className="col-xl-4 col-lg-4 col-md-4 col-sm-6">
+        <div className="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
             <div className="products-entry clearfix product-wapper">
                 <ToastContainer theme="dark"     position="bottom-right" />
                 <div className="products-thumb">
@@ -161,7 +161,6 @@ const ProductCard = (props) => {
                                 addToCart(props.proid, props.title, props.catid, props.price , dispatch)
                                 notify()
 
-                              
                             }} >Add to cart</button>
                         </div>
                         <div className="btn-wishlist" data-title="Wishlist">

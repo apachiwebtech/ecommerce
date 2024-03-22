@@ -897,7 +897,6 @@ async function getsubcatData() {
                     <CKEditor
 
 
-
                       editor={ClassicEditor}
                       data={uid.specification}
                       onReady={editor => {

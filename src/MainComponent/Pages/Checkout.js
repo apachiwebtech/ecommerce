@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { useParams } from 'react-router-dom'
 import custdecryptedUserId from '../../Utils/CustUserid'
+import Cookies from 'js-cookie'
 
 const Checkout = () => {
     const [state, setState] = useState([])
@@ -164,13 +165,16 @@ const Checkout = () => {
                 scity: value.scity || value.city,
                 sstate: value.sstate || value.state,
                 spostcode: value.spostcode || value.postcode,
-                order_id: orderid
+                order_id: orderid,
+                totalamt : totalPrice
             }
 
             axios.post(`${BASE_URL}/place_order`, data)
                 .then((res) => {
                     console.log(res)
                     alert("order placed")
+
+                    Cookies.remove(`orderid`)
                 })
                 .catch((err) => {
                     console.log(err)

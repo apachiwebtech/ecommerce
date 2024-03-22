@@ -9,16 +9,23 @@ import axios from 'axios'
 import { Link, useParams } from 'react-router-dom'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import ProductCard from '../Subcomponents/ProductCard'
+import Icon from '@mdi/react'
+import { mdiClose, mdiFilterVariant } from '@mdi/js'
 
 
 const ShopProduct = () => {
 
     const [products, setProducts] = useState([])
     const [group, setGroup] = useState([])
-    const [header , SiteHeader] = useState()
+    const [toggle, setToggle] = useState(false)
+    const [header, SiteHeader] = useState()
 
     function valuetext(value) {
         return `₹${value}`;
+    }
+
+    const toggleSidebar = () => {
+        setToggle(!toggle)
     }
 
 
@@ -91,9 +98,12 @@ const ShopProduct = () => {
                         <div className="section-padding">
                             <div className="section-container p-l-r">
                                 <div className="row">
-                                    <div className="col-xl-3 col-lg-3 col-md-12 col-12  left-sidebar md-b-50">
+                                    <div className={`col-xl-3 col-lg-3 col-md-12 col-12 mob-left-sidebar ${toggle ? `mob-left-view` : ``}  left-sidebar md-b-50`}>
                                         {/* <!-- Block Product Categories --> */}
                                         <div className="block block-product-cats">
+                                            <div className="py-4  mob-left-sidebar-close " onClick={toggleSidebar} style={{ textAlign: "right", display: "none" }} >
+                                                <Icon path={mdiClose} size={1} />
+                                            </div>
                                             <div className="block-title"><h2>Categories</h2></div>
                                             <div className="block-content">
                                                 <div className="product-cats-list">
@@ -148,7 +158,7 @@ const ShopProduct = () => {
                                             <div className="block-title"><h2>Brands</h2></div>
                                             <div className="block-content">
                                                 <ul className="filter-items image">
-                                                    {products.map((brand) => {  
+                                                    {products.map((brand) => {
                                                         return (
 
                                                             <li><span><img src={brand1} alt="Brand" /></span></li>
@@ -238,25 +248,44 @@ const ShopProduct = () => {
                                     </div>
 
                                     <div className="col-xl-9 col-lg-9 col-md-12 col-12">
-                                        <div className="products-topbar clearfix">
-                                            <div className="products-topbar-left">
-                                                <div className="products-count">
-                                                    Showing all 21 results
+                                        <div className="products-topbar clearfix ">
+
+                                            <div className='d-flex justify-content-between'>
+                                                <div className=''>
+                                                    <div className="">
+                                                        <div className="products-count">
+                                                            Filter
+                                                        </div>
+                                                    </div>
+                                                    <div className='mob-filter' style={{display :"none"}}>
+                                                        <Icon path={mdiFilterVariant} onClick={toggleSidebar} className='border p-1' size={1} />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="products-topbar-right">
-                                                <div className="products-sort dropdown">
-                                                    <span className="sort-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Default sorting</span>
-                                                    <ul className="sort-list dropdown-menu" x-placement="bottom-start">
-                                                        <li className="active"><a href="#">Default sorting</a></li>
-                                                        <li><a href="#">Sort by popularity</a></li>
-                                                        <li><a href="#">Sort by average rating</a></li>
-                                                        <li><a href="#">Sort by latest</a></li>
-                                                        <li><a href="#">Sort by price: low to high</a></li>
-                                                        <li><a href="#">Sort by price: high to low</a></li>
-                                                    </ul>
+
+
+                                                <div>
+                                                    <div className="">
+                                                        <div className="products-count">
+                                                            Showing all 21 results
+                                                        </div>
+                                                    </div>
+                                                    <div className="products-topbar-right">
+                                                        <div className="products-sort dropdown">
+                                                            <span className="sort-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Default sorting</span>
+                                                            <ul className="sort-list dropdown-menu" x-placement="bottom-start">
+                                                                <li className="active"><a href="#">Default sorting</a></li>
+                                                                <li><a href="#">Sort by popularity</a></li>
+                                                                <li><a href="#">Sort by average rating</a></li>
+                                                                <li><a href="#">Sort by latest</a></li>
+                                                                <li><a href="#">Sort by price: low to high</a></li>
+                                                                <li><a href="#">Sort by price: high to low</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </div>
+
                                             </div>
+
                                         </div>
 
                                         <div className="tab-content">
