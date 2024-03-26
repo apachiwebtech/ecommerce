@@ -18,20 +18,52 @@ const ShopCart = ({ fetchcount }) => {
   const orderid = Cookies.get(`orderid`)
   const handleToggle = (e) => {
     setOpen(!open);
-}
+  }
 
-  const handleIncrease = (itemId) => {
+  const handleIncrease = (itemId, proid,qty) => {
     setQuantities(prevQuantities => ({
       ...prevQuantities,
-      [itemId]: (prevQuantities[itemId] || 0) + 1
+      [itemId]: (prevQuantities[itemId] || 0) + 1 
     }));
+
+
+    console.log(quantities, "value")
+
+    const data = {
+      pqty: quantities[itemId] + 1,
+      order_id: Cookies.get(`orderid`),
+      p_id: proid
+    }
+
+
+    axios.post(`${BASE_URL}/update_proqty`, data)
+      .then((res) => {
+        console.log(res)
+        getcartdata()
+      })
   };
 
-  const handleDecrease = (itemId) => {
+
+
+  const handleDecrease = (itemId, proid) => {
     setQuantities(prevQuantities => ({
       ...prevQuantities,
       [itemId]: Math.max((prevQuantities[itemId] || 0) - 1, 0)
     }));
+
+
+    const data = {
+      pqty: quantities[itemId] - 1,
+      order_id: Cookies.get(`orderid`),
+      p_id: proid
+    }
+
+
+    axios.post(`${BASE_URL}/update_proqty`, data)
+      .then((res) => {
+        console.log(res)
+        getcartdata()
+      })
   };
 
   async function getcartdata() {
@@ -45,6 +77,7 @@ const ShopCart = ({ fetchcount }) => {
         console.log(res)
 
         setCart(res.data)
+        // setQuantities(quantities[4] || res.data.pqty)
 
 
       })
@@ -78,8 +111,10 @@ const ShopCart = ({ fetchcount }) => {
       })
   }
 
+
+
   const totalPrice = cart.reduce((acc, item) => {
-    const itemTotal = item.price * (quantities[item.id] || 1); // Use 1 as default quantity if not 
+    const itemTotal = item.price * item.pqty; // Use 1 as default quantity if not 
     return acc + itemTotal;
   }, 0);
 
@@ -112,7 +147,7 @@ const ShopCart = ({ fetchcount }) => {
                           <div className='text-center'>
                             {cart.length == 0 && <img src={empty} alt='' />}
                             {cart.length == 0 && <h3>Your cart is empty</h3>}
-                           
+
                           </div>
                           <form class="cart-form" action="" method="post">
                             <div class="table-responsive">
@@ -150,9 +185,11 @@ const ShopCart = ({ fetchcount }) => {
                                         </td>
                                         <td className="product-quantity">
                                           <div className="quantity">
-                                            <button type="button" className="minus" onClick={() => handleDecrease(item.id)}>-</button>
-                                            <input type="number" className="qty" step="1" min="0" max="" name="quantity" value={quantities[item.id] || 1} title="Qty" size="4" placeholder="" inputMode="numeric" autoComplete="off" />
-                                            <button type="button" onClick={() => handleIncrease(item.id)} className="plus">+</button>
+                                            <button type="button" className="minus" onClick={() => handleDecrease(item.id, item.proid , item.pqty)}>-</button>
+
+                                            <input type="number" className="qty" step="1" min="0" max="" name="quantity" value={quantities[item.id] || item.pqty} title="Qty" size="4" placeholder="" inputMode="numeric" autoComplete="off" />
+
+                                            <button type="button" onClick={() => handleIncrease(item.id, item.proid)} className="plus">+</button>
                                           </div>
                                         </td>
                                         <td className="product-subtotal">
@@ -220,30 +257,30 @@ const ShopCart = ({ fetchcount }) => {
                               </div>
                             </div>
                             <div class="proceed-to-checkout">
-                            {Cookies.get(`custuserid`) ? <Link to={`/checkout/${orderid}`} class="checkout-button button">
+                              {Cookies.get(`custuserid`) ? <Link to={`/checkout/${orderid}`} class="checkout-button button">
                                 Proceed to checkout
-                              </Link>:  <Link onClick={() => handleToggle()} class="checkout-button button">
+                              </Link> : <Link onClick={() => handleToggle()} class="checkout-button button">
                                 Proceed to checkout
                               </Link>}
-                            
+
 
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                    {cart.length == 0 &&    <div class="shop-cart-empty">
+                    {cart.length == 0 && <div class="shop-cart-empty">
                       <div class="notices-wrapper">
                         <p class="cart-empty">Your cart is currently empty.</p>
                       </div>
                       <div class="return-to-shop">
                         <Link class="button" to="/">
-                          
+
                           Return to shop
                         </Link>
                       </div>
-                    </div> }
-                 
+                    </div>}
+
 
                   </div>
                 </div>

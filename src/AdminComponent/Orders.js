@@ -9,11 +9,11 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { dark } from '@mui/material/styles/createPalette';
 const Orders = () => {
     const [order, setOrderData] = useState([])
-    const [order2, setOrderData2] = useState([])
+    const [filteredData, setFilteredData] = useState([]);
     const [value, setValue] = useState({
-        Order : "" ,
-        Name: "" ,
-        Number: "" ,
+        Order: "",
+        Name: "",
+        Number: "",
         from: "",
         to: "",
         deliveryStatus: "",
@@ -21,19 +21,20 @@ const Orders = () => {
     })
 
     const onhandleChange = (e) => {
-        setValue((prev) => ({...prev, [e.target.name]: e.target.value }))
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
     const handleCancel = () => {
         setValue({
-            Order : "" ,
-            Name: "" ,
-            Number: "" ,
+            Order: "",
+            Name: "",
+            Number: "",
             from: "",
             to: "",
             deliveryStatus: "",
             paymentStatus: "",
         })
+        setFilteredData(order)
 
     }
 
@@ -42,8 +43,7 @@ const Orders = () => {
             .then((res) => {
                 console.log(res.data)
                 setOrderData(res.data)
-                
-                setOrderData2(res.data)
+                setFilteredData(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -55,36 +55,37 @@ const Orders = () => {
     }, [])
 
     const handleSubmit = (e) => {
-        console.log(value , ":::::::::");
-        console.log( "{{{{{{{{{{{{")
         e.preventDefault();
-        const filtered = order2.filter(item => {
+        const filteredResult = order.filter(item => {
+            // Apply order filter   
             const orderMatch = value.Order === '' || item.orderno.includes(value.Order);
-            const nameMatch = value.Name ==='' || item.firstname.toLowerCase().includes(value.Name.toLowerCase());
-            const numberMatch = value.Number ==='' || item.mobileno.includes(value.Number);
+            const nameMatch = value.Name === '' || item.firstname.toLowerCase().includes(value.Name.toLowerCase());
+            const numberMatch = value.Number === '' || item.mobileno.includes(value.Number);
             let dateMatch = true;
             const orderDate = item.created_date.split('T')[0];
             const from = value.from;
             const to = value.to;
             if (value.from && !value.to) {
                 dateMatch = orderDate >= from;
-                console.log(dateMatch ,"????")
-              } else if (!value.from && value.to) {
+                console.log(dateMatch, "????")
+            } else if (!value.from && value.to) {
                 dateMatch = orderDate <= to;
-                console.log(dateMatch ,"????")
-              } else if (value.from && value.to) {
+                console.log(dateMatch, "????")
+            } else if (value.from && value.to) {
                 dateMatch = orderDate >= from && orderDate <= to;
-                console.log(dateMatch ,"????")
-              }
-            const deliveryStatusMatch = isNaN(value.deliveryStatus) ? value.paymentStatus === 'All' : item.ostatus === value.deliveryStatus;
-            const paymentStatusMatch = isNaN(value.paymentStatus) ?  value.paymentStatus === 'All' : item.paystatus === value.paymentStatus; 
+                console.log(dateMatch, "????")
+            }
+            const deliveryStatusMatch = value.deliveryStatus === 'All' || value.deliveryStatus === '' || item.ostatus === parseInt(value.deliveryStatus);
+            const paymentStatusMatch = value.paymentStatus === 'All' || value.paymentStatus === '' || item.paymentStatus === parseInt(value.paymentStatus);
+            console.log(item.paystatus === parseInt(value.paymentStatus), "???????")
+            return orderMatch && nameMatch && numberMatch && dateMatch && deliveryStatusMatch && paymentStatusMatch;
 
-            return orderMatch && nameMatch && numberMatch && dateMatch && deliveryStatusMatch && paymentStatusMatch ;
-    
-          });
-          console.log(filtered , "///////")
-          setOrderData(filtered);
+
+        });
+        // Update filtered data state
+        setFilteredData(filteredResult);
     }
+
 
 
 
@@ -111,11 +112,11 @@ const Orders = () => {
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Customer Name</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Name" name='Name' value={value.Name} onChange={onhandleChange}/>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Name" name='Name' value={value.Name} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Mobile No</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Number" name='Number' value={value.Number} onChange={onhandleChange}/>
+                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Number" name='Number' value={value.Number} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Order From</label>
@@ -127,12 +128,12 @@ const Orders = () => {
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Delivery Status</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='deliveryStatus'  onChange={onhandleChange}>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='deliveryStatus' onChange={onhandleChange}>
                                                     <option selected>All</option>
-                                                    <option value="1">Confirm</option>
-                                                    <option value="2">Dispatch</option>
-                                                    <option value="3">Delivered</option>
-                                                    <option value="4">Cancelled</option>
+                                                    <option value="Confirm">Confirm</option>
+                                                    <option value="Dispatched">Dispatch</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                    <option value="Cancelled">Cancelled</option>
                                                 </select>
 
                                             </div>
@@ -214,7 +215,7 @@ const Orders = () => {
 
                                             <tbody>
 
-                                                {order.map((item) => {
+                                                {filteredData.map((item) => {
                                                     return (
                                                         <tr >
                                                             <td>
@@ -230,7 +231,7 @@ const Orders = () => {
                                                                 {item.firstname} {item.lastname}
                                                             </td>
                                                             <td>
-                                                                {item.tamount}
+                                                                ₹{item.totalamt}
                                                             </td>
                                                             <td>
                                                                 {item.paystatus == 0 ? "pending" : "paid"}
@@ -243,12 +244,12 @@ const Orders = () => {
                                                                 <button className='bt btn-sm btn-primary'>Print Invoice</button>
                                                             </td>
                                                             <td>
-                                                                <Link to="/webapp/view"><RemoveRedEyeIcon className='text-primary' /></Link>
+                                                                <Link to={`/webapp/view/${item.id}`}><RemoveRedEyeIcon className='text-primary' /></Link>
                                                             </td>
                                                         </tr>
                                                     )
                                                 })}
-                                          
+
 
 
 

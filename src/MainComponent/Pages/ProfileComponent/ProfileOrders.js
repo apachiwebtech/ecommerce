@@ -23,7 +23,7 @@ const ProfileOrder = () => {
     }
 
 
-    
+
 
     useEffect(() => {
         getOrderData()
@@ -74,7 +74,7 @@ const ProfileOrder = () => {
                                         const year = String(date.getFullYear()).slice();
 
                                         const formattedDate = `${day}-${month}-${year}`;
-                                     
+
                                         return (
                                             <tr>
                                                 <td>{item.orderno}</td>
@@ -85,11 +85,25 @@ const ProfileOrder = () => {
                                                     ₹{item.totalamt}
                                                 </td>
                                                 <td>
-                                                    {item.ostatus == "success" ? <span className='text-success'> {item.ostatus}</span>:<span className='text-danger'> {item.ostatus}</span>}
-                                                   
+                                                    {item.ostatus === "Delivered" ?
+                                                        <span className='text-success'>Delivered</span>
+                                                        :
+                                                        item.ostatus === "Dispatched" ?
+                                                            <span className='text-success'>Dispatched</span>
+                                                            :
+                                                            item.ostatus === "Cancelled" ?
+                                                                <span className='text-danger'>Cancelled</span> :
+                                                                item.ostatus === "Confirm" ?
+                                                                    <span className='text-Success'>Cancelled</span> :
+                                                                    <span className='text-warning'>Pending</span>
+                                                    }
+
+
+
+
                                                 </td>
                                                 <td>
-                                                   <Link to={`/profile/order/${item.id}`}><Icon path={mdiFileEye} size={1} /></Link> 
+                                                    <Link to={`/profile/order/${item.id}`}><Icon path={mdiFileEye} size={1} /></Link>
                                                 </td>
 
                                             </tr>

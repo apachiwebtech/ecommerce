@@ -59,6 +59,7 @@ import ProfileWish from './MainComponent/Pages/ProfileComponent/ProfileWish';
 import Address from './MainComponent/Pages/ProfileComponent/ProfileAddress';
 import ProfileOrder from './MainComponent/Pages/ProfileComponent/ProfileOrders';
 import OrderView from './MainComponent/Pages/ProfileComponent/OrderView';
+import RoleAssignment from './AdminComponent/RoleAssignment';
 
 
 const Router = createBrowserRouter([
@@ -221,7 +222,7 @@ const Router = createBrowserRouter([
         element: <ThresholdProduct />
       },
       {
-        path: '/webapp/view',
+        path: '/webapp/view/:orderid',
         element: <View />
       },
 
@@ -252,6 +253,10 @@ const Router = createBrowserRouter([
         path: '/webapp/color',
         element: <Color />
       },
+      {
+        path: '/webapp/roleassign',
+        element: <RoleAssignment />
+      },
       // {
       //   path: '/webapp/addimages/:product_id',
       //   element: <AddProductImg />
@@ -269,7 +274,16 @@ function checkLocalStorageAndRedirect(navigate) {
 }
 
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
 
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 
 function WebApp() {
@@ -298,8 +312,11 @@ function WebApp() {
 
   }, [navigate]);
 
+  const { pathname } = useLocation();
 
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
 
 
@@ -345,16 +362,7 @@ function WebApp() {
   );
 }
 
-function ScrollToTop() {
-  const { pathname } = useLocation();
 
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-  return null;
-}
 
 
 

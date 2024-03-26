@@ -11,6 +11,8 @@ const Checkout = () => {
     const [subtotal, setSubtotal] = useState("")
     const [copy, setCopy] = useState(false)
     const [errors, setErrors] = useState({})
+    const [selectedPayment, setSelectedPayment] = useState('cod');
+
 
     const [value, setValue] = useState({
         firstname: "",
@@ -22,6 +24,7 @@ const Checkout = () => {
         state: "",
         postcode: "",
         orderNotes: "",
+        mobile: "",
 
         sfirstname: "",
         slastname: "",
@@ -32,9 +35,15 @@ const Checkout = () => {
         sstate: "",
         spostcode: "",
 
+
     })
 
+    const handlePaymentChange = (event) => {
+        setSelectedPayment(event.target.value);
+        // Here you can do whatever you want with the selected value, like sending it to the server or performing some action.
+    };
 
+console.log(value.mobile)
 
 
     const validateForm = () => {
@@ -60,6 +69,10 @@ const Checkout = () => {
         if (!value.city) {
             isValid = false;
             newErrors.city = "city is required";
+        }
+        if (!value.mobile) {
+            isValid = false;
+            newErrors.mobile = "mobile is required";
         }
         if (!value.state) {
             isValid = false;
@@ -156,6 +169,7 @@ const Checkout = () => {
                 state: value.state,
                 postcode: value.postcode,
                 orderNotes: value.orderNotes,
+                mobile: value.mobile,
 
                 sfirstname: value.sfirstname || value.firstname,
                 slastname: value.slastname || value.lastname,
@@ -166,7 +180,10 @@ const Checkout = () => {
                 sstate: value.sstate || value.state,
                 spostcode: value.spostcode || value.postcode,
                 order_id: orderid,
-                totalamt: totalPrice
+                totalamt: totalPrice,
+                paymode: selectedPayment,
+
+                user_id: custdecryptedUserId()
             }
 
             axios.post(`${BASE_URL}/place_order`, data)
@@ -185,13 +202,15 @@ const Checkout = () => {
 
     }
 
+    // alert(value.mobile)
+
     async function fetchAddress() {
         const data = {
             user_id: custdecryptedUserId()
         }
         axios.post(`${BASE_URL}/fetch_address`, data)
             .then((res) => {
-                if(res.data.length !== 0){
+                if (res.data.length !== 0) {
                     setValue({
                         firstname: res.data[0].firstname,
                         lastname: res.data[0].lastname,
@@ -200,10 +219,11 @@ const Checkout = () => {
                         city: res.data[0].city,
                         state: res.data[0].state,
                         postcode: res.data[0].pincode,
+                        mobile: res.data[0].mobile,
                     })
                 }
 
-              
+
 
             })
     }
@@ -225,6 +245,7 @@ const Checkout = () => {
             address: value.address,
             city: value.city,
             state: value.state,
+            mobile:value.mobile,
             postcode: value.postcode,
             sfirstname: value.firstname,
             slastname: value.lastname,
@@ -290,18 +311,25 @@ const Checkout = () => {
                                                                         </p>
                                                                     </div>
 
+                                                                    <div className='row '>
+                                                                        <p class="form-row form-row-last validate-required col-lg-6 col-md-6 col-12">
+                                                                            <label>Mobile <span class="required" title="required">*</span></label>
+                                                                            <span class="input-wrapper"><input type="number" class="input-text" name="mobile" value={value.mobile} onChange={onhandlechange} /></span>
+                                                                            {errors.mobile && <span className='text-danger'>{errors.mobile}</span>}
+                                                                        </p>
+                                                                        <p class="form-row form-row-wide validate-required col-lg-6">
+                                                                            <label>Country / Region <span class="required" title="required">*</span></label>
+                                                                            <span class="input-wrapper">
+                                                                                <select name="country" class="country-select custom-select" onChange={onhandlechange}>
+                                                                                    <option value="">Select a country / region…</option>
+                                                                                    <option value="1">India</option>
 
-                                                                    <p class="form-row form-row-wide validate-required">
-                                                                        <label>Country / Region <span class="required" title="required">*</span></label>
-                                                                        <span class="input-wrapper">
-                                                                            <select name="country" class="country-select custom-select" onChange={onhandlechange}>
-                                                                                <option value="">Select a country / region…</option>
-                                                                                <option value="1">India</option>
+                                                                                </select>
+                                                                            </span>
+                                                                            {errors.country && <span className='text-danger'>{errors.country}</span>}
+                                                                        </p>
 
-                                                                            </select>
-                                                                        </span>
-                                                                        {errors.country && <span className='text-danger'>{errors.country}</span>}
-                                                                    </p>
+                                                                    </div>
                                                                     <p class="form-row address-field validate-required form-row-wide">
                                                                         <label>Address <span class="required" title="required">*</span></label>
                                                                         <span class="input-wrapper">
@@ -390,7 +418,7 @@ const Checkout = () => {
                                                                     <span class="input-wrapper">
                                                                         <select name="scountry" class="state-select custom-select" value={value.scountry} onChange={onhandlechange}>
                                                                             <option value="">Select a country / region…</option>
-                                                                            <option value="1">India</option>
+                                                                            <option value="1" selected>India</option>
 
                                                                         </select>
                                                                     </span>
@@ -519,32 +547,76 @@ const Checkout = () => {
                                                             </div>
                                                         </div>
                                                         <div id="payment" class="checkout-payment">
-                                                            <ul class="payment-methods methods custom-radio">
-                                                                <li class="payment-method">
-                                                                    <input type="radio" class="input-radio" name="payment_method" value="bacs" checked="checked" />
-                                                                    <label for="payment_method_bacs">Direct bank transfer</label>
-                                                                    <div class="payment-box">
+
+                                                            <ul className="payment-methods methods custom-radio">
+                                                                <li className="payment-method">
+                                                                    <input
+                                                                        className="form-check-input"
+                                                                        type="radio"
+                                                                        name="exampleRadios"
+                                                                        id="exampleRadios1"
+                                                                        value="bank-transfer"
+                                                                        checked={selectedPayment === 'bank-transfer'}
+                                                                        onChange={handlePaymentChange}
+                                                                        disabled
+                                                                    />
+                                                                    <label className="form-check-label" htmlFor="exampleRadios1">
+                                                                        Direct bank transfer
+                                                                    </label>
+                                                                    <div className="payment-box">
                                                                         <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
                                                                     </div>
                                                                 </li>
-                                                                <li class="payment-method">
-                                                                    <input type="radio" class="input-radio" name="payment_method" value="cheque" />
-                                                                    <label>Check payments</label>
-                                                                    <div class="payment-box">
+                                                                <li className="payment-method">
+                                                                    <input
+                                                                        className="form-check-input"
+                                                                        type="radio"
+                                                                        name="exampleRadios"
+                                                                        id="exampleRadios2"
+                                                                        value="check"
+                                                                        checked={selectedPayment === 'check'}
+                                                                        onChange={handlePaymentChange}
+                                                                        disabled
+                                                                    />
+                                                                    <label className="form-check-label" htmlFor="exampleRadios2">
+                                                                        Check payments
+                                                                    </label>
+                                                                    <div className="payment-box">
                                                                         <p>Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
                                                                     </div>
                                                                 </li>
-                                                                <li class="payment-method">
-                                                                    <input type="radio" class="input-radio" name="payment_method" value="cod" />
-                                                                    <label>Cash on delivery</label>
-                                                                    <div class="payment-box">
+                                                                <li className="payment-method">
+                                                                    <input
+                                                                        className="form-check-input"
+                                                                        type="radio"
+                                                                        name="exampleRadios"
+                                                                        id="exampleRadios3"
+                                                                        value="cod"
+                                                                        checked={selectedPayment === 'cod'}
+                                                                        onChange={handlePaymentChange}
+                                                                    />
+                                                                    <label className="form-check-label" htmlFor="exampleRadios3">
+                                                                        Cash on delivery
+                                                                    </label>
+                                                                    <div className="payment-box">
                                                                         <p>Pay with cash upon delivery.</p>
                                                                     </div>
                                                                 </li>
-                                                                <li class="payment-method">
-                                                                    <input type="radio" class="input-radio" name="payment_method" value="paypal" />
-                                                                    <label>PayPal</label>
-                                                                    <div class="payment-box">
+                                                                <li className="payment-method">
+                                                                    <input
+                                                                        className="form-check-input"
+                                                                        type="radio"
+                                                                        name="exampleRadios"
+                                                                        id="exampleRadios4"
+                                                                        value="paypal"
+                                                                        checked={selectedPayment === 'paypal'}
+                                                                        onChange={handlePaymentChange}
+                                                                        disabled
+                                                                    />
+                                                                    <label className="form-check-label" htmlFor="exampleRadios4">
+                                                                        PayPal
+                                                                    </label>
+                                                                    <div className="payment-box">
                                                                         <p>Pay via PayPal; you can pay with your credit card if you don’t have a PayPal account.</p>
                                                                     </div>
                                                                 </li>

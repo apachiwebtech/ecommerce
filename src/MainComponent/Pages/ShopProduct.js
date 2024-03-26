@@ -28,6 +28,31 @@ const ShopProduct = () => {
         setToggle(!toggle)
     }
 
+    const marks = [
+        {
+            value: 0,
+            label: '₹0',
+        },
+
+        {
+            value: 25000,
+            label: '₹25000',
+        },
+        {
+            value: 50000,
+            label: '₹50000',
+        },
+        {
+            value: 75000,
+            label: '₹75000',
+        },
+        {
+            value: 100000,
+            label: '₹100000',
+        },
+    ];
+
+
 
     // const dispatch = useDispatch();
     // const products = useSelector((state) => state.products.products);
@@ -127,17 +152,7 @@ const ShopProduct = () => {
                                             <div className="block-title"><h2>Price</h2></div>
                                             <div className="block-content">
 
-                                                <Slider
-                                                    aria-label="Temperature"
-                                                    defaultValue={30}
-                                                    getAriaValueText={valuetext}
-                                                    valueLabelDisplay="auto"
-                                                    shiftStep={30}
-                                                    step={10}
-                                                    marks
-                                                    min={10}
-                                                    max={110}
-                                                />
+                                                <Slider defaultValue={1000} getAriaValueText={valuetext} marks={marks} max={100000} aria-label="Default" valueLabelDisplay="auto" />
                                             </div>
                                         </div>
 
@@ -257,7 +272,7 @@ const ShopProduct = () => {
                                                             Filter
                                                         </div>
                                                     </div>
-                                                    <div className='mob-filter' style={{display :"none"}}>
+                                                    <div className='mob-filter' style={{ display: "none" }}>
                                                         <Icon path={mdiFilterVariant} onClick={toggleSidebar} className='border p-1' size={1} />
                                                     </div>
                                                 </div>

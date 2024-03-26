@@ -10529,3 +10529,7 @@ html {
     .otp-text {
       font-size: 13px;
     }
+
+    .w-200{
+      width : 300px
+    }

@@ -190,7 +190,7 @@ function LoginForm({ open, setOpen }) {
             axios.post(`${BASE_URL}/customerlogin`, data)
                 .then((res) => {
                     setLoader(false)
-                    console.log(res.data, "000")
+                    // console.log(res.data, "000")
                     if (res.data[0].id) {
                         setShowOtp(true)
                         setHide(true)
@@ -295,9 +295,30 @@ function LoginForm({ open, setOpen }) {
 
             axios.post(`${BASE_URL}/updateproid`, data)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
+          
+                  
                 });
         }
+
+    }
+
+    async function addorderid() {
+    
+            const data = {
+                user_id: custdecryptedUserId(),
+            }
+
+            axios.post(`${BASE_URL}/addorderid`, data)
+                .then((res) => {
+                    // console.log(res)
+
+                    if(res.data[0].id){
+
+                        Cookies.set('orderid' , res.data[0].id)
+                    }
+                });
+      
 
     }
 
@@ -323,7 +344,7 @@ function LoginForm({ open, setOpen }) {
 
         axios.post(`${BASE_URL}/otp`, data)
             .then((res) => {
-                console.log(res)
+                // console.log(res)
 
 
                 if (res.data.length == 0) {
@@ -338,7 +359,7 @@ function LoginForm({ open, setOpen }) {
 
                     setTimeout(() => {
                         updateuserid()
-                        
+                        addorderid()
                     }, 1000);
                     setLoader(false)
                     setOpen(false)

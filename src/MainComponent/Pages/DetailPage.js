@@ -17,6 +17,8 @@ import LoginForm from '../Authentication/LoginForm';
 
 const DetailPage = () => {
 
+
+
 	var settings = {
 		dots: false,
 		infinite: true,
@@ -124,6 +126,9 @@ const DetailPage = () => {
         dispatch(addToWishList(wishData));
 
     }
+
+
+	console.log(value)
 
 	return (
 
@@ -310,8 +315,9 @@ const DetailPage = () => {
 																		</div>
 																		<div class="btn-add-to-cart">
 																			<div class="button" onClick={() => {
-																				addToCart(item.id, item.title, item.catid, item.price)
+																				addToCart(item.id, item.title, item.catid, item.price,dispatch , value)
 																				notify();
+
 																			}} >Add to cart</div>
 																		</div>
 																	</div>
