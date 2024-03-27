@@ -2286,7 +2286,7 @@ app.post('/address_delete', (req, res) => {
               }
               else {
 
-                if (data.length > 0 ) {
+                if (data.length > 0) {
                   const addid = data[0].id
 
 
@@ -2302,7 +2302,7 @@ app.post('/address_delete', (req, res) => {
                     }
                   })
                 }
-                else{
+                else {
                   res.json(data)
                 }
               }
@@ -2363,5 +2363,276 @@ app.post('/update_default', (req, res) => {
 })
 
 
+app.post('/profile_order', (req, res) => {
+
+  let user_id = req.body.user_id;
+
+  const sql = "select * from `order` where  `userid` = ? and `ostatus` !='incart' "
+
+  con.query(sql, [user_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+
+app.post('/fetch_address', (req, res) => {
+
+  let user_id = req.body.user_id;
+
+  const sql = "select * from `awt_address` where  `uid` = ? and `default` = 1 and `deleted` = 0"
+
+  con.query(sql, [user_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+app.post('/order_view', (req, res) => {
+
+  let order_id = req.body.order_id;
+
+  const sql = "select id, sfirstname,slastname,orderno,order_date,ostatus,paymode,shipaddress,paymode,pstatus,shipcity,shippostcode,totalamt from `order` where `id` = ? and deleted = 0"
+
+  con.query(sql, [order_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+app.post('/order_status_update', (req, res) => {
+
+  let order_id = req.body.order_id;
+  let order_status = req.body.order_status;
+
+  const sql = "update `order` set `ostatus` = ?  where  id = ?"
+
+  con.query(sql, [order_status, order_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+
+app.post('/addorderid', (req, res) => {
+
+  let user_id = req.body.user_id;
+
+
+  const sql = "select id from `order` where `userid` = ? and `ostatus` = 'incart' order by `id` desc limit 1"
+
+  con.query(sql, [user_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+
+
+app.get('/role_data', (req, res) => {
+
+  const sql = 'select * from role where role.delete = 0 '
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/role_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+
+  const sql = "select * from role where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/role_delete', (req, res) => {
+
+  let role_id = req.body.role_id;
+
+  const sql = "update role set role.delete = 1 where id = ?"
+
+  con.query(sql, [role_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/add_role', (req, res) => {
+  let user_id = req.body.user_id
+  let title = req.body.title;
+  let description = req.body.description;
+  let created_date = new Date()
+  let u_id = req.body.u_id;
+
+
+
+  let sql;
+  let param;
+
+  if (u_id == undefined) {
+    sql = "insert into role(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
+    param = [title, description, user_id, created_date]
+
+  } else {
+    sql = "update role set title = ? , description = ? , updated_by = ? ,updated_date = ? where id = ? "
+    param = [title, description, user_id, created_date, u_id]
+  }
+
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+
+      return res.json(err)
+    }
+    else {
+
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+app.post('/role_pages', (req, res) => {
+  let role_id = req.body.role_id;
+
+  const sqlSelect = "SELECT * FROM `pagerole` AS pg LEFT JOIN `page_master` AS pm ON pg.pageid = pm.id  WHERE pg.roleid = ? ORDER BY pg.id ASC";
+
+  con.query(sqlSelect, [role_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      if (data.length == 0) {
+
+        const selectquery = "select COUNT(*) as count from `page_master` where deleted = 0"
+
+
+        con.query(selectquery, (err, data) => {
+          if (err) {
+            return res.json(err)
+          } else {
+            const count = data[0].count
+
+            // Insert 35 rows if data length is less than 0
+            const insertRows = "INSERT INTO `pagerole` (`roleid`, `pageid`,`accessid`) VALUES ?";
+
+            let values = [];
+            for (let i = 1; i < count; i++) {
+              // Assuming `roleid` and `pageid` are the columns in `pagerole` table
+              values.push([role_id, i, 1]);
+            }
+            con.query(insertRows, [values], (insertErr, insertResult) => {
+              if (insertErr) {
+                return res.json(insertErr);
+              } else {
+                const getdata = "SELECT * FROM `pagerole` AS pg LEFT JOIN `page_master` AS pm ON pg.pageid = pm.id  WHERE pg.roleid = ? ORDER BY pg.id ASC";
+
+
+                con.query(getdata, [role_id], (err, data) => {
+                  if (err) {
+                    return res.json(err)
+                  } else {
+                    return res.json(data)
+                  }
+                })
+              }
+
+            });
+
+          }
+        })
+
+
+
+
+      }
+      else {
+        return res.json(data)
+      }
+    }
+  });
+});
+
+
+app.post('/assign_role', (req, res) => {
+
+  let rolePages = req.body
+
+
+  const role_id = rolePages[0].roleid
+
+
+  const sql = "delete from `pagerole` where roleid = ?"
+
+
+  con.query(sql, [role_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+
+      const sql = "insert into pagerole(`roleid`,`pageid`,`accessid`) VALUES ?"
+      const values = rolePages.map(rolePage => [rolePage.roleid, rolePage.pageid, rolePage.accessid]);
+
+      con.query(sql, [values], (err, data) => {
+        if (err) {
+          return res.json(err)
+        }
+        else {
+          return res.json(data)
+        }
+      })
+
+    }
+  })
+
+
+
+
+
+
+})
 
 

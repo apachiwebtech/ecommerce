@@ -11,11 +11,13 @@ import { DataGrid } from '@mui/x-data-grid';
 import CryptoJS from 'crypto-js';
 import decryptedUserId from '../Utils/UserID';
 import Loader from './Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
 const AdminUser = () => {
 
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [errors, setErrors] = useState({})
-    const [loader , setLoader] = useState(false)
+    const [loader, setLoader] = useState(false)
     const [cid, setCid] = useState("")
     const [admindata, setData] = useState([])
     const [uid, setUid] = useState([])
@@ -26,7 +28,7 @@ const AdminUser = () => {
         mobile: "" || uid.mobile,
         password: "",
         cnf_password: "",
-       
+
     })
 
     useEffect(() => {
@@ -117,7 +119,7 @@ const AdminUser = () => {
         getAdminuserData()
     }, [])
 
-  
+
     const handleClick = (id) => {
         setCid(id)
         setConfirmationVisibleMap((prevMap) => ({
@@ -125,7 +127,7 @@ const AdminUser = () => {
             [id]: true,
         }));
     };
-    
+
 
 
     const handleCancel = (id) => {
@@ -158,7 +160,7 @@ const AdminUser = () => {
             [id]: false,
         }));
     }
-  
+
 
 
     const handleSubmit = (e) => {
@@ -183,7 +185,7 @@ const AdminUser = () => {
                     alert(res.data)
                     setLoader(false)
                     getAdminuserData()
-                     window.location.pathname = '/webapp/adminuser'
+                    window.location.pathname = '/webapp/adminuser'
 
 
 
@@ -235,21 +237,38 @@ const AdminUser = () => {
                 return (
                     <>
                         <div>
-                            <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
-                            <DeleteIcon sx={{cursor :"pointer"}} style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
+                            <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
+                            <DeleteIcon sx={{ cursor: "pointer" }} style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
                         </div>
-                     
+
                     </>
                 )
             }
         },
     ];
+
+
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 3
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    console.log(roleaccess, ")))")
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
     return (
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            {loader && <Loader/>}
-            <div class="main-panel">
+            {loader && <Loader />}
+
+            {roleaccess > 1 ? <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
@@ -290,7 +309,7 @@ const AdminUser = () => {
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button'  onClick={() => {
+                                        <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
                                     </form>
@@ -316,17 +335,17 @@ const AdminUser = () => {
                                             columns={columns}
                                             initialState={{
                                                 pagination: {
-                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 10, page: 0 },
                                                 },
-                                              }}
+                                            }}
                                         />
-                                           {confirmationVisibleMap[cid] && (
-                                                                <div className='confirm-delete'>
-                                                                    <p>Are you sure you want to delete?</p>
-                                                                    <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                                                </div>
-                                                            )}
+                                        {confirmationVisibleMap[cid] && (
+                                            <div className='confirm-delete'>
+                                                <p>Are you sure you want to delete?</p>
+                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                            </div>
+                                        )}
                                     </div>
 
                                 </div>
@@ -334,7 +353,8 @@ const AdminUser = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> : <h1>No Access</h1>}
+
         </div>
 
     )

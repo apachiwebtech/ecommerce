@@ -21,6 +21,8 @@ function RoleAssignment() {
             return item;
         });
         setRolePages(updatedData);
+
+        console.log(updatedData, "(((")
     };
 
 
@@ -55,11 +57,22 @@ function RoleAssignment() {
     async function getRolePages(rid) {
         axios.post(`${BASE_URL}/role_pages`, { role_id: rid })
             .then((res) => {
-                console.log(res.data, ">>>>>")
+                // console.log(res.data, ">>>>>")
                 setRolePages(res.data)
             })
             .catch((err) => {
                 console.log(err)
+            })
+    }
+
+    const handlesubmit = (e) => {
+        e.preventDefault()
+
+        console.log(rolePages,"(((")
+
+        axios.post(`${BASE_URL}/assign_role`, rolePages)
+            .then((res) => {
+                console.log(res)
             })
     }
 
@@ -74,21 +87,27 @@ function RoleAssignment() {
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">Select Role</h4>
-                                    <form class="forms-sample pt-3" >
-                                        <div class="form-group">
-                                            <Autocomplete
-                                                disablePortal
-                                                id="combo-box-demo"
-                                                options={role}
-                                                value={selectedOption}
-                                                getOptionLabel={(option) => option.title}
-                                                getOptionSelected={(option, value) => option.id === value.id}
-                                                sx={{ width: "100%", border: "none", borderRadius: "5px" }}
-                                                renderInput={(params) => <TextField {...params} />}
-                                                onChange={(event, value) => HandleChange(value)}
-                                                name="category"
-                                            />
+                                    <form class="forms-sample pt-3" onSubmit={handlesubmit}>
+                                        <div className='d-flex justify-content-between'>
+                                            <div class="form-group col-lg-6">
+                                                <Autocomplete
+                                                    disablePortal
+                                                    id="combo-box-demo"
+                                                    options={role}
+                                                    value={selectedOption}
+                                                    getOptionLabel={(option) => option.title}
+                                                    getOptionSelected={(option, value) => option.id === value.id}
+                                                    sx={{ width: "100%", border: "none", borderRadius: "5px" }}
+                                                    renderInput={(params) => <TextField {...params} label="select role"/>}
+                                                    onChange={(event, value) => HandleChange(value)}
+                                                    name="category"
+                                                />
+                                            </div>
+                                            <div>
+                                                <button className='btn btn-primary'>Submit</button>
+                                            </div>
                                         </div>
+
                                         {roleId === true && <div class="form-group" >
 
                                             <table class="table table-bordered">
@@ -98,11 +117,17 @@ function RoleAssignment() {
                                                             Role Rights
                                                         </th>
                                                         <th>
-                                                            Hide
+                                                            Block
                                                         </th>
 
                                                         <th>
-                                                            Show
+                                                            View
+                                                        </th>
+                                                        <th>
+                                                            Edit
+                                                        </th>
+                                                        <th>
+                                                            Full
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -111,21 +136,37 @@ function RoleAssignment() {
                                                         return (
                                                             <tr key={index}>
                                                                 <td>
-                                                                    {item.pageid}
-                                                                </td>
-                                                                <td>
-                                                                    <Radio
-                                                                        checked={item.accessid === 0}
-                                                                        onChange={(e) => handleRadioChange(e, index)}
-                                                                        value={0}
-                                                                        name={`radio-buttons-${item.pageid}`}
-                                                                    />
+                                                                    {item.pagename}
                                                                 </td>
                                                                 <td>
                                                                     <Radio
                                                                         checked={item.accessid === 1}
                                                                         onChange={(e) => handleRadioChange(e, index)}
                                                                         value={1}
+                                                                        name={`radio-buttons-${item.pageid}`}
+                                                                    />
+                                                                </td>
+                                                                <td>
+                                                                    <Radio
+                                                                        checked={item.accessid === 2}
+                                                                        onChange={(e) => handleRadioChange(e, index)}
+                                                                        value={2}
+                                                                        name={`radio-buttons-${item.pageid}`}
+                                                                    />
+                                                                </td>
+                                                                <td>
+                                                                    <Radio
+                                                                        checked={item.accessid === 3}
+                                                                        onChange={(e) => handleRadioChange(e, index)}
+                                                                        value={3}
+                                                                        name={`radio-buttons-${item.pageid}`}
+                                                                    />
+                                                                </td>
+                                                                <td>
+                                                                    <Radio
+                                                                        checked={item.accessid === 4}
+                                                                        onChange={(e) => handleRadioChange(e, index)}
+                                                                        value={4}
                                                                         name={`radio-buttons-${item.pageid}`}
                                                                     />
                                                                 </td>

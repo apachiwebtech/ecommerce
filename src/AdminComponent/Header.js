@@ -70,11 +70,18 @@ const Header = () => {
           </Link>
         </li>
         <li className="nav-item">
+          <Link className="nav-link" to='/webapp/addrole'>
+            <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+            <span className="menu-title">Add Role</span>
+          </Link>
+        </li>
+        <li className="nav-item">
           <Link className="nav-link" to='/webapp/roleassign'>
             <Icon path={mdiAccountOutline} size={1} className='mx-3' />
             <span className="menu-title">Role Page</span>
           </Link>
         </li>
+  
 
 
         {/* <li className="nav-item">

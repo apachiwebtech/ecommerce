@@ -9,6 +9,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 import { DataGrid } from '@mui/x-data-grid';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
     padding: 8,
@@ -49,7 +52,7 @@ const VendorMaster = () => {
     async function getVendordata() {
         axios.get(`${BASE_URL}/vendor_data`)
             .then((res) => {
-                console.log(res.data)
+          
                 setVendorData(res.data)
             })
             .catch((err) => {
@@ -71,7 +74,7 @@ const VendorMaster = () => {
 
             axios.post(`${BASE_URL}/vendor_approve`, data)
                 .then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     getVendordata()
                 })
 
@@ -83,43 +86,26 @@ const VendorMaster = () => {
         }
     };
 
+
+    const roledata = {
+     role : Cookies.get(`role`),
+     pageid : 2
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    console.log(roleaccess, ")))")
+
     useEffect(() => {
         getVendordata()
+        dispatch(getRoleData(roledata))
     }, [])
 
-    const handleClick = (id) => {
-        setConfirmationVisibleMap((prev) => ({
-            ...prev,
-            [id]: true
-        }))
-    }
 
-    const handleCancel = (id) => {
-        setConfirmationVisibleMap((prev) => ({
-            ...prev,
-            [id]: false
-        }))
-    }
 
-    const handleDelete = (id) => {
-        const data = {
-            vendor_id: id
-        }
 
-        axios.post(`${BASE_URL}/vendor_delete`, data)
-            .then((res) => {
-                console.log(res)
-                getVendordata()
-            })
-            .catch((err) => {
-                console.log(err)
-            })
 
-        setConfirmationVisibleMap((prev) => ({
-            ...prev,
-            [id]: false
-        }))
-    }
 
 
     const handlestatus = (e, id) => {
@@ -192,7 +178,7 @@ const VendorMaster = () => {
             headerName: 'Action',
             flex: 1,
             renderCell: (params) => {
-                console.log(params, ">>>")
+             
                 return (
                     <>
                         <Link to={`/webapp/vendorform/${params.row.id}`}><EditIcon /></Link>
@@ -201,11 +187,14 @@ const VendorMaster = () => {
             }
         },
     ];
+
     const rowsWithIds = vendordata.map((row, index) => ({ index: index + 1, ...row }));
+
     return (
+
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            <div class="main-panel">
+            {roleaccess > 1 ?   <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="">
                         <div class="grid-margin stretch-card">
@@ -333,7 +322,8 @@ const VendorMaster = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>:<h1>No Access</h1>}
+          
         </div>
     )
 }

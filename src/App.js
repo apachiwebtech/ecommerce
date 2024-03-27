@@ -60,6 +60,7 @@ import Address from './MainComponent/Pages/ProfileComponent/ProfileAddress';
 import ProfileOrder from './MainComponent/Pages/ProfileComponent/ProfileOrders';
 import OrderView from './MainComponent/Pages/ProfileComponent/OrderView';
 import RoleAssignment from './AdminComponent/RoleAssignment';
+import AddRole from './AdminComponent/AddRole';
 
 
 const Router = createBrowserRouter([
@@ -256,6 +257,10 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/roleassign',
         element: <RoleAssignment />
+      },
+      {
+        path: '/webapp/addrole',
+        element: <AddRole />
       },
       // {
       //   path: '/webapp/addimages/:product_id',

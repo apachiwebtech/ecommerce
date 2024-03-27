@@ -96,11 +96,16 @@ const WebLogin = () => {
       }
       axios.post(`${BASE_URL}/login`, data)
         .then((res) => {
-          console.log(res.data.err)
+          console.log(res.data.data[0].role, "role")
+
           if (res.data.id) {
-            // localStorage.setItem("userid", res.data.id)
+
+            const role = res.data.data[0].role
             const ciphertext = CryptoJS.AES.encrypt(res.data.id.toString(), encryptionKey).toString();
-            Cookies.set('userid', ciphertext, { expires: 1 });
+            
+            Cookies.set('userid', ciphertext, { expires: 2 });
+            Cookies.set('role', role, { expires: 2 });
+           
             navigate('/webapp')
           }
           else {
