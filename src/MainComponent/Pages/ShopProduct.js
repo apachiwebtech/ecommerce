@@ -4,7 +4,7 @@ import brand1 from '../../assets/frontimg/brand/1.jpg'
 import product4_2 from '../../assets/frontimg/product/4-2.jpg'
 import product6_2 from '../../assets/frontimg/product/6-2.jpg'
 
-import { Slider } from '@mui/material'
+import { FormControl, MenuItem, Select, Slider } from '@mui/material'
 import axios from 'axios'
 import { Link, useParams } from 'react-router-dom'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
@@ -19,6 +19,8 @@ const ShopProduct = () => {
     const [group, setGroup] = useState([])
     const [toggle, setToggle] = useState(false)
     const [header, SiteHeader] = useState()
+    const [filter, setFilter] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
 
     function valuetext(value) {
         return `₹${value}`;
@@ -76,6 +78,7 @@ const ShopProduct = () => {
                 console.log(res)
                 setProducts(res.data)
                 SiteHeader(res.data[0].title)
+                setFilteredData(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -97,7 +100,21 @@ const ShopProduct = () => {
     useEffect(() => {
         getproductdetails()
         getGroupData()
+        setFilter('')
     }, [groupslug, catslug, subcatslug])
+
+    const handleChange = (e) => {
+        e.preventDefault();
+        const filteredList = products.filter(item => {
+            let productMatch = true;
+            return productMatch;
+        })
+
+        if(e.target.value === 10) {
+            filteredList.sort((a, b) => b.disc_price - a.disc_price).reverse();
+        }
+        setFilteredData(filteredList)
+    }
 
 
 
@@ -286,7 +303,7 @@ const ShopProduct = () => {
                                                     </div>
                                                     <div className="products-topbar-right">
                                                         <div className="products-sort dropdown">
-                                                            <span className="sort-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Default sorting</span>
+                                                            {/* <span className="sort-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Default sorting</span>
                                                             <ul className="sort-list dropdown-menu" x-placement="bottom-start">
                                                                 <li className="active"><a href="#">Default sorting</a></li>
                                                                 <li><a href="#">Sort by popularity</a></li>
@@ -294,7 +311,33 @@ const ShopProduct = () => {
                                                                 <li><a href="#">Sort by latest</a></li>
                                                                 <li><a href="#">Sort by price: low to high</a></li>
                                                                 <li><a href="#">Sort by price: high to low</a></li>
-                                                            </ul>
+                                                            </ul> */}
+                                                           <FormControl sx={{ m: 0.5, minWidth: 240 }}>
+                                                                <Select
+                                                                    value={filter}
+                                                                    onChange={handleChange}
+                                                                    displayEmpty
+                                                                    sx={{
+                                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                                            borderColor: 'rgba(0, 0, 0, 1)',
+                                                                          },
+                                                                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                                            borderColor: 'rgba(0, 0, 0, 1)',
+                                                                          },// Add more specific selector
+                                                                    }}
+                                                                >
+                                                                    <MenuItem value="">
+                                                                        <em>Default sorting</em>
+                                                                    </MenuItem>
+                                                                    <MenuItem value={10}>Sort by popularity</MenuItem>
+                                                                    <MenuItem value={20}>Sort by average rating</MenuItem>
+                                                                    <MenuItem value={30}>Sort by latest</MenuItem>
+                                                                    <MenuItem value={40}>Sort by price: low to high</MenuItem>
+                                                                    <MenuItem value={50}>Sort by price: high to low</MenuItem>
+                                                                </Select>
+                                                            </FormControl>
+
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -307,7 +350,7 @@ const ShopProduct = () => {
                                             <div className="tab-pane fade show active" id="layout-grid" role="tabpanel">
                                                 <div className="products-list grid">
                                                     <div className="row">
-                                                        {products?.map((product) => {
+                                                        {filteredData?.map((product) => {
                                                             //     return (
                                                             //     <div className="col-xl-4 col-lg-4 col-md-4 col-sm-6">
                                                             //     <div className="products-entry clearfix product-wapper">
