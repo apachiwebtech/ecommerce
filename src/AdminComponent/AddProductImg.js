@@ -10,6 +10,9 @@ import decryptedUserId from '../Utils/UserID';
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomHeder from './CustomHeder';
 import Loader from './Loader';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
 
 const AddProductImg = () => {
     const [value, setValue] = useState({
@@ -235,12 +238,27 @@ const AddProductImg = () => {
 
 
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 10
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
+
+
 
 
     return (
         <div class="container-fluid page-body-wrapper position-relative" >
             {loader && <Loader />}
-            <div class="main-panel">
+            {roleaccess > 1 ? <div class="main-panel">
                 <div class="content-wrapper" style={{ height: "100vh" }}>
                     <CustomHeder />
                     <div className='py-3'>
@@ -325,10 +343,12 @@ const AddProductImg = () => {
 
                                                 <div className='row'>
                                                     <div className="col-lg-12 my-3">
-                                                        <button type='submit' className="btn btn btn-primary mr-2">Add</button>
-                                                        <button type='button' onClick={() => {
-                                                            window.location.reload()
-                                                        }} class="btn btn-light">Cancel</button>
+
+                                                        {roleaccess > 2 && <> <button type='submit' className="btn btn btn-primary mr-2">Add</button>
+                                                            <button type='button' onClick={() => {
+                                                                window.location.reload()
+                                                            }} class="btn btn-light">Cancel</button></>}
+
                                                     </div>
                                                 </div>
 
@@ -344,7 +364,7 @@ const AddProductImg = () => {
                         <div class="col-lg-3 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">List Of Images</h4>
+                                    <h4 class="card-title">Image Preview</h4>
                                     <div className='row'>
                                         <div className='col-lg-6 py-2' >
                                             <img
@@ -420,9 +440,10 @@ const AddProductImg = () => {
                                                             <td>{item.image1 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image1} alt='' /> : <></>}{item.image2 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image2} alt='' /> : <></>}{item.image3 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image3} alt='' /> : <></>}{item.image4 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image4} alt='' /> : <></>}</td>
                                                             <td>{item.title}</td>
                                                             <td>
-                                                                <Link>
+                                                                {roleaccess > 3 &&    <Link>
                                                                     <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
-                                                                </Link>
+                                                                </Link> }
+                                                             
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>
@@ -450,7 +471,8 @@ const AddProductImg = () => {
 
                     </div>
                 </div>
-            </div>
+            </div> : null}
+
         </div>
     )
 }

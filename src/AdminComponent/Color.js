@@ -7,6 +7,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
 
 
 const Color = () => {
@@ -18,7 +21,7 @@ const Color = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [value, setValue] = useState({
         title: "" || uid.title,
-        colorcode: ""  || uid.colorcode,
+        colorcode: "" || uid.colorcode,
 
     })
 
@@ -111,13 +114,13 @@ const Color = () => {
         e.preventDefault()
 
         if (validateForm()) {
-            
 
-            const data ={
-            title : value.title,
-            colorcode : value.colorcode,
-            user_id : decryptedUserId(),
-            uid : uid.id
+
+            const data = {
+                title: value.title,
+                colorcode: value.colorcode,
+                user_id: decryptedUserId(),
+                uid: uid.id
             }
 
 
@@ -142,7 +145,7 @@ const Color = () => {
 
 
 
-    
+
     const columns = [
         {
             field: 'index',
@@ -162,8 +165,8 @@ const Color = () => {
             renderCell: (params) => {
                 return (
                     <>
-                       <EditIcon onClick={() => handleUpdate(params.row.id)} />
-                       <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
+                        {roleaccess >= 2 && <EditIcon onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -173,11 +176,24 @@ const Color = () => {
 
     const rowsWithIds = brand.map((row, index) => ({ index: index + 1, ...row }));
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 9
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
     return (
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            <div class="main-panel">
+            {roleaccess > 1 ? <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
@@ -191,18 +207,18 @@ const Color = () => {
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
                                             {error.title && <span className='text-danger'>{error.title}</span>}
                                         </div>
-                                   
+
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Color code <span className='text-danger'>*</span></label>
                                             {/* <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.colorcode} name='colorcode' onChange={onhandleChange}></textarea> */}
-                                            <input type="color" class="form-control"  value={value.colorcode}  name='colorcode' onChange={onhandleChange} />
+                                            <input type="color" class="form-control" value={value.colorcode} name='colorcode' onChange={onhandleChange} />
                                         </div>
 
+                                        {roleaccess > 2 && <>  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type='button' onClick={() => {
+                                                window.location.reload()
+                                            }} class="btn btn-light">Cancel</button></>}
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -219,26 +235,26 @@ const Color = () => {
                                         </div>
 
                                     </div>
-                                    
+
                                     <div>
-                                    <DataGrid
-                                            rows= {rowsWithIds}
+                                        <DataGrid
+                                            rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 10, page: 0 },
                                                 },
-                                              }}
+                                            }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (
-                                                                <div className='confirm-delete'>
-                                                                    <p>Are you sure you want to delete?</p>
-                                                                    <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                                                </div>
-                                                            )}
+                                            <div className='confirm-delete'>
+                                                <p>Are you sure you want to delete?</p>
+                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* <div class="table-responsive pt-3">
@@ -296,7 +312,8 @@ const Color = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> : null}
+
         </div>
 
     )

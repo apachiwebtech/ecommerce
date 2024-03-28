@@ -236,10 +236,14 @@ const AdminUser = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <div>
-                            <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />
-                            <DeleteIcon sx={{ cursor: "pointer" }} style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
-                        </div>
+                       <div>
+                        {roleaccess >=2 &&  <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} /> }
+                     
+
+                            {roleaccess > 3 && <DeleteIcon sx={{ cursor: "pointer" }} style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />}
+
+                        </div> 
+
 
                     </>
                 )
@@ -256,7 +260,7 @@ const AdminUser = () => {
     const dispatch = useDispatch()
     const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
 
-    console.log(roleaccess, ")))")
+
 
     useEffect(() => {
         dispatch(getRoleData(roledata))
@@ -307,11 +311,12 @@ const AdminUser = () => {
                                             <input type="text" class="form-control" id="exampleInputConfirmPassword1" name='cnf_password' placeholder="Password" onChange={onhandleChange} />
                                             {errors.cnf_password && <div className="text-danger">{errors.cnf_password}</div>}
                                         </div>
+                                        {roleaccess > 2 && <> <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type='button' onClick={() => {
+                                                window.location.reload()
+                                            }} class="btn btn-light">Cancel</button></>}
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+
                                     </form>
                                 </div>
                             </div>

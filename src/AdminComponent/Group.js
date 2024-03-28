@@ -1,15 +1,15 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { BASE_URL, IMG_URL } from './BaseUrl';
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import InnerHeader from './InnerHeader';
-import decryptedUserId from '../Utils/UserID';
+import EditIcon from "@mui/icons-material/Edit";
 import { DataGrid } from '@mui/x-data-grid';
-import { param } from 'jquery';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
+import decryptedUserId from '../Utils/UserID';
+import { BASE_URL, IMG_URL } from './BaseUrl';
+import InnerHeader from './InnerHeader';
 import Loader from './Loader';
-import { Hidden } from '@mui/material';
 
 
 
@@ -21,7 +21,7 @@ const Group = () => {
     const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [cid, setCid] = useState("")
-    const [loader , setLoader] = useState(false)
+    const [loader, setLoader] = useState(false)
     const [value, setValue] = useState({
         title: "" || uid.title,
         slug: "" || uid.slug,
@@ -121,7 +121,7 @@ const Group = () => {
 
     const handleUpdate = (id) => {
         setValue({
-            description :""
+            description: ""
         })
         setLoader(true)
         axios.post(`${BASE_URL}/group_update`, { u_id: id })
@@ -134,7 +134,7 @@ const Group = () => {
             })
     }
 
-  
+
 
 
 
@@ -194,14 +194,16 @@ const Group = () => {
             filterable: false,
         },
         { field: 'title', headerName: 'Title', flex: 2 },
-        { field: 'image', headerName: 'image', flex: 2,renderCell :(param) =>{
-            return(
-            <div style={{width :"40px" , height :"40px", borderRadius :"50%" , display:"flex" , overflow:"hidden",alignItems:"center",justifyContent:"center"}}>
+        {
+            field: 'image', headerName: 'image', flex: 2, renderCell: (param) => {
+                return (
+                    <div style={{ width: "40px", height: "40px", borderRadius: "50%", display: "flex", overflow: "hidden", alignItems: "center", justifyContent: "center" }}>
 
-                <img src={`${IMG_URL}/category/${param.row.image}`}  alt='' />
-            </div>
-            )
-        } },
+                        <img src={`${IMG_URL}/category/${param.row.image}`} alt='' />
+                    </div>
+                )
+            }
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -210,21 +212,35 @@ const Group = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
+                        {roleaccess >= 2 && <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
         },
     ];
+
     const rowsWithIds = cat.map((row, index) => ({ index: index + 1, ...row }));
+
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 16
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     return (
 
         <div class="container-fluid page-body-wrapper position-relative" >
             <InnerHeader />
-           {loader && <Loader/>}
-            <div class="main-panel">
+            {loader && <Loader />}
+            {roleaccess > 1 ? <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
@@ -255,11 +271,11 @@ const Group = () => {
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
 
                                         </div>
+                                        {roleaccess > 2 && <>  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type='button' onClick={() => {
+                                                window.location.reload()
+                                            }} class="btn btn-light">Cancel</button></>}
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -283,9 +299,9 @@ const Group = () => {
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 10, page: 0 },
                                                 },
-                                              }}
+                                            }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (
@@ -350,7 +366,8 @@ const Group = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> : <h1>No Access</h1>}
+
         </div>
 
     )

@@ -8,6 +8,9 @@ import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
 import Loader from './Loader';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
 
 
 const Brand = () => {
@@ -15,7 +18,7 @@ const Brand = () => {
     const [brand, setBrand] = useState([])
     const [uid, setUid] = useState([])
     const [image, setImage] = useState()
-    const [loader , setLoader] = useState(false)
+    const [loader, setLoader] = useState(false)
     const [cid, setCid] = useState("")
     const [error, setError] = useState({})
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -157,7 +160,7 @@ const Brand = () => {
         setImage(file)
     }
 
-    
+
     const columns = [
         {
             field: 'index',
@@ -177,8 +180,8 @@ const Brand = () => {
             renderCell: (params) => {
                 return (
                     <>
-                       <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
-                       <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
+                        {roleaccess >= 2 && <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -186,12 +189,25 @@ const Brand = () => {
     ];
     const rowsWithIds = brand.map((row, index) => ({ index: index + 1, ...row }));
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 8
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
     return (
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            {loader && <Loader/>}
-            <div class="main-panel">
+            {loader && <Loader />}
+            {roleaccess > 1 ? <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
@@ -216,11 +232,11 @@ const Brand = () => {
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
                                         </div>
 
+                                        {roleaccess > 2 && <>  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type='button' onClick={() => {
+                                                window.location.reload()
+                                            }} class="btn btn-light">Cancel</button></>}
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -237,26 +253,26 @@ const Brand = () => {
                                         </div>
 
                                     </div>
-                                    
+
                                     <div>
-                                    <DataGrid
-                                            rows= {rowsWithIds}
+                                        <DataGrid
+                                            rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 10, page: 0 },
                                                 },
-                                              }}
+                                            }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (
-                                                                <div className='confirm-delete'>
-                                                                    <p>Are you sure you want to delete?</p>
-                                                                    <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                                                </div>
-                                                            )}
+                                            <div className='confirm-delete'>
+                                                <p>Are you sure you want to delete?</p>
+                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* <div class="table-responsive pt-3">
@@ -314,7 +330,8 @@ const Brand = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> : null}
+
         </div>
 
     )

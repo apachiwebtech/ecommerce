@@ -10,6 +10,9 @@ import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
 import { DataGrid } from '@mui/x-data-grid';
 import Loader from './Loader';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
 
 const SubCategory = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -17,10 +20,10 @@ const SubCategory = () => {
     const [error, setError] = useState({})
     const [cat, setCatData] = useState([])
     const [cid, setCid] = useState("")
-    const [selectedOption, setSelectedOption] = useState(null); 
+    const [selectedOption, setSelectedOption] = useState(null);
     const [uid, setUid] = useState([])
 
-    const [loader , setLoader] = useState(false)
+    const [loader, setLoader] = useState(false)
     const [cat_id, setId] = useState("")
     const [value, setValue] = useState({
         category: "" || uid.cat_id,
@@ -55,7 +58,7 @@ const SubCategory = () => {
 
 
     useEffect(() => {
-        console.log(uid , "???")
+        console.log(uid, "???")
         setValue({
             category: "" || uid.cat_id,
             title: "" || uid.title,
@@ -173,7 +176,7 @@ const SubCategory = () => {
 
     }
 
-  
+
 
 
     const onhandleChange = (e) => {
@@ -182,15 +185,15 @@ const SubCategory = () => {
 
     const HandleChange = (selectedValue) => {
         if (selectedValue) {
-            console.log(selectedValue , "::::")
+            console.log(selectedValue, "::::")
             const selectedId = selectedValue.id;
             setSelectedOption(selectedValue);
             // Now you have the selected id, you can use it in your application logic
             setId(selectedId)
             setValue(prevValue => ({
-    ...prevValue,               // Copy the existing value object
-    category: selectedId      // Update only the category property
-  }));
+                ...prevValue,               // Copy the existing value object
+                category: selectedId      // Update only the category property
+            }));
 
         }
     };
@@ -198,14 +201,14 @@ const SubCategory = () => {
     useEffect(() => {
         // If you have received the ID from the API, find the option that matches the ID
         if (uid.cat_id) {
-            console.log(cat , "111")
-          const selected = cat.find(option => option.id === uid.cat_id);
-          console.log(selected, "dadad")
-          setSelectedOption(selected);
+            console.log(cat, "111")
+            const selected = cat.find(option => option.id === uid.cat_id);
+            console.log(selected, "dadad")
+            setSelectedOption(selected);
         }
-      }, [uid, cat]);
+    }, [uid, cat]);
 
-      const columns = [
+    const columns = [
         {
             field: 'index',
             headerName: 'ID',
@@ -224,8 +227,8 @@ const SubCategory = () => {
             renderCell: (params) => {
                 return (
                     <>
-                       <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
-                       <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
+                        {roleaccess >= 2 && <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -233,15 +236,26 @@ const SubCategory = () => {
     ];
     const rowsWithIds = subcat.map((row, index) => ({ index: index + 1, ...row }));
 
-    
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 7
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     return (
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            {loader && <Loader/>}
-            <div class="main-panel">
+            {loader && <Loader />}
+            {roleaccess > 1 ?    <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
@@ -257,7 +271,7 @@ const SubCategory = () => {
                                                 id="combo-box-demo"
                                                 options={cat}
                                                 size='small'
-                                                value={selectedOption}  
+                                                value={selectedOption}
                                                 getOptionLabel={(option) => option.title}
                                                 getOptionSelected={(option, value) => option.id === value.id}
                                                 sx={{ width: "100%", border: "none", borderRadius: "5px" }}
@@ -266,17 +280,17 @@ const SubCategory = () => {
                                                 name="category"
 
                                             />
-                                              {error.category && <span className='text-danger'>{error.category}</span>}
+                                            {error.category && <span className='text-danger'>{error.category}</span>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
-                                              {error.title && <span className='text-danger'>{error.title}</span>}
+                                            {error.title && <span className='text-danger'>{error.title}</span>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">SubCategory Slug<span className='text-danger'>*</span></label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.slug} name='slug' onChange={onhandleChange} placeholder="Enter.." />
-                                              {error.slug && <span className='text-danger'>{error.slug}</span>}
+                                            {error.slug && <span className='text-danger'>{error.slug}</span>}
 
                                         </div>
 
@@ -285,11 +299,11 @@ const SubCategory = () => {
                                             <label for="exampleTextarea1">Description</label>
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
                                         </div>
+                                        {roleaccess > 2 && <>   <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type='button' onClick={() => {
+                                                window.location.reload()
+                                            }} class="btn btn-light">Cancel</button></>}
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -308,25 +322,25 @@ const SubCategory = () => {
                                     </div>
 
                                     <div>
-                                    <DataGrid
-                                            rows= {rowsWithIds}
+                                        <DataGrid
+                                            rows={rowsWithIds}
                                             columns={columns}
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 10, page: 0 },
                                                 },
-                                              }}
-                                            
-                                            
+                                            }}
+
+
                                         />
                                         {confirmationVisibleMap[cid] && (
-                                                                <div className='confirm-delete'>
-                                                                    <p>Are you sure you want to delete?</p>
-                                                                    <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                                                </div>
-                                                            )}
+                                            <div className='confirm-delete'>
+                                                <p>Are you sure you want to delete?</p>
+                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
+                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* <div class="table-responsive pt-3">
@@ -385,7 +399,8 @@ const SubCategory = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> : null }
+        
         </div>
 
     )

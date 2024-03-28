@@ -11,6 +11,9 @@ import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import InnerHeader from "./InnerHeader";
 import noimg from '../assets/images/noimg.jpg'
+import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
 
 const ProductCatalog = () => {
   const [product, setProductData] = useState([]);
@@ -104,10 +107,24 @@ const ProductCatalog = () => {
     },
   }));
 
+
+  const roledata = {
+    role: Cookies.get(`role`),
+    pageid: 10
+}
+
+const dispatch = useDispatch()
+const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+useEffect(() => {
+    dispatch(getRoleData(roledata))
+}, [])
+
   return (
     <div class="container-fluid page-body-wrapper">
       <InnerHeader />
-      <div class="main-panel">
+      {roleaccess > 1 ?   <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -119,8 +136,8 @@ const ProductCatalog = () => {
                       <p class="card-description">List Of Products</p>
                     </div>
                     <div>
-
-                      <Link to="/webapp/product/:update_id" ><button className=' btn btn-primary'>Add Product</button></Link>
+                      {roleaccess > 3 &&   <Link to="/webapp/product/:update_id" ><button className=' btn btn-primary'>Add Product</button></Link>}
+                  
                     </div>
                   </div>
 
@@ -160,19 +177,21 @@ const ProductCatalog = () => {
                               <td>{item.subcategory}</td>
                               <td>{item.vendor}</td>
                               <td>{item.price}</td>
-                              <td><Link to={`/webapp/addimages/${item.id}/${item.title}`}><Button
+                              {roleaccess >= 2  &&    <td><Link to={`/webapp/addimages/${item.id}/${item.title}`}><Button
                                 color="primary"
                                 disabled={false}
                                 size="medium"
                                 variant="outlined"
-                              >Add</Button></Link></td>
+                              >Add</Button></Link></td>}
+                           
+
                               <td>
                                 {item.active == 1 ? <FormControlLabel
-                                  control={<Android12Switch value="0" onChange={(e) =>handlestatus(e,item.id,"active") } defaultChecked />}
+                                  control={<Android12Switch value="0" onChange={(e) =>handlestatus(e,item.id,"active") } defaultChecked disabled={roleaccess < 3}/>}
                                 /> : <FormControlLabel
                                 onChange={(e) =>handlestatus(e,item.id,"active") }
                                   value="1"
-                                  control={<Android12Switch />}
+                                  control={<Android12Switch disabled={roleaccess < 3} />}
                                 />}
 
                               </td>
@@ -197,7 +216,8 @@ const ProductCatalog = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>: null}
+   
     </div>
   );
 };

@@ -160,10 +160,11 @@ const VendorMaster = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        {params.row.address !== null && params.row.aggrement_upload !== "" && params.row.city !== null && params.row.emailid !== null && params.row.gst_upload !== "" && params.row.gstno !== null && params.row.mobile !== null && params.row.panupload !== "" && params.row.picode !== null && params.row.state !== null && params.row.username && params.row.username && params.row.vendor_pan ? <div>{params.row.approve == 0 ? <button className='btn btn-sm btn-success' onClick={() => handleConfirmation(params.row.id)}>Approve</button> : <>{params.row.active == 1 ? <FormControlLabel
-                            control={<Android12Switch value="0" onChange={(e) => handlestatus(e, params.row.id)} defaultChecked />}
+                        {params.row.address !== null && params.row.aggrement_upload !== "" && params.row.city !== null && params.row.emailid !== null && params.row.gst_upload !== "" && params.row.gstno !== null && params.row.mobile !== null && params.row.panupload !== "" && params.row.picode !== null && params.row.state !== null && params.row.username && params.row.username && params.row.vendor_pan ? <div>{params.row.approve == 0 ? <button className='btn btn-sm btn-success' onClick={() => handleConfirmation(params.row.id)}>Approve</button> : <>{params.row.active == 1 ? 
+                        <FormControlLabel
+                            control={<Android12Switch value="0"  onChange={(e) => handlestatus(e, params.row.id)} defaultChecked   disabled={roleaccess <= 2}/>}
                         /> : <FormControlLabel
-                            control={<Android12Switch value="1" onChange={(e) => handlestatus(e, params.row.id)} />}
+                            control={<Android12Switch value="1" onChange={(e) => handlestatus(e, params.row.id)} disabled={roleaccess <= 2} />}
                         />} </>} </div> :
                             <FormControlLabel
                                 control={<Android12Switch disabled />}
@@ -207,9 +208,10 @@ const VendorMaster = () => {
                                                 List Of Vendor
                                             </p>
                                         </div>
-                                        <div>
+                                        {roleaccess > 2 &&   <div>
                                             <Link to="/webapp/vendorform/:id"><button className=' btn btn-primary'>Add Vendor</button></Link>
-                                        </div>
+                                        </div> }
+                                      
 
                                     </div>
                                   

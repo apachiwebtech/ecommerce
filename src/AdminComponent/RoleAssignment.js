@@ -3,6 +3,9 @@ import InnerHeader from './InnerHeader'
 import { Autocomplete, Radio, TextField } from '@mui/material';
 import { BASE_URL } from './BaseUrl';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { getRoleData } from '../Store/Role/role-action';
 
 function RoleAssignment() {
 
@@ -26,7 +29,7 @@ function RoleAssignment() {
     };
 
 
-    async function getRoleData() {
+    async function getRole() {
         axios.get(`${BASE_URL}/role_data`)
             .then((res) => {
                 setRoleData(res.data)
@@ -37,7 +40,7 @@ function RoleAssignment() {
     }
 
     useEffect(() => {
-        getRoleData()
+        getRole()
     }, [])
 
     const HandleChange = (selectedValue) => {
@@ -68,7 +71,7 @@ function RoleAssignment() {
     const handlesubmit = (e) => {
         e.preventDefault()
 
-        console.log(rolePages,"(((")
+        console.log(rolePages, "(((")
 
         axios.post(`${BASE_URL}/assign_role`, rolePages)
             .then((res) => {
@@ -76,11 +79,27 @@ function RoleAssignment() {
             })
     }
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 5
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
+
+
     return (
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            <div class="main-panel">
+
+            {roleaccess > 1 ?      <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-12 grid-margin stretch-card">
@@ -98,7 +117,7 @@ function RoleAssignment() {
                                                     getOptionLabel={(option) => option.title}
                                                     getOptionSelected={(option, value) => option.id === value.id}
                                                     sx={{ width: "100%", border: "none", borderRadius: "5px" }}
-                                                    renderInput={(params) => <TextField {...params} label="select role"/>}
+                                                    renderInput={(params) => <TextField {...params} label="select role" />}
                                                     onChange={(event, value) => HandleChange(value)}
                                                     name="category"
                                                 />
@@ -182,7 +201,8 @@ function RoleAssignment() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>:null}
+       
         </div>
     )
 }

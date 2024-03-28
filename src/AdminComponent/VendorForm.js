@@ -13,6 +13,8 @@ import md5 from 'js-md5'
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import Loader from './Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -358,6 +360,20 @@ const VendorForm = () => {
 
     };
 
+    const roledata = {
+        role : Cookies.get(`role`),
+        pageid : 2
+       }
+   
+       const dispatch = useDispatch()
+       const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+   
+   
+       useEffect(() => {
+           
+           dispatch(getRoleData(roledata))
+       }, [])
+
 
 
     return (
@@ -521,12 +537,13 @@ const VendorForm = () => {
                                                 {errors.ifsc_code && <div className="text-danger">{errors.ifsc_code}</div>}
                                             </div>
                                         </div>
-                                        <div className='mt-3 text-right'>
+                                        {roleaccess > 2 ?    <div className='mt-3 text-right'>
                                             <button type="submit" class="btn btn-primary mr-2">{loader ? "Submitting.." : "Submit"}</button>
                                             <button type='button' onClick={() => {
                                                 window.location.reload()
                                             }} class="btn btn-light">Cancel</button>
-                                        </div>
+                                        </div> :null }
+                                     
 
                                     </form>
                                 </div>

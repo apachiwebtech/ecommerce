@@ -152,8 +152,8 @@ function AddRole() {
             renderCell: (params) => {
                 return (
                     <>
-                       <EditIcon onClick={() => handleUpdate(params.row.id)} />
-                       <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} /> 
+                        {roleaccess >= 2 && <EditIcon style={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red",cursor :"pointer" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -162,95 +162,97 @@ function AddRole() {
     const rowsWithIds = role.map((row, index) => ({ index: index + 1, ...row }));
 
     const roledata = {
-        role : Cookies.get(`role`),
-        pageid : 2
-       }
-   
-       const dispatch = useDispatch()
-       const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
-   
-   
-       useEffect(() => {
-           dispatch(getRoleData(roledata))
-       }, [])
+        role: Cookies.get(`role`),
+        pageid: 4
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
 
 
-  return (
-    
-    
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
-    <div class="container-fluid page-body-wrapper">
-    <InnerHeader/>
 
-    {roleaccess > 1 ?    <div class="main-panel">
-        <div class="content-wrapper">
-            <div class="row">
-                <div class="col-lg-5 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Add Role</h4>
+    return (
 
-                            <form class="forms-sample py-3" onSubmit={handleSubmit}>
-                                <div class="form-group">
-                                    <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
-                                    <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
-                                    {error.title && <span className='text-danger'>{error.title}</span>}
+
+
+        <div class="container-fluid page-body-wrapper">
+            <InnerHeader />
+
+            {roleaccess > 1 ? <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-lg-5 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">Add Role</h4>
+
+                                    <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                        <div class="form-group">
+                                            <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
+                                            {error.title && <span className='text-danger'>{error.title}</span>}
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="exampleTextarea1">Description</label>
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
+                                        </div>
+
+                                        {roleaccess > 2 && <>  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type='button' onClick={() => {
+                                                window.location.reload()
+                                            }} class="btn btn-light">Cancel</button></>}
+
+                                    </form>
                                 </div>
-                                <div class="form-group ">
-                                    <label for="exampleTextarea1">Description</label>
-                                    <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea> 
+                            </div>
+                        </div>
+                        <div class="col-lg-7 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div className='d-flex justify-content-between'>
+                                        <div>
+                                            <h4 class="card-title">Roles </h4>
+                                            <p class="card-description">
+                                                List Of Role
+                                            </p>
+                                        </div>
+
+                                    </div>
+                                    <div>
+                                        <DataGrid
+                                            rows={rowsWithIds}
+                                            columns={columns}
+                                            getRowId={(row) => row.id}
+                                        />
+
+                                        {
+                                            confirmationVisibleMap[cid] && (
+                                                <div className='confirm-delete'>
+                                                    <p>Are you sure you want to delete?</p>
+                                                    <button
+                                                        onClick={() => handleDelete(cid)}
+                                                        className='btn btn-sm btn-primary'>OK</button>
+                                                    <button
+                                                        onClick={() => handleCancel(cid)}
+                                                        className='btn btn-sm btn-danger'>Cancel</button>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
                                 </div>
-                                <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                <button type='button' onClick={()=>{
-                                    window.location.reload()
-                                }} class="btn btn-light">Cancel</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-7 grid-margin stretch-card">
-                    <div class="card">
-                        <div class="card-body">
-                            <div className='d-flex justify-content-between'>
-                                <div>
-                                    <h4 class="card-title">Roles </h4>
-                                    <p class="card-description">
-                                        List Of Role
-                                    </p>
-                                </div>
+            </div> : <h1>No Access</h1>}
 
-                            </div>
-                            <div>
-                            <DataGrid
-                                    rows= {rowsWithIds}
-                                    columns={columns}
-                                    getRowId={(row) => row.id}
-                                />
-
-                                {
-                                confirmationVisibleMap[cid] && (
-                                                        <div className='confirm-delete'>
-                                                            <p>Are you sure you want to delete?</p>
-                                                            <button 
-                                                            onClick={() => handleDelete(cid)} 
-                                                            className='btn btn-sm btn-primary'>OK</button>
-                                                            <button 
-                                                            onClick={() => handleCancel(cid)} 
-                                                            className='btn btn-sm btn-danger'>Cancel</button>
-                                                        </div>
-                                                    )
-                                                    }
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-    </div> : <h1>No Access</h1> }
 
-</div>
-    
-  )
+    )
 }
 
 export default AddRole

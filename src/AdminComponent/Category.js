@@ -6,12 +6,15 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import decryptedUserId from '../Utils/UserID';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { param } from 'jquery';
 import Loader from './Loader';
 import { Hidden } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
 
 
 
@@ -20,12 +23,12 @@ const Category = () => {
     const [cat, setCatData] = useState([])
     const [group, setGroupData] = useState([])
     const [error, setError] = useState({})
-    const [selectedOption, setSelectedOption] = useState(null); 
+    const [selectedOption, setSelectedOption] = useState(null);
     const [image, setImage] = useState()
     const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [cid, setCid] = useState("")
-    const [loader , setLoader] = useState(false)
+    const [loader, setLoader] = useState(false)
     const [group_id, setId] = useState("")
     const [value, setValue] = useState({
         title: "" || uid.title,
@@ -139,7 +142,7 @@ const Category = () => {
 
     const handleUpdate = (id) => {
         setValue({
-            description :""
+            description: ""
         })
         setLoader(true)
         axios.post(`${BASE_URL}/category_update`, { u_id: id })
@@ -212,14 +215,16 @@ const Category = () => {
             filterable: false,
         },
         { field: 'title', headerName: 'Title', flex: 2 },
-        { field: 'image', headerName: 'image', flex: 2,renderCell :(param) =>{
-            return(
-            <div style={{width :"40px" , height :"40px", borderRadius :"50%" , display:"flex" , overflow:"hidden",alignItems:"center",justifyContent:"center"}}>
+        {
+            field: 'image', headerName: 'image', flex: 2, renderCell: (param) => {
+                return (
+                    <div style={{ width: "40px", height: "40px", borderRadius: "50%", display: "flex", overflow: "hidden", alignItems: "center", justifyContent: "center" }}>
 
-                <img src={`${IMG_URL}/category/${param.row.image}`}  alt='' />
-            </div>
-            )
-        } },
+                        <img src={`${IMG_URL}/category/${param.row.image}`} alt='' />
+                    </div>
+                )
+            }
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -228,8 +233,8 @@ const Category = () => {
             renderCell: (params) => {
                 return (
                     <>
-                        <EditIcon sx={{cursor :"pointer"}} onClick={() => handleUpdate(params.row.id)} />
-                        <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />
+                        {roleaccess >= 2 && <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
+                        {roleaccess > 3 && <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
@@ -239,7 +244,7 @@ const Category = () => {
 
     const HandleChange = (selectedValue) => {
         if (selectedValue) {
-            console.log(selectedValue , "::::")
+            console.log(selectedValue, "::::")
             const selectedId = selectedValue.id;
             setSelectedOption(selectedValue);
             // Now you have the selected id, you can use it in your application logic
@@ -250,19 +255,33 @@ const Category = () => {
     useEffect(() => {
         // If you have received the ID from the API, find the option that matches the ID
         if (uid.group_id) {
-            
-          const selected = group.find(option => option.id === uid.group_id);
-          console.log(selected, "dadad")
-          setSelectedOption(selected);
+
+            const selected = group.find(option => option.id === uid.group_id);
+            console.log(selected, "dadad")
+            setSelectedOption(selected);
         }
-      }, [uid, group]);
+    }, [uid, group]);
+
+
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 6
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     return (
 
         <div class="container-fluid page-body-wrapper position-relative" >
             <InnerHeader />
-           {loader && <Loader/>}
-            <div class="main-panel">
+            {loader && <Loader />}
+            {roleaccess > 1 ? <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
@@ -283,7 +302,7 @@ const Category = () => {
                                                 id="combo-box-demo"
                                                 size='small'
                                                 options={group}
-                                                value={selectedOption}  
+                                                value={selectedOption}
                                                 getOptionLabel={(option) => option.title}
                                                 getOptionSelected={(option, value) => option.id === value.id}
                                                 sx={{ width: "100%", border: "none", borderRadius: "5px" }}
@@ -292,7 +311,7 @@ const Category = () => {
                                                 name="category"
 
                                             />
-                                              {error.group && <span className='text-danger'>{error.group}</span>}
+                                            {error.group && <span className='text-danger'>{error.group}</span>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
@@ -311,11 +330,11 @@ const Category = () => {
                                             <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
 
                                         </div>
+                                        {roleaccess > 2 && <><button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                            <button type='button' onClick={() => {
+                                                window.location.reload()
+                                            }} class="btn btn-light">Cancel</button> </>}
 
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
                                     </form>
                                 </div>
                             </div>
@@ -336,12 +355,21 @@ const Category = () => {
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
+                                            disableColumnFilter
+                                            disableColumnSelector
+                                            disableDensitySelector
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
-                                                  paginationModel: { pageSize: 10, page: 0 },
+                                                    paginationModel: { pageSize: 10, page: 0 },
                                                 },
-                                              }}
+                                            }}
+                                            slots={{ toolbar: GridToolbar }}
+                                            slotProps={{
+                                                toolbar: {
+                                                    showQuickFilter: true,
+                                                },
+                                            }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (
@@ -406,7 +434,8 @@ const Category = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> : null}
+
         </div>
 
     )
