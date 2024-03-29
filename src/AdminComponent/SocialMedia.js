@@ -9,6 +9,9 @@ import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
 import img1 from "../assets/images/prof.png";
 import decryptedUserId from "../Utils/UserID";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const SocialMedia = () => {
   const [social, setSocial] = useState([]);
@@ -19,6 +22,19 @@ const SocialMedia = () => {
     link: "" || uid.link,
     colorcode: "" || uid.colorcode,
   });
+
+  const roledata = {
+    role: Cookies.get(`role`),
+    pageid: 13
+}
+
+const dispatch = useDispatch()
+const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+useEffect(() => {
+    dispatch(getRoleData(roledata))
+}, [])
 
   useEffect(() => {
     setValue({
@@ -124,7 +140,7 @@ const SocialMedia = () => {
             </div>
           </div>
         </header>
-        <div class="content-wrapper">
+       {roleaccess > 1 && <div class="content-wrapper">
           <div class="breadcrumb-wrap">
             <ul class="breadcrumb ">
               <li class="breadcrumb-item">
@@ -223,7 +239,7 @@ const SocialMedia = () => {
                     </div>
 
 
-                    {uid.title ? <button type="submit" class="btn btn-sm btn-primary mr-2">
+                    {uid.title && roleaccess > 2 ? <button type="submit" class="btn btn-sm btn-primary mr-2">
                       Update
                     </button> : null}
 
@@ -268,7 +284,7 @@ const SocialMedia = () => {
             </div>
 
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );

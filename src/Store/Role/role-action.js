@@ -22,6 +22,7 @@ export const getRoleData = (data) => {
             })
 
             const apidata = await response.json();
+            
             dispatch(roleActions.getRoleData(apidata));
 
     

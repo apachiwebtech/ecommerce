@@ -8,6 +8,9 @@ import { Link } from 'react-router-dom';
 import { BASE_URL, IMG_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 
 const Banner = () => {
@@ -28,7 +31,18 @@ const Banner = () => {
 
     })
 
-
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 12
+    }
+    
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+    
+    
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     useEffect(() => {
         setValue({
@@ -192,7 +206,7 @@ const Banner = () => {
         <div className="container-fluid page-body-wrapper" style={{position :"relative"}}>
             <InnerHeader />
             {loader &&  <Loader />}
-            <div className="main-panel">
+            {roleaccess > 1 && <div className="main-panel">
 
                 <div className="content-wrapper">
                     <div className="row">
@@ -251,10 +265,10 @@ const Banner = () => {
                                             {errors.view && <div className="text-danger">{errors.view}</div>}
 
                                         </div>
-                                        <button type="submit" className="btn btn-sm btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={() => {
+                                        {roleaccess > 2 && <button type="submit" className="btn btn-sm btn-primary mr-2">Submit</button>}
+                                        {roleaccess > 2 && <button type='button' onClick={() => {
                                             window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+                                        }} class="btn btn-light">Cancel</button> }
                                         {/* <Link to="/webapp/banner"><button className="btn btn-sm btn-light">Cancel</button></Link> */}
                                     </form>
                                 </div>
@@ -342,7 +356,7 @@ const Banner = () => {
 
 
                 </div>
-            </div>
+            </div>}
         </div>
 
     )

@@ -8,6 +8,9 @@ import { BASE_URL, IMG_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const View = () => {
   const [order, setOrder] = useState([])
@@ -15,6 +18,18 @@ const View = () => {
   const [orderstatus, setOrderStatus] = useState()
   const { orderid } = useParams()
 
+  const roledata = {
+    role: Cookies.get(`role`),
+    pageid: 11
+}
+
+const dispatch = useDispatch()
+const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+useEffect(() => {
+    dispatch(getRoleData(roledata))
+}, [])
 
   async function getOrderDetails() {
     const data = {
@@ -82,7 +97,7 @@ const View = () => {
       <div class="main-panel">
         <InnerHeader />
 
-        <div class="content-wrapper">
+       {roleaccess > 1 && <div class="content-wrapper">
 
 
           <div class="row">
@@ -319,7 +334,7 @@ const View = () => {
                     <option value="Cancelled">Cancelled</option>
                   </select>
 
-                  <button className="btn btn-primary w-100" onClick={() => onhandleChange(order.id)}>Update</button>
+                  {roleaccess > 2 && <button className="btn btn-primary w-100" onClick={() => onhandleChange(order.id)}>Update</button>}
 
 
                 </div>
@@ -329,7 +344,7 @@ const View = () => {
 
 
           </div>
-        </div>
+        </div>}
       </div>
     </div>
   );

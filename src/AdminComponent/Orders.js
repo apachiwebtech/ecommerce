@@ -7,6 +7,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { dark } from '@mui/material/styles/createPalette';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
+import Cookies from 'js-cookie';
 const Orders = () => {
     const [order, setOrderData] = useState([])
     const [filteredData, setFilteredData] = useState([]);
@@ -19,6 +22,19 @@ const Orders = () => {
         deliveryStatus: "",
         paymentStatus: "",
     })
+
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 11
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -92,7 +108,7 @@ const Orders = () => {
     return (
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            <div class="main-panel">
+            {roleaccess > 1 && <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-12 grid-margin stretch-card">
@@ -157,6 +173,7 @@ const Orders = () => {
 
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                     <div class="row">
@@ -262,7 +279,7 @@ const Orders = () => {
                     </div>
 
                 </div>
-            </div>
+            </div>}
         </div>
     )
 }

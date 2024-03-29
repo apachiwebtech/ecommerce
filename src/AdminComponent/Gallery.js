@@ -6,6 +6,9 @@ import { BASE_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
+import { useDispatch, useSelector } from "react-redux";
+import { getRoleData } from "../Store/Role/role-action";
+import Cookies from "js-cookie";
 
 const Gallery = () => {
 
@@ -20,6 +23,19 @@ const Gallery = () => {
 
 
     })
+
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 14
+
+    }
+    
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+    
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
 
     useEffect(()=>{
     setValue({
@@ -160,7 +176,7 @@ const Gallery = () => {
 
         <div class="container-fluid page-body-wrapper">
             <InnerHeader />
-            <div class="main-panel">
+           {roleaccess > 1 && <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
                         <div class="col-lg-5 grid-margin stretch-card">
@@ -179,10 +195,10 @@ const Gallery = () => {
                                             <input type="file" class="form-control" id="image" placeholder="" name='image' onChange={handleUpload} />
                                             {errors.image && <div className="text-danger">{errors.image}</div>}
                                         </div>
-                                        <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={()=>{
-                                            window.location.reload()
-                                        }} class="btn btn-light">Cancel</button>
+                                        {roleaccess > 2 && <button type="submit" class="btn btn-primary mr-2">Submit</button>}
+                                        {roleaccess > 2 && <button type='button' onClick={()=>{
+                                            setValue({title : '' , image : ''})
+                                        }} class="btn btn-light">Cancel</button>}
                                     </form>
                                 </div>
                             </div>
@@ -233,7 +249,7 @@ const Gallery = () => {
 
                                                                 <td>
                                                                     <Link><EditIcon  onClick={() =>handleupdateId(item.id)}/></Link>
-                                                                    <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
+                                                                    {roleaccess === 4 && <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />}
 
                                                                 </td>
                                                                 {confirmationVisibleMap[item.id] && (
@@ -261,7 +277,7 @@ const Gallery = () => {
 
                     </div>
                 </div>
-            </div>
+            </div> }
         </div>
 
     )
