@@ -1,15 +1,10 @@
-import { mdiAccountGroupOutline, mdiAccountOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiHome, mdiImageArea,mdiNut, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiStarBox, mdiViewGallery } from '@mdi/js';
+import { mdiAccountDetails, mdiAccountGroupOutline, mdiAccountOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiHome, mdiImageArea, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiNut, mdiStarBox, mdiViewGallery } from '@mdi/js';
 import Icon from '@mdi/react';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
-import { BASE_URL } from './BaseUrl';
-import Cookies from 'js-cookie';
-import axios from 'axios';
-import decryptedUserId from '../Utils/UserID';
-
 
 const Header = () => {
 
@@ -17,6 +12,7 @@ const Header = () => {
     order: false,
     product: false,
     home: false,
+    usermanage :false
     // Add more menu items as needed
   });
 
@@ -42,7 +38,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="sidebar sidebar-offcanvas" id="sidebar" wordBreak='break-word' overflowWrap='break-word'>
+    <nav className="sidebar sidebar-offcanvas col-lg-2 p-3" id="sidebar" wordBreak='break-word' overflowWrap='break-word'>
       <ul className="nav">
 
         <li className="nav-item">
@@ -63,25 +59,44 @@ const Header = () => {
             <span className="menu-title">Vendor Master</span>
           </Link>
         </li>
-        <li className="nav-item">
-          <Link className="nav-link" to='/webapp/adminuser'>
-            <Icon path={mdiAccountOutline} size={1} className='mx-3' />
-            <span className="menu-title">Admin User</span>
-          </Link>
+
+        <li className="nav-item" onClick={() => handleToggle('usermanage')}>
+          <div className="nav-link" >
+
+            <Icon path={mdiAccountDetails} size={1} className='mx-3' />
+            <span className="menu-title">Products</span>
+            {openStates.usermanage ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </div>
         </li>
-        <li className="nav-item">
-          <Link className="nav-link" to='/webapp/addrole'>
-            <Icon path={mdiAccountOutline} size={1} className='mx-3' />
-            <span className="menu-title">Add Role</span>
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link" to='/webapp/roleassign'>
-            <Icon path={mdiAccountOutline} size={1} className='mx-3' />
-            <span className="menu-title">Role Page</span>
-          </Link>
-        </li>
-  
+
+
+        <Collapse in={openStates.usermanage} timeout="auto" unmountOnExit>
+          <ul className='inner-item'>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/addrole'>
+                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+                <span className="menu-title">Add Role</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/adminuser'>
+                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+                <span className="menu-title">Admin User</span>
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/roleassign'>
+                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+                <span className="menu-title">Role Page</span>
+              </Link>
+            </li>
+
+          </ul>
+        </Collapse>
+
+
+
 
 
         {/* <li className="nav-item">
@@ -218,7 +233,7 @@ const Header = () => {
             <span className="menu-title">Orders</span>
           </Link>
         </li>
-        
+
         <Collapse timeout="auto" unmountOnExit>
           <ul className='inner-item'>
             {/* <li className="nav-item">

@@ -445,7 +445,7 @@ async function getsubcatData() {
 
 
   return (
-    <div class="container-fluid page-body-wrapper">
+    <div class="container-fluid page-body-wrapper col-lg-10">
       <InnerHeader />
       <div class="main-panel">
         <div class="content-wrapper">
@@ -893,10 +893,8 @@ async function getsubcatData() {
                     </h5>
                     <p class="para">Manage the product-related specifications.</p>
                   </div>
-                  <div style={{ width: "600px", padding: "20px 22px " }} >
+                  <div style={{ width: "100%", padding: "20px 22px " }} >
                     <CKEditor
-
-
                       editor={ClassicEditor}
                       data={uid.specification}
                       onReady={editor => {

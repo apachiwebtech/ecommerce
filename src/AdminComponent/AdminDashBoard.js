@@ -17,7 +17,7 @@ const AdminDashBoard = () => {
   return (
 
 
-    <div className="container-fluid page-body-wrapper">
+    <div className="container-fluid page-body-wrapper col-lg-10">
        <InnerHeader/>
       <nav className="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row">
         <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">

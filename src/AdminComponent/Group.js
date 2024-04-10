@@ -21,6 +21,7 @@ const Group = () => {
     const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [cid, setCid] = useState("")
+    const [slug, setSlug] = useState()
     const [loader, setLoader] = useState(false)
     const [value, setValue] = useState({
         title: "" || uid.title,
@@ -181,6 +182,14 @@ const Group = () => {
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+
+        if (value.slug) {
+            axios.post(`${BASE_URL}/check_againslug`, { slug: value.slug })
+                .then((res) => {
+                    console.log(res)
+                })
+        }
+
     }
 
     const columns = [
@@ -235,9 +244,24 @@ const Group = () => {
         dispatch(getRoleData(roledata))
     }, [])
 
+
+    const handleclick = () => {
+
+
+        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') })
+            .then((res) => {
+                setValue({
+                    slug: res.data.newslug
+                })
+            })
+
+
+    }
+
+
     return (
 
-        <div class="container-fluid page-body-wrapper position-relative" >
+        <div class="container-fluid page-body-wrapper position-relative col-lg-10" >
             <InnerHeader />
             {loader && <Loader />}
             {roleaccess > 1 ? <div class="main-panel">
@@ -256,7 +280,10 @@ const Group = () => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') || value.slug} onChange={onhandleChange} />
+
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onClick={handleclick} onChange={onhandleChange} />
+
+
                                             {error.slug && <span className='text-danger'>{error.slug}</span>}
 
                                         </div>

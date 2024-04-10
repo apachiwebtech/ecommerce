@@ -252,7 +252,7 @@ const SubCategory = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             {loader && <Loader />}
             {roleaccess > 1 ?    <div class="main-panel">

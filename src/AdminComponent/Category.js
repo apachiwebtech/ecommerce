@@ -278,7 +278,7 @@ const Category = () => {
 
     return (
 
-        <div class="container-fluid page-body-wrapper position-relative" >
+        <div class="container-fluid page-body-wrapper position-relative col-lg-10" >
             <InnerHeader />
             {loader && <Loader />}
             {roleaccess > 1 ? <div class="main-panel">

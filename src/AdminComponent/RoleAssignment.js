@@ -62,6 +62,9 @@ function RoleAssignment() {
             .then((res) => {
                 // console.log(res.data, ">>>>>")
                 setRolePages(res.data)
+
+
+            
             })
             .catch((err) => {
                 console.log(err)
@@ -75,7 +78,9 @@ function RoleAssignment() {
 
         axios.post(`${BASE_URL}/assign_role`, rolePages)
             .then((res) => {
-                console.log(res)
+                if(res.data.insertId){
+                    alert("Date Submitted")
+                }
             })
     }
 
@@ -96,7 +101,7 @@ function RoleAssignment() {
 
     return (
 
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
 
             {roleaccess > 1 ?      <div class="main-panel">

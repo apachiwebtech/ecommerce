@@ -10,7 +10,7 @@ import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 
 function SettingPages() {
     return (
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10" >
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">

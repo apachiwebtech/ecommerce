@@ -189,7 +189,7 @@ const Banner = () => {
 
     return (
 
-        <div className="container-fluid page-body-wrapper" style={{position :"relative"}}>
+        <div className="container-fluid page-body-wrapper col-lg-10" style={{position :"relative"}}>
             <InnerHeader />
             {loader &&  <Loader />}
             <div className="main-panel">

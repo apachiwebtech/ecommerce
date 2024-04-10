@@ -358,7 +358,7 @@ function WebApp() {
   return (
     <>
 
-      <div className="container-scroller d-flex">
+      <div className="container-scroller row">
         <Header />
         <Outlet />
       </div>
