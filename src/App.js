@@ -2,7 +2,7 @@ import axios from 'axios';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/js/bootstrap.min.js';
 import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
+import { Component, useEffect, useState } from 'react';
 import { Outlet, createBrowserRouter, useNavigate, useLocation } from 'react-router-dom';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import AdminUser from './AdminComponent/AdminUser';
@@ -61,6 +61,20 @@ import ProfileOrder from './MainComponent/Pages/ProfileComponent/ProfileOrders';
 import OrderView from './MainComponent/Pages/ProfileComponent/OrderView';
 import RoleAssignment from './AdminComponent/RoleAssignment';
 import AddRole from './AdminComponent/AddRole';
+
+// vendor Component
+
+import VendorSettingPages from './VendorComponents/VendorSettingPages';
+import VendorHeader from './VendorComponents/Header';
+import VendorUser from './VendorComponents/VendorUser';
+import VendorCategory from './VendorComponents/VendorCategory';
+import VendorProductCatalog from './VendorComponents/ProductCatalog';
+import AddProduct from './VendorComponents/Product';
+import '../src/MainComponent/Library/Fontawsome/Font-awsome.css'
+import '../src/MainComponent/Library/Icomoonfont/icomoon.css'
+import '../src/MainComponent/Library/elegant-icons/css/elegant.css'
+import '../src/MainComponent/Library/feather-font/css/iconfont.css'
+import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
 
 
 const Router = createBrowserRouter([
@@ -268,6 +282,132 @@ const Router = createBrowserRouter([
       // },
 
     ]
+  },
+
+
+  {
+    path : '/vendor',
+    element : <VendorApp/>,
+    errorElement: <PageNotFound />,
+    children: [
+      {
+        path: '/vendor',
+        element: <AdminDashBoard />
+      },
+      {
+        path: '/vendor/addProduct',
+        element: <AddProduct />
+      },
+      {
+        path: '/vendor/gallery',
+        element: <Gallery />
+      },
+
+      {
+        path: '/vendor/vendormaster',
+        element: <VendorMaster />
+      },
+      {
+        path: '/vendor/vendoruser',
+        element: <VendorUser />
+      },
+      {
+        path: '/vendor/category/',
+        element: <VendorCategory />
+      },
+      {
+        path: '/vendor/group/',
+        element: <Group />
+      },
+      {
+        path: '/vendor/productapproval',
+        element: <ProductApproval />
+      },
+      {
+        path: '/vendor/subcategory',
+        element: <SubCatetgory />
+      },
+
+      {
+        path: '/vendor/product/:update_id',
+        element: <Product />
+      },
+
+      {
+        path: '/vendor/productcatalog',
+        element: <VendorProductCatalog />
+      },
+
+      {
+        path: '/vendor/sellersproductinventory',
+        element: <SellersProductInventory />
+      },
+
+      {
+        path: '/vendor/brand',
+        element: <Brand />
+      },
+      {
+        path: '/vendor/orders',
+        element: <Orders />
+      },
+      {
+        path: '/vendor/shop',
+        element: <Shop />
+      },
+
+      {
+        path: '/vendor/productoption',
+        element: <ProductOption />
+      },
+
+      {
+        path: '/vendor/producttag',
+        element: <ProductTag />
+      },
+
+      {
+        path: '/vendor/thresholdproduct',
+        element: <ThresholdProduct />
+      },
+      {
+        path: '/vendor/view',
+        element: <View />
+      },
+
+      {
+        path: '/vendor/banner',
+        element: <Banner />
+      },
+
+      {
+        path: '/vendor/reviewcomment',
+        element: <ReviewComment />
+      },
+      {
+        path: '/vendor/testimonial',
+        element: <Testimonial />
+      },
+
+      {
+        path: '/vendor/socialmedia',
+        element: <SocialMedia />
+      },
+
+      {
+        path: '/vendor/settings',
+        element: <VendorSettingPages />
+      },
+      {
+        path: '/vendor/color',
+        element: <Color />
+      },
+      {
+        path: '/vendor/addimages/:proid',
+        element: <AddProductImg />
+      },
+      
+    ]
   }
 ])
 
@@ -367,7 +507,47 @@ function WebApp() {
   );
 }
 
+function VendorApp() {
 
+  const [id, setId] = useState(null)
+
+  async function accessSession() {
+    axios.get(`${BASE_URL}/checkauth`)
+      .then((res) => {
+        if (res.data.valid) {
+          // setId(res.data.id)
+        } else {
+          navigate('/weblog')
+        }
+      });
+  }
+
+  // axios.defaults.withCredentials = true
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    checkLocalStorageAndRedirect(navigate);
+    accessSession()
+  }, [navigate]);
+
+
+
+
+
+
+
+
+  return (
+    <>
+      <div className="container-scroller d-flex">
+        {/* <Header /> */}
+        <VendorHeader/>
+        <Outlet />
+      </div>
+    </>
+
+  );
+}
 
 
 
