@@ -9,7 +9,8 @@ import InnerHeader from './InnerHeader';
 import Cookies from 'js-cookie';
 import { DataGrid } from '@mui/x-data-grid';
 import CryptoJS from 'crypto-js';
-import decryptedUserId from '../Utils/UserID';
+import decryptedvendorid from '../Utils/Vendorid';
+
 const VendorUser = () => {
 
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
@@ -89,7 +90,7 @@ const VendorUser = () => {
 
     const handleUpdate = (id) => {
         console.log(id, "id hai yeb ")
-        axios.post(`${BASE_URL}/vendor/vendorUserUpdate`, { u_id: id })
+        axios.post(`${BASE_URL}/vendorUserUpdate`, { u_id: id })
             .then((res) => {
                 console.log(res.data[0]);
                 setUid(res.data[0])
@@ -108,7 +109,7 @@ const VendorUser = () => {
 
 
     async function getAdminuserData() {
-        axios.get(`${BASE_URL}/vendor/getVendorData`)
+        axios.get(`${BASE_URL}/getVendorData`)
             .then((res) => {
                 console.log(res.data)
                 setData(res.data)
@@ -149,7 +150,7 @@ const VendorUser = () => {
         }
 
 
-        axios.post(`${BASE_URL}/vendor/vendorUserDelete`, data)
+        axios.post(`${BASE_URL}/vendorUserDelete`, data)
             .then((res) => {
                 getAdminuserData()
 
@@ -178,11 +179,11 @@ const VendorUser = () => {
                 mobile: value.mobile,
                 password: hashpassword,
                 u_id: uid.id,
-                user_id: decryptedUserId()
+                user_id: decryptedvendorid()
 
             }
 
-            axios.post(`${BASE_URL}/vendor/addVendorUser`, data)
+            axios.post(`${BASE_URL}/addVendorUser`, data)
                 .then((res) => {
                     alert(res.data)
                     getAdminuserData()

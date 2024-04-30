@@ -6,14 +6,44 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { dark } from '@mui/material/styles/createPalette';
 const Orders = () => {
     const [order, setOrderData] = useState([])
+    const [filteredData, setFilteredData] = useState([]);
+    const [value, setValue] = useState({
+        Order: "",
+        Name: "",
+        Number: "",
+        from: "",
+        to: "",
+        deliveryStatus: "",
+        paymentStatus: "",
+    })
+
+    const onhandleChange = (e) => {
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    }
+
+    const handleCancel = () => {
+        setValue({
+            Order: "",
+            Name: "",
+            Number: "",
+            from: "",
+            to: "",
+            deliveryStatus: "",
+            paymentStatus: "",
+        })
+        setFilteredData(order)
+
+    }
 
     async function getOrderdata() {
         axios.get(`${BASE_URL}/order_detail`)
             .then((res) => {
                 console.log(res.data)
                 setOrderData(res.data)
+                setFilteredData(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -24,13 +54,43 @@ const Orders = () => {
         getOrderdata()
     }, [])
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const filteredResult = order.filter(item => {
+            // Apply order filter   
+            const orderMatch = value.Order === '' || item.orderno.includes(value.Order);
+            const nameMatch = value.Name === '' || item.firstname.toLowerCase().includes(value.Name.toLowerCase());
+            const numberMatch = value.Number === '' || item.mobileno.includes(value.Number);
+            let dateMatch = true;
+            const orderDate = item.created_date.split('T')[0];
+            const from = value.from;
+            const to = value.to;
+            if (value.from && !value.to) {
+                dateMatch = orderDate >= from;
+                console.log(dateMatch, "????")
+            } else if (!value.from && value.to) {
+                dateMatch = orderDate <= to;
+                console.log(dateMatch, "????")
+            } else if (value.from && value.to) {
+                dateMatch = orderDate >= from && orderDate <= to;
+                console.log(dateMatch, "????")
+            }
+            const deliveryStatusMatch = value.deliveryStatus === 'All' || value.deliveryStatus === '' || item.ostatus === parseInt(value.deliveryStatus);
+            const paymentStatusMatch = value.paymentStatus === 'All' || value.paymentStatus === '' || item.paymentStatus === parseInt(value.paymentStatus);
+            console.log(item.paystatus === parseInt(value.paymentStatus), "???????")
+            return orderMatch && nameMatch && numberMatch && dateMatch && deliveryStatusMatch && paymentStatusMatch;
 
+
+        });
+        // Update filtered data state
+        setFilteredData(filteredResult);
+    }
 
 
 
 
     return (
-        <div class="container-fluid page-body-wrapper">
+        <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -44,42 +104,42 @@ const Orders = () => {
 
                                         </div>
                                     </div>
-                                    <form class="forms-sample" >
+                                    <form class="forms-sample" onSubmit={handleSubmit}>
                                         <div className='row'>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Order No</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='title' />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='Order' value={value.Order} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Customer Name</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Name" name='title' />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Name" name='Name' value={value.Name} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-3">
                                                 <label for="exampleInputUsername1">Mobile No</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Number" name='title' />
+                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter Number" name='Number' value={value.Number} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Order From</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='title' />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='from' value={value.from} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleInputUsername1">Order To</label>
-                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='title' />
+                                                <input type="date" class="form-control" id="exampleInputUsername1" placeholder="Order No" name='to' value={value.to} onChange={onhandleChange} />
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Delivery Status</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='state'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='deliveryStatus' onChange={onhandleChange}>
                                                     <option selected>All</option>
-                                                    <option value="1">Confirm</option>
-                                                    <option value="2">Dispatch</option>
-                                                    <option value="3">Delivered</option>
-                                                    <option value="4">Cancelled</option>
+                                                    <option value="Confirm">Confirm</option>
+                                                    <option value="Dispatched">Dispatch</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                    <option value="Cancelled">Cancelled</option>
                                                 </select>
 
                                             </div>
                                             <div class="form-group col-lg-2">
                                                 <label for="exampleFormControlSelect1">Payment Status</label>
-                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='state'>
+                                                <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='paymentStatus' onChange={onhandleChange}>
                                                     <option selected>All</option>
                                                     <option value="1">Paid</option>
                                                     <option value="2">Cod</option>
@@ -91,7 +151,7 @@ const Orders = () => {
                                         </div>
 
                                         <button type="submit" class="btn btn-primary mr-2">Search</button>
-                                        <Link to="/webapp/adminuser"><button class="btn btn-light">Cancel</button></Link>
+                                        <button type="button" class="btn btn-light" onClick={handleCancel}>Cancel</button>
                                     </form>
 
 
@@ -155,7 +215,7 @@ const Orders = () => {
 
                                             <tbody>
 
-                                                {order.map((item) => {
+                                                {filteredData.map((item) => {
                                                     return (
                                                         <tr >
                                                             <td>
@@ -171,57 +231,24 @@ const Orders = () => {
                                                                 {item.firstname} {item.lastname}
                                                             </td>
                                                             <td>
-                                                                {item.transacamount}
+                                                                ₹{item.totalamt}
                                                             </td>
                                                             <td>
                                                                 {item.paystatus == 0 ? "pending" : "paid"}
                                                             </td>
                                                             <td>
-                                                                {item.status}
+                                                                {item.ostatus}
                                                             </td>
                                                             <td>
 
                                                                 <button className='bt btn-sm btn-primary'>Print Invoice</button>
                                                             </td>
-                                                            <td>
-                                                                <Link to="/webapp/view"><RemoveRedEyeIcon className='text-primary' /></Link>
-                                                            </td>
+                                                            {/* <td>
+                                                                <Link to={`/webapp/view/${item.id}`}><RemoveRedEyeIcon className='text-primary' /></Link>
+                                                            </td> */}
                                                         </tr>
                                                     )
                                                 })}
-                                                <tr >
-                                                    <td>
-                                                        RST-231004-11
-                                                    </td>
-                                                    <td>
-                                                        04-10-2023
-                                                    </td>
-                                                    <td>
-                                                        RST-WS/23-24/003
-                                                    </td>
-                                                    <td>
-                                                        Satyam satkar
-                                                    </td>
-                                                    <td>
-                                                        15112
-                                                    </td>
-                                                    <td>
-                                                        paid
-                                                    </td>
-                                                    <td>
-                                                        Confirm
-                                                    </td>
-                                                    <td>
-
-                                                        <button className='bt btn-sm btn-primary'>Print Invoice</button>
-                                                    </td>
-                                                    <td>
-                                                        <Link to="/webapp/view"><RemoveRedEyeIcon className='text-primary' /></Link>
-                                                    </td>
-                                                </tr>
-
-
-
 
 
 

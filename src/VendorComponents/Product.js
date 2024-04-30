@@ -15,6 +15,7 @@ import decryptedUserId from "../Utils/UserID";
 import img1 from "../assets/images/product_default_image.jpg";
 import { BASE_URL, IMG_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
+import decryptedvendorid from '../Utils/Vendorid';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -51,7 +52,9 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 const Product = () => {
   const [cat, setCatData] = useState([])
   const [error, setError] = useState({})
+  const [group ,setGroupData] = useState([])
   const [selectedOption, setSelectedCat] = useState(null);
+  const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedOptionvendor, setSelectedVendor] = useState(null);
   const [selectedOptionBrand, setSelectedBrand] = useState(null);
   const [selectedOptionSub, setSelectedSub] = useState(null);
@@ -60,66 +63,74 @@ const Product = () => {
   const [uid, setUid] = useState([])
   const [brand, setBrand] = useState([])
   const [catid, selectedId] = useState("")
+  const [groupid, selectedgroupId] = useState("")
   const [subcatid, selectedsubcatId] = useState("")
-  const [brandid, selectedBrandId] = useState("")
-  const [vendorid, selectedVendorId] = useState("")
+  const [brand_id, selectedBrandId] = useState("")
+  const [vendor_id, selectedVendorId] = useState("")
   const [value, setValue] = useState({
-    sizeimage: "" ||  `${IMG_URL}/sizechart/` + uid.size_image,
+    sizeimage: "" || `${IMG_URL}/sizechart/` + uid.size_image,
     title: "" || uid.title,
     price: "" || uid.price,
     discountedprice: "" || uid.disc_price,
     description: "" || uid.description,
-    stock : "" || uid.stock,
+    slug : "" || uid.slug,
   });
 
   useEffect(() => {
     setValue({
-      sizeimage :  `${IMG_URL}/sizechart/` +  uid.size_image,
+      sizeimage: `${IMG_URL}/sizechart/` + uid.size_image,
       title: uid.title,
       price: uid.price,
       discountedprice: uid.disc_price,
-      description: uid.description
+      description: uid.description,
+      slug : uid.slug
     })
   }, [uid])
+
   const [sizeimage, setSizeImage] = useState()
   const [specification, setSpecification] = useState()
-  const [activeValue, setactiveVal] = useState()
-  const [featureValue, setfeatureVal] = useState()
-  const [trendingValue, settrendingVal] = useState()
   const { update_id } = useParams()
 
 
-console.log(value.sizeimage , "000")
+  // console.log(value.sizeimage, "000")
   const validateForm = () => {
     let isValid = true
     const newErrors = {}
 
-    if (!selectedOption) {
+    if (!catid) {
       isValid = false;
       newErrors.category = "category is required"
+    }
+    if (!groupid) {
+      isValid = false;
+      newErrors.group = "group is required"
     }
 
     if (!value.title) {
       isValid = false;
       newErrors.title = "title is required"
     }
+    if (!value.slug) {
+      isValid = false;
+      newErrors.slug = "slug is required"
+    }
 
     if (!selectedOptionBrand) {
       isValid = false
       newErrors.brand = "brand is required"
     }
-    if (!selectedOptionvendor) {
-      isValid = false
-      newErrors.vendor = "vendor is required"
-    }
+    // if (!selectedOptionvendor) {
+    //   isValid = false
+    //   newErrors.vendor = "vendor is required"
+    // }
     if (!value.price) {
       isValid = false
       newErrors.price = "price is required"
     }
-    if (!sizeimage) {
-      isValid = false
-      newErrors.sizeimage = "sizechart is required"
-    }
+    // if (!sizeimage) {
+    //   isValid = false
+    //   newErrors.sizeimage = "sizechart is required"
+    // }
 
     setError(newErrors)
     return isValid
@@ -129,7 +140,9 @@ console.log(value.sizeimage , "000")
 
     axios.post(`${BASE_URL}/product_update`, { u_id: update_id })
       .then((res) => {
-        setUid(res.data[0])
+
+          setUid(res.data[0])
+        
 
       })
       .catch((err) => {
@@ -137,19 +150,38 @@ console.log(value.sizeimage , "000")
       })
   }
 
+  const handlestatus = (e, id, column) => {
+    const value = e.target.value
+
+    const data = {
+      product_id: id,
+      status: value,
+      column: column
+    }
+
+    axios.post(`${BASE_URL}/product_status`, data)
+      .then((res) => {
+        // console.log(res)
+        // setProductData()
+      })
+
+  }
 
 
-
-  async function getcatData() {
-    axios.get(`${BASE_URL}/category_data`)
+  async function getGroupData() {
+    axios.get(`${BASE_URL}/group_data`)
       .then((res) => {
         // console.log(res.data)
-        setCatData(res.data)
+        setGroupData(res.data)
       })
       .catch((err) => {
         console.log(err)
       })
   }
+
+
+
+
 
   async function getBrandData() {
     axios.get(`${BASE_URL}/Brand_data`)
@@ -174,6 +206,27 @@ console.log(value.sizeimage , "000")
       })
   }
 
+  async function getCatData() {
+    axios.get(`${BASE_URL}/category_data`)
+        .then((res) => {
+            setCatData(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+async function getsubcatData() {
+  axios.get(`${BASE_URL}/subcategory_data`)
+      .then((res) => {
+        setsubcategory(res.data)
+      })
+      .catch((err) => {
+          console.log(err)
+      })
+}
+
+
 
 
 
@@ -182,9 +235,11 @@ console.log(value.sizeimage , "000")
     if (update_id !== ":update_id") {
       getUpdateData()
     }
-    getcatData()
+    getGroupData() 
     getBrandData()
     getVendordata()
+    getCatData()
+    getsubcatData() 
   }, [update_id])
 
 
@@ -197,27 +252,30 @@ console.log(value.sizeimage , "000")
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const HandleVendorChange = (selectedValue) => {
-    if (selectedValue) {
-      const vendorid = selectedValue.id
-      setSelectedVendor(selectedValue)
-      selectedVendorId(vendorid);
-    }
-  };
+  // const HandleVendorChange = (selectedValue) => {
+  //   if (selectedValue) {
+  //     const vendorid = selectedValue.id
+  //     setSelectedVendor(selectedValue)
+  //     selectedVendorId(vendorid);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (uid.v_id) {
-      const selected = vendor.find(option => option.id === uid.v_id);
-      setSelectedVendor(selected);
-    }
+  // useEffect(() => {
+  //   if (uid.v_id) {
+  //     const selected = vendor.find(option => option.id === uid.v_id);
+  //     setSelectedVendor(selected);
+  //     selectedVendorId(uid.v_id)
+  //   }
 
-  }, [uid, vendor]);
+  // }, [uid, vendor,vendor_id]);
+
+  // console.log(vendor_id,"dd")
 
   const HandleBrandChange = (selectedValue) => {
     if (selectedValue) {
       const brandid = selectedValue.id
-      selectedBrandId(brandid);
       setSelectedBrand(selectedValue)
+      selectedBrandId(brandid);
     }
   };
 
@@ -225,9 +283,12 @@ console.log(value.sizeimage , "000")
     if (uid.b_id) {
       const selected = brand.find(option => option.id === uid.b_id);
       setSelectedBrand(selected);
+      selectedBrandId(uid.b_id);
     }
 
-  }, [uid, brand]);
+  }, [uid, brand,brand_id]);
+
+  // console.log(brand_id,"juu")
 
   const HandlesubcatChange = (selectedValue) => {
     if (selectedValue) {
@@ -238,31 +299,54 @@ console.log(value.sizeimage , "000")
   };
 
   useEffect(() => {
+
     if (uid.scatid) {
       const selected = subcat.find(option => option.id === uid.scatid);
       setSelectedSub(selected);
+      selectedsubcatId(uid.scatid);
     }
 
   }, [uid, subcat]);
 
 
+  const HandleGroupChange = (selectedValue) => {
+
+    const val = selectedValue.id 
+   
+    selectedgroupId(val)
+    setSelectedGroup(selectedValue);
+    // setSelectedSub();
+    // setsubcategory([]);
 
 
+    const data = {
+      groupid: val
+    }
 
-  const handleactive = (e) => {
-    const value = e.target.value
-    setactiveVal(value)
-  }
-  const handletrending = (e) => {
-    const value = e.target.value
-    settrendingVal(value)
-  }
+    axios.post(`${BASE_URL}/getcategory_data`, data)
+      .then((res) => {
+        // console.log(res.data)
+        setCatData(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+   
+  };
+
+  useEffect(() => {
+    // console.log(uid,"??");
+    
+    if (uid.groupid) {
+      const selected = group.find(option => option.id === uid.groupid);
+      setSelectedGroup(selected);
+      selectedgroupId(uid.groupid)
+    }
+    
+  }, [uid, group]);
 
 
-  const handlefeature = (e) => {
-    const value = e.target.value
-    setfeatureVal(value)
-  }
 
 
   const HandleCatChange = (selectedValue) => {
@@ -276,7 +360,7 @@ console.log(value.sizeimage , "000")
 
     axios.post(`${BASE_URL}/getsubcategory`, data)
       .then((res) => {
-        console.log(res.data)
+        // console.log(res.data)
         setsubcategory(res.data)
       })
       .catch((err) => {
@@ -285,10 +369,12 @@ console.log(value.sizeimage , "000")
   };
 
   useEffect(() => {
+
     // If you have received the ID from the API, find the option that matches the ID
     if (uid.catid) {
       const selected = cat.find(option => option.id === uid.catid);
       setSelectedCat(selected);
+      selectedId(uid.catid);
     }
   }, [uid, cat]);
 
@@ -323,25 +409,36 @@ console.log(value.sizeimage , "000")
     e.preventDefault()
     if (validateForm()) {
       const formdata = new FormData()
-      formdata.append('v_id', vendorid)
+      formdata.append('uid', uid.id)
+      
+      if (update_id == ":update_id") {
+        formdata.append('v_id', decryptedvendorid())
+        formdata.append('b_id', brand_id)
+        formdata.append('subcatid', subcatid)
+        formdata.append('catid', catid)
+        formdata.append('groupid', groupid)
+        
+      }else{
+        formdata.append('v_id', decryptedvendorid())
+        formdata.append('b_id', brand_id)
+        formdata.append('catid', catid )
+        formdata.append('groupid', groupid)
+        formdata.append('subcatid', subcatid )
+        
+      }
       formdata.append('title', value.title)
-      formdata.append('catid', catid)
-      formdata.append('b_id', brandid)
-      formdata.append('subcatid', subcatid)
+      formdata.append('slug', value.slug)
       formdata.append('price', value.price)
       formdata.append('d_price', value.discountedprice)
       formdata.append('description', value.description)
       formdata.append('sizeimage', sizeimage)
       formdata.append('specification', specification)
-      formdata.append('activeval', activeValue)
-      formdata.append('featureval', featureValue)
-      formdata.append('trendingval', trendingValue)
       formdata.append('user_id', decryptedUserId())
-      formdata.append('stock', value.stock);
+
 
       axios.post(`${BASE_URL}/add_product`, formdata)
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           alert(res.data)
         })
     }
@@ -351,7 +448,7 @@ console.log(value.sizeimage , "000")
 
 
   return (
-    <div class="container-fluid page-body-wrapper">
+    <div class="container-fluid page-body-wrapper col-lg-10">
       <InnerHeader />
       <div class="main-panel">
         <div class="content-wrapper">
@@ -472,35 +569,7 @@ console.log(value.sizeimage , "000")
                     <div class="col-md-12">
                       <div class="row">
 
-
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="category">
-                              Vendor <span class="text-danger">*</span>
-                              {error.vendor && <span className="text-danger">{error.vendor}</span>}
-                            </label>
-                            <Autocomplete
-                              disablePortal
-                              id="combo-box-demo"
-                              options={vendor}
-                              InputLabelProps={{
-                                shrink: true,  // This makes the label move up when there's a value
-                              }}
-                              value={selectedOptionvendor}
-                              placeholder="brand"
-                              getOptionLabel={(option) => option.vendor_name}
-                              getOptionSelected={(option, value) => option.id === value.id}
-                              sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
-                              renderInput={(params) => <TextField   {...params} label="Select Vendor" />}
-                              onChange={(event, value) => HandleVendorChange(value)}
-                              name="vendor"
-
-                            />
-                          </div>
-
-
-                        </div>
-                        <div class="col-md-6 ">
+                        <div class="col-md-6 col-lg-6 ">
                           <div class="form-group ">
                             <label for="prod_id">
                               Product title
@@ -521,30 +590,28 @@ console.log(value.sizeimage , "000")
 
                         </div>
 
-
-                        {/* <div class="row ">
-                        <div class="col-md-12 py-3">
+                        <div class="col-md-6 col-lg-6">
                           <div class="form-group ">
                             <label for="prod_id">
-                              Product identifier
+                              slug
                               <span class="text-danger">*</span>
+                              {error.slug && <span className="text-danger">{error.slug}</span>}
                             </label>
 
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="prod_id"
-                              placeholder="Product Title"
-                              name="title"
-                              onChange={onhandleChange}
 
-                            />
-                        
+                            <div>
+                              <TextField id="outlined-basic" InputLabelProps={{
+                                shrink: true,  // This makes the label move up when there's a value
+                              }} label="Enter product title.." value={value.slug} sx={{ width: "100%" }} variant="outlined" name="slug"
+                                onChange={onhandleChange} />
+
+                            </div>
+
                           </div>
 
                         </div>
 
-                       </div> */}
+
 
 
                         <div class="col-md-6 ">
@@ -569,7 +636,31 @@ console.log(value.sizeimage , "000")
                             />
                           </div>
                         </div>
+
                         <div class="col-md-6 ">
+                          <div class="form-group ">
+                            <label for="category">
+                              Group<span class="text-danger">*</span>
+                              {error.group && <span className="text-danger">{error.group}</span>}
+                            </label>
+                            <Autocomplete
+                              disablePortal
+                              id="combo-box-demo"
+                              options={group}
+                              value={selectedGroup}
+                              placeholder="Group"
+                              getOptionLabel={(option) => option.title}
+                              getOptionSelected={(option, value) => option.id === value.id}
+                              sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
+                              renderInput={(params) => <TextField {...params} label="Select Group" />}
+                              onChange={(event, value) => HandleGroupChange(value)}
+                              name="group"
+
+                            />
+                          </div>
+                        </div>
+
+                        <div class="col-md-6 pt-4" >
                           <div class="form-group ">
                             <label for="category">
                               Category<span class="text-danger">*</span>
@@ -594,7 +685,7 @@ console.log(value.sizeimage , "000")
 
 
 
-                        <div class="col-md-6 " style={{ paddingTop: "30px" }}>
+                        <div class="col-md-6 pt-4" >
                           <div class="form-group ">
                             <label for="prod_id">
                               SubCategory<span class="text-danger">*</span>
@@ -619,7 +710,7 @@ console.log(value.sizeimage , "000")
                           </div>
                         </div>
 
-                        <div class="col-md-6 " style={{ paddingTop: "30px" }}>
+                        <div class="col-md-6 pt-4" >
                           <div class="form-group ">
                             <label for="name">
                               Price
@@ -639,7 +730,7 @@ console.log(value.sizeimage , "000")
 
 
 
-                        <div class="col-md-6">
+                        <div class="col-md-6 pt-4">
                           <div class="form-group ">
                             <label for="slug">Discounted Price </label>
 
@@ -648,18 +739,6 @@ console.log(value.sizeimage , "000")
                               <TextField label="Enter price.." InputLabelProps={{
                                 shrink: true,  // This makes the label move up when there's a value
                               }} value={value.discountedprice} variant="outlined" sx={{ width: "100%" }} name="discountedprice" onChange={onhandleChange} />
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="slug">Stock </label>
-
-                            <div>
-
-                              <TextField label="Enter price.." InputLabelProps={{
-                                shrink: true,  // This makes the label move up when there's a value
-                              }} value={value.stock} variant="outlined" sx={{ width: "100%" }} name="stock" onChange={onhandleChange} />
                             </div>
                           </div>
                         </div>
@@ -690,7 +769,7 @@ console.log(value.sizeimage , "000")
                 </div>
 
 
-               
+
 
 
 
@@ -735,7 +814,7 @@ console.log(value.sizeimage , "000")
                               class="uploaded-stocks-img"
                               data-bs-toggle="tooltip"
                               data-placement="top"
-                              src={uid.size_image == undefined ? img1 : value.sizeimage }
+                              src={value.sizeimage == ""  ? img1 : value.sizeimage}
                               title=""
                               alt=""
                               data-bs-original-title=""
@@ -769,11 +848,10 @@ console.log(value.sizeimage , "000")
                     </h5>
                     <p class="para">Manage the product-related specifications.</p>
                   </div>
-                  <div style={{ width: "600px", padding: "20px 22px " }} >
+                  <div style={{ width: "100%", padding: "20px 22px " }} >
                     <CKEditor
-
                       editor={ClassicEditor}
-                      data=""
+                      data={uid.specification}
                       onReady={editor => {
                         // Allows you to store the editor instance and use it later.
                         // console.log('Editor is ready to use!', editor);
@@ -783,171 +861,16 @@ console.log(value.sizeimage , "000")
                         setSpecification(data)
                       }}
                       onBlur={(event, editor) => {
-                        console.log('Blur.', editor);
+                        // console.log('Blur.', editor);
                       }}
                       onFocus={(event, editor) => {
-                        console.log('Focus.', editor);
+                        // console.log('Focus.', editor);
                       }}
                     />
                   </div>
 
                 </div>
 
-                {/* <div class="card mt-3" id="tax">
-                  <div class="card-head" style={{ padding: "20px 22px 0px" }}>
-                    <h5
-                      style={{
-                        color: "#000000DE",
-                        fontSize: "20px",
-                        margin: "0",
-                      }}
-                    >
-                      Tax and shipping
-                    </h5>
-                    <p class="para">
-                      Set up the tax and shipping information of the product.
-                    </p>
-                  </div>
-                  <div class="card-body" style={{ padding: "20px 10px" }}>
-
-                    <div class="col-md-12">
-                      <div class="row">
-                        <div class="col-md-12">
-                          <div class="form-group ">
-                            <label for="category">
-                              Tax Category<span class="text-danger">*</span>
-                            </label>
-                            <select
-                              type="text"
-                              class="form-control"
-                              id="tx_category"
-                              placeholder=""
-                              name="tx_category"
-                            >
-                              <option value="0">Select Category</option>
-                              <option value="1">cat 1</option>
-                              <option value="2">cat 2</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="method">
-                              Fulfillment method
-                              <span class="text-danger">*</span>
-                            </label>
-                            <select
-                              type="text"
-                              class="form-control"
-                              id="method"
-                              placeholder=""
-                              name="method"
-                            >
-                              <option value="0">Select Method</option>
-                              <option value="1">method 1</option>
-                              <option value="2">method 2</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="ship">
-                              Shipping package<span class="text-danger">*</span>
-                            </label>
-                            <select
-                              type="text"
-                              class="form-control"
-                              id="ship"
-                              placeholder=""
-                              name="ship"
-                            >
-                              <option value="0">Select Package</option>
-                              <option value="1">Package 1</option>
-                              <option value="2">Package 2</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="weight">
-                              Weight<span class="text-danger">*</span>
-                            </label>
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="weight"
-                              placeholder=""
-                              name="weight"
-                            />
-                          </div>
-                        </div>
-
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="wt_unit">
-                              Weight Unit<span class="text-danger">*</span>
-                            </label>
-                            <select
-                              type="text"
-                              class="form-control"
-                              id="wt_unit"
-                              placeholder=""
-                              name="wt_unit"
-                            >
-                              <option value="0">Select Unit</option>
-                              <option value="1">Gram</option>
-                              <option value="2">KiloGram</option>
-                              <option value="3">Pound</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="country">
-                              Country Of Origine
-                              <span class="text-danger">*</span>
-                            </label>
-                            <select
-                              type="text"
-                              class="form-control"
-                              id="country"
-                              placeholder=""
-                              name="country"
-                            >
-                              <option value="0">Select Country</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="ship_prpfile">
-                              Shipping Profile<span class="text-danger">*</span>
-                            </label>
-                            <select
-                              type="text"
-                              class="form-control"
-                              id="ship_prpfile"
-                              placeholder=""
-                              name="ship_prpfile"
-                            >
-                              <option value="0">Select </option>
-                              <option value="1">Order Level Shipping</option>
-                              <option value="2">Item Level Shipping</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div> */}
 
               </div>
               <div class="col-lg-3 grid-margin stretch-card">
@@ -976,9 +899,14 @@ console.log(value.sizeimage , "000")
                               </label>
                             </div>
                             <div>
-                              <FormControlLabel
-                                control={<Android12Switch onChange={(e) => handleactive(e)} value="1" />}
-                              />
+                              {isNaN(update_id) && <FormControlLabel
+                                control={<Android12Switch disabled />}
+                              />}
+                              {uid.active == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="0" defaultChecked />} />}
+                              {uid.active == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="1" />} />}
+
+
+
                             </div>
                           </div>
                         </div>
@@ -990,11 +918,16 @@ console.log(value.sizeimage , "000")
                               htmlFor=""
                               class="switch switch-sm switch-icon"
                             >
+
                               Approval status
                             </label>
-                            <FormControlLabel
-                              control={<Android12Switch />}
-                            />
+                            {isNaN(update_id) && <FormControlLabel
+                              control={<Android12Switch disabled />}
+                            />}
+
+                            {uid.approve == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="0" defaultChecked />} />}
+                            {uid.approve == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="1" />} />}
+
                           </div>
                         </div>
                       </div>
@@ -1019,9 +952,11 @@ console.log(value.sizeimage , "000")
                               </label>
                             </div>
                             <div>
-                              <FormControlLabel
-                                control={<Android12Switch value='1' onChange={(e) => handlefeature(e)} />}
-                              />
+                              {isNaN(update_id) && <FormControlLabel
+                                control={<Android12Switch disabled />}
+                              />}
+                              {uid.featured == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "featured")} value="0" defaultChecked />} />}
+                              {uid.featured == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "featured")} value="1" />} />}
                             </div>
                           </div>
                           <p
@@ -1047,9 +982,11 @@ console.log(value.sizeimage , "000")
                               </label>
                             </div>
                             <div>
-                              <FormControlLabel
-                                control={<Android12Switch value="1" onChange={(e) => handletrending(e)} />}
-                              />
+                              {isNaN(update_id) && <FormControlLabel
+                                control={<Android12Switch disabled />}
+                              />}
+                              {uid.trending == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "trending")} value="0" defaultChecked />} />}
+                              {uid.trending == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "trending")} value="1" />} />}
                             </div>
                           </div>
                           <p

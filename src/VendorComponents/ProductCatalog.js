@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BASE_URL } from "./BaseUrl";
+import { BASE_URL, IMG_URL } from "./BaseUrl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
@@ -10,19 +10,38 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import InnerHeader from "./InnerHeader";
+import noimg from '../assets/images/noimg.jpg'
 import chair from '../assets/images/chair.jpg'
+import decryptedvendorid from "../Utils/Vendorid";
+import { get } from "jquery";
 const ProductCatalog = () => {
   const [product, setProductData] = useState([]);
   const [toggleValues, setToggleValues] = useState({});
   const [selectedProduct, setSelectedProduct] = useState({ id: "", status: "" });
 
-
+  const [image, setImg] = useState([]);
   async function getcatData() {
+    const data ={
+      vendor_id : decryptedvendorid()
+    }
+
     axios
-      .get(`${BASE_URL}/product_data`)
+      .post(`${BASE_URL}/vendor_product_data`,data)
+
       .then((res) => {
-        console.log(res.data);
+
         setProductData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  async function getSigleImg() {
+    axios
+      .get(`${BASE_URL}/product_single_img`)
+      .then((res) => {
+        setImg(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -31,8 +50,10 @@ const ProductCatalog = () => {
 
 
 
+
   useEffect(() => {
     getcatData();
+    getSigleImg()
   }, []);
 
 
@@ -58,7 +79,7 @@ const ProductCatalog = () => {
 
   };
 const updateStatus = async (productData)=>{
-  const response = await fetch(`${BASE_URL}/vendor/updateStataus`, {
+  const response = await fetch(`${BASE_URL}/updateStataus`, {
     method : "POST",
     body :JSON.stringify({
       id : productData.id,
@@ -116,7 +137,7 @@ console.log(selectedProduct)
         column:column
     }
 
-    axios.post(`${BASE_URL}/vendor/product_status`, data)
+    axios.post(`${BASE_URL}/product_status`, data)
         .then((res) => {
             console.log(res)
             // setProductData()
@@ -141,7 +162,7 @@ console.log(selectedProduct)
                     <div>
 
                       {/* <Link to="/vendor/product/:update_id" ><button className=' btn btn-primary'>Add Product</button></Link> */}
-                      <Link to="/vendor/addProduct" ><button className=' btn btn-primary'>Add Product</button></Link>
+                      <Link to="/vendor/addProduct/:update_id" ><button className=' btn btn-primary'>Add Product</button></Link>
                     </div>
                   </div>
 
@@ -172,13 +193,15 @@ console.log(selectedProduct)
                               <td>
                                 {index + 1}
                               </td>
-                              <td><img src={chair} alt="" /></td>
+                              <td>{image.filter((ele) => ele.product_id == item.id).map((item) => { return (<img src={`${IMG_URL}/productimg/` + item.image1} alt="" />) })}  {image.filter((ele) => ele.product_id === item.id).length === 0 && (
+                                <img src={noimg} alt="No" />
+                              )}</td>
                               <td>{item.title}</td>
                               <td>{item.category}</td>
                               <td>{item.subcategory}</td>
                               <td>{item.vendor}</td>
                               <td>{item.price}</td>
-                              <td><Link to={`/webapp/addimages/${item.id}`}><Button
+                              <td><Link to={`/vendor/addimages/${item.id}`}><Button
                                 color="primary"
                                 disabled={false}
                                 size="medium"
@@ -203,7 +226,7 @@ console.log(selectedProduct)
                                 />}
                               </td>
                               <td>
-                                <Link to={`/webapp/product/${item.id}`}>
+                                <Link to={`/vendor/product/${item.id}`}>
                                   <EditIcon />
                                 </Link>
                                 {/* <Link>

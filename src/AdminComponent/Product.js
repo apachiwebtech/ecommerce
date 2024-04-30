@@ -139,7 +139,9 @@ const Product = () => {
 
     axios.post(`${BASE_URL}/product_update`, { u_id: update_id })
       .then((res) => {
-        setUid(res.data[0])
+           
+          setUid(res.data[0])
+        
 
       })
       .catch((err) => {

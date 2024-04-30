@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import img1 from "../assets/images/product_default_image.jpg";
 import EditIcon from "@mui/icons-material/Edit";
 import InnerHeader from './InnerHeader';
 import axios from 'axios';
-import { BASE_URL } from './BaseUrl';
+import { BASE_URL, IMG_URL } from './BaseUrl';
 import { Autocomplete, TextField } from '@mui/material';
+import decryptedUserId from '../Utils/UserID';
+import DeleteIcon from "@mui/icons-material/Delete";
+import CustomHeder from './CustomHeder';
+import Loader from './Loader';
+import Cookies from 'js-cookie';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRoleData } from '../Store/Role/role-action';
 
 const AddProductImg = () => {
     const [value, setValue] = useState({
@@ -19,9 +26,33 @@ const AddProductImg = () => {
     const [image2, setImage2] = useState()
     const [image3, setImage3] = useState()
     const [image4, setImage4] = useState()
+    const [loader, setLoader] = useState(false)
     const [selectedOption, setSelectedOption] = useState(null);
     const [color_id, setId] = useState("")
     const [color, setColor] = useState([])
+    const [productimg, setProductimg] = useState([])
+    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const { product_id, product_name } = useParams()
+    const [error, setError] = useState({})
+
+    const validateForm = () => {
+        let isValid = true
+        const newErrors = {}
+
+        if (!image1) {
+            isValid = false;
+            newErrors.image1 = "Upload 1 is required"
+        }
+
+        if (!color_id) {
+            isValid = false
+            newErrors.color_id = "color is required"
+        }
+
+
+        setError(newErrors)
+        return isValid
+    }
 
 
     async function getColorData() {
@@ -34,11 +65,67 @@ const AddProductImg = () => {
                 console.log(err)
             })
     }
+    async function getProductimgData() {
+
+        const data = {
+            product_id: product_id
+        }
+
+        axios.post(`${BASE_URL}/product_img_data`, data)
+            .then((res) => {
+                console.log(res.data)
+                setProductimg(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
 
     useEffect(() => {
+        getProductimgData()
         getColorData()
     }, [])
 
+
+    const handleClick = (id) => {
+        setConfirmationVisibleMap((prevMap) => ({
+            ...prevMap,
+            [id]: true,
+        }));
+    };
+
+    const handleCancel = (id) => {
+        // Hide the confirmation dialog without performing the delete action
+        setConfirmationVisibleMap((prevMap) => ({
+            ...prevMap,
+            [id]: false,
+        }));
+    };
+
+    const handleDelete = (id) => {
+
+        setLoader(true)
+
+        const data = {
+            product_id: id
+        }
+
+
+        axios.post(`${BASE_URL}/product_img_delete`, data)
+            .then((res) => {
+                setLoader(false)
+                getProductimgData()
+            })
+
+            .catch((err) => {
+                console.log(err)
+            })
+        setConfirmationVisibleMap((prevMap) => ({
+            ...prevMap,
+            [id]: false,
+        }));
+    }
 
 
 
@@ -114,17 +201,28 @@ const AddProductImg = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        const formdata = new FormData()
-        formdata("image1", image1)
-        formdata("image2", image2)
-        formdata("image3", image3)
-        formdata("image4", image4)
-        formdata("color_id", color_id)
+        if (validateForm()) {
+            setLoader(true)
+            const formdata = new FormData()
+            formdata.append("image1", image1)
+            formdata.append("image2", image2)
+            formdata.append("image3", image3)
+            formdata.append("image4", image4)
+            formdata.append("color_id", color_id)
+            formdata.append("product_id", product_id)
+            formdata.append("user_id", decryptedUserId())
 
-        axios.post(`${BASE_URL}/add_product_img`, formdata)
-            .then((res) => {
-                console.log(res)
-            })
+            axios.post(`${BASE_URL}/add_product_img`, formdata)
+                .then((res) => {
+                    console.log(res)
+                    alert(res.data)
+                    setLoader(false)
+                    getProductimgData()
+                    window.location.pathname = `/webapp/addimages/${product_id}/${product_name}`
+                })
+        }
+
+
 
     }
 
@@ -140,16 +238,34 @@ const AddProductImg = () => {
 
 
 
+    const roledata = {
+        role: Cookies.get(`role`),
+        pageid: 10
+    }
+
+    const dispatch = useDispatch()
+    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+
+
+    useEffect(() => {
+        dispatch(getRoleData(roledata))
+    }, [])
+
+
+
 
 
     return (
-        <div class="container-fluid page-body-wrapper position-relative" >
-            <InnerHeader />
-
-            <div class="main-panel">
-                <div class="content-wrapper">
+        <div class="container-fluid page-body-wrapper position-relative col-lg-12" >
+            {loader && <Loader />}
+            {roleaccess > 1 ? <div class="main-panel">
+                <div class="content-wrapper" style={{ height: "100vh" }}>
+                    <CustomHeder />
+                    <div className='py-3'>
+                        <h5>Product Name: {product_name}</h5>
+                    </div>
                     <div class="row">
-                        <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="col-lg-5 grid-margin stretch-card">
                             <form onSubmit={handleSubmit} method='POST'>
                                 <div class="card">
                                     <div class="card-body">
@@ -179,22 +295,22 @@ const AddProductImg = () => {
                                                         <label>Upload 1<span className='text-danger'>*</span></label>
 
                                                         <input type="file" class="form-control file-upload-info" name='image1' onChange={handleupload1} />
-                                                        {/* {errors.gstupload && <div className="text-danger"></div>} */}
+                                                        {error.image1 && <span className='text-danger'>{error.image1}</span>}
                                                     </div>
                                                     <div class="form-group col-lg-6">
-                                                        <label>Upload 2<span className='text-danger'>*</span></label>
+                                                        <label>Upload 2</label>
 
                                                         <input type="file" class="form-control file-upload-info" name='image2' onChange={handleupload2} />
                                                         {/* {errors.panupload && <div className="text-danger">{errors.panupload}</div>} */}
                                                     </div>
                                                     <div class="form-group col-lg-6">
-                                                        <label>Upload 3<span className='text-danger text-underline' >*</span></label>
+                                                        <label>Upload 3</label>
 
                                                         <input type="file" class="form-control file-upload-info" name='image3' onChange={handleupload3} />
                                                         {/* {errors.agreementupload && <div className="text-danger">{errors.agreementupload}</div>} */}
                                                     </div>
                                                     <div class="form-group col-lg-6">
-                                                        <label>upload 4<span className='text-danger text-underline' >*</span></label>
+                                                        <label>upload 4</label>
 
                                                         <input type="file" class="form-control file-upload-info" name='image4' onChange={handleupload4} />
                                                         {/* {errors.agreementupload && <div className="text-danger">{errors.agreementupload}</div>} */}
@@ -211,12 +327,12 @@ const AddProductImg = () => {
                                                             getOptionLabel={(option) => option.title}
                                                             getOptionSelected={(option, value) => option.id === value.id}
                                                             sx={{ width: "100%", border: "none", borderRadius: "5px" }}
-                                                            renderInput={(params) => <TextField  label="Select Colour" {...params} />}
+                                                            renderInput={(params) => <TextField label="Select Colour" {...params} />}
                                                             onChange={(event, value) => HandleChange(value)}
                                                             name="color"
 
                                                         />
-                                                        {/* {error.group && <span className='text-danger'>{error.group}</span>} */}
+                                                        {error.color_id && <span className='text-danger'>{error.color_id}</span>}
                                                     </div>
 
                                                 </div>
@@ -227,10 +343,12 @@ const AddProductImg = () => {
 
                                                 <div className='row'>
                                                     <div className="col-lg-12 my-3">
-                                                        <button type='submit' className="btn btn btn-primary mr-2">Add</button>
-                                                        <button type='button' onClick={() => {
-                                                            window.location.reload()
-                                                        }} class="btn btn-light">Cancel</button>
+
+                                                        {roleaccess > 2 && <> <button type='submit' className="btn btn btn-primary mr-2">Add</button>
+                                                            <button type='button' onClick={() => {
+                                                                window.location.reload()
+                                                            }} class="btn btn-light">Cancel</button></>}
+
                                                     </div>
                                                 </div>
 
@@ -243,10 +361,10 @@ const AddProductImg = () => {
                                 </div>
                             </form>
                         </div>
-                        <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="col-lg-3 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">List Of Images</h4>
+                                    <h4 class="card-title">Image Preview</h4>
                                     <div className='row'>
                                         <div className='col-lg-6 py-2' >
                                             <img
@@ -271,7 +389,7 @@ const AddProductImg = () => {
                                                 data-bs-original-title=""
                                             ></img>
                                         </div>
-                                        <div className='col-lg-6'>
+                                        <div className='col-lg-6 py-2'>
                                             <img
                                                 class=""
                                                 data-bs-toggle="tooltip"
@@ -282,7 +400,7 @@ const AddProductImg = () => {
                                                 data-bs-original-title=""
                                             ></img>
                                         </div>
-                                        <div className='col-lg-6'>
+                                        <div className='col-lg-6 py-2'>
                                             <img
                                                 class=""
                                                 data-bs-toggle="tooltip"
@@ -299,7 +417,7 @@ const AddProductImg = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 grid-margin stretch-card">
+                        <div class="col-lg-4 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
                                     <h4 class="card-title">List Of Images</h4>
@@ -309,21 +427,35 @@ const AddProductImg = () => {
                                                 <tr>
                                                     <th width="18%">Sr. No.</th>
                                                     <th width="60%">Image</th>
+                                                    <th width="20%">Color</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
 
                                             <tbody>
+                                                {productimg.map((item, index) => {
+                                                    return (
+                                                        <tr>
+                                                            <td>{index + 1}</td>
+                                                            <td>{item.image1 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image1} alt='' /> : <></>}{item.image2 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image2} alt='' /> : <></>}{item.image3 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image3} alt='' /> : <></>}{item.image4 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image4} alt='' /> : <></>}</td>
+                                                            <td>{item.title}</td>
+                                                            <td>
+                                                                {roleaccess > 3 &&    <Link>
+                                                                    <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
+                                                                </Link> }
+                                                             
+                                                            </td>
+                                                            {confirmationVisibleMap[item.id] && (
+                                                                <div className='confirm-delete'>
+                                                                    <p>Are you sure you want to delete?</p>
+                                                                    <button onClick={() => handleDelete(item.id)} className='btn btn-sm btn-primary'>OK</button>
+                                                                    <button onClick={() => handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
+                                                                </div>
+                                                            )}
+                                                        </tr>
+                                                    )
+                                                })}
 
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>1</td>
-                                                    <td>
-                                                        <Link>
-                                                            <EditIcon />
-                                                        </Link>
-                                                    </td>
-                                                </tr>
 
 
                                             </tbody>
@@ -339,7 +471,8 @@ const AddProductImg = () => {
 
                     </div>
                 </div>
-            </div>
+            </div> : null}
+
         </div>
     )
 }

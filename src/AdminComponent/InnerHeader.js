@@ -41,6 +41,10 @@ const InnerHeader = () => {
                 return 'Settings';
             case '/webapp/group':
                 return 'Group';
+            case '/webapp/addrole':
+                return 'Add Role';
+            case '/webapp/roleassign':
+                return 'Role Assign';
             case '/webapp/color':
                 return 'Colour';
             case '/webapp/product':

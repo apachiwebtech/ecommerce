@@ -39,10 +39,9 @@ const VendorHeader = () => {
       <ul className="nav">
 
         <li className="nav-item">
-          <Link className="nav-link" to="/webapp">
+          <Link className="nav-link" to="/vendor">
             <Icon path={mdiMenu} size={1} className='mx-3' />
             <span className="menu-title">Dashboard</span>
-            {/* <div className="badge badge-info badge-pill">2</div> */}
           </Link>
         </li>
         <li className="nav-item sidebar-category">
@@ -51,23 +50,9 @@ const VendorHeader = () => {
         </li>
 
         {/* <li className="nav-item">
-          <Link className="nav-link" to="/vendor/vendormaster">
-            <Icon path={mdiAccountGroupOutline} size={1} className='mx-3' />
-            <span className="menu-title">Vendor Master</span>
-          </Link>
-        </li> */}
-        <li className="nav-item">
           <Link className="nav-link" to='/vendor/vendoruser'>
             <Icon path={mdiAccountOutline} size={1} className='mx-3' />
             <span className="menu-title">Vendor User</span>
-          </Link>
-        </li>
-
-
-        {/* <li className="nav-item">
-          <Link className="nav-link" to='' onClick={handleClick}>
-            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
-            <span className="menu-title">Product </span>
           </Link>
         </li> */}
 
@@ -82,7 +67,7 @@ const VendorHeader = () => {
         <Collapse in={openStates.product} timeout="auto" unmountOnExit>
           <ul className='inner-item'>
 
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" to='/vendor/group'>
                 <Icon path={mdiLandPlotsCircle} size={1} className='mx-3' />
                 <span className="menu-title">Group</span>
@@ -102,30 +87,28 @@ const VendorHeader = () => {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to='/vendor/brand'>
-                {/* <Icon path={mdiMagnifyPlusOutline} size={1}  /> */}
                 <Icon path={mdiStarBox} size={1} className='mx-3' />
                 <span className="menu-title">Brand</span>
               </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to='/vendor/color'>
-                {/* <Icon path={mdiMagnifyPlusOutline} size={1}  /> */}
                 <Icon path={mdiFormatColorFill} size={1} className='mx-3' />
                 <span className="menu-title">Color</span>
               </Link>
-            </li>
+            </li> */}
             <li className="nav-item">
               <Link className="nav-link" to='/vendor/productcatalog'>
                 <Icon path={mdiMap} size={1} className='mx-3' />
-                <span className="menu-title">Products</span>
+                <span className="menu-title">Product Catalog</span>
               </Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" to='/vendor/productapproval'>
                 <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
                 <span className="menu-title">Product Approval</span>
               </Link>
-            </li>
+            </li> */}
             {/* <li className="nav-item">
               <Link className="nav-link" to='/vendor/SellersProductInventory'>
                 <Icon path={mdiArchive} size={1} className='mx-3' />

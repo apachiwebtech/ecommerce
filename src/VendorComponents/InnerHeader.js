@@ -16,38 +16,17 @@ const InnerHeader = () => {
                 return 'Dashboard';
             case '/webapp/vendormaster':
                 return 'Vendor Master';
-            case '/webapp/adminuser':
-                return 'Admin Users';
-            case '/webapp/productcatalog':
-                return 'Products';
-            case '/webapp/category':
-                return 'Category';
-            case '/webapp/subcategory':
-                return 'SubCategory';
-            case '/webapp/brand':
-                return 'Brand';
-            case '/webapp/productapproval':
-                return 'Product Approval';
-            case '/webapp/orders':
+            case '/vendor/productcatalog':
+                return 'Product Catalog';
+            case '/vendor/orders':
                 return 'Orders';
-            case '/webapp/banner':
-                return 'Banner';
-            case '/webapp/socialmedia':
-                return 'Social Media';
-            case '/webapp/gallery':
-                return 'Gallery';
-            case '/webapp/settings':
+            case '/vendor/settings':
                 return 'Settings';
-            case '/webapp/group':
-                return 'Group';
-            case '/webapp/color':
-                return 'Colour';
-            case '/webapp/product':
+            case '/vendor/vendoruser':
+                return 'Vendor User';
+            case '/vendor/addProduct/:update_id':
                 return 'Add Product';
-            case location.pathname.match(/^\/addservice\/\d+$/) ? location.pathname : '':
-                return 'Add Service'
-            case location.pathname.match(/^\/webapp\/addimages\/\d+$/) ? location.pathname : '':
-                return 'Add Images'
+         
 
             default:
                 return '';

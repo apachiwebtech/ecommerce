@@ -51,6 +51,8 @@ import ShopWishlist from './MainComponent/Pages/ShopWishlist';
 import DetailPage from './MainComponent/Pages/DetailPage';
 import SiteLoader from './MainComponent/Ui/SiteLoader';
 import decryptedUserId from './Utils/UserID';
+
+
 import Checkout from './MainComponent/Pages/Checkout';
 import { getCartCount } from './Store/Cart/cart-action';
 import { useDispatch } from 'react-redux';
@@ -68,13 +70,16 @@ import VendorSettingPages from './VendorComponents/VendorSettingPages';
 import VendorHeader from './VendorComponents/Header';
 import VendorUser from './VendorComponents/VendorUser';
 import VendorCategory from './VendorComponents/VendorCategory';
+import VendorOrder from './VendorComponents/Orders';
 import VendorProductCatalog from './VendorComponents/ProductCatalog';
 import AddProduct from './VendorComponents/Product';
+import VendorProduct from './VendorComponents/Product'
 import '../src/MainComponent/Library/Fontawsome/Font-awsome.css'
 import '../src/MainComponent/Library/Icomoonfont/icomoon.css'
 import '../src/MainComponent/Library/elegant-icons/css/elegant.css'
 import '../src/MainComponent/Library/feather-font/css/iconfont.css'
 import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
+import VendorLogin from './VendorComponents/VendorLogin';
 
 
 const Router = createBrowserRouter([
@@ -83,11 +88,19 @@ const Router = createBrowserRouter([
     element: <WebLogin />
   },
   {
+    path: '/vendorlog',
+    element: <VendorLogin />
+  },
+  {
     path: '/webapp/vendorform/:id',
     element: <VendorForm />
   },
   {
     path: '/webapp/addimages/:product_id/:product_name',
+    element: <AddProductImg />
+  },
+  {
+    path: '/vendor/addimages/:product_id',
     element: <AddProductImg />
   },
   {
@@ -201,6 +214,7 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/productcatalog',
         element: <ProductCatalog />
+
       },
 
       {
@@ -295,14 +309,10 @@ const Router = createBrowserRouter([
         element: <AdminDashBoard />
       },
       {
-        path: '/vendor/addProduct',
+        path: '/vendor/addProduct/:update_id',
         element: <AddProduct />
       },
-      {
-        path: '/vendor/gallery',
-        element: <Gallery />
-      },
-
+ 
       {
         path: '/vendor/vendormaster',
         element: <VendorMaster />
@@ -312,21 +322,10 @@ const Router = createBrowserRouter([
         element: <VendorUser />
       },
       {
-        path: '/vendor/category/',
-        element: <VendorCategory />
+        path: '/vendor/',
+        element: <VendorUser />
       },
-      {
-        path: '/vendor/group/',
-        element: <Group />
-      },
-      {
-        path: '/vendor/productapproval',
-        element: <ProductApproval />
-      },
-      {
-        path: '/vendor/subcategory',
-        element: <SubCatetgory />
-      },
+ 
 
       {
         path: '/vendor/product/:update_id',
@@ -334,36 +333,16 @@ const Router = createBrowserRouter([
       },
 
       {
-        path: '/vendor/productcatalog',
-        element: <VendorProductCatalog />
-      },
-
-      {
-        path: '/vendor/sellersproductinventory',
-        element: <SellersProductInventory />
-      },
-
-      {
-        path: '/vendor/brand',
-        element: <Brand />
-      },
-      {
         path: '/vendor/orders',
-        element: <Orders />
+        element: <VendorOrder />
       },
       {
         path: '/vendor/shop',
         element: <Shop />
       },
-
       {
-        path: '/vendor/productoption',
-        element: <ProductOption />
-      },
-
-      {
-        path: '/vendor/producttag',
-        element: <ProductTag />
+        path: '/vendor/productcatalog',
+        element: <VendorProductCatalog />
       },
 
       {
@@ -374,38 +353,12 @@ const Router = createBrowserRouter([
         path: '/vendor/view',
         element: <View />
       },
-
-      {
-        path: '/vendor/banner',
-        element: <Banner />
-      },
-
-      {
-        path: '/vendor/reviewcomment',
-        element: <ReviewComment />
-      },
-      {
-        path: '/vendor/testimonial',
-        element: <Testimonial />
-      },
-
-      {
-        path: '/vendor/socialmedia',
-        element: <SocialMedia />
-      },
-
       {
         path: '/vendor/settings',
         element: <VendorSettingPages />
       },
-      {
-        path: '/vendor/color',
-        element: <Color />
-      },
-      {
-        path: '/vendor/addimages/:proid',
-        element: <AddProductImg />
-      },
+
+   
       
     ]
   }
@@ -415,6 +368,14 @@ function checkLocalStorageAndRedirect(navigate) {
   const user_id = Cookies.get('userid');
   if (user_id == null) {
     navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
+  }
+}
+
+
+function checkLocalStorage(navigate) {
+  const user_id = Cookies.get('vendorid');
+  if (user_id == null) {
+    navigate('/vendorlog'); // Redirect to dashboard if id exists in localStorage
   }
 }
 
@@ -517,7 +478,7 @@ function VendorApp() {
         if (res.data.valid) {
           // setId(res.data.id)
         } else {
-          navigate('/weblog')
+          navigate('/vendorlog')
         }
       });
   }
@@ -526,7 +487,7 @@ function VendorApp() {
 
   const navigate = useNavigate();
   useEffect(() => {
-    checkLocalStorageAndRedirect(navigate);
+    checkLocalStorage(navigate);
     accessSession()
   }, [navigate]);
 

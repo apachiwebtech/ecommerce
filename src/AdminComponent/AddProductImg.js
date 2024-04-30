@@ -256,7 +256,7 @@ const AddProductImg = () => {
 
 
     return (
-        <div class="container-fluid page-body-wrapper position-relative col-lg-10" >
+        <div class="container-fluid page-body-wrapper position-relative col-lg-12" >
             {loader && <Loader />}
             {roleaccess > 1 ? <div class="main-panel">
                 <div class="content-wrapper" style={{ height: "100vh" }}>

@@ -64,7 +64,7 @@ const Header = () => {
           <div className="nav-link" >
 
             <Icon path={mdiAccountDetails} size={1} className='mx-3' />
-            <span className="menu-title">Products</span>
+            <span className="menu-title">User Master</span>
             {openStates.usermanage ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
         </li>
