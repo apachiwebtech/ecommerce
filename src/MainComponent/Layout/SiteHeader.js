@@ -14,11 +14,14 @@ import LoginForm from '../Authentication/LoginForm';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getWishCount } from '../../Store/WishList/wishlist-actions';
+import { mdiClose, mdiFacebook, mdiFilterVariant, mdiInstagram, mdiLinkedin, mdiPinterest } from '@mdi/js'
+import Icon from '@mdi/react'
 
 const SiteHeader = (cartCount) => {
 	const [banner, setBanner] = useState([])
 	const [cat, setCatData] = useState([])
 	const [subcat, setsubCatData] = useState([])
+	const [toggle, setToggle] = useState(false)
 	const custuser_id = Cookies.get('custuserid');
 	async function getTrendingData() {
 		axios.get(`${BASE_URL}/group_data`)
@@ -29,6 +32,11 @@ const SiteHeader = (cartCount) => {
 			.catch((err) => {
 				console.log(err)
 			})
+	}
+
+	const toggleSidebar = () => {
+		setToggle(!toggle)
+		
 	}
 
 
@@ -61,7 +69,7 @@ const SiteHeader = (cartCount) => {
 		getsubcatData()
 		getcatData()
 		getTrendingData()
-		
+
 	}, [])
 
 	const [open, setOpen] = useState(false);
@@ -72,21 +80,21 @@ const SiteHeader = (cartCount) => {
 
 
 	const dispatch = useDispatch();
-    const count = useSelector((state) => state.cartCount.cartCount);
-    const wishcount = useSelector((state) => state.wishlist.wishCount);
+	const count = useSelector((state) => state.cartCount.cartCount);
+	const wishcount = useSelector((state) => state.wishlist.wishCount);
 
-	console.log(wishcount , "()()())")
-
-
+	console.log(wishcount, "()()())")
 
 
 
-	useEffect(()=>{
+
+
+	useEffect(() => {
 		dispatch(getCartCount())
 		dispatch(getWishCount())
-	},[])
+	}, [])
 
-	
+
 
 
 
@@ -100,7 +108,7 @@ const SiteHeader = (cartCount) => {
 							<div className="row">
 								<div className="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-left">
 									<div className="navbar-header">
-										<button type="button" id="show-megamenu" className="navbar-toggle"></button>
+										<button type="button" id="show-megamenu" onClick={toggleSidebar} className="navbar-toggle"></button>
 									</div>
 								</div>
 
@@ -177,7 +185,7 @@ const SiteHeader = (cartCount) => {
 
 						<div className="my-account">
 							<div className="login-header">
-								<Link href="page-my-account.html"><i className="wpb-icon-user"></i></Link>
+								<Link to="/profile"><i className="wpb-icon-user"></i></Link>
 							</div>
 						</div>
 
@@ -193,6 +201,8 @@ const SiteHeader = (cartCount) => {
 					</div>
 				</div>
 
+
+
 				<div className="header-desktop">
 					<div className="header-wrapper">
 						<div className="section-padding">
@@ -205,6 +215,8 @@ const SiteHeader = (cartCount) => {
 											</Link>
 										</div>
 									</div>
+
+
 
 									<div className="col-xl-7 col-lg-7 col-md-12 col-sm-12 col-12 text-center header-center">
 										<div className="site-navigation">
@@ -312,7 +324,7 @@ const SiteHeader = (cartCount) => {
 													<Link className="active-login" onClick={handleToggle}>Login</Link> : <Link className="active-login" onClick={handleLogout}>Logout</Link>} */}
 												{open && <LoginForm setOpen={setOpen} open={open} />}
 
-												{!custuser_id ? <Link  to="#" className="active-login" onClick={handleToggle}>Login</Link> : <Link to="/profile" className="active-login" ><i className="icon-user"></i></Link>}
+												{!custuser_id ? <Link to="#" className="active-login" onClick={handleToggle}>Login</Link> : <Link to="/profile" className="active-login" ><i className="icon-user"></i></Link>}
 
 
 
@@ -388,6 +400,31 @@ const SiteHeader = (cartCount) => {
 					</div>
 				</div >
 			</header >
+
+			<div className={`header-mobile-sidebar ${toggle ? `mob-left-view` : ``}  `}  >
+				<div className='p-2' style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+					<div className="">
+						<img width="130" height="79" src={logo} alt="Ruper – Furniture HTML Theme" />
+					</div>
+					<div className="py-4  mob-left-sidebar-close " onClick={toggleSidebar} style={{ textAlign: "right", display: "none" }} >
+						<Icon path={mdiClose} size={1} />
+					</div>
+				</div>
+
+				<hr className='m-0' />
+				<div className='mobile-cat p-3'>
+					<h5><Link to={`/shoproduct/${banner[0]?.slug}`}><span className="menu-item-text">{banner[0]?.title}</span></Link></h5>
+					<h5><Link to={`/shoproduct/${banner[1]?.slug}`}><span className="menu-item-text">{banner[1]?.title}</span></Link></h5>
+					<h5><Link to={`/shoproduct/${banner[2]?.slug}`}><span className="menu-item-text">{banner[2]?.title}</span></Link></h5>
+				</div>
+
+				<div className='mobile-footer d-flex ' style={{justifyContent :"space-evenly",position:"absolute" , width:"100%",bottom:"15px"}}> 
+					<Icon path={mdiFacebook} size={1.2} />
+					<Icon path={mdiInstagram} size={1.3} />
+					<Icon path={mdiLinkedin} size={1.3} />
+					<Icon path={mdiPinterest} size={1.3} />
+				</div>
+			</div>
 		</div >
 	)
 }

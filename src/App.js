@@ -80,6 +80,10 @@ import '../src/MainComponent/Library/elegant-icons/css/elegant.css'
 import '../src/MainComponent/Library/feather-font/css/iconfont.css'
 import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
 import VendorLogin from './VendorComponents/VendorLogin';
+import BrandRequest from './AdminComponent/BrandRequest';
+import BlogCategory from './AdminComponent/BlogCategory';
+import BlogPosts from './AdminComponent/BlogPosts';
+import Faq from './AdminComponent/Faq';
 
 
 const Router = createBrowserRouter([
@@ -227,6 +231,10 @@ const Router = createBrowserRouter([
         element: <Brand />
       },
       {
+        path: '/webapp/brandrequest',
+        element: <BrandRequest />
+      },
+      {
         path: '/webapp/orders',
         element: <Orders />
       },
@@ -289,6 +297,18 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/addrole',
         element: <AddRole />
+      },
+      {
+        path: '/webapp/blogcategory',
+        element: <BlogCategory />
+      },
+      {
+        path: '/webapp/blogposts',
+        element: <BlogPosts />
+      },
+      {
+        path: '/webapp/faq',
+        element: <Faq />
       },
       // {
       //   path: '/webapp/addimages/:product_id',

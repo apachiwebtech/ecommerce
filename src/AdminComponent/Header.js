@@ -1,4 +1,4 @@
-import { mdiAccountDetails, mdiAccountGroupOutline, mdiAccountOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiHome, mdiImageArea, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiNut, mdiStarBox, mdiViewGallery } from '@mdi/js';
+import { mdiAccountDetails, mdiAccountGroupOutline, mdiAccountOutline, mdiApplicationBracketsOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiFrequentlyAskedQuestions, mdiHome, mdiImageArea, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiNut, mdiPost, mdiStarBox, mdiViewGallery } from '@mdi/js';
 import Icon from '@mdi/react';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
@@ -12,7 +12,9 @@ const Header = () => {
     order: false,
     product: false,
     home: false,
-    usermanage :false
+    usermanage :false,
+    request :false,
+    blog :true,
     // Add more menu items as needed
   });
 
@@ -60,56 +62,10 @@ const Header = () => {
           </Link>
         </li>
 
-        <li className="nav-item" onClick={() => handleToggle('usermanage')}>
-          <div className="nav-link" >
-
-            <Icon path={mdiAccountDetails} size={1} className='mx-3' />
-            <span className="menu-title">User Master</span>
-            {openStates.usermanage ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
-          </div>
-        </li>
-
-
-        <Collapse in={openStates.usermanage} timeout="auto" unmountOnExit>
-          <ul className='inner-item'>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/addrole'>
-                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
-                <span className="menu-title">Add Role</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/adminuser'>
-                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
-                <span className="menu-title">Admin User</span>
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/roleassign'>
-                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
-                <span className="menu-title">Role Page</span>
-              </Link>
-            </li>
-
-          </ul>
-        </Collapse>
-
-
-
-
-
-        {/* <li className="nav-item">
-          <Link className="nav-link" to='' onClick={handleClick}>
-            <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
-            <span className="menu-title">Product </span>
-          </Link>
-        </li> */}
-
         <li className="nav-item" onClick={() => handleToggle('product')}>
           <div className="nav-link" >
             <Icon path={mdiFormatListBulletedSquare} size={1} className='mx-3' />
-            <span className="menu-title">Products</span>
+            <span className="menu-title">Product Manage</span>
             {openStates.product ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
         </li>
@@ -161,61 +117,79 @@ const Header = () => {
                 <span className="menu-title">Product Approval</span>
               </Link>
             </li>
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/SellersProductInventory'>
-                <Icon path={mdiArchive} size={1} className='mx-3' />
-                <span className="menu-title">SellersProductInventory</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/shop'>
-                <Icon path={mdiStore} size={1} className='mx-3' />
-
-                <span className="menu-title">Shop</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/productoption'>
-                <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
-                <span className="menu-title">Product Option</span>
-              </Link>
-            </li> */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/producttag'>
-                <Icon path={mdiTagTextOutline} size={1} className='mx-3' />
-               
-                <span className="menu-title">Product Tag</span>
-              </Link>
-            </li> */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/thresholdproduct'>
            
-                <ProductionQuantityLimitsIcon className='mx-3' />
-                <span className="menu-title">Threshold Product</span>
-              </Link>
-            </li> */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/view'>
-                <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
-                <span className="menu-title">View</span>
-              </Link>
-            </li>
-        
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/reviewcomment'>
-                <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
-                <span className="menu-title">Review & Comment</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/testimonial'>
-                <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
-                <span className="menu-title">Testimonials</span>
-              </Link>
-            </li> */}
 
           </ul>
         </Collapse>
+
+        <li className="nav-item" onClick={() => handleToggle('request')}>
+          <div className="nav-link" >
+            <Icon path={mdiAccountDetails} size={1} className='mx-3' />
+            <span className="menu-title">Request</span>
+            {openStates.request ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </div>
+        </li>
+
+
+        <Collapse in={openStates.request} timeout="auto" unmountOnExit>
+          <ul className='inner-item'>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/brandrequest'>
+                <Icon path={mdiStarBox} size={1} className='mx-3' />
+                <span className="menu-title">Brand Request</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/productapproval'>
+                <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
+                <span className="menu-title">Product Request</span>
+              </Link>
+            </li>
+
+          
+          </ul>
+        </Collapse>
+
+        <li className="nav-item" onClick={() => handleToggle('usermanage')}>
+          <div className="nav-link" >
+
+            <Icon path={mdiAccountDetails} size={1} className='mx-3' />
+            <span className="menu-title">User Master</span>
+            {openStates.usermanage ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </div>
+        </li>
+
+
+        <Collapse in={openStates.usermanage} timeout="auto" unmountOnExit>
+          <ul className='inner-item'>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/addrole'>
+                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+                <span className="menu-title">Add Role</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/adminuser'>
+                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+                <span className="menu-title">Admin User</span>
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/roleassign'>
+                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+                <span className="menu-title">Role Page</span>
+              </Link>
+            </li>
+
+          </ul>
+        </Collapse>
+
+
+
+
+
+   
 
 
 
@@ -236,52 +210,43 @@ const Header = () => {
 
         <Collapse timeout="auto" unmountOnExit>
           <ul className='inner-item'>
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/orders'>
+      
+          </ul>
+        </Collapse>
 
-                <Icon path={mdiCartOutline} size={1} className='mx-3' />
-                <span className="menu-title">Orders</span>
+        <li className="nav-item" onClick={() => handleToggle('blog')}>
+          <div className="nav-link" >
+            <Icon path={mdiPost} size={1} className='mx-3' />
+            <span className="menu-title">Blog</span>
+            {openStates.blog ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </div>
+        </li>
+
+
+        <Collapse in={openStates.blog} timeout="auto" unmountOnExit>
+          <ul className='inner-item'>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/blogcategory'>
+                <Icon path={mdiLandPlotsCircle} size={1} className='mx-3' />
+                <span className="menu-title">Blog Category</span>
               </Link>
-            </li> */}
-            {/* <li className="nav-item">
-              <Link className="nav-link" to='/webapp/thresholdproduct'>
-                <Icon path={mdiCheckDecagram} size={1} className='mx-3' />
-                <span className="menu-title">Subscription Orders</span>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/blogposts'>
+                <Icon path={mdiPost} size={1} className='mx-3' />
+                <span className="menu-title">Blog Posts</span>
               </Link>
             </li>
 
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/thresholdproduct'>
-                <Icon path={mdiArrowUUpRight} size={1} className='mx-3' />
-                <span className="menu-title">Order Return Reasons</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/thresholdproduct'>
-                <Icon path={mdiMessageDraw} size={1} className='mx-3' />
-                <span className="menu-title">Product Reviews</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/thresholdproduct'>
-                <Star className='mx-3' />
-                <span className="menu-title">Abandoned Cart</span>
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/thresholdproduct'>
-                <Icon path={mdiCartOutline} size={1} className='mx-3' />
-                <span className="menu-title">Order Cancellation Reasons</span>
-              </Link>
-            </li> */}
+          
           </ul>
         </Collapse>
 
         <li className="nav-item" onClick={() => handleToggle('home')}>
           <div className="nav-link" >
 
-            <Icon path={mdiHome} size={1} className='mx-3' />
-            <span className="menu-title">Home</span>
+            <Icon path={mdiApplicationBracketsOutline} size={1} className='mx-3' />
+            <span className="menu-title">Cms</span>
             {openStates.home ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
           </div>
 
@@ -315,12 +280,35 @@ const Header = () => {
           </ul>
         </Collapse>
 
-        <li className="nav-item">
-          <Link className="nav-link" to="/webapp/settings">
+  
+
+        <li className="nav-item" onClick={() => handleToggle('settings')}>
+          <div className="nav-link" >
+
             <Icon path={mdiNut} size={1} className='mx-3' />
             <span className="menu-title">Settings</span>
-          </Link>
+            {openStates.settings ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </div>
+
         </li>
+
+        <Collapse in={openStates.settings} timeout="auto" unmountOnExit>
+          <ul className='inner-item'>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/settings'>
+                <Icon path={mdiNut} size={1} className='mx-3' />
+                <span className="menu-title">Password/Tax</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/faq'>
+                {/* <Icon path={mdiCheckDecagram} size={1} className='mx-3' /> */}
+                <Icon path={mdiFrequentlyAskedQuestions} size={1} className='mx-3' />
+                <span className="menu-title">Faq</span>
+              </Link>
+            </li>
+          </ul>
+        </Collapse>
 
 
       </ul>

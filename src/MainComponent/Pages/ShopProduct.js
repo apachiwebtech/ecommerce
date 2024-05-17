@@ -114,7 +114,7 @@ const ShopProduct = () => {
                                 </h1>
                             </div>
                             <div className="breadcrumbs">
-                                <a href="index.html">Home</a><span className="delimiter"></span><a href="shop-grid-left.html">Shop</a><span className="delimiter"></span> {header}
+                                <a href="index.html">Home</a><span className="delimiter"></span><a href="">Shop</a><span className="delimiter"></span> {header}
                             </div>
                         </div>
                     </div>
@@ -152,7 +152,7 @@ const ShopProduct = () => {
                                             <div className="block-title"><h2>Price</h2></div>
                                             <div className="block-content">
 
-                                                <Slider defaultValue={1000} getAriaValueText={valuetext} marks={marks} max={100000} aria-label="Default" valueLabelDisplay="auto" />
+                                                <Slider style={{width:"90%"}} defaultValue={1000} getAriaValueText={valuetext} marks={marks} max={100000} aria-label="Default" valueLabelDisplay="auto" />
                                             </div>
                                         </div>
 
@@ -268,7 +268,7 @@ const ShopProduct = () => {
                                             <div className='d-flex justify-content-between'>
                                                 <div className=''>
                                                     <div className="">
-                                                        <div className="products-count">
+                                                        <div className="products-count" onClick={toggleSidebar} >
                                                             Filter
                                                         </div>
                                                     </div>
