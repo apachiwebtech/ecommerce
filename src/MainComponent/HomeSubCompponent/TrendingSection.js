@@ -85,7 +85,7 @@ const TrendingSection = () => {
         <section class="section section-padding">
             <div class="section-container">
                 {/* {loader && <h1>hiffjj</h1>} */}
-                <ToastContainer theme="dark"    position="bottom-right" />
+                <ToastContainer theme="dark" position="bottom-right" />
                 <div class="block block-products slider">
                     <div class="block-widget-wrap">
                         <div class="block-title"><h2>Best Seller</h2></div>
@@ -114,16 +114,16 @@ const TrendingSection = () => {
                                                                 <div class="product-button">
                                                                     <div class="btn-wishlist" data-title="Wishlist">
 
-                                                                        {!Cookies.get(`custuserid`)?   <button class="product-btn" onClick={() => {
-                                                                        
+                                                                        {!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
+
                                                                             handleToggle()
                                                                         }}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
                                                                             addWishList(item.id)
                                                                             wishify()
-                                                                           
-                                                                     
+
+
                                                                         }}>Add to wishlist</button>}
-                                                                      
+
 
                                                                     </div>
 
@@ -138,15 +138,17 @@ const TrendingSection = () => {
                                                             <div class="products-content">
                                                                 <div class="contents">
                                                                     <h3 class="product-title"><Link to={`/detailpage/${item.slug}`}>{item.title}</Link></h3>
-                                                                    <span class="price">₹{item.price}</span>
+                                                                    <span className="price">
+                                                                        <del aria-hidden="true"><span>₹{item.price}</span></del>
+                                                                        <ins><span>₹{item.disc_price}</span></ins>
+                                                                    </span>
                                                                     <div class="btn-add-to-cart">
                                                                         <div data-title="Add to cart">
                                                                             <Link
                                                                                 class="button"
                                                                                 onClick={() => {
-                                                                                    addToCart(item.id, item.title, item.catid, item.price, dispatch,"1");
+                                                                                    addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, "1", item.v_id);
                                                                                     notify();
-
                                                                                 }}
                                                                             >
                                                                                 Add to cart

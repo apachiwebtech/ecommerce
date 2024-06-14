@@ -1,18 +1,14 @@
-import React, { useState } from 'react'
-import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
-import product1 from '../../assets/frontimg/product/1.jpg'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { IMG_URL } from '../../AdminComponent/BaseUrl';
 // import UserID from '../../Utils/UserID';
-import { wishListActions } from '../../Store/WishList/wishListSlice';
-import { addToWishList } from '../../Store/WishList/wishlist-actions';
+import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
-import Cookies from 'js-cookie'
-import CryptoJS from 'crypto-js';
-import custdecryptedUserId from '../../Utils/CustUserid';
-import addToCart from '../../Utils/AddtoCart';
 import { ToastContainer, toast } from 'react-toastify';
+import { addToWishList } from '../../Store/WishList/wishlist-actions';
+import addToCart from '../../Utils/AddtoCart';
+import custdecryptedUserId from '../../Utils/CustUserid';
 import LoginForm from '../Authentication/LoginForm';
-import { getCartCount } from '../../Store/Cart/cart-action';
 const ProductCard = (props) => {
 
     const dispatch = useDispatch();
@@ -158,7 +154,7 @@ const ProductCard = (props) => {
                     <div className="product-button">
                         <div className="btn-add-to-cart" data-title="Add to cart">
                             <button rel="nofollow" className="product-btn button" onClick={() => {
-                                addToCart(props.proid, props.title, props.catid, props.price , dispatch,"1")
+                                addToCart(props.proid, props.title, props.catid, props.price , dispatch,"1", props.v_id)
                                 notify()
 
                             }} >Add to cart</button>

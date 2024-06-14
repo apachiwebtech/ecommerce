@@ -1,12 +1,9 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { BASE_URL } from './BaseUrl'
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { BASE_URL } from '../AdminComponent/BaseUrl';
 import InnerHeader from './InnerHeader';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { dark } from '@mui/material/styles/createPalette';
+import decryptedvendorid from '../Utils/Vendorid';
+
 const Orders = () => {
     const [order, setOrderData] = useState([])
     const [filteredData, setFilteredData] = useState([]);
@@ -39,7 +36,10 @@ const Orders = () => {
     }
 
     async function getOrderdata() {
-        axios.get(`${BASE_URL}/order_detail`)
+        const data ={
+            vendor_id : decryptedvendorid()
+        }
+        axios.post(`${BASE_URL}/vendor_order_detail`, data)
             .then((res) => {
                 console.log(res.data)
                 setOrderData(res.data)

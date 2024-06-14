@@ -16,12 +16,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getWishCount } from '../../Store/WishList/wishlist-actions';
 import { mdiClose, mdiFacebook, mdiFilterVariant, mdiInstagram, mdiLinkedin, mdiPinterest } from '@mdi/js'
 import Icon from '@mdi/react'
+import { Search } from '@mui/icons-material';
 
 const SiteHeader = (cartCount) => {
 	const [banner, setBanner] = useState([])
+	const [products, setProducts] = useState([])
+	const [search, setSearch] = useState('')
 	const [cat, setCatData] = useState([])
 	const [subcat, setsubCatData] = useState([])
 	const [toggle, setToggle] = useState(false)
+	const [searchtoggle, setsearchtoggle] = useState(false)
 	const custuser_id = Cookies.get('custuserid');
 	async function getTrendingData() {
 		axios.get(`${BASE_URL}/group_data`)
@@ -36,7 +40,7 @@ const SiteHeader = (cartCount) => {
 
 	const toggleSidebar = () => {
 		setToggle(!toggle)
-		
+
 	}
 
 
@@ -83,8 +87,16 @@ const SiteHeader = (cartCount) => {
 	const count = useSelector((state) => state.cartCount.cartCount);
 	const wishcount = useSelector((state) => state.wishlist.wishCount);
 
-	console.log(wishcount, "()()())")
 
+	const handlechangesearch = (e) => {
+		setSearch(e.target.value)
+
+		axios.post(`${BASE_URL}/searchproduct`, { search: search })
+			.then((res) => {
+				setProducts(res.data)
+			})
+
+	}
 
 
 
@@ -95,8 +107,16 @@ const SiteHeader = (cartCount) => {
 	}, [])
 
 
+	const handlesearch = () => {
+		setsearchtoggle(!searchtoggle)
+	}
+	const searchclose = () => {
+		setsearchtoggle(false)
+	}
 
-
+	const handleclose = () => {
+		setToggle(!toggle)
+	}
 
 	return (
 		<div>
@@ -308,7 +328,10 @@ const SiteHeader = (cartCount) => {
 														</ul>
 													</li>
 													<li className="level-0 menu-item">
-														<Link href="page-contact.html"><span className="menu-item-text">Contact</span></Link>
+														<Link to="/contact"><span className="menu-item-text">Contact</span></Link>
+													</li>
+													<li className="level-0 menu-item">
+														<Link to="/vendorregister"><span className="menu-item-text">Vendor Request</span></Link>
 													</li>
 												</ul>
 											</nav>
@@ -332,7 +355,7 @@ const SiteHeader = (cartCount) => {
 
 
 											<div className="search-box">
-												<div className="search-toggle"><i className="icon-search"></i></div>
+												<div className="search-toggle" onClick={handlesearch}><i className="icon-search"></i></div>
 											</div>
 
 
@@ -348,48 +371,73 @@ const SiteHeader = (cartCount) => {
 														<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{count}</span></div>
 													</Link>
 
-													{/* <div className="dropdown-menu cart-popup">
-														<div className="cart-empty-wrap">
-															<ul className="cart-list">
-																<li className="empty">
-																	<span>No products in the cart.</span>
-																	<Link className="go-shop" href="shop-grid-left.html">GO TO SHOP<i aria-hidden="true" className="arrow_right"></i></Link>
-																</li>
-															</ul>
-														</div>
+													<div class={searchtoggle ? `search-overlay overlay-open` : `search-overlay `}>
+														<div class="close-search"></div>
 
-														<div className="cart-list-wrap">
-															<ul className="cart-list ">
-																<li className="mini-cart-item">
-																	<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>
-																	<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product3} alt="pro" /></Link>
-																	<Link href="shop-details.html" className="product-name">Chair Oak Matt Lacquered</Link>
-																	<div className="quantity">Qty: 1</div>
-																	<div className="price">$150.00</div>
-																</li>
-																<li className="mini-cart-item">
-																	<Link href="#" className="remove" title="Remove this item"><i className="icon_close"></i></Link>
-																	<Link href="shop-details.html" className="product-image"><img width="600" height="600" src={product1} alt="pro" /></Link>
-																	<Link href="shop-details.html" className="product-name">Zunkel Schwarz</Link>
-																	<div className="quantity">Qty: 1</div>
-																	<div className="price">$100.00</div>
-																</li>
-															</ul>
-															<div className="total-cart">
-																<div className="title-total">Total: </div>
-																<div className="total-price"><span>$100.00</span></div>
-															</div>
-															<div className="free-ship">
-																<div className="title-ship">Buy <strong>$400</strong> more to enjoy <strong>FREE Shipping</strong></div>
-																<div className="total-percent"><div className="percent" style={{ width: "20%" }}></div></div>
-															</div>
-															<div className="buttons">
-																<Link href="shop-cart.html" className="button btn view-cart btn-primary">View cart</Link>
-																<Link href="shop-checkout.html" className="button btn checkout btn-default">Check out</Link>
-															</div>
+														<div class={searchtoggle ? `wrapper-search wrapper-open` : `wrapper-search `}>
+															<form role="search" method="get" class="search-from ajax-search" action="" style={{ position: "relative" }}>
+																<div class="search-box">
+																	<button className='close-searchbar' onClick={() =>toggleSidebar()}>
+																		<Icon path={mdiClose} size={1}  style={{ float: "right" }} />
+																	</button>
+																	{/* <button id="searchsubmit" class="btn" type="submit">
+																		<i class="icon-search"></i>
+																	</button> */}
+
+																	<input id="myInput" onChange={handlechangesearch} type="text" autocomplete="off" name="s" class="input-search s" placeholder="Search..." />
+
+																	<div className="block block-products">
+																		<div className="block-title"><h2>item Product</h2></div>
+																		<div className="block-content">
+																			<ul className="products-list">
+																				{products.map((item) => {
+																					return (
+																						<Link to={`/detailpage/${item.slug}`} >
+																							<li className="product-item my-2">
+																								<a href="shop-details.html" className="product-image">
+																									<img onClick={searchclose} src={`${IMG_URL}/productimg/` + item.image1} alt='product6' />
+																								</a>
+																								<div onClick={searchclose} className="product-content">
+																									<h2 className="product-title">
+																										<Link to={`/detailpage/${item.slug}`} >
+																											{item.title}
+																										</Link>
+																									</h2>
+																									<div className="rating small">
+																										<div className="star star-5"></div>
+																									</div>
+
+																									{item.disc_price ?
+																										(<span className="price">
+																											<del aria-hidden="true"><span>₹{item.price}</span></del>
+																											<ins><span>₹{item.disc_price}</span></ins>
+																										</span>) :
+																										(<span className="price">₹{item.price}</span>)
+																									}
+																								</div>
+																							</li>
+																						</Link>
+																					)
+																				})}
+
+																			</ul>
+																		</div>
+																	</div>
+																	<div class="content-menu_search">
+																		<label>Suggested</label>
+																		<ul id="menu_search" class="menu">
+																			<li><a href="#">Furniture</a></li>
+																			<li><a href="#">Home Décor</a></li>
+																			<li><a href="#">Industrial</a></li>
+																			<li><a href="#">Kitchen</a></li>
+																		</ul>
+																	</div>
+																</div>
+															</form>
 														</div>
 													</div>
-													 */}
+
+
 												</div>
 											</div>
 										</div>
@@ -418,7 +466,7 @@ const SiteHeader = (cartCount) => {
 					<h5><Link to={`/shoproduct/${banner[2]?.slug}`}><span className="menu-item-text">{banner[2]?.title}</span></Link></h5>
 				</div>
 
-				<div className='mobile-footer d-flex ' style={{justifyContent :"space-evenly",position:"absolute" , width:"100%",bottom:"15px"}}> 
+				<div className='mobile-footer d-flex ' style={{ justifyContent: "space-evenly", position: "absolute", width: "100%", bottom: "15px" }}>
 					<Icon path={mdiFacebook} size={1.2} />
 					<Icon path={mdiInstagram} size={1.3} />
 					<Icon path={mdiLinkedin} size={1.3} />

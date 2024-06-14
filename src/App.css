@@ -418,3 +418,20 @@ li{
   100% { transform: rotate(360deg) }
 }
  
+.product-img-table td img{
+ width: 200px;
+ height: 200px;
+ border-radius: 0px;
+ padding: 10px;
+}
+
+.stock-btn{
+  position: absolute !important;
+  right: 15px;
+  top: 10px;
+}
+.close-searchbar{
+  position: absolute;
+
+  right: 0px;
+}

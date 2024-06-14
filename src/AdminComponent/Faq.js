@@ -24,15 +24,15 @@ const Faq = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
 
     const [value, setValue] = useState({
-        title: "" || uid.title,
-        description: "" || uid.description,
+        question: "" || uid.title,
+        description: "" || uid.answer,
 
     })
 
     useEffect(() => {
         setValue({
-            title: "" || uid.title,
-            description: "" || uid.description,
+            question: "" || uid.title,
+            description: "" || uid.answer,
         })
     }, [uid])
 
@@ -42,9 +42,9 @@ const Faq = () => {
         const newErrors = {}
 
 
-        if (!value.title) {
+        if (!value.question) {
             isValid = false;
-            newErrors.title = "title is required"
+            newErrors.question = "question is required"
         }
 
      
@@ -68,7 +68,7 @@ const Faq = () => {
     async function getBrandData() {
         axios.get(`${BASE_URL}/faq_data`)
             .then((res) => {
-                console.log(res.data)
+          
                 setBrand(res.data)
             })
             .catch((err) => {
@@ -122,21 +122,33 @@ const Faq = () => {
 
         if (validateForm()) {
             setLoader(true)
-            const formdata = new FormData();
+            // const formdata = new FormData();
 
-            formdata.append('title', value.title)
-            formdata.append('description', value.description)
-            formdata.append('user_id', decryptedUserId())
-            formdata.append('uid', uid.id)
+            // formdata.append('question', value.question)
+            // formdata.append('description', value.description)
+            // formdata.append('user_id', decryptedUserId())
+            // formdata.append('uid', uid.id)
 
+            const data = {
+                question : value.question,
+                description : value.description,
+                user_id : decryptedUserId(),
+                uid : uid.id
+            }
 
-
-            axios.post(`${BASE_URL}/add_faq`, formdata)
+            axios.post(`${BASE_URL}/add_faq`, data)
                 .then((res) => {
                     alert(res.data)
-                    getBrandData()
                     setLoader(false)
-                    window.location.pathname = "/webapp/faq"
+                    
+                    setValue({
+                        question: "" ,
+                        description: "" ,
+                    })
+                    
+          
+                    getBrandData()
+                    setUid([])
 
                 })
                 .catch((err) => {
@@ -152,10 +164,7 @@ const Faq = () => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
-    const handleUpload = async (e) => {
-        const file = e.target.files[0]
-        setImage(file)
-    }
+
 
 
     const columns = [
@@ -168,7 +177,7 @@ const Faq = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'title', headerName: 'Title', flex: 2 },
+        { field: 'title', headerName: 'Question', flex: 2 },
         {
             field: 'actions',
             type: 'actions',
@@ -211,19 +220,13 @@ const Faq = () => {
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Brand</h4>
+                                    <h4 class="card-question">Add Faq</h4>
 
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">Title <span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
-                                            {error.title && <span className='text-danger'>{error.title}</span>}
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputUsername1">Logo<span className='text-danger'>*</span></label>
-                                            <input type="file" class="form-control" id="exampleInputUsername1" onChange={handleUpload} name="image" placeholder="Enter.." />
-                                            {error.logo && <span className='text-danger'>{error.logo}</span>}
-
+                                            <label for="exampleInputUsername1">Question <span className='text-danger'>*</span></label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.question} placeholder="question" name='question' onChange={onhandleChange} />
+                                            {error.question && <span className='text-danger'>{error.question}</span>}
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
@@ -244,9 +247,9 @@ const Faq = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Brand </h4>
+                                            <h4 class="card-question">Faq </h4>
                                             <p class="card-description">
-                                                List Of Brand
+                                                List Of Faq
                                             </p>
                                         </div>
 
@@ -281,7 +284,7 @@ const Faq = () => {
                                                         #
                                                     </th>
                                                     <th>
-                                                        Title
+                                                        question
                                                     </th>
 
                                                     <th>
@@ -298,7 +301,7 @@ const Faq = () => {
                                                                 {index + 1}
                                                             </td>
                                                             <td>
-                                                                {item.title}
+                                                                {item.question}
                                                             </td>
 
 

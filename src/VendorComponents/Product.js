@@ -13,9 +13,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import decryptedUserId from "../Utils/UserID";
 import img1 from "../assets/images/product_default_image.jpg";
-import { BASE_URL, IMG_URL } from "./BaseUrl";
+import { BASE_URL, IMG_URL } from '../AdminComponent/BaseUrl';
 import InnerHeader from "./InnerHeader";
-import decryptedvendorid from '../Utils/Vendorid';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -52,7 +51,7 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 const Product = () => {
   const [cat, setCatData] = useState([])
   const [error, setError] = useState({})
-  const [group ,setGroupData] = useState([])
+  const [group, setGroupData] = useState([])
   const [selectedOption, setSelectedCat] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedOptionvendor, setSelectedVendor] = useState(null);
@@ -73,7 +72,7 @@ const Product = () => {
     price: "" || uid.price,
     discountedprice: "" || uid.disc_price,
     description: "" || uid.description,
-    slug : "" || uid.slug,
+    slug: "" || uid.slug,
   });
 
   useEffect(() => {
@@ -83,7 +82,7 @@ const Product = () => {
       price: uid.price,
       discountedprice: uid.disc_price,
       description: uid.description,
-      slug : uid.slug
+      slug: uid.slug
     })
   }, [uid])
 
@@ -119,10 +118,10 @@ const Product = () => {
       isValid = false
       newErrors.brand = "brand is required"
     }
-    // if (!selectedOptionvendor) {
-    //   isValid = false
-    //   newErrors.vendor = "vendor is required"
-    // }
+    if (!selectedOptionvendor) {
+      isValid = false
+      newErrors.vendor = "vendor is required"
+    }
     if (!value.price) {
       isValid = false
       newErrors.price = "price is required"
@@ -141,8 +140,8 @@ const Product = () => {
     axios.post(`${BASE_URL}/product_update`, { u_id: update_id })
       .then((res) => {
 
-          setUid(res.data[0])
-        
+        setUid(res.data[0])
+
 
       })
       .catch((err) => {
@@ -208,23 +207,23 @@ const Product = () => {
 
   async function getCatData() {
     axios.get(`${BASE_URL}/category_data`)
-        .then((res) => {
-            setCatData(res.data)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-}
+      .then((res) => {
+        setCatData(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
-async function getsubcatData() {
-  axios.get(`${BASE_URL}/subcategory_data`)
+  async function getsubcatData() {
+    axios.get(`${BASE_URL}/subcategory_data`)
       .then((res) => {
         setsubcategory(res.data)
       })
       .catch((err) => {
-          console.log(err)
+        console.log(err)
       })
-}
+  }
 
 
 
@@ -235,11 +234,11 @@ async function getsubcatData() {
     if (update_id !== ":update_id") {
       getUpdateData()
     }
-    getGroupData() 
+    getGroupData()
     getBrandData()
     getVendordata()
     getCatData()
-    getsubcatData() 
+    getsubcatData()
   }, [update_id])
 
 
@@ -252,22 +251,22 @@ async function getsubcatData() {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // const HandleVendorChange = (selectedValue) => {
-  //   if (selectedValue) {
-  //     const vendorid = selectedValue.id
-  //     setSelectedVendor(selectedValue)
-  //     selectedVendorId(vendorid);
-  //   }
-  // };
+  const HandleVendorChange = (selectedValue) => {
+    if (selectedValue) {
+      const vendorid = selectedValue.id
+      setSelectedVendor(selectedValue)
+      selectedVendorId(vendorid);
+    }
+  };
 
-  // useEffect(() => {
-  //   if (uid.v_id) {
-  //     const selected = vendor.find(option => option.id === uid.v_id);
-  //     setSelectedVendor(selected);
-  //     selectedVendorId(uid.v_id)
-  //   }
+  useEffect(() => {
+    if (uid.v_id) {
+      const selected = vendor.find(option => option.id === uid.v_id);
+      setSelectedVendor(selected);
+      selectedVendorId(uid.v_id)
+    }
 
-  // }, [uid, vendor,vendor_id]);
+  }, [uid, vendor, vendor_id]);
 
   // console.log(vendor_id,"dd")
 
@@ -286,7 +285,7 @@ async function getsubcatData() {
       selectedBrandId(uid.b_id);
     }
 
-  }, [uid, brand,brand_id]);
+  }, [uid, brand, brand_id]);
 
   // console.log(brand_id,"juu")
 
@@ -311,8 +310,8 @@ async function getsubcatData() {
 
   const HandleGroupChange = (selectedValue) => {
 
-    const val = selectedValue.id 
-   
+    const val = selectedValue.id
+
     selectedgroupId(val)
     setSelectedGroup(selectedValue);
     // setSelectedSub();
@@ -332,18 +331,18 @@ async function getsubcatData() {
         console.log(err)
       })
 
-   
+
   };
 
   useEffect(() => {
     // console.log(uid,"??");
-    
+
     if (uid.groupid) {
       const selected = group.find(option => option.id === uid.groupid);
       setSelectedGroup(selected);
       selectedgroupId(uid.groupid)
     }
-    
+
   }, [uid, group]);
 
 
@@ -410,21 +409,21 @@ async function getsubcatData() {
     if (validateForm()) {
       const formdata = new FormData()
       formdata.append('uid', uid.id)
-      
+
       if (update_id == ":update_id") {
-        formdata.append('v_id', decryptedvendorid())
+        formdata.append('v_id', vendor_id)
         formdata.append('b_id', brand_id)
         formdata.append('subcatid', subcatid)
         formdata.append('catid', catid)
         formdata.append('groupid', groupid)
-        
-      }else{
-        formdata.append('v_id', decryptedvendorid())
+
+      } else {
+        formdata.append('v_id', vendor_id)
         formdata.append('b_id', brand_id)
-        formdata.append('catid', catid )
+        formdata.append('catid', catid)
         formdata.append('groupid', groupid)
-        formdata.append('subcatid', subcatid )
-        
+        formdata.append('subcatid', subcatid)
+
       }
       formdata.append('title', value.title)
       formdata.append('slug', value.slug)
@@ -569,7 +568,35 @@ async function getsubcatData() {
                     <div class="col-md-12">
                       <div class="row">
 
-                        <div class="col-md-6 col-lg-6 ">
+
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="category">
+                              Vendor <span class="text-danger">*</span>
+                              {error.vendor && <span className="text-danger">{error.vendor}</span>}
+                            </label>
+                            <Autocomplete
+                              disablePortal
+                              id="combo-box-demo"
+                              options={vendor}
+                              InputLabelProps={{
+                                shrink: true,  // This makes the label move up when there's a value
+                              }}
+                              value={selectedOptionvendor}
+                              placeholder="brand"
+                              getOptionLabel={(option) => option.vendor_name}
+                              getOptionSelected={(option, value) => option.id === value.id}
+                              sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
+                              renderInput={(params) => <TextField   {...params} label="Select Vendor" />}
+                              onChange={(event, value) => HandleVendorChange(value)}
+                              name="vendor"
+
+                            />
+                          </div>
+
+
+                        </div>
+                        <div class="col-md-6 ">
                           <div class="form-group ">
                             <label for="prod_id">
                               Product title
@@ -589,8 +616,7 @@ async function getsubcatData() {
                           </div>
 
                         </div>
-
-                        <div class="col-md-6 col-lg-6">
+                        <div class="col-md-6 ">
                           <div class="form-group ">
                             <label for="prod_id">
                               slug
@@ -612,6 +638,29 @@ async function getsubcatData() {
                         </div>
 
 
+                        {/* <div class="row ">
+                        <div class="col-md-12 py-3">
+                          <div class="form-group ">
+                            <label for="prod_id">
+                              Product identifier
+                              <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="prod_id"
+                              placeholder="Product Title"
+                              name="title"
+                              onChange={onhandleChange}
+
+                            />
+                        
+                          </div>
+
+                        </div>
+
+                       </div> */}
 
 
                         <div class="col-md-6 ">
@@ -636,7 +685,6 @@ async function getsubcatData() {
                             />
                           </div>
                         </div>
-
                         <div class="col-md-6 ">
                           <div class="form-group ">
                             <label for="category">
@@ -659,8 +707,7 @@ async function getsubcatData() {
                             />
                           </div>
                         </div>
-
-                        <div class="col-md-6 pt-4" >
+                        <div class="col-md-6" >
                           <div class="form-group ">
                             <label for="category">
                               Category<span class="text-danger">*</span>
@@ -685,7 +732,7 @@ async function getsubcatData() {
 
 
 
-                        <div class="col-md-6 pt-4" >
+                        <div class="col-md-6 " style={{ paddingTop: "30px" }}>
                           <div class="form-group ">
                             <label for="prod_id">
                               SubCategory<span class="text-danger">*</span>
@@ -710,7 +757,7 @@ async function getsubcatData() {
                           </div>
                         </div>
 
-                        <div class="col-md-6 pt-4" >
+                        <div class="col-md-6 " style={{ paddingTop: "30px" }}>
                           <div class="form-group ">
                             <label for="name">
                               Price
@@ -730,7 +777,7 @@ async function getsubcatData() {
 
 
 
-                        <div class="col-md-6 pt-4">
+                        <div class="col-md-6">
                           <div class="form-group ">
                             <label for="slug">Discounted Price </label>
 
@@ -814,7 +861,7 @@ async function getsubcatData() {
                               class="uploaded-stocks-img"
                               data-bs-toggle="tooltip"
                               data-placement="top"
-                              src={value.sizeimage == ""  ? img1 : value.sizeimage}
+                              src={value.sizeimage == "" ? img1 : value.sizeimage}
                               title=""
                               alt=""
                               data-bs-original-title=""
@@ -871,6 +918,161 @@ async function getsubcatData() {
 
                 </div>
 
+                {/* <div class="card mt-3" id="tax">
+                  <div class="card-head" style={{ padding: "20px 22px 0px" }}>
+                    <h5
+                      style={{
+                        color: "#000000DE",
+                        fontSize: "20px",
+                        margin: "0",
+                      }}
+                    >
+                      Tax and shipping
+                    </h5>
+                    <p class="para">
+                      Set up the tax and shipping information of the product.
+                    </p>
+                  </div>
+                  <div class="card-body" style={{ padding: "20px 10px" }}>
+
+                    <div class="col-md-12">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group ">
+                            <label for="category">
+                              Tax Category<span class="text-danger">*</span>
+                            </label>
+                            <select
+                              type="text"
+                              class="form-control"
+                              id="tx_category"
+                              placeholder=""
+                              name="tx_category"
+                            >
+                              <option value="0">Select Category</option>
+                              <option value="1">cat 1</option>
+                              <option value="2">cat 2</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="method">
+                              Fulfillment method
+                              <span class="text-danger">*</span>
+                            </label>
+                            <select
+                              type="text"
+                              class="form-control"
+                              id="method"
+                              placeholder=""
+                              name="method"
+                            >
+                              <option value="0">Select Method</option>
+                              <option value="1">method 1</option>
+                              <option value="2">method 2</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="ship">
+                              Shipping package<span class="text-danger">*</span>
+                            </label>
+                            <select
+                              type="text"
+                              class="form-control"
+                              id="ship"
+                              placeholder=""
+                              name="ship"
+                            >
+                              <option value="0">Select Package</option>
+                              <option value="1">Package 1</option>
+                              <option value="2">Package 2</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="weight">
+                              Weight<span class="text-danger">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="weight"
+                              placeholder=""
+                              name="weight"
+                            />
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="wt_unit">
+                              Weight Unit<span class="text-danger">*</span>
+                            </label>
+                            <select
+                              type="text"
+                              class="form-control"
+                              id="wt_unit"
+                              placeholder=""
+                              name="wt_unit"
+                            >
+                              <option value="0">Select Unit</option>
+                              <option value="1">Gram</option>
+                              <option value="2">KiloGram</option>
+                              <option value="3">Pound</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="country">
+                              Country Of Origine
+                              <span class="text-danger">*</span>
+                            </label>
+                            <select
+                              type="text"
+                              class="form-control"
+                              id="country"
+                              placeholder=""
+                              name="country"
+                            >
+                              <option value="0">Select Country</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="ship_prpfile">
+                              Shipping Profile<span class="text-danger">*</span>
+                            </label>
+                            <select
+                              type="text"
+                              class="form-control"
+                              id="ship_prpfile"
+                              placeholder=""
+                              name="ship_prpfile"
+                            >
+                              <option value="0">Select </option>
+                              <option value="1">Order Level Shipping</option>
+                              <option value="2">Item Level Shipping</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div> */}
 
               </div>
               <div class="col-lg-3 grid-margin stretch-card">
@@ -887,50 +1089,55 @@ async function getsubcatData() {
                       >
                         Save
                       </button>
-                      <div class="mt-3">
-                        <div class="form-group">
-                          <div class="setting-block">
-                            <div>
+                      {window.location.pathname.match(/^\/webapp\/product\/\d+$/) &&
+                        <div class="mt-3">
+                          <div class="form-group">
+                            <div class="setting-block">
+                              <div>
+                                <label
+                                  htmlFor=""
+                                  class="switch switch-sm switch-icon"
+                                >
+                                  Activate it
+                                </label>
+                              </div>
+                              <div>
+                                {isNaN(update_id) && <FormControlLabel
+                                  control={<Android12Switch disabled />}
+                                />}
+                                {uid.active == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="0" defaultChecked />} />}
+                                {uid.active == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="1" />} />}
+
+
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>}
+                        
+                      {window.location.pathname.match(/^\/webapp\/product\/\d+$/) &&
+                        <div class="mt-3">
+                          <div class="form-group">
+                            <div class="setting-block">
                               <label
                                 htmlFor=""
                                 class="switch switch-sm switch-icon"
                               >
-                                Activate it
+
+                                Approval status
                               </label>
-                            </div>
-                            <div>
                               {isNaN(update_id) && <FormControlLabel
                                 control={<Android12Switch disabled />}
                               />}
-                              {uid.active == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="0" defaultChecked />} />}
-                              {uid.active == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="1" />} />}
 
-
+                              {uid.approve == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="0" defaultChecked />} />}
+                              {uid.approve == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="1" />} />}
 
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="mt-3">
-                        <div class="form-group">
-                          <div class="setting-block">
-                            <label
-                              htmlFor=""
-                              class="switch switch-sm switch-icon"
-                            >
+                      }
 
-                              Approval status
-                            </label>
-                            {isNaN(update_id) && <FormControlLabel
-                              control={<Android12Switch disabled />}
-                            />}
-
-                            {uid.approve == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="0" defaultChecked />} />}
-                            {uid.approve == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="1" />} />}
-
-                          </div>
-                        </div>
-                      </div>
 
                     </div>
                   </div>

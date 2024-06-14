@@ -134,7 +134,7 @@ const VendorMaster = () => {
             flex: 1,
             filterable: false,
         },
-        { field: 'username', headerName: 'Vendor Name', flex: 2 },
+        { field: 'vendor_name', headerName: 'Vendor Name', flex: 2 },
         {
             field: 'mobile',
             headerName: 'Contact',

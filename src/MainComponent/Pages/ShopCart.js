@@ -4,7 +4,7 @@ import axios from 'axios'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import Cookies from 'js-cookie'
 import custdecryptedUserId from '../../Utils/CustUserid'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import empty from '../../assets/frontimg/empty.gif'
 import LoginForm from '../Authentication/LoginForm'
 import { getCartCount } from '../../Store/Cart/cart-action'
@@ -85,7 +85,6 @@ const ShopCart = ({ fetchcount }) => {
 
   useEffect(() => {
     getcartdata()
-
   }, [])
 
   const dispatch = useDispatch();
@@ -109,6 +108,17 @@ const ShopCart = ({ fetchcount }) => {
       .catch((err) => {
         console.log(err)
       })
+  }
+
+  const Navigate = useNavigate()
+
+  const handleprocess = (orderid) =>{
+    if(totalPrice > 0){
+      Navigate(`/checkout/${orderid}`)
+      
+    }else{
+      alert(`Please add something in cart`)
+    }
   }
 
 
@@ -151,7 +161,7 @@ const ShopCart = ({ fetchcount }) => {
                           </div>
                           <form class="cart-form" action="" method="post">
                             <div class="table-responsive">
-                              <table class="cart-items table" cellspacing="0">
+                              {cart.length !== 0 &&  <table class="cart-items table" cellspacing="0">
                                 <thead>
                                   <tr>
                                     <th class="product-thumbnail">Product</th>
@@ -163,7 +173,7 @@ const ShopCart = ({ fetchcount }) => {
                                 </thead>
                                 <tbody>
                                   {cart?.map((item) => {
-                                    const total = item.price * (quantities[item.id] || 1);
+                                    const total = item.price * (quantities[item.id] || item.pqty);
 
 
 
@@ -210,25 +220,15 @@ const ShopCart = ({ fetchcount }) => {
 
 
 
-                                  {/* <tr>
-                                    <td colspan="6" class="actions">
-                                      <div class="bottom-cart">
-                                        <div class="coupon">
-                                          <input type="text" name="coupon_code" class="input-text" id="coupon-code" value="" placeholder="Coupon code" />
-                                          <button type="submit" name="apply_coupon" class="button" value="Apply coupon">Apply coupon</button>
-                                        </div>
-                                        <h2><Link href="shop-grid-left.html">Continue Shopping</Link></h2>
-                                        <button type="submit" name="update_cart" class="button" value="Update cart">Update cart</button>
-                                      </div>
-                                    </td>
-                                  </tr> */}
                                 </tbody>
-                              </table>
+                              </table>}
+                             
                             </div>
                           </form>
                         </div>
+
                         <div class="col-xl-4 col-lg-12 col-md-12 col-12">
-                          <div class="cart-totals">
+                          {cart.length !== 0 &&      <div class="cart-totals">
                             <h2>Cart totals</h2>
                             <div>
                               <div class="cart-subtotal">
@@ -257,15 +257,16 @@ const ShopCart = ({ fetchcount }) => {
                               </div>
                             </div>
                             <div class="proceed-to-checkout">
-                              {Cookies.get(`custuserid`) ? <Link to={`/checkout/${orderid}`} class="checkout-button button">
+                              {Cookies.get(`custuserid`) ? <Link class="checkout-button button" onClick={() =>handleprocess(orderid)}>
                                 Proceed to checkout
-                              </Link> : <Link onClick={() => handleToggle()} class="checkout-button button">
+                              </Link>  : <Link onClick={() => handleToggle()} class="checkout-button button">
                                 Proceed to checkout
                               </Link>}
 
 
                             </div>
-                          </div>
+                          </div> }
+                     
                         </div>
                       </div>
                     </div>
@@ -294,7 +295,7 @@ const ShopCart = ({ fetchcount }) => {
 
 
 
-
+{/* 
       <div class="search-overlay">
         <div class="close-search"></div>
         <div class="wrapper-search">
@@ -319,10 +320,10 @@ const ShopCart = ({ fetchcount }) => {
             </div>
           </form>
         </div>
-      </div>
+      </div> */}
 
 
-      <div class="wishlist-popup">
+      {/* <div class="wishlist-popup">
         <div class="wishlist-popup-inner">
           <div class="wishlist-popup-content">
             <div class="wishlist-popup-content-top">
@@ -404,10 +405,10 @@ const ShopCart = ({ fetchcount }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
 
-      <div class="compare-popup">
+      {/* <div class="compare-popup">
         <div class="compare-popup-inner">
           <div class="compare-table">
             <div class="compare-table-inner">
@@ -519,7 +520,7 @@ const ShopCart = ({ fetchcount }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

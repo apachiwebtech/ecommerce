@@ -30,6 +30,7 @@ const VendorForm = () => {
     const [image2, setImage2] = useState(null);
     const [image3, setImage3] = useState(null);
     const [loader , setLoader] = useState(false)
+    const [state , setState] = useState([])
     const [errors, setErrors] = useState({
         email: "",
         mobile: "",
@@ -375,6 +376,17 @@ const VendorForm = () => {
        }, [])
 
 
+      async function getstate(){
+       axios.get(`${BASE_URL}/state`)
+       .then((res)=>{
+        setState(res.data)
+       })
+      }
+     
+      useEffect(()=>{
+        getstate()
+      },[])
+
 
     return (
         <div class="container-fluid page-body-wrapper">
@@ -432,8 +444,14 @@ const VendorForm = () => {
                                                 <label for="exampleFormControlSelect1">state</label>
                                                 <select class="form-control form-control-lg" id="exampleFormControlSelect1" value={value.state} onChange={onhandleChange} name='state'>
                                                     <option selected>Select state</option>
-                                                    <option value="1">Maharashtra</option>
-                                                    <option value="2">Goa</option>
+
+                                                    {state.map((item)=>{
+                                                        return(
+                                                            
+                                                            <option value={item.id}>{item.name}</option>
+                                                        )
+                                                    })}
+                                                
                                                 </select>
                                                 {errors.state && <div className="text-danger">{errors.state}</div>}
                                             </div>

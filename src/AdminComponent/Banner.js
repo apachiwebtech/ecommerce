@@ -42,6 +42,8 @@ const Banner = () => {
         })
     }, [uid])
 
+    console.log(uid.upload_image)
+
     const validateForm = () => {
         let isValid = true;
         const newErrors = { ...errors };
@@ -50,9 +52,9 @@ const Banner = () => {
             isValid = false;
             newErrors.title = "Title is required";
         }
-        if (!image) {
+        if (uid.upload_image == undefined && !image) {
             isValid = false;
-            newErrors.banner = "Banner is required"
+            newErrors.banner = "Banner is required";
         }
         if (!value.link) {
             isValid = false;
@@ -107,7 +109,7 @@ const Banner = () => {
         }
         axios.post(`${BASE_URL}/banner_updateid`, data)
             .then((res) => {
-                console.log(res)
+
                 setupdateDate(res.data[0])
                 setLoader(false)
             })
@@ -146,7 +148,13 @@ const Banner = () => {
 
             const formdata = new FormData()
             formdata.append('title', value.title)
-            formdata.append('image', image)
+            if(image){
+
+                formdata.append('image', image)
+            }else{
+                formdata.append('image', uid.upload_image)
+
+            }
             formdata.append('link', value.link)
             formdata.append('target', value.target)
             formdata.append('viewid', value.view)

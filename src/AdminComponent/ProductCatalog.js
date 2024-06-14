@@ -32,7 +32,7 @@ const ProductCatalog = () => {
       });
   }
 
-  
+
   async function getSigleImg() {
     axios
       .get(`${BASE_URL}/product_single_img`)
@@ -51,22 +51,22 @@ const ProductCatalog = () => {
     getcatData();
   }, []);
 
-  const handlestatus = (e,id,column) => {
+  const handlestatus = (e, id, column) => {
     const value = e.target.value
 
     const data = {
-        product_id: id,
-        status: value,
-        column:column
+      product_id: id,
+      status: value,
+      column: column
     }
 
     axios.post(`${BASE_URL}/product_status`, data)
-        .then((res) => {
-            console.log(res)
-            // setProductData()
-        })
+      .then((res) => {
+        console.log(res)
+        // setProductData()
+      })
 
-}
+  }
 
 
 
@@ -111,20 +111,20 @@ const ProductCatalog = () => {
   const roledata = {
     role: Cookies.get(`role`),
     pageid: 10
-}
+  }
 
-const dispatch = useDispatch()
-const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
+  const dispatch = useDispatch()
+  const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
 
 
-useEffect(() => {
+  useEffect(() => {
     dispatch(getRoleData(roledata))
-}, [])
+  }, [])
 
   return (
     <div class="container-fluid page-body-wrapper col-lg-10">
       <InnerHeader />
-      {roleaccess > 1 ?   <div class="main-panel">
+      {roleaccess > 1 ? <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
             <div class="col-lg-12 grid-margin stretch-card">
@@ -136,8 +136,8 @@ useEffect(() => {
                       <p class="card-description">List Of Products</p>
                     </div>
                     <div>
-                      {roleaccess > 3 &&   <Link to="/webapp/product/:update_id" ><button className=' btn btn-primary'>Add Product</button></Link>}
-                  
+                      {roleaccess > 3 && <Link to="/webapp/product/:update_id" ><button className=' btn btn-primary'>Add Product</button></Link>}
+
                     </div>
                   </div>
 
@@ -177,19 +177,19 @@ useEffect(() => {
                               <td>{item.subcategory}</td>
                               <td>{item.vendor}</td>
                               <td>{item.price}</td>
-                              {roleaccess >= 2  &&    <td><Link to={`/webapp/addimages/${item.id}/${item.title}`}><Button
+                              {roleaccess >= 2 && <td><Link to={`/webapp/addimages/${item.id}/${item.title}`}><Button
                                 color="primary"
                                 disabled={false}
                                 size="medium"
                                 variant="outlined"
                               >Add</Button></Link></td>}
-                           
+
 
                               <td>
                                 {item.active == 1 ? <FormControlLabel
-                                  control={<Android12Switch value="0" onChange={(e) =>handlestatus(e,item.id,"active") } defaultChecked disabled={roleaccess < 3}/>}
+                                  control={<Android12Switch value="0" onChange={(e) => handlestatus(e, item.id, "active")} defaultChecked disabled={roleaccess < 3} />}
                                 /> : <FormControlLabel
-                                onChange={(e) =>handlestatus(e,item.id,"active") }
+                                  onChange={(e) => handlestatus(e, item.id, "active")}
                                   value="1"
                                   control={<Android12Switch disabled={roleaccess < 3} />}
                                 />}
@@ -216,8 +216,8 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      </div>: null}
-   
+      </div> : null}
+
     </div>
   );
 };

@@ -1,15 +1,13 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import custdecryptedUserId from '../../Utils/CustUserid'
 import Cookies from 'js-cookie'
 
 const Checkout = () => {
     const [state, setState] = useState([])
     const [cart, setCart] = useState([])
-    const [subtotal, setSubtotal] = useState("")
-    const [copy, setCopy] = useState(false)
     const [errors, setErrors] = useState({})
     const [selectedPayment, setSelectedPayment] = useState('cod');
 
@@ -34,6 +32,7 @@ const Checkout = () => {
         scity: "",
         sstate: "",
         spostcode: "",
+        smobile: "",
 
 
     })
@@ -43,7 +42,7 @@ const Checkout = () => {
         // Here you can do whatever you want with the selected value, like sending it to the server or performing some action.
     };
 
-console.log(value.mobile)
+
 
 
     const validateForm = () => {
@@ -112,6 +111,10 @@ console.log(value.mobile)
             isValid = false;
             newErrors.spostcode = "postcode is required";
         }
+        if (!value.smobile) {
+            isValid = false;
+            newErrors.smobile = "mobile is required";
+        }
 
 
 
@@ -140,6 +143,10 @@ console.log(value.mobile)
             })
     }
 
+    const vendor_id = cart.map((item) => item.v_id)
+    let unique_vendor_id = [...new Set(vendor_id)].join(',');
+
+
 
 
     async function getState() {
@@ -154,6 +161,8 @@ console.log(value.mobile)
         getState()
         getcartdata()
     }, [])
+
+    const navigate = useNavigate()
 
     const onhandlesubmit = (e) => {
         e.preventDefault()
@@ -170,7 +179,7 @@ console.log(value.mobile)
                 postcode: value.postcode,
                 orderNotes: value.orderNotes,
                 mobile: value.mobile,
-
+                vendor_id: unique_vendor_id,
                 sfirstname: value.sfirstname || value.firstname,
                 slastname: value.slastname || value.lastname,
                 scountry: value.scountry || value.country,
@@ -179,6 +188,7 @@ console.log(value.mobile)
                 scity: value.scity || value.city,
                 sstate: value.sstate || value.state,
                 spostcode: value.spostcode || value.postcode,
+                smobile: value.smobile || value.mobile,
                 order_id: orderid,
                 totalamt: totalPrice,
                 paymode: selectedPayment,
@@ -189,9 +199,15 @@ console.log(value.mobile)
             axios.post(`${BASE_URL}/place_order`, data)
                 .then((res) => {
                     console.log(res)
-                    alert("order placed")
-
-                    Cookies.remove(`orderid`)
+         
+                        if(res.data){
+                            alert("order placed")
+                            Cookies.remove(`orderid`)
+                            navigate('/thankyou')
+                            Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
+                        }
+                    
+                      
                 })
                 .catch((err) => {
                     console.log(err)
@@ -245,15 +261,16 @@ console.log(value.mobile)
             address: value.address,
             city: value.city,
             state: value.state,
-            mobile:value.mobile,
+            mobile: value.mobile,
             postcode: value.postcode,
             sfirstname: value.firstname,
             slastname: value.lastname,
-            scountry: value.country,
+            scountry: 1,
             saddress: value.address,
             scity: value.city,
             sstate: value.state,
             spostcode: value.postcode,
+            smobile: value.mobile,
 
         })
     }
@@ -320,7 +337,7 @@ console.log(value.mobile)
                                                                         <p class="form-row form-row-wide validate-required col-lg-6">
                                                                             <label>Country / Region <span class="required" title="required">*</span></label>
                                                                             <span class="input-wrapper">
-                                                                                <select name="country" class="country-select custom-select" onChange={onhandlechange}>
+                                                                                <select name="country" class="country-select custom-select" value={value.country}  onChange={onhandlechange}>
                                                                                     <option value="">Select a country / region…</option>
                                                                                     <option value="1">India</option>
 
@@ -412,11 +429,17 @@ console.log(value.mobile)
                                                                         </span>}
                                                                     </p>
                                                                 </div>
+                                                                <div className='row'>
+                                                                <p class="form-row form-row-last validate-required col-lg-6 col-md-6 col-12">
+                                                                            <label>Mobile <span class="required" title="required">*</span></label>
+                                                                            <span class="input-wrapper"><input type="number" class="input-text" name="mobile" value={value.smobile} onChange={onhandlechange} /></span>
+                                                                            {errors.smobile && <span className='text-danger'>{errors.smobile}</span>}
+                                                                        </p>
 
-                                                                <p class="form-row form-row-wide address-field validate-required">
+                                                                <p class="form-row form-row-wide address-field validate-required col-lg-6 col-md-6 col-12">
                                                                     <label for="shipping_country" class="">Country / Region <span class="required" title="required">*</span></label>
                                                                     <span class="input-wrapper">
-                                                                        <select name="scountry" class="state-select custom-select" value={value.scountry} onChange={onhandlechange}>
+                                                                        <select name="scountry" defaultValue="1" class="state-select custom-select" value={value.scountry} onChange={onhandlechange}>
                                                                             <option value="">Select a country / region…</option>
                                                                             <option value="1" selected>India</option>
 
@@ -425,6 +448,7 @@ console.log(value.mobile)
                                                                     {errors.scountry && <span className='text-danger'>{errors.scountry}
                                                                     </span>}
                                                                 </p>
+                                                                </div>
                                                                 <p class="form-row address-field validate-required form-row-wide">
                                                                     <label>Address <span class="required" title="required">*</span></label>
                                                                     <span class="input-wrapper">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import md5 from 'js-md5';
 import { Link, useNavigate } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
+import { BASE_URL, IMG_URL } from '../AdminComponent/BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';

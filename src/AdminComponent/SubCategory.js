@@ -157,7 +157,7 @@ const SubCategory = () => {
                 description: value.description,
                 slug: value.slug,
                 user_id: decryptedUserId(),
-                cat_id: value.category,
+                cat_id: cat_id,
                 u_id: uid.id
             }
 
@@ -167,6 +167,16 @@ const SubCategory = () => {
                     getsubcatData()
                     setLoader(false)
                     // window.location.pathname = '/webapp/subcategory'
+
+                    setValue({
+                        category: "" ,
+                        title: "" ,
+                        slug: "" ,
+                        description: "" ,
+                    })
+
+                    setUid([])
+                    setSelectedOption(null)
                 })
                 .catch((err) => {
                     console.log(err)
@@ -176,7 +186,19 @@ const SubCategory = () => {
 
     }
 
+    const handleslugclick = () => {
 
+
+        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') , table_name : "awt_subcategory" })
+            .then((res) => {
+                setValue({
+                    slug: res.data.newslug,
+                    title : value.title
+                })
+            })
+
+
+    }
 
 
     const onhandleChange = (e) => {
@@ -190,6 +212,7 @@ const SubCategory = () => {
             setSelectedOption(selectedValue);
             // Now you have the selected id, you can use it in your application logic
             setId(selectedId)
+
             setValue(prevValue => ({
                 ...prevValue,               // Copy the existing value object
                 category: selectedId      // Update only the category property
@@ -289,7 +312,7 @@ const SubCategory = () => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">SubCategory Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.slug} name='slug' onChange={onhandleChange} placeholder="Enter.." />
+                                            <input type="text" onClick={handleslugclick} class="form-control" id="exampleInputUsername1" value={value.slug} name='slug' onChange={onhandleChange} placeholder="Enter.." />
                                             {error.slug && <span className='text-danger'>{error.slug}</span>}
 
                                         </div>

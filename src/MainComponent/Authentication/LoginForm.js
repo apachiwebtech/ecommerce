@@ -7,7 +7,8 @@ import Cookies from 'js-cookie'
 import CryptoJS from 'crypto-js';
 import { Alert } from '@mui/material'
 import custdecryptedUserId from '../../Utils/CustUserid'
-
+import { getCartCount } from '../../Store/Cart/cart-action'
+import { useDispatch } from 'react-redux'
 
 function LoginForm({ open, setOpen }) {
 
@@ -130,6 +131,11 @@ function LoginForm({ open, setOpen }) {
             errors.remail = 'Email is required';
             isValid = false;
         }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value.remail)) {
+            isValid = false;
+            errors.remail = "Invalid email format";
+        }
         if (!value.firstname) {
             errors.firstname = 'Firstname is required';
             isValid = false;
@@ -138,10 +144,12 @@ function LoginForm({ open, setOpen }) {
             errors.lastname = 'Lastname is required';
             isValid = false;
         }
-        if (!value.mobile) {
-            errors.mobile = 'Mobile is required';
+        const mobileNumberRegex = /^\d{10,15}$/;
+        if (!mobileNumberRegex.test(value.mobile)) {
             isValid = false;
+            errors.mobile = "Mobile number must be between 10 to 15 digits";
         }
+        
 
         setErrors(errors);
 
@@ -201,7 +209,7 @@ function LoginForm({ open, setOpen }) {
                         const otp = res.data[0].otp;
                         localStorage.setItem("ecom_email", id)
                         localStorage.setItem("ecom_value", value)
-                        // localStorage.setItem("Name", name)
+                        localStorage.setItem("Name", name)
                         // localStorage.setItem('otp', otp)
                     }
                     else {
@@ -259,8 +267,7 @@ function LoginForm({ open, setOpen }) {
                         const value = res.data[0].value; // Define id here
                         const firstname = res.data[0].firstname;
                         const lastname = res.data[0].lastname;
-                        const Mobile = res.data[0].mobile
-                        const otp = res.data[0].otp;
+                        const Mobile = res.data[0].mobile;
                         localStorage.setItem("ecom_email", id)
                         localStorage.setItem("ecom_value", value)
                         localStorage.setItem("ecom_mobile", Mobile)
@@ -303,30 +310,57 @@ function LoginForm({ open, setOpen }) {
 
     }
 
-    async function addorderid() {
+    // async function addorderid() {
     
-            const data = {
-                user_id: custdecryptedUserId(),
-            }
+    //         const data = {
+    //             user_id: custdecryptedUserId(),
+    //         }
 
-            axios.post(`${BASE_URL}/addorderid`, data)
-                .then((res) => {
-                    // console.log(res)
+    //         axios.post(`${BASE_URL}/addorderid`, data)
+    //             .then((res) => {
+    //                 // console.log(res)
 
-                    if(res.data[0].id){
+    //                 if(res.data[0].id){
 
-                        Cookies.set('orderid' , res.data[0].id)
-                    }
-                });
+    //                     Cookies.set('orderid' , res.data[0].id)
+    //                 }
+    //             });
       
 
-    }
+    // }
 
     // useEffect(() => {
     //     if (Cookies.get("custuserid")) {
     //         updateuserid()
     //     }
     // }, [])
+
+
+
+    async function addorderid(){
+        const data = {
+          user_id  :custdecryptedUserId(),
+          orderid  :Cookies.get('orderid')
+        }
+        axios.post(`${BASE_URL}/addorderid`, data)
+    
+        .then((res)=>{
+          if(res.data[0]){
+
+            Cookies.set('orderid', res.data[0].id)
+
+            setTimeout(() => {
+              dispatch(getCartCount())
+            }, 500);
+          }
+        })
+      }
+    
+      const dispatch = useDispatch()
+    
+    //   useEffect(()=>{
+    //     addorderid()
+    //   })
 
     const onhandleotpsubmit = (e) => {
         const mergedOtp = Object.values(otpvalue).join('');
@@ -372,6 +406,8 @@ function LoginForm({ open, setOpen }) {
                     localStorage.setItem("ecom_value", value)
                     localStorage.setItem('ecom_id', id);
 
+                    // window.location.reload()
+
                 }
             })
             .catch((err) => {
@@ -379,12 +415,15 @@ function LoginForm({ open, setOpen }) {
             });
     }
 
+
+
+
     return (
         <div className="form-login-register">
             {open && <div className="box-form-login" >
                 <div className="active-login" onClick={handleToggle} ></div>
-                <div className="box-content">
-                    <div className="form-login active">
+                <div className="box-content ">
+                    {!hide &&        <div className="form-login active">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link active" id="home-tab" onClick={flushdata} data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">LOGIN</button>
@@ -434,7 +473,7 @@ function LoginForm({ open, setOpen }) {
 
                                         <div className="username">
                                             <input type="text" className="input-text" name="firstname" id="username" placeholder="Firstname" onChange={onhandleChange} />
-                                            {errors.firstname && (<span className="text-danger">{errors.remail}</span>
+                                            {errors.firstname && (<span className="text-danger">{errors.firstname}</span>
                                             )}
                                         </div>
                                         <div className="username">
@@ -473,7 +512,9 @@ function LoginForm({ open, setOpen }) {
                         </div>
 
 
-                    </div>
+                    </div>}
+             
+
                     {hide ?
                         <div className='form-login active'>
                             <form onSubmit={onhandleotpsubmit} className="login">

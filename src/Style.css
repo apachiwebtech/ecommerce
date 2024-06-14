@@ -1112,10 +1112,37 @@ html {
     width: 45px;
     height: 38px;
   }
+  .quantity2 .minus, 
+  .quantity2 .plus {
+    background: #fff;
+    float: left;
+    display: block;
+    padding: 0;
+    margin: 0;
+    vertical-align: text-top;
+    overflow: visible;
+    text-decoration: none;
+    cursor: pointer;
+    line-height: 13px;
+    font-size: 18px;
+    color: #868686;
+    border: 1px solid #e5e5e5;
+    text-align: center;
+    width: 26px;
+    height: 26px;
+  }
   .quantity input.qty {
     float: left;
     width: 45px;
     height: 38px;
+    text-align: center;
+    padding: 0;
+    -moz-appearance: textfield;
+  }
+  .quantity2 input.qty {
+    float: left;
+    width: 26px;
+    height: 25px;
     text-align: center;
     padding: 0;
     -moz-appearance: textfield;
@@ -3028,6 +3055,14 @@ html {
     -webkit-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
   }
+
+  .overlay-open{
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .wrapper-open{
+    transform: translateX(0%) !important;
+  }
   .search-overlay.search-visible {
     opacity: 1;
     visibility: visible;
@@ -3099,7 +3134,7 @@ html {
     -webkit-transition: max-width 1s ease;
     transition: max-width 1s ease;
     transition-delay: .3s;
-    max-width: 0;
+
   }
   .search-overlay.search-visible .search-from .search-box input[type=text] {
     max-width: 100%;
@@ -8490,7 +8525,7 @@ html {
     visibility: visible;
   }
   .shop-details .buttons {
-    display: flex;
+    /* display: flex; */
     vertical-align: top;
     flex-wrap: wrap;
   }
@@ -8647,7 +8682,7 @@ html {
     color: #fff;
   }
   .shop-details .buttons .btn-wishlist .product-btn {
-    margin-top: 20px;
+    margin-bottom: 15px;
     text-align: center;
     color: #000;
     display: inline-flex;

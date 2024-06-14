@@ -189,7 +189,17 @@ const Category = () => {
                     alert(res.data)
                     getcatData()
                     setLoader(false)
-                    window.location.pathname = '/webapp/category'
+                    // window.location.pathname = '/webapp/category'
+
+                    setValue({
+                        title: "" ,
+                        slug: "" ,
+                        description: "" ,
+                    })
+
+                    setImage(null)
+                    setUid([])
+                    setSelectedOption(null)
 
                 })
                 .catch((err) => {
@@ -262,6 +272,21 @@ const Category = () => {
         }
     }, [uid, group]);
 
+    
+    const handleslugclick = () => {
+
+
+        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') , table_name : "awt_category" })
+        .then((res) => {
+            setValue({
+                slug: res.data.newslug,
+                title : value.title
+            })
+        })
+
+
+    }
+
 
     const roledata = {
         role: Cookies.get(`role`),
@@ -290,12 +315,7 @@ const Category = () => {
                                     <h4 class="card-title">Add Category</h4>
 
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
-                                        <div class="form-group">
-                                            <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
-                                            {error.title && <span className='text-danger'>{error.title}</span>}
-                                        </div>
-                                        <div class="form-group">
+                                    <div class="form-group">
                                             <label for="exampleInputUsername1">Group<span className='text-danger'>*</span></label>
                                             <Autocomplete
                                                 disablePortal
@@ -314,8 +334,14 @@ const Category = () => {
                                             {error.group && <span className='text-danger'>{error.group}</span>}
                                         </div>
                                         <div class="form-group">
+                                            <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
+                                            {error.title && <span className='text-danger'>{error.title}</span>}
+                                        </div>
+                                      
+                                        <div class="form-group">
                                             <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onChange={onhandleChange} />
+                                            <input type="text" onClick={handleslugclick} class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onChange={onhandleChange} />
                                             {error.slug && <span className='text-danger'>{error.slug}</span>}
 
                                         </div>

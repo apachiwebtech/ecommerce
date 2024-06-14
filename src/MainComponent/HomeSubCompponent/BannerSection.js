@@ -53,7 +53,7 @@ const BannerSection = () => {
                                                     {/* <div class="subtitle-slider">20%OFF.END MONDAY</div> */}
                                                     <h2 class="title-slider">{item.title}</h2>
                                                     <div class="description-slider">{item.description} </div>
-                                                    <Link to="/shoproduct" class="button-slider button-white" target={item.target} href={item.link}>SHOP NOW</Link>
+                                                    <Link to={item.link} class="button-slider button-white" target={item.target} >SHOP NOW</Link>
                                                 </div>
                                             </div>
                                         </div>

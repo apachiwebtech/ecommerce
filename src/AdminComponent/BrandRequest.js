@@ -1,33 +1,20 @@
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BASE_URL } from "./BaseUrl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch, { SwitchProps } from "@mui/material/Switch";
-import { styled } from "@mui/material/styles";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Button from '@mui/material/Button';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { BASE_URL, IMG_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import chair from '../assets/images/chair.jpg'
 
 
 const BrandRequest = () => {
-  const [cat, setCatData] = useState([]);
-  const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
-  const [value, setValue] = useState({
-    title: "",
-    description: "",
-  });
+  const [brand, setBrand] = useState([]);
 
-  async function getcatData() {
+
+  async function getbrandrequest() {
     axios
-      .get(`${BASE_URL}/category_data`)
+      .get(`${BASE_URL}/vendor_Brand_request`)
       .then((res) => {
-        console.log(res.data);
-        setCatData(res.data);
+        setBrand(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -35,103 +22,32 @@ const BrandRequest = () => {
   }
 
   useEffect(() => {
-    getcatData();
+    getbrandrequest();
   }, []);
 
-  const handleClick = (id) => {
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: true,
-    }));
-  };
-  const handleCancel = (id) => {
-    // Hide the confirmation dialog without performing the delete action
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
+  const handleapprove = (id) => {
 
-  const handleDelete = (id) => {
-    const data = {
-      cat_id: id,
-    };
-
-    axios
-      .post(`${BASE_URL}/category_delete`, data)
-      .then((res) => {
-        getcatData();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    setConfirmationVisibleMap((prevMap) => ({
-      ...prevMap,
-      [id]: false,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+    const userConfirmed = window.confirm('Are you sure you want to approve?');
 
     const data = {
-      title: value.title,
-      description: value.description,
-      user_id: localStorage.getItem("userid"),
-    };
+      brand_id: id
+    }
+    if (userConfirmed) {
+      axios.post(`${BASE_URL}/approve_brand`, data)
+        .then((res) => {
+          if (res.data) {
+            alert("Approved successfully")
+            getbrandrequest()
+          }
+        })
+    }
 
-    axios
-      .post(`${BASE_URL}/add_category`, data)
-      .then((res) => {
-        alert(res.data);
-        getcatData();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  }
 
-  const onhandleChange = (e) => {
-    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const Android12Switch = styled(Switch)(({ theme }) => ({
-    padding: 8,
-    "& .MuiSwitch-track": {
-      borderRadius: 22 / 2,
-      "&::before, &::after": {
-        content: '""',
-        position: "absolute",
-        top: "50%",
-        transform: "translateY(-50%)",
-        width: 16,
-        height: 16,
-      },
-      "&::before": {
-        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-          theme.palette.getContrastText(theme.palette.primary.main)
-        )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
-        left: 12,
-      },
-      "&::after": {
-        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
-          theme.palette.getContrastText(theme.palette.primary.main)
-        )}" d="M19,13H5V11H19V13Z" /></svg>')`,
-        right: 12,
-      },
-    },
-    "& .MuiSwitch-thumb": {
-      boxShadow: "none",
-      width: 16,
-      height: 16,
-      margin: 2,
-    },
-  }));
 
   return (
     <div class="container-fluid page-body-wrapper col-lg-10">
-      <InnerHeader/>
+      <InnerHeader />
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
@@ -155,48 +71,70 @@ const BrandRequest = () => {
                   <div class="table-responsive pt-3">
                     <table class="table table-bordered">
                       <thead>
-                      <tr>
+                        <tr>
                           <th>
                             #
                           </th>
                           <th>Image</th>
-                          <th>Name</th>
-                          <th>Category</th>
-                          <th>Subcategory</th>
+                          <th>Brand Name</th>
                           <th>Vendor Name</th>
-                          <th>Price</th>
-                          <th>Status</th>
                           <th>Action</th>
                         </tr>
                       </thead>
 
                       <tbody>
-                        <tr>
-                          <td>
-                            1
-                          </td>
-                          <td><img src={chair} alt="" /></td>
-                          <td>Chair</td>
-                          <td>Chair</td>
-                          <td>Office Chair</td>
-                          <td>Satyam</td>
-                          <td>2000</td>
-                        
-                          <td>
-                            {" "}
-                            <FormControlLabel
-                              control={<Android12Switch defaultChecked />}
-                            />
-                          </td>
-                          <td>
-                            <Link>
-                              <RemoveRedEyeIcon />
-                            </Link>
-                            {/* <Link>
-                              <DeleteIcon  className="text-danger"/>
-                            </Link> */}
-                          </td>
-                        </tr>
+                        {brand.map((item, index) => {
+                          return (
+                            <tr>
+                              <td>
+                                {index + 1}
+                              </td>
+                              <td><img src={`${IMG_URL}/brand/` + item.logo} alt="" /></td>
+                              <td>{item.title}</td>
+                              <td>
+                                {item.vendor_name}
+                              </td>
+                              <td>
+                                <Link>
+                                  <RemoveRedEyeIcon type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" />
+                                </Link>
+                              </td>
+                              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="exampleModalLabel">Add Message</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <div className='col-lg-4'>
+                                        <div class="card-body">
+                                          <ul class="list-stats" style={{ paddingLeft: "0", width: "200px" }}>
+                                            <li class="">
+                                              <span class="lable">Brand name:</span>
+                                              &nbsp;<span class="value"><b>test</b></span>
+                                            </li>
+                                            <li class="w-200 py-1">
+                                              <span class="lable">Vendor Name</span>
+                                              &nbsp; <span class="value"><b>test</b></span>
+                                            </li>
+                                     
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-success" onClick={() =>handleapprove(item.id) } data-bs-dismiss="modal">Approve</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </tr>
+                          )
+                        })}
+
                       </tbody>
                     </table>
                   </div>

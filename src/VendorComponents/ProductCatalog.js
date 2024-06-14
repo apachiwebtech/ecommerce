@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BASE_URL, IMG_URL } from "./BaseUrl";
+import { BASE_URL, IMG_URL } from '../AdminComponent/BaseUrl';
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch, { SwitchProps } from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
@@ -59,42 +59,7 @@ const ProductCatalog = () => {
 
 
 
-  const handleToggle = (productId) => {
-    setToggleValues((prevValues) => {
-      const updatedValues = { ...prevValues };
-      if (productId in updatedValues) {
-        updatedValues[productId] = updatedValues[productId] === 0 ? 1 : 0;
-      } else {
-        updatedValues[productId] = 1; // Assuming initial value is 1 if not present
-      }
-      return updatedValues;
-    });
-  };
-  const toggleProductStatus = (productId, status) => {
-    const newStatus = status ? 0 : 1; // Toggle between 0 and 1
-    setSelectedProduct({ id: productId, status: newStatus });    // Send the updated status to the server if needed
-    // await axios.put(`${BASE_URL}/product/${productId}/status`, { status: status });
 
-    updateStatus({ id: productId, status: newStatus })
-
-  };
-const updateStatus = async (productData)=>{
-  const response = await fetch(`${BASE_URL}/updateStataus`, {
-    method : "POST",
-    body :JSON.stringify({
-      id : productData.id,
-      status : productData.status,
-    }),
-    headers : {
-      'Content-Type' : 'application/json'
-    }
-  })
-
-  const data = await response.json();
-
-  console.log(data);
-}
-console.log(selectedProduct)
 
   const Android12Switch = styled(Switch)(({ theme }) => ({
     padding: 8,
@@ -217,10 +182,10 @@ console.log(selectedProduct)
                           />}
                                   
                                 /> */}
-                                {item.approve == 1 ? <FormControlLabel
-                                  control={<Android12Switch value="0" onChange={(e) =>handlestatus(e,item.id,"approve") } defaultChecked />}
+                                {item.active == 1 ? <FormControlLabel
+                                  control={<Android12Switch value="0" onChange={(e) =>handlestatus(e,item.id,"active") } defaultChecked />}
                                 /> : <FormControlLabel
-                                onChange={(e) =>handlestatus(e,item.id,"approve") }
+                                onChange={(e) =>handlestatus(e,item.id,"active") }
                                   value="1"
                                   control={<Android12Switch />}
                                 />}

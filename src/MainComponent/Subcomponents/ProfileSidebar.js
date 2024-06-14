@@ -2,12 +2,19 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { mdiAccount, mdiAccountOutline, mdiGiftOutline, mdiHeartOutline, mdiLocationExit, mdiMapMarkerOutline } from '@mdi/js';
 import Icon from '@mdi/react';
+import Cookies from 'js-cookie'
+
 
 const ProfileSidebar = () => {
+
+    const handlelogout = () =>{
+        Cookies.remove('custuserid')
+        Cookies.remove('orderid')
+    }
     return (
         <div className='shadow-sm p-3 mb-5 bg-body rounded'>
             <div className='py-3'>
-                <p className=''>Guest User</p>
+                {/* <p className=''>Guest User</p> */}
                 <h4 className=''> <Icon path={mdiAccount} size={1} /> satyam vilas satkar</h4>
             </div>
             <div className='bg-light py-2'>
@@ -42,7 +49,7 @@ const ProfileSidebar = () => {
                     <h5><Icon path={mdiMapMarkerOutline} size={1} /> Address </h5>
                 </div>
             </Link>
-            <Link to="">
+            <Link to="/" onClick={handlelogout}>
                 <div className='py-2'>
                     <h5><Icon path={mdiLocationExit} size={1} /> Sign Out </h5>
                 </div>

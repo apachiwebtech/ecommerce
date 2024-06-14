@@ -28,7 +28,7 @@ const InnerHeader = () => {
             case '/webapp/brand':
                 return 'Brand';
             case '/webapp/productapproval':
-                return 'Product Approval';
+                return 'Product Request';
             case '/webapp/orders':
                 return 'Orders';
             case '/webapp/banner':
@@ -39,12 +39,20 @@ const InnerHeader = () => {
                 return 'Gallery';
             case '/webapp/settings':
                 return 'Settings';
+            case '/webapp/vendorrequest':
+                return 'Vendor Request';
             case '/webapp/group':
                 return 'Group';
             case '/webapp/addrole':
                 return 'Add Role';
             case '/webapp/roleassign':
                 return 'Role Assign';
+            case '/webapp/brandrequest':
+                return 'Brand Request';
+            case '/vendor/addbrand':
+                return 'Add Brand';
+            case '/webapp/deleteduser':
+                return 'Deleted Users';
             case '/webapp/color':
                 return 'Colour';
             case '/webapp/product':

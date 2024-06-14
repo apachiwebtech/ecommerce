@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import brand1 from '../../assets/frontimg/brand/1.jpg'
-
 import product4_2 from '../../assets/frontimg/product/4-2.jpg'
 import product6_2 from '../../assets/frontimg/product/6-2.jpg'
-
 import { Slider } from '@mui/material'
 import axios from 'axios'
 import { Link, useParams } from 'react-router-dom'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import ProductCard from '../Subcomponents/ProductCard'
-import Icon from '@mdi/react'
 import { mdiClose, mdiFilterVariant } from '@mdi/js'
-
+import Icon from '@mdi/react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getProducts } from '../../Store/Products/product-actions'
+import { FormControl, MenuItem, Select } from '@mui/material'
 
 const ShopProduct = () => {
 
     const [products, setProducts] = useState([])
     const [group, setGroup] = useState([])
+    const [brand, setBrand] = useState([])
     const [toggle, setToggle] = useState(false)
     const [header, SiteHeader] = useState()
 
@@ -35,47 +35,48 @@ const ShopProduct = () => {
         },
 
         {
-            value: 25000,
-            label: '₹25000',
+            value: 2500,
+            label: '₹2500',
         },
         {
-            value: 50000,
-            label: '₹50000',
+            value: 5000,
+            label: '₹5000',
         },
         {
-            value: 75000,
-            label: '₹75000',
+            value: 7500,
+            label: '₹7500',
         },
         {
-            value: 100000,
-            label: '₹100000',
+            value: 10000,
+            label: '₹10000',
         },
     ];
 
 
 
-    // const dispatch = useDispatch();
-    // const products = useSelector((state) => state.products.products);
+    const dispatch = useDispatch();
+    const productnew = useSelector((state) => state.products.products);
 
-    // useEffect(() => {
-    //     dispatch(getProducts());
-    // }, [dispatch]);
+    useEffect(() => {
+        dispatch(getProducts());
+    }, [dispatch]);
 
-    const { groupslug, catslug, subcatslug } = useParams()
+    const { groupslug, catslug, subcatslug , brand_id } = useParams()
 
 
     async function getproductdetails() {
         const data = {
             groupslug: groupslug,
             catslug: catslug,
-            subcatslug: subcatslug
+            subcatslug: subcatslug,
+            brand_id : brand_id
         }
 
         axios.post(`${BASE_URL}/getproductlisting`, data)
             .then((res) => {
                 console.log(res)
                 setProducts(res.data)
-                SiteHeader(res.data[0].title)
+                SiteHeader(res.data[0].slug)
             })
             .catch((err) => {
                 console.log(err)
@@ -93,11 +94,43 @@ const ShopProduct = () => {
             })
     }
 
+    async function getbrand(){
+        const data = {
+            groupslug: groupslug,
+            catslug: catslug,
+            subcatslug: subcatslug,
+            brand_id : brand_id
+        }
+        axios.post(`${BASE_URL}/getbrand` , data)
+        .then((res) => {
+            console.log(res)
+            setBrand(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }
+
 
     useEffect(() => {
+        getbrand()
         getproductdetails()
         getGroupData()
-    }, [groupslug, catslug, subcatslug])
+    }, [groupslug, catslug, subcatslug,brand_id])
+
+    const [value, setValue] = React.useState('');
+
+
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+
+    };
+
+
+
+
+
 
 
 
@@ -136,7 +169,7 @@ const ShopProduct = () => {
                                                         {group.map((item) => {
                                                             return (
                                                                 <li className="current">
-                                                                    <Link to={`/shoproduct/${item.slug}`}>{item.title}<span className="count">9</span></Link>
+                                                                    <Link to={`/shoproduct/${item.slug}`}>{item.title}</Link>
                                                                 </li>
                                                             )
                                                         })}
@@ -152,12 +185,23 @@ const ShopProduct = () => {
                                             <div className="block-title"><h2>Price</h2></div>
                                             <div className="block-content">
 
-                                                <Slider style={{width:"90%"}} defaultValue={1000} getAriaValueText={valuetext} marks={marks} max={100000} aria-label="Default" valueLabelDisplay="auto" />
+                                                <Slider onChange={handleChange} style={{ width: "90%" }} defaultValue={100} getAriaValueText={valuetext} marks={marks} max={10000} aria-label="Default" valueLabelDisplay="auto" sx={{
+                                                    color: 'black',
+                                                    '& .MuiSlider-thumb': {
+                                                        borderColor: 'black',
+                                                    },
+                                                    '& .MuiSlider-track': {
+                                                        borderColor: 'black',
+                                                    },
+                                                    '& .MuiSlider-rail': {
+                                                        borderColor: 'black',
+                                                    },
+                                                }} />
                                             </div>
                                         </div>
 
                                         {/* <!-- Block Product Filter --> */}
-                                        <div className="block block-product-filter clearfix my-3">
+                                        {/* <div className="block block-product-filter clearfix my-3">
                                             <div className="block-title"><h2>Size</h2></div>
                                             <div className="block-content">
                                                 <ul className="filter-items text">
@@ -166,17 +210,16 @@ const ShopProduct = () => {
                                                     <li><span>S</span></li>
                                                 </ul>
                                             </div>
-                                        </div>
+                                        </div> */}
 
                                         {/* <!-- Block Product Filter --> */}
                                         <div className="block block-product-filter clearfix my-3">
                                             <div className="block-title"><h2>Brands</h2></div>
                                             <div className="block-content">
                                                 <ul className="filter-items image">
-                                                    {products.map((brand) => {
+                                                    {brand.map((brand) => {
                                                         return (
-
-                                                            <li><span><img src={brand1} alt="Brand" /></span></li>
+                                                            <li><Link to={`/${brand.id}`}><span><img src={`${IMG_URL}/brand/` + brand.logo} alt="Brand" /></span></Link></li>
                                                         )
                                                     })}
 
@@ -222,41 +265,7 @@ const ShopProduct = () => {
                                                             </Link>
                                                         )
                                                     })}
-                                                    {/* <li className="product-item">
-                                                <a href="shop-details.html" className="product-image">
-                                                    <img src={product8} alt='product8'/>
-                                                </a>
-                                                <div className="product-content">
-                                                    <h2 className="product-title">
-                                                        <a href="shop-details.html">
-                                                            Spinning Pendant Lamp
-                                                        </a>
-                                                    </h2>
-                                                    <div className="rating small">
-                                                        <div className="star star-0"></div>
-                                                    </div>
-                                                    <span className="price">$120.00</span>
-                                                </div>
-                                            </li>
-                                            <li className="product-item">
-                                                <a href="shop-details.html" className="product-image">
-                                                    <img src={product9} alt='product9'/>
-                                                </a>
-                                                <div className="product-content">
-                                                    <h2 className="product-title">
-                                                        <a href="shop-details.html">
-                                                            Bora Armchair
-                                                        </a>
-                                                    </h2>
-                                                    <div className="rating small">
-                                                        <div className="star star-5"></div>
-                                                    </div>
-                                                    <span className="price">
-                                                        <del aria-hidden="true"><span>$200.00</span></del> 
-                                                        <ins><span>$180.00</span></ins>
-                                                    </span>
-                                                </div>
-                                            </li> */}
+
                                                 </ul>
                                             </div>
                                         </div>
@@ -281,12 +290,12 @@ const ShopProduct = () => {
                                                 <div>
                                                     <div className="">
                                                         <div className="products-count">
-                                                            Showing all 21 results
+                                                            Showing all {products.length} results
                                                         </div>
                                                     </div>
                                                     <div className="products-topbar-right">
                                                         <div className="products-sort dropdown">
-                                                            <span className="sort-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Default sorting</span>
+                                                            {/* <span className="sort-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Default sorting</span>
                                                             <ul className="sort-list dropdown-menu" x-placement="bottom-start">
                                                                 <li className="active"><a href="#">Default sorting</a></li>
                                                                 <li><a href="#">Sort by popularity</a></li>
@@ -294,7 +303,32 @@ const ShopProduct = () => {
                                                                 <li><a href="#">Sort by latest</a></li>
                                                                 <li><a href="#">Sort by price: low to high</a></li>
                                                                 <li><a href="#">Sort by price: high to low</a></li>
-                                                            </ul>
+                                                            </ul> */}
+
+                                                            <FormControl sx={{ m: 0.5, minWidth: 240 }}>
+                                                                <Select
+                                                                   
+                                                                    // onChange={handleChange}
+                                                                    displayEmpty
+                                                                    sx={{
+                                                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                                                            borderColor: 'rgba(0, 0, 0, 1)',
+                                                                          },
+                                                                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                                            borderColor: 'rgba(0, 0, 0, 1)',
+                                                                          },// Add more specific selector
+                                                                    }}
+                                                                >
+                                                                    <MenuItem value="">
+                                                                        <em>Default sorting</em>
+                                                                    </MenuItem>
+                                                                    <MenuItem value={10}>Sort by popularity</MenuItem>
+                                                                    <MenuItem value={20}>Sort by average rating</MenuItem>
+                                                                    <MenuItem value={30}>Sort by latest</MenuItem>
+                                                                    <MenuItem value={40}>Sort by price: low to high</MenuItem>
+                                                                    <MenuItem value={50}>Sort by price: high to low</MenuItem>
+                                                                </Select>
+                                                            </FormControl>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -307,45 +341,10 @@ const ShopProduct = () => {
                                             <div className="tab-pane fade show active" id="layout-grid" role="tabpanel">
                                                 <div className="products-list grid">
                                                     <div className="row">
-                                                        {products?.map((product) => {
-                                                            //     return (
-                                                            //     <div className="col-xl-4 col-lg-4 col-md-4 col-sm-6">
-                                                            //     <div className="products-entry clearfix product-wapper">
-                                                            //         <div className="products-thumb">
-                                                            //             <div className="product-lable">
-                                                            //                 <div className="hot">Hot</div>
-                                                            //             </div>
-                                                            //             <div className="product-thumb-hover">
-                                                            //                 <a href="shop-details.html">
-                                                            //                     <img width="600" height="600" src={product6_2} className="post-image" alt=""/>
-                                                            //                     <img width="600" height="600" src={product4_2} className="hover-image back" alt=""/>
-                                                            //                 </a>
-                                                            //             </div>		
-                                                            //             <div className="product-button">
-                                                            //                 <div className="btn-add-to-cart" data-title="Add to cart">
-                                                            //                     <a rel="nofollow" href="#" className="product-btn button">Add to cart</a>
-                                                            //                 </div>
-                                                            //                 <div className="btn-wishlist" data-title="Wishlist">
-                                                            //                     <button className="product-btn">Add to wishlist</button>
-                                                            //                 </div>
-                                                            //             </div>
-                                                            //         </div>
-                                                            //         <div className="products-content">
-                                                            //             <div className="contents text-center">
-                                                            //                 <h3 className="product-title"><a href="shop-details.html">{product.title}</a></h3>
-                                                            //                 {product.disc_price ? (<span className="price">
-                                                            //                         <del aria-hidden="true"><span>$200.00</span></del> 
-                                                            //                          <ins><span>$180.00</span></ins>
-                                                            //                 </span>) :
-                                                            //                 (<span className="price">{product.price  }</span>) 
-                                                            //                 }
-                                                            //             </div>
-                                                            //         </div>
-                                                            //     </div>
-                                                            // </div>
-                                                            //     )
+                                                        {products?.filter((item)=>(item.disc_price > value)).map((product) => {
+                                                   
                                                             return (
-                                                                <ProductCard proid={product.proid} title={product.product_title} disc_price={product.disc_price} price={product.price} image1={product.image1} image2={product.image2} trending={product.trending} catid={product.catid} slug={product.slug} />
+                                                                <ProductCard proid={product.proid} title={product.product_title} disc_price={product.disc_price} price={product.disc_price} image1={product.image1} image2={product.image2} trending={product.trending} catid={product.catid} slug={product.slug} v_id={product.v_id} />
                                                             )
                                                         })
                                                         }
@@ -769,7 +768,7 @@ const ShopProduct = () => {
                                                 </div>
                                             </div>
                                         </div>
-
+{/* 
                                         <nav className="pagination">
                                             <ul className="page-numbers">
                                                 <li><a className="prev page-numbers" href="#">Previous</a></li>
@@ -778,7 +777,8 @@ const ShopProduct = () => {
                                                 <li><a className="page-numbers" href="#">3</a></li>
                                                 <li><a className="next page-numbers" href="#">Next</a></li>
                                             </ul>
-                                        </nav>
+                                        </nav> */}
+
                                     </div>
                                 </div>
                             </div>

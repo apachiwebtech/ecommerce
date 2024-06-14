@@ -4,7 +4,7 @@ import img1 from "../assets/images/product_default_image.jpg";
 import EditIcon from "@mui/icons-material/Edit";
 import InnerHeader from './InnerHeader';
 import axios from 'axios';
-import { BASE_URL, IMG_URL } from './BaseUrl';
+import { BASE_URL, IMG_URL } from '../AdminComponent/BaseUrl';
 import { Autocomplete, TextField } from '@mui/material';
 import decryptedUserId from '../Utils/UserID';
 import DeleteIcon from "@mui/icons-material/Delete";

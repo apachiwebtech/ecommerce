@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 // import logo from '../assets/images/logo.svg'
 import axios from 'axios'
-import { BASE_URL } from './BaseUrl'
+import { BASE_URL, IMG_URL } from '../AdminComponent/BaseUrl';
 import md5 from 'js-md5'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';

@@ -26,6 +26,10 @@ const InnerHeader = () => {
                 return 'Vendor User';
             case '/vendor/addProduct/:update_id':
                 return 'Add Product';
+            case '/vendor/addbrand':
+                return 'Add Brand';
+            case '/vendor/productstock':
+                return 'Product Stock';
          
 
             default:

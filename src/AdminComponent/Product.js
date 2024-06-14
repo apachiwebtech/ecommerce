@@ -51,7 +51,7 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 const Product = () => {
   const [cat, setCatData] = useState([])
   const [error, setError] = useState({})
-  const [group ,setGroupData] = useState([])
+  const [group, setGroupData] = useState([])
   const [selectedOption, setSelectedCat] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedOptionvendor, setSelectedVendor] = useState(null);
@@ -72,7 +72,7 @@ const Product = () => {
     price: "" || uid.price,
     discountedprice: "" || uid.disc_price,
     description: "" || uid.description,
-    slug : "" || uid.slug,
+    slug: "" || uid.slug,
   });
 
   useEffect(() => {
@@ -82,7 +82,7 @@ const Product = () => {
       price: uid.price,
       discountedprice: uid.disc_price,
       description: uid.description,
-      slug : uid.slug
+      slug: uid.slug
     })
   }, [uid])
 
@@ -139,9 +139,9 @@ const Product = () => {
 
     axios.post(`${BASE_URL}/product_update`, { u_id: update_id })
       .then((res) => {
-           
-          setUid(res.data[0])
-        
+
+        setUid(res.data[0])
+
 
       })
       .catch((err) => {
@@ -207,23 +207,23 @@ const Product = () => {
 
   async function getCatData() {
     axios.get(`${BASE_URL}/category_data`)
-        .then((res) => {
-            setCatData(res.data)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-}
+      .then((res) => {
+        setCatData(res.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
 
-async function getsubcatData() {
-  axios.get(`${BASE_URL}/subcategory_data`)
+  async function getsubcatData() {
+    axios.get(`${BASE_URL}/subcategory_data`)
       .then((res) => {
         setsubcategory(res.data)
       })
       .catch((err) => {
-          console.log(err)
+        console.log(err)
       })
-}
+  }
 
 
 
@@ -234,11 +234,11 @@ async function getsubcatData() {
     if (update_id !== ":update_id") {
       getUpdateData()
     }
-    getGroupData() 
+    getGroupData()
     getBrandData()
     getVendordata()
     getCatData()
-    getsubcatData() 
+    getsubcatData()
   }, [update_id])
 
 
@@ -266,7 +266,7 @@ async function getsubcatData() {
       selectedVendorId(uid.v_id)
     }
 
-  }, [uid, vendor,vendor_id]);
+  }, [uid, vendor, vendor_id]);
 
   // console.log(vendor_id,"dd")
 
@@ -285,7 +285,7 @@ async function getsubcatData() {
       selectedBrandId(uid.b_id);
     }
 
-  }, [uid, brand,brand_id]);
+  }, [uid, brand, brand_id]);
 
   // console.log(brand_id,"juu")
 
@@ -310,8 +310,8 @@ async function getsubcatData() {
 
   const HandleGroupChange = (selectedValue) => {
 
-    const val = selectedValue.id 
-   
+    const val = selectedValue.id
+
     selectedgroupId(val)
     setSelectedGroup(selectedValue);
     // setSelectedSub();
@@ -331,18 +331,18 @@ async function getsubcatData() {
         console.log(err)
       })
 
-   
+
   };
 
   useEffect(() => {
     // console.log(uid,"??");
-    
+
     if (uid.groupid) {
       const selected = group.find(option => option.id === uid.groupid);
       setSelectedGroup(selected);
       selectedgroupId(uid.groupid)
     }
-    
+
   }, [uid, group]);
 
 
@@ -409,21 +409,21 @@ async function getsubcatData() {
     if (validateForm()) {
       const formdata = new FormData()
       formdata.append('uid', uid.id)
-      
+
       if (update_id == ":update_id") {
         formdata.append('v_id', vendor_id)
         formdata.append('b_id', brand_id)
         formdata.append('subcatid', subcatid)
         formdata.append('catid', catid)
         formdata.append('groupid', groupid)
-        
-      }else{
+
+      } else {
         formdata.append('v_id', vendor_id)
         formdata.append('b_id', brand_id)
-        formdata.append('catid', catid )
+        formdata.append('catid', catid)
         formdata.append('groupid', groupid)
-        formdata.append('subcatid', subcatid )
-        
+        formdata.append('subcatid', subcatid)
+
       }
       formdata.append('title', value.title)
       formdata.append('slug', value.slug)
@@ -444,6 +444,20 @@ async function getsubcatData() {
 
   }
 
+
+  const handleslugclick = () => {
+
+
+    axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') , table_name : "awt_add_product" })
+    .then((res) => {
+        setValue({
+            slug: res.data.newslug,
+            title : value.title
+        })
+    })
+
+
+}
 
 
   return (
@@ -628,7 +642,7 @@ async function getsubcatData() {
                             <div>
                               <TextField id="outlined-basic" InputLabelProps={{
                                 shrink: true,  // This makes the label move up when there's a value
-                              }} label="Enter product title.." value={value.slug} sx={{ width: "100%" }} variant="outlined" name="slug"
+                              }} label="Enter product title.." onClick={handleslugclick} value={value.slug} sx={{ width: "100%" }} variant="outlined" name="slug"
                                 onChange={onhandleChange} />
 
                             </div>
@@ -861,7 +875,7 @@ async function getsubcatData() {
                               class="uploaded-stocks-img"
                               data-bs-toggle="tooltip"
                               data-placement="top"
-                              src={value.sizeimage == ""  ? img1 : value.sizeimage}
+                              src={value.sizeimage == "" ? img1 : value.sizeimage}
                               title=""
                               alt=""
                               data-bs-original-title=""
@@ -1089,50 +1103,55 @@ async function getsubcatData() {
                       >
                         Save
                       </button>
-                      <div class="mt-3">
-                        <div class="form-group">
-                          <div class="setting-block">
-                            <div>
+                      {window.location.pathname.match(/^\/webapp\/product\/\d+$/) &&
+                        <div class="mt-3">
+                          <div class="form-group">
+                            <div class="setting-block">
+                              <div>
+                                <label
+                                  htmlFor=""
+                                  class="switch switch-sm switch-icon"
+                                >
+                                  Activate it
+                                </label>
+                              </div>
+                              <div>
+                                {isNaN(update_id) && <FormControlLabel
+                                  control={<Android12Switch disabled />}
+                                />}
+                                {uid.active == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="0" defaultChecked />} />}
+                                {uid.active == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="1" />} />}
+
+
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>}
+                        
+                      {window.location.pathname.match(/^\/webapp\/product\/\d+$/) &&
+                        <div class="mt-3">
+                          <div class="form-group">
+                            <div class="setting-block">
                               <label
                                 htmlFor=""
                                 class="switch switch-sm switch-icon"
                               >
-                                Activate it
+
+                                Approval status
                               </label>
-                            </div>
-                            <div>
                               {isNaN(update_id) && <FormControlLabel
                                 control={<Android12Switch disabled />}
                               />}
-                              {uid.active == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="0" defaultChecked />} />}
-                              {uid.active == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "active")} value="1" />} />}
 
-
+                              {uid.approve == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="0" defaultChecked />} />}
+                              {uid.approve == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="1" />} />}
 
                             </div>
                           </div>
                         </div>
-                      </div>
-                      <div class="mt-3">
-                        <div class="form-group">
-                          <div class="setting-block">
-                            <label
-                              htmlFor=""
-                              class="switch switch-sm switch-icon"
-                            >
+                      }
 
-                              Approval status
-                            </label>
-                            {isNaN(update_id) && <FormControlLabel
-                              control={<Android12Switch disabled />}
-                            />}
-
-                            {uid.approve == 1 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="0" defaultChecked />} />}
-                            {uid.approve == 0 && <FormControlLabel control={<Android12Switch onChange={(e) => handlestatus(e, uid.id, "approve")} value="1" />} />}
-
-                          </div>
-                        </div>
-                      </div>
 
                     </div>
                   </div>

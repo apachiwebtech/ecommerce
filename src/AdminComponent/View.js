@@ -310,7 +310,7 @@ const View = () => {
 
                   <label>Select Order Status</label>
 
-                  <select class="form-select mb-3 w-100" style={{ height: "40px", borderColor: "lightgrey" }} onChange={(e) => handleChange(e)} value={order.ostatus} aria-label=".form-select-lg example">
+                  <select class="form-select mb-3 w-100" style={{ height: "40px", borderColor: "lightgrey" }} onChange={(e) => handleChange(e)} value={orderstatus || order.ostatus} aria-label=".form-select-lg example">
 
                     <option value="pending">Pending</option>
                     <option value="Confirm">Confirm</option>

@@ -13,13 +13,16 @@ import Loader from './Loader';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoleData } from '../Store/Role/role-action';
+import CloseIcon from '@mui/icons-material/Close';
 
 const AddProductImg = () => {
     const [value, setValue] = useState({
         image1: "",
         image2: "",
         image3: "",
-        image4: ""
+        image4: "",
+        title: "",
+        colorcode: "",
     })
 
     const [image1, setImage1] = useState()
@@ -34,6 +37,7 @@ const AddProductImg = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const { product_id, product_name } = useParams()
     const [error, setError] = useState({})
+    const [error2, setError2] = useState({})
 
     const validateForm = () => {
         let isValid = true
@@ -55,6 +59,22 @@ const AddProductImg = () => {
     }
 
 
+    const validateForm2 = () => {
+        let isValid = true
+        const newErrors2 = {}
+
+
+        if (!value.title) {
+            isValid = false;
+            newErrors2.title = "title is require"
+        }
+
+
+        setError2(newErrors2)
+        return isValid
+    }
+
+
     async function getColorData() {
         axios.get(`${BASE_URL}/color_data`)
             .then((res) => {
@@ -65,6 +85,7 @@ const AddProductImg = () => {
                 console.log(err)
             })
     }
+
     async function getProductimgData() {
 
         const data = {
@@ -226,6 +247,37 @@ const AddProductImg = () => {
 
     }
 
+    const handleSubmit2 = (e) => {
+
+
+        if (validateForm2()) {
+
+            const data = {
+                title: value.title,
+                colorcode: value.colorcode,
+                user_id: decryptedUserId(),
+
+            }
+
+
+            axios.post(`${BASE_URL}/add_color`, data)
+                .then((res) => {
+                    alert(res.data)
+                    getColorData()
+                    setValue({
+                        title:"",
+                        colorcode :""
+                    })
+
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+        }
+
+    }
+
     const HandleChange = (selectedValue) => {
         if (selectedValue) {
             console.log(selectedValue, "::::")
@@ -251,7 +303,9 @@ const AddProductImg = () => {
         dispatch(getRoleData(roledata))
     }, [])
 
-
+    const onhandleChange = (e) => {
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    }
 
 
 
@@ -330,15 +384,55 @@ const AddProductImg = () => {
                                                             renderInput={(params) => <TextField label="Select Colour" {...params} />}
                                                             onChange={(event, value) => HandleChange(value)}
                                                             name="color"
-
                                                         />
                                                         {error.color_id && <span className='text-danger'>{error.color_id}</span>}
                                                     </div>
+                                                    <div class="form-group col-lg-6 mt-4">
+
+
+                                                        <button className='btn btn-primary mt-2 float-right' type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Colour +</button>
+
+                                                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                   
+                                                                        <CloseIcon style={{width:"30px"}} type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <form class="forms-sample py-3" >
+
+                                                                            <div class="form-group">
+                                                                                <label for="exampleInputUsername1">Title <span className='text-danger'>*</span></label>
+                                                                                <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
+                                                                                {error2.title && <span className='text-danger'>{error2.title}</span>}
+                                                                            </div>
+
+                                                                            <div class="form-group ">
+                                                                                <label for="exampleTextarea1">Color code <span className='text-danger'>*</span></label>                                    
+                                                                                <input type="color" class="form-control" value={value.colorcode} name='colorcode' onChange={onhandleChange} />
+                                                                            </div>
+
+                                                                            {roleaccess > 2 && <> 
+                                                                             <button type="button" onClick={handleSubmit2} class="btn btn-primary mr-2" data-bs-dismiss="modal">Submit</button>
+
+                                                                                {/* <button type='button' onClick={() => {
+                                                                                    window.location.reload()
+                                                                                }} class="btn btn-light">Cancel</button> */}
+                                                                                </>
+                                                                                
+                                                                                }
+
+                                                                        </form>
+                                                                    </div>
+                                                                 
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
                                                 </div>
-
-
-
 
 
                                                 <div className='row'>
@@ -417,6 +511,7 @@ const AddProductImg = () => {
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-lg-4 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
@@ -440,10 +535,10 @@ const AddProductImg = () => {
                                                             <td>{item.image1 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image1} alt='' /> : <></>}{item.image2 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image2} alt='' /> : <></>}{item.image3 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image3} alt='' /> : <></>}{item.image4 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image4} alt='' /> : <></>}</td>
                                                             <td>{item.title}</td>
                                                             <td>
-                                                                {roleaccess > 3 &&    <Link>
+                                                                {roleaccess > 3 && <Link>
                                                                     <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
-                                                                </Link> }
-                                                             
+                                                                </Link>}
+
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
                                                                 <div className='confirm-delete'>

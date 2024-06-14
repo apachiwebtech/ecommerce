@@ -137,21 +137,14 @@ const Group = () => {
 
 
 
-
+console.log(value.title, "rrr")
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
         if (validateForm()) {
 
-            // const data = {
-            //     title: value.title,
-            //     description: value.description,
-            //     slug: value.slug,
-            //     user_id: decryptedUserId(),
-            //     u_id: uid.id,
-            //     image :
-            // }
+    
 
             const formdata = new FormData();
 
@@ -169,7 +162,16 @@ const Group = () => {
                     getcatData()
 
                     setLoader(false)
-                    window.location.pathname = '/webapp/group'
+                    // window.location.pathname = '/webapp/group'
+
+                    setValue({
+                        title: "" ,
+                        slug: "",
+                        description: "",
+                    })
+
+                    setImage('')
+                    setUid([])
 
                 })
                 .catch((err) => {
@@ -245,13 +247,14 @@ const Group = () => {
     }, [])
 
 
-    const handleclick = () => {
+    const handleslugclick = () => {
 
 
-        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') })
+        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') , table_name : "awt_group" })
             .then((res) => {
                 setValue({
-                    slug: res.data.newslug
+                    slug: res.data.newslug,
+                    title : value.title
                 })
             })
 
@@ -281,8 +284,7 @@ const Group = () => {
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
 
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onClick={handleclick} onChange={onhandleChange} />
-
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onClick={handleslugclick} onChange={onhandleChange} />
 
                                             {error.slug && <span className='text-danger'>{error.slug}</span>}
 

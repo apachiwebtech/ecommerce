@@ -40,13 +40,13 @@ const DetailPage = () => {
 	const { productslug } = useParams()
 	const [productdata, setProductdata] = useState([])
 	const [image, setProductImg] = useState([])
-	const [value, setValue] = useState(0)
+	const [value, setValue] = useState(1)
 	const [colorimg, setImgcolordata] = useState([]);
-	
-    const [open, setOpen] = useState(false);
+	const [open, setOpen] = useState(false);
+
 	const handleToggle = (e) => {
-        setOpen(!open);
-    }
+		setOpen(!open);
+	}
 	const notify = () => toast("Product added to the cart");
 
 
@@ -63,7 +63,7 @@ const DetailPage = () => {
 				setProductdata(res.data)
 				if (res.data) {
 					getProductImage(res.data[0].id)
-				
+
 				}
 
 				// setproductid(res.data[0].id)
@@ -92,7 +92,7 @@ const DetailPage = () => {
 			})
 	}
 
-	const getcolorimgData = async ( colorid) => {
+	const getcolorimgData = async (colorid) => {
 		const data = {
 			colorid: colorid,
 		}
@@ -105,37 +105,39 @@ const DetailPage = () => {
 			})
 	}
 
+	async function getstock() {
+		axios.post(`${BASE_URL}/getstock`)
+	}
+
 	useEffect(() => {
 		getProductDetails()
 
-	}, [])
+	}, [productslug])
 
 
-	console.log(colorimg?.image1 , "^^^^")
+	console.log(colorimg?.image1, "^^^^")
 
-    const dispatch = useDispatch();
-    const addWishList = (data) => {
+	const dispatch = useDispatch();
+	const addWishList = (data) => {
 
-        const id = data;
-        const userId = custdecryptedUserId();
-        const wishData = {
-            id,
-            userId,
-        }
+		const id = data;
+		const userId = custdecryptedUserId();
+		const wishData = {
+			id,
+			userId,
+		}
 
-        dispatch(addToWishList(wishData));
+		dispatch(addToWishList(wishData));
 
-    }
+	}
 
-
-	console.log(value)
 
 	return (
 
 		<div>
 			<div id="site-main" class="site-main">
 				<div id="main-content" class="main-content">
-					<ToastContainer theme="dark"     position="bottom-right"/>
+					<ToastContainer theme="dark" position="bottom-right" />
 					<div id="primary" class="content-area">
 						{productdata?.map((item) => {
 							return (
@@ -189,7 +191,7 @@ const DetailPage = () => {
 																						<span class="img-thumbnail-scroll">
 																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
 																						</span>
-																					</div> 
+																					</div>
 
 
 
@@ -206,16 +208,9 @@ const DetailPage = () => {
 																		<div class="scroll-image main-image">
 																			<div class="image-additional slick-carousel" data-asnavfor=".image-thumbnail" data-fade="true" data-columns4="1" data-columns3="1" data-columns2="1" data-columns1="1" data-columns="1" data-nav="true">
 																				<Slider {...settings}>
-																					{/* {colorimg.map((ele) => {
-																						return (
-																							<div class="img-item slick-slide">
-																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + ele.image1} alt="" />
-																							</div>
 
-																						)
-																					})} */}
 
-																					 <div class="img-item slick-slide">
+																					<div class="img-item slick-slide">
 																						<span class="img-thumbnail-scroll">
 																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image1} alt="" />
 																						</span>
@@ -234,7 +229,7 @@ const DetailPage = () => {
 																						<span class="img-thumbnail-scroll">
 																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
 																						</span>
-																					</div> 
+																					</div>
 																				</Slider>
 																			</div>
 																		</div>
@@ -262,7 +257,7 @@ const DetailPage = () => {
 																<div class="variations">
 																	<table cellspacing="0">
 																		<tbody>
-																			<tr>
+																			{/* <tr>
 																				<td class="label">Size</td>
 																				<td class="attributes">
 																					<ul class="text">
@@ -271,7 +266,7 @@ const DetailPage = () => {
 																						<li><span>S</span></li>
 																					</ul>
 																				</td>
-																			</tr>
+																			</tr> */}
 																			<tr>
 																				<td class="label">Color</td>
 																				<td class="attributes">
@@ -284,7 +279,7 @@ const DetailPage = () => {
 																										style={{ background: `${item.colorcode}`, width: "50px", height: "50px" }}
 																										value={item.colorcode}
 																										onClick={(e) => {
-																											getcolorimgData( item.id)
+																											getcolorimgData(item.id)
 
 																										}}
 																									></button>
@@ -299,52 +294,73 @@ const DetailPage = () => {
 																		</tbody>
 																	</table>
 																</div>
+
 																<div class="buttons">
-																	<div class="add-to-cart-wrap">
+																	<div class="btn-wishlist d-block" data-title="Wishlist">
+																		{/* <button class="product-btn">Add to wishlist</button> */}
+																		{!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
+
+																			handleToggle()
+																		}}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
+																			addWishList(item.id)
+																			wishify()
+
+
+																		}}>Add to wishlist</button>}
+																	</div>
+
+																	{item.stock == null || item.stock == 0 ? <div>
+																		<div class="button  text-danger" >Out Of Stock</div>
+
+																	</div> : <div class="add-to-cart-wrap ">
 																		<div class="quantity">
-																			<button type="button" onClick={() => { setValue(value + 1) }} class="plus">+</button>
+																			<button type="button" onClick={() => {
+
+																				if (value < item.stock) {
+																					setValue(value + 1)
+																				}
+
+																			}} class="plus">+</button>
 
 																			<input type="number" class="qty" step="1" min="0" max="" name="quantity" value={value} title="Qty" size="4" placeholder="" inputmode="numeric" autocomplete="off" />
 
 																			<button type="button" onClick={() => {
-																				if (value > 0) {
+																				if (value > 1) {
 																					setValue(value - 1)
 																				}
 																			}
-																			} class="minus">-</button>
+																			} class="minus" >-</button>
 																		</div>
 																		<div class="btn-add-to-cart">
 																			<div class="button" onClick={() => {
-																				addToCart(item.id, item.title, item.catid, item.price,dispatch , value)
-																				notify();
 
-																			}} >Add to cart</div>
+																				if (item.stock == null) {
+																					alert("out of stock")
+																				} else {
+																					addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, value, item.v_id)
+																					notify();
+																				}
+
+
+																			}}  >Add to cart</div>
 																		</div>
-																	</div>
-																	<div class="btn-quick-buy" data-title="Wishlist">
-																		<button class="product-btn">Buy It Now</button>
-																	</div>
-																	<div class="btn-wishlist" data-title="Wishlist">
-																		{/* <button class="product-btn">Add to wishlist</button> */}
-																		{!Cookies.get(`custuserid`)?   <button class="product-btn" onClick={() => {
-                                                                        
-																		handleToggle()
-																	}}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
-																		addWishList(item.id)
-																		wishify()
-																	   
-																 
-																	}}>Add to wishlist</button>}
-																	</div>
+																	</div>}
 
-																
+
+
+																	{/* <div class="btn-quick-buy" data-title="Wishlist">
+																		<button class="product-btn">Buy It Now</button>
+																	</div> */}
+
+
+
 																	{/* <div class="btn-compare" data-title="Compare">
 																		<button class="product-btn">Compare</button>
 																	</div> */}
 																</div>
 																<div class="product-meta">
 																	<span class="sku-wrapper">SKU: <span class="sku">D2300-3-2-2</span></span>
-																	<span class="posted-in">Category: <Link href="shop-grid-left.html" rel="tag">Furniture</Link></span>
+																	<span class="posted-in">Category: <Link href="shop-grid-left.html" rel="tag">{item.category}</Link></span>
 																	<span class="tagged-as">Tags: <Link href="shop-grid-left.html" rel="tag">Hot</Link>, <Link href="shop-grid-left.html" rel="tag">Trend</Link></span>
 																</div>
 																<div class="social-share">

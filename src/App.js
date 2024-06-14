@@ -16,18 +16,13 @@ import Header from './AdminComponent/Header';
 import Orders from './AdminComponent/Orders';
 import PageNotFound from './AdminComponent/PageNotFound';
 import Product from './AdminComponent/Product';
+import VProduct from './VendorComponents/Product'
 import ProductApproval from './AdminComponent/ProductApproval';
 import ProductCatalog from './AdminComponent/ProductCatalog';
-import ProductOption from './AdminComponent/ProductOption';
-import ProductTag from './AdminComponent/ProductTag';
 import ReviewComment from './AdminComponent/ReviewComment';
-import SellersProductInventory from './AdminComponent/SellersProductInventory';
 import SettingPages from './AdminComponent/SettingPages';
-import Shop from './AdminComponent/Shop';
 import SocialMedia from './AdminComponent/SocialMedia';
 import SubCatetgory from './AdminComponent/SubCategory';
-import Testimonial from './AdminComponent/Testimonials';
-import ThresholdProduct from './AdminComponent/ThresholdProduct';
 import VendorForm from './AdminComponent/VendorForm';
 import VendorMaster from './AdminComponent/VendorMaster';
 import View from './AdminComponent/View';
@@ -44,6 +39,7 @@ import '../src/MainComponent/Library/feather-font/css/iconfont.css'
 import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
 import './Responsive.css';
 import './Style.css';
+import Productapprovalview from './AdminComponent/Productapprovalview'
 import Group from './AdminComponent/Group';
 import AddProductImg from './AdminComponent/AddProductImg';
 import ShopCart from './MainComponent/Pages/ShopCart';
@@ -84,6 +80,28 @@ import BrandRequest from './AdminComponent/BrandRequest';
 import BlogCategory from './AdminComponent/BlogCategory';
 import BlogPosts from './AdminComponent/BlogPosts';
 import Faq from './AdminComponent/Faq';
+import AddBrand from './VendorComponents/AddBrand';
+import Deleteduser from './AdminComponent/Deleteduser';
+import Adminuserform from './AdminComponent/Adminuserform';
+import Contact from './MainComponent/Pages/Contact';
+import VendorRegister from './MainComponent/Pages/VendorRegistration';
+import VendorRequest from './AdminComponent/VendorRequest';
+import Returnrequest from './AdminComponent/Returnrequest';
+import Returnrequestview from './AdminComponent/Returnrequestview';
+import CancellationReasons from './AdminComponent/CancellationReasons';
+import Seo from './AdminComponent/Seo';
+import SeoForm from './AdminComponent/SeoForm';
+import SiteFaq from './MainComponent/Pages/Faq';
+import AboutUS from './AdminComponent/AboutUs';
+import SalesReport from './AdminComponent/SalesReport';
+import ProductTag from './AdminComponent/ProductTag';
+import About from './MainComponent/Pages/About';
+import ImageGallery from './MainComponent/Pages/ImageGallery';
+import ProductStock from './VendorComponents/ProductStock';
+import custdecryptedUserId from './Utils/CustUserid';
+import ThankYou from './MainComponent/Pages/ThankYouPage';
+
+
 
 
 const Router = createBrowserRouter([
@@ -95,6 +113,7 @@ const Router = createBrowserRouter([
     path: '/vendorlog',
     element: <VendorLogin />
   },
+
   {
     path: '/webapp/vendorform/:id',
     element: <VendorForm />
@@ -120,6 +139,10 @@ const Router = createBrowserRouter([
         element: <ShopCart />
       },
       {
+        path: '/:brand_id',
+        element: <ShopProduct />
+      },
+      {
         path: '/shopwishlist',
         element: <ShopWishlist />
       },
@@ -131,6 +154,31 @@ const Router = createBrowserRouter([
         path: '/shoproduct',
         element: <ShopProduct />
       },
+      {
+        path: '/thankyou',
+        element: <ThankYou />
+      },
+      {
+        path: '/contact',
+        element: <Contact />
+      },
+      {
+        path: '/sitefaq',
+        element: <SiteFaq />
+      },
+      {
+        path: '/about',
+        element: <About />
+      },
+      {
+        path: '/imagegallery',
+        element: <ImageGallery />
+      },
+      {
+        path: '/vendorregister',
+        element: <VendorRegister />
+      },
+    
       {
         path: '/shoproduct/:groupslug',
         element: <ShopProduct />
@@ -194,6 +242,10 @@ const Router = createBrowserRouter([
         element: <AdminUser />
       },
       {
+        path: '/webapp/adminuser/:userid',
+        element: <Adminuserform />
+      },
+      {
         path: '/webapp/category/',
         element: <Category />
       },
@@ -202,14 +254,54 @@ const Router = createBrowserRouter([
         element: <Group />
       },
       {
+        path: '/webapp/vendorrequest',
+        element: <VendorRequest />
+      },
+      {
+        path: '/webapp/returnrequest',
+        element: <Returnrequest />
+      },
+      {
+        path: '/webapp/returnrequestview/:requestid',
+        element: <Returnrequestview />
+      },
+      {
         path: '/webapp/productapproval',
         element: <ProductApproval />
+      },
+      {
+        path: '/webapp/cancelreasons',
+        element: <CancellationReasons />
       },
       {
         path: '/webapp/subcategory',
         element: <SubCatetgory />
       },
-
+      {
+        path: '/webapp/deleteduser',
+        element: <Deleteduser />
+      },
+      {
+        path: '/webapp/seo',
+        element: <Seo />
+      },
+      {
+        path: '/webapp/seo/:seoid',
+        element: <SeoForm />
+      },
+      {
+        path: '/webapp/Aboutus',
+        element: <AboutUS />
+      },
+    
+      {
+        path: '/webapp/producttag',
+        element: <ProductTag />
+      },
+      {
+        path: '/webapp/salesreport',
+        element: <SalesReport />
+      },
       {
         path: '/webapp/product/:update_id',
         element: <Product />
@@ -221,10 +313,6 @@ const Router = createBrowserRouter([
 
       },
 
-      {
-        path: '/webapp/sellersproductinventory',
-        element: <SellersProductInventory />
-      },
 
       {
         path: '/webapp/brand',
@@ -239,25 +327,9 @@ const Router = createBrowserRouter([
         element: <Orders />
       },
     
-      {
-        path: '/webapp/shop',
-        element: <Shop />
-      },
+   
 
-      {
-        path: '/webapp/productoption',
-        element: <ProductOption />
-      },
 
-      {
-        path: '/webapp/producttag',
-        element: <ProductTag />
-      },
-
-      {
-        path: '/webapp/thresholdproduct',
-        element: <ThresholdProduct />
-      },
       {
         path: '/webapp/view/:orderid',
         element: <View />
@@ -272,10 +344,7 @@ const Router = createBrowserRouter([
         path: '/webapp/reviewcomment',
         element: <ReviewComment />
       },
-      {
-        path: '/webapp/testimonial',
-        element: <Testimonial />
-      },
+   
 
       {
         path: '/webapp/socialmedia',
@@ -309,6 +378,10 @@ const Router = createBrowserRouter([
       {
         path: '/webapp/faq',
         element: <Faq />
+      },
+      {
+        path: '/webapp/productapprovalview/:productid',
+        element: <Productapprovalview />
       },
       // {
       //   path: '/webapp/addimages/:product_id',
@@ -345,11 +418,9 @@ const Router = createBrowserRouter([
         path: '/vendor/',
         element: <VendorUser />
       },
- 
-
       {
         path: '/vendor/product/:update_id',
-        element: <Product />
+        element: <VProduct />
       },
 
       {
@@ -357,8 +428,8 @@ const Router = createBrowserRouter([
         element: <VendorOrder />
       },
       {
-        path: '/vendor/shop',
-        element: <Shop />
+        path: '/vendor/productstock',
+        element: <ProductStock />
       },
       {
         path: '/vendor/productcatalog',
@@ -366,12 +437,12 @@ const Router = createBrowserRouter([
       },
 
       {
-        path: '/vendor/thresholdproduct',
-        element: <ThresholdProduct />
-      },
-      {
         path: '/vendor/view',
         element: <View />
+      },
+      {
+        path: '/vendor/addbrand',
+        element: <AddBrand />
       },
       {
         path: '/vendor/settings',
@@ -446,34 +517,6 @@ function WebApp() {
 
 
 
-  // const navigate = useNavigate();
-
-  // async function accessToken() {
-  //   axios.get(`${BASE_URL}/checkauth`, {
-  //     headers: {
-  //       'access-token': Cookies.get('token')
-  //     }
-  //   })
-  //   .then((res) => {
-  //     // console.log(res.data.status);
-
-  //     checkLocalStorageAndRedirect(res.data.status); // Pass auth value to the function
-  //   });
-  // }
-
-  // const checkLocalStorageAndRedirect = (authValue) => {
-
-  //   // console.log(authValue,"ii")
-  //   if (authValue !== 1) {
-  //     navigate('/weblog'); // Redirect to dashboard if id exists in localStorage
-  //   }
-  // };
-
-
-
-  // useEffect(() => {
-  //   accessToken();
-  // }, []); // Removed 'navigate' from the dependency array as it was causing unnecessary re-renders
 
 
   return (
@@ -503,7 +546,7 @@ function VendorApp() {
       });
   }
 
-  // axios.defaults.withCredentials = true
+
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -539,6 +582,9 @@ function App() {
 
   const [cartCount, setCartCount] = useState(0);
 
+
+
+
   async function fetchCartCount() {
     try {
       const data = {
@@ -552,7 +598,7 @@ function App() {
   };
 
 
-
+  
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -2,6 +2,7 @@ import React from 'react'
 import logo from '../../assets/frontimg/logo.png'
 import payments from '../../assets/frontimg/payments.png'
 import '../../Style.css'
+import { Link } from 'react-router-dom'
 const SiteFooter = () => {
 	const handleTop = () =>{
 		window.scrollTo(0, 0);
@@ -46,23 +47,18 @@ const SiteFooter = () => {
 											<div className="block-content">
 												<ul>
 													<li>
-														<a href="page-about.html">Sale</a>
+														<Link to='/about' >About US</Link>
 													</li>
 													<li>
-														<a href="page-about.html">Quick Ship</a>
+														<Link to='/contact'>Contact US</Link>
 													</li>
 													<li>
-														<a href="page-about.html">New Designs</a>
+														<Link to='/sitefaq' >Faq</Link>
 													</li>
 													<li>
-														<a href="page-about.html">Accidental Fabric Protection</a>
+														<Link to='/imagegallery' >Image Gallery</Link>
 													</li>
-													<li>
-														<a href="page-about.html">Furniture Care</a>
-													</li>
-													<li>
-														<a href="page-about.html">Gift Cards</a>
-													</li>
+												
 												</ul>
 											</div>
 										</div>

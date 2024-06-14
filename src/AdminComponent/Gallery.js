@@ -33,11 +33,11 @@ const Gallery = () => {
 
         if (!value.title) {
             isValid = false;
-            newErrors.email = "Email is required";
+            newErrors.title = "Title is required";
         }
         if (!image) {
             isValid = false;
-            newErrors.firstname = "FirstName is required"
+            newErrors.image = "Image is required"
         }
 
 
@@ -136,6 +136,12 @@ const Gallery = () => {
                     getGalleryData()
                     if (res.data) {
                         //    navigate('/vendormaster')
+                        setValue({
+                          title : ""
+                        })
+
+                        setUpdateData([])
+                        setImage(null)
                     }
                 })
                 .catch((err) => {
