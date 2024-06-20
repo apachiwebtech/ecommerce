@@ -14,7 +14,8 @@ import custdecryptedUserId from '../../Utils/CustUserid';
 import { addToWishList } from '../../Store/WishList/wishlist-actions';
 import Cookies from 'js-cookie';
 import LoginForm from '../Authentication/LoginForm';
-
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import the carousel styles
+import { Carousel } from 'react-responsive-carousel';
 const DetailPage = () => {
 
 
@@ -28,8 +29,10 @@ const DetailPage = () => {
 		slidesToScroll: 1
 	};
 	var settings2 = {
+
 		dots: false,
 		infinite: true,
+		dotsClass: "slick-dots slick-thumb",
 		vertical: true,
 		arrows: true,
 		speed: 500,
@@ -43,7 +46,7 @@ const DetailPage = () => {
 	const [value, setValue] = useState(1)
 	const [colorimg, setImgcolordata] = useState([]);
 	const [open, setOpen] = useState(false);
-
+	const [r_stock, setReservestock] = useState()
 	const handleToggle = (e) => {
 		setOpen(!open);
 	}
@@ -60,9 +63,11 @@ const DetailPage = () => {
 
 		axios.post(`${BASE_URL}/getproductDetails`, data)
 			.then((res) => {
-				setProductdata(res.data)
+				setProductdata(res.data.data)
+				setReservestock(res.data.r_stock)
+
 				if (res.data) {
-					getProductImage(res.data[0].id)
+					getProductImage(res.data.data[0].id)
 
 				}
 
@@ -105,9 +110,7 @@ const DetailPage = () => {
 			})
 	}
 
-	async function getstock() {
-		axios.post(`${BASE_URL}/getstock`)
-	}
+
 
 	useEffect(() => {
 		getProductDetails()
@@ -115,7 +118,6 @@ const DetailPage = () => {
 	}, [productslug])
 
 
-	console.log(colorimg?.image1, "^^^^")
 
 	const dispatch = useDispatch();
 	const addWishList = (data) => {
@@ -171,27 +173,35 @@ const DetailPage = () => {
 																			<div class="image-thumbnail slick-carousel slick-vertical" data-asnavfor=".image-additional" data-centermode="true" data-focusonselect="true" data-columns4="5" data-columns3="4" data-columns2="4" data-columns1="4" data-columns="4" data-nav="true" data-vertical="&quot;true&quot;" data-verticalswiping="&quot;true&quot;">
 																				<Slider {...settings2}>
 
-
-																					<div class="img-item slick-slide">
+																					{colorimg.image1 && <div class="img-item slick-slide">
 																						<span class="img-thumbnail-scroll">
 																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image1} alt="" />
 																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image2} alt="" />
-																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image3} alt="" />
-																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
-																						</span>
-																					</div>
+																					</div>}
+																					{colorimg.image2 &&
+																						<div class="img-item slick-slide">
+																							<span class="img-thumbnail-scroll">
+																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image2} alt="" />
+																							</span>
+																						</div>
+																					}
+																					{colorimg.image3 &&
+																						<div class="img-item slick-slide">
+																							<span class="img-thumbnail-scroll">
+																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image3} alt="" />
+																							</span>
+																						</div>
+																					}
+
+																					{colorimg.image3 &&
+																						<div class="img-item slick-slide">
+																							<span class="img-thumbnail-scroll">
+																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
+																							</span>
+																						</div>
+																					}
+
+
 
 
 
@@ -206,31 +216,43 @@ const DetailPage = () => {
 																	<div class="col-md-10">
 
 																		<div class="scroll-image main-image">
-																			<div class="image-additional slick-carousel" data-asnavfor=".image-thumbnail" data-fade="true" data-columns4="1" data-columns3="1" data-columns2="1" data-columns1="1" data-columns="1" data-nav="true">
-																				<Slider {...settings}>
+																			<div class="image-additional" data-asnavfor=".image-thumbnail" data-fade="true" data-columns4="1" data-columns3="1" data-columns2="1" data-columns1="1" data-columns="1" data-nav="true">
+																				<Slider {...settings} >
 
+																					{colorimg?.image1 &&
+																						<div class="img-item ">
+																							<span class="img-thumbnail-scroll">
+																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image1} alt="" />
+																							</span>
+																						</div>
+																					}
 
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image1} alt="" />
-																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image2} alt="" />
-																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image3} alt="" />
-																						</span>
-																					</div>
-																					<div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
-																						</span>
-																					</div>
+																					{colorimg.image2 &&
+																						<div class="img-item ">
+																							<span class="img-thumbnail-scroll">
+																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image2} alt="" />
+																							</span>
+																						</div>
+																					}
+
+																					{colorimg.image3 &&
+																						<div class="img-item ">
+																							<span class="img-thumbnail-scroll">
+																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image3} alt="" />
+																							</span>
+																						</div>
+																					}
+
+																					{colorimg.image4 &&
+																						<div class="img-item ">
+																							<span class="img-thumbnail-scroll">
+																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
+																							</span>
+																						</div>
+																					}
+
 																				</Slider>
+
 																			</div>
 																		</div>
 
@@ -309,14 +331,14 @@ const DetailPage = () => {
 																		}}>Add to wishlist</button>}
 																	</div>
 
-																	{item.stock == null || item.stock == 0 ? <div>
+																	{item.stock == null || item.stock == 0 || item.stock == r_stock ? <div>
 																		<div class="button  text-danger" >Out Of Stock</div>
 
 																	</div> : <div class="add-to-cart-wrap ">
 																		<div class="quantity">
 																			<button type="button" onClick={() => {
 
-																				if (value < item.stock) {
+																				if (value < item.stock - r_stock) {
 																					setValue(value + 1)
 																				}
 
@@ -337,7 +359,7 @@ const DetailPage = () => {
 																				if (item.stock == null) {
 																					alert("out of stock")
 																				} else {
-																					addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, value, item.v_id)
+																					addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, value, item.v_id, item.gst)
 																					notify();
 																				}
 

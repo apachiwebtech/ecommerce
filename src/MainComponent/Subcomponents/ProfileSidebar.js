@@ -11,11 +11,13 @@ const ProfileSidebar = () => {
         Cookies.remove('custuserid')
         Cookies.remove('orderid')
     }
+
+    const name = localStorage.getItem('Name')
     return (
         <div className='shadow-sm p-3 mb-5 bg-body rounded'>
             <div className='py-3'>
                 {/* <p className=''>Guest User</p> */}
-                <h4 className=''> <Icon path={mdiAccount} size={1} /> satyam vilas satkar</h4>
+                <h4 className=''> <Icon path={mdiAccount} size={1} />{name}</h4>
             </div>
             <div className='bg-light py-2'>
                 <p className='px-2'>DashBoard</p>

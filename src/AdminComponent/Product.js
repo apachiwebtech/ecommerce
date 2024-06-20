@@ -73,6 +73,7 @@ const Product = () => {
     discountedprice: "" || uid.disc_price,
     description: "" || uid.description,
     slug: "" || uid.slug,
+    gst:"" || uid.gst
   });
 
   useEffect(() => {
@@ -82,7 +83,8 @@ const Product = () => {
       price: uid.price,
       discountedprice: uid.disc_price,
       description: uid.description,
-      slug: uid.slug
+      slug: uid.slug,
+      gst : uid.gst
     })
   }, [uid])
 
@@ -125,6 +127,10 @@ const Product = () => {
     if (!value.price) {
       isValid = false
       newErrors.price = "price is required"
+    }
+    if (!value.gst) {
+      isValid = false
+      newErrors.gst = "gst is required"
     }
     // if (!sizeimage) {
     //   isValid = false
@@ -418,6 +424,7 @@ const Product = () => {
         formdata.append('groupid', groupid)
 
       } else {
+
         formdata.append('v_id', vendor_id)
         formdata.append('b_id', brand_id)
         formdata.append('catid', catid)
@@ -425,11 +432,13 @@ const Product = () => {
         formdata.append('subcatid', subcatid)
 
       }
+      
       formdata.append('title', value.title)
       formdata.append('slug', value.slug)
       formdata.append('price', value.price)
       formdata.append('d_price', value.discountedprice)
       formdata.append('description', value.description)
+      formdata.append('gst', value.gst)
       formdata.append('sizeimage', sizeimage)
       formdata.append('specification', specification)
       formdata.append('user_id', decryptedUserId())
@@ -794,12 +803,24 @@ const Product = () => {
                         <div class="col-md-6">
                           <div class="form-group ">
                             <label for="slug">Discounted Price </label>
-
+                      
                             <div>
 
                               <TextField label="Enter price.." InputLabelProps={{
                                 shrink: true,  // This makes the label move up when there's a value
                               }} value={value.discountedprice} variant="outlined" sx={{ width: "100%" }} name="discountedprice" onChange={onhandleChange} />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="slug">Add gst % <span class="text-danger">*</span> </label>
+                            {error.gst && <span className="text-danger">{error.gst}</span>}
+                            <div>
+                              <TextField label="Enter percentage.." InputLabelProps={{
+                                shrink: true,  // This makes the label move up when there's a value
+                              }} value={value.gst} variant="outlined" sx={{ width: "100%" }} name="gst" onChange={onhandleChange} />
                             </div>
                           </div>
                         </div>

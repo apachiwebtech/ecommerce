@@ -154,7 +154,7 @@ const ProductCard = (props) => {
                     <div className="product-button">
                         <div className="btn-add-to-cart" data-title="Add to cart">
                             <button rel="nofollow" className="product-btn button" onClick={() => {
-                                addToCart(props.proid, props.title, props.catid, props.price , dispatch,"1", props.v_id)
+                                addToCart(props.proid, props.title, props.catid, props.price , dispatch,"1", props.v_id, props.gst)
                                 notify()
 
                             }} >Add to cart</button>

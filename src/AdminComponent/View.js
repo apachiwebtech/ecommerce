@@ -2,13 +2,16 @@ import ArrowCircleLeftSharpIcon from "@mui/icons-material/ArrowCircleLeftSharp";
 import CreditCardRoundedIcon from '@mui/icons-material/CreditCardRounded';
 import InsertDriveFileOutlinedIcon from "@mui/icons-material/InsertDriveFileOutlined";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BASE_URL, IMG_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
-
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import MyDocument from "./MyDocument";
 const View = () => {
   const [order, setOrder] = useState([])
   const [cart, setCart] = useState([])
@@ -61,7 +64,7 @@ const View = () => {
   const onhandleChange = (orderid) => {
     const data = {
       order_id: orderid,
-      order_status : orderstatus
+      order_status: orderstatus
     }
     axios.post(`${BASE_URL}/order_status_update`, data)
       .then((res) => {
@@ -75,7 +78,12 @@ const View = () => {
 
   }
 
+  const totalcgst = cart.reduce((total, row) => total + Number(row.cgst), 0);
+  const totalsgst = cart.reduce((total, row) => total + Number(row.sgst), 0);
 
+  const totalgst = totalcgst + totalsgst
+
+  const finalamt = totalgst + Number(order.totalamt)
 
   return (
     <div class="container-fluid page-body-wrapper col-lg-10">
@@ -192,7 +200,7 @@ const View = () => {
           </div>
 
 
-          <div class="row mt-4">
+          <div class="row mt-4" >
             <div class="col-lg-9">
               <div>
                 <div class="card" style={{ height: "min-content" }}>
@@ -242,8 +250,17 @@ const View = () => {
                         </tbody>
                       </table>
                     </div>
-                    <div>
+                    {/* <div>
                       <button className="btn btn-info">Print Invoice</button>
+                    </div> */}
+                    <div>
+                      <PDFDownloadLink className="btn btn-info" document={<MyDocument orderid={orderid} />} fileName={order.oderno}>
+                        {({ blob, url, loading, error }) =>
+                          loading ? 'Loading document...' : 'Print Invoice'
+                        }
+                      </PDFDownloadLink>
+
+
                     </div>
 
                   </div>
@@ -254,7 +271,7 @@ const View = () => {
 
             <div className="col-lg-3">
 
-              <div class="card" style={{ height: "300px" }}>
+              <div class="card" style={{ height: "400px" }}>
                 <div class="card-head">
                   <div class="card-head-label">
                     <h3
@@ -266,7 +283,7 @@ const View = () => {
                   </div>
                 </div>
 
-                <div class="card-body">
+                <div class="card-body" >
                   <div class="cart-summary">
                     <ul style={{ paddingLeft: "0" }}>
                       <li>
@@ -281,11 +298,27 @@ const View = () => {
                           </span>{" "}
                         </span>
                       </li>
+                      <li>
+                        <span class="label">Cgst</span>
+                        <span class="value">
+                          <span class="currency-value" dir="ltr">
+                            <span class="currency-symbol">₹{totalcgst}</span>
+                          </span>{" "}
+                        </span>
+                      </li>
+                      <li>
+                        <span class="label">Sgst</span>
+                        <span class="value">
+                          <span class="currency-value" dir="ltr">
+                            <span class="currency-symbol">₹{totalsgst}</span>
+                          </span>{" "}
+                        </span>
+                      </li>
                       <li class="highlighted">
                         <span class="label">Net Amount</span>
                         <span class="value">
                           <span class="currency-value" dir="ltr">
-                            <span class="currency-symbol">₹{order.totalamt}</span>
+                            <span class="currency-symbol">₹{finalamt}</span>
                           </span>{" "}
                         </span>
                       </li>

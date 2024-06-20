@@ -10568,3 +10568,8 @@ html {
     .w-200{
       width : 300px
     }
+
+    .carousel .slide:focus {
+      outline: none;
+  }
+  

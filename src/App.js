@@ -100,6 +100,8 @@ import ImageGallery from './MainComponent/Pages/ImageGallery';
 import ProductStock from './VendorComponents/ProductStock';
 import custdecryptedUserId from './Utils/CustUserid';
 import ThankYou from './MainComponent/Pages/ThankYouPage';
+import MyDocument from './AdminComponent/MyDocument';
+
 
 
 
@@ -113,7 +115,10 @@ const Router = createBrowserRouter([
     path: '/vendorlog',
     element: <VendorLogin />
   },
-
+  {
+    path: '/doc',
+    element: <MyDocument />
+  },
   {
     path: '/webapp/vendorform/:id',
     element: <VendorForm />
@@ -142,6 +147,7 @@ const Router = createBrowserRouter([
         path: '/:brand_id',
         element: <ShopProduct />
       },
+ 
       {
         path: '/shopwishlist',
         element: <ShopWishlist />
@@ -158,6 +164,7 @@ const Router = createBrowserRouter([
         path: '/thankyou',
         element: <ThankYou />
       },
+ 
       {
         path: '/contact',
         element: <Contact />

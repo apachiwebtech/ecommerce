@@ -344,7 +344,7 @@ const ShopProduct = () => {
                                                         {products?.filter((item)=>(item.disc_price > value)).map((product) => {
                                                    
                                                             return (
-                                                                <ProductCard proid={product.proid} title={product.product_title} disc_price={product.disc_price} price={product.disc_price} image1={product.image1} image2={product.image2} trending={product.trending} catid={product.catid} slug={product.slug} v_id={product.v_id} />
+                                                                <ProductCard proid={product.proid} title={product.product_title} disc_price={product.disc_price} price={product.disc_price} image1={product.image1} image2={product.image2} trending={product.trending} catid={product.catid} slug={product.slug} v_id={product.v_id} gst={product.gst} />
                                                             )
                                                         })
                                                         }

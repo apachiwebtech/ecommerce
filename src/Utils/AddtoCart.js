@@ -4,7 +4,7 @@ import custdecryptedUserId from './CustUserid';
 import { useState } from 'react';
 import { getCartCount } from '../Store/Cart/cart-action';
 
-const addToCart = (pro_id, title, catid, price, dispatch,p_qty,v_id) => {
+const addToCart = (pro_id, title, catid, price, dispatch,p_qty,v_id,gst) => {
     try {
         if (!Cookies.get("orderid") && !Cookies.get("custuserid")) {
             const randomUserId = Math.random().toString(36).substring(2);
@@ -21,7 +21,8 @@ const addToCart = (pro_id, title, catid, price, dispatch,p_qty,v_id) => {
                     catid: catid,
                     price: price,
                     p_qty: p_qty,
-                    v_id : v_id
+                    v_id : v_id,
+                    gst : gst
                 }),
                 headers: {
                     "Content-type": "application/json"
@@ -50,7 +51,8 @@ const addToCart = (pro_id, title, catid, price, dispatch,p_qty,v_id) => {
                     catid: catid,
                     price: price,
                     p_qty: p_qty,
-                    v_id : v_id
+                    v_id : v_id,
+                    gst : gst
                 }),
                 headers: {
                     "Content-type": "application/json"
@@ -81,7 +83,8 @@ const addToCart = (pro_id, title, catid, price, dispatch,p_qty,v_id) => {
                     catid: catid,
                     price: price,
                     p_qty: p_qty,
-                    v_id : v_id
+                    v_id : v_id,
+                    gst : gst
                 }),
                 headers: {
                     "Content-type": "application/json"

@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 var session = require('express-session')
 var cookieParser = require('cookie-parser')
 const Razorpay = require("razorpay");
+const cron = require('node-cron')
 dotenv.config();
 
 
@@ -101,7 +102,7 @@ const con = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'ecommerce'
+  database: 'ecommerce',
 })
 
 con.connect((err) => {
@@ -1676,7 +1677,7 @@ app.post('/addToCart', async (req, res) => {
               if (Err) {
                 return res.json(Err)
               } else {
-                  
+
                 const sql = 'select * from awt_cart where id = ?';
 
                 con.query(sql, [insertedid], (err, data) => {
@@ -1726,7 +1727,7 @@ app.post('/addToCart', async (req, res) => {
                     if (err) {
                       return res.json(err)
                     } else {
-                
+
                       return res.json(data)
                     }
                   })
@@ -1746,7 +1747,7 @@ app.post('/addToCart', async (req, res) => {
                     if (err) {
                       return res.json(err)
                     } else {
-          
+
 
                       return res.json(data)
 
@@ -1785,7 +1786,7 @@ app.post('/addToCart', async (req, res) => {
                 if (err) {
                   return res.json(err)
                 } else {
-                
+
 
                   return res.json(data)
                 }
@@ -1801,13 +1802,13 @@ app.post('/addToCart', async (req, res) => {
             } else {
               const updatereservstock = "update awt_reservstock set r_stock = ? where orderid = ? and proid = ?"
 
-              console.log(p_qty , orderid , product_id)
+              console.log(p_qty, orderid, product_id)
 
               con.query(updatereservstock, [p_qty, orderid, product_id], (err, data) => {
                 if (err) {
                   return res.json(err)
                 } else {
-            
+
 
                   return res.json(data)
                 }
@@ -2534,7 +2535,7 @@ app.post('/addorderid', (req, res) => {
       return res.json(err)
     }
     else {
-      if(data){
+      if (data) {
         const sql = "select id from `order` where `userid` = ? and `ostatus` = 'incart' order by `id` desc limit 1"
 
         con.query(sql, [user_id], (err, data) => {
@@ -2545,8 +2546,8 @@ app.post('/addorderid', (req, res) => {
           }
         })
       }
-     
-      
+
+
 
     }
   })
@@ -3450,7 +3451,7 @@ app.post('/return_status_update', (req, res) => {
 })
 
 
-app.post('/add_cancellation',  (req, res) => {
+app.post('/add_cancellation', (req, res) => {
   let user_id = req.body.user_id
   let title = req.body.title;
   let description = req.body.description;
@@ -3461,15 +3462,15 @@ app.post('/add_cancellation',  (req, res) => {
   let param;
 
 
-  
+
   if (uid == undefined) {
 
     sql = "insert into awt_cancellation_reason(`title`,`description`,`created_by`,`created_date`) values(?,?,?,?)"
-    param = [title,  description, user_id, created_date]
+    param = [title, description, user_id, created_date]
   } else {
 
     sql = "update awt_cancellation_reason set title = ?, description = ?,updated_by = ?, updated_date = ? where id =?";
-    param = [title,  description, user_id, created_date, uid]
+    param = [title, description, user_id, created_date, uid]
   }
 
   con.query(sql, param, (err, data) => {
@@ -3981,3 +3982,53 @@ app.post('/payment', async (req, res) => {
     res.status(500).send("error");
   }
 })
+
+
+
+function checkRows() {
+  const query = `SELECT * FROM awt_reservstock WHERE created_date < NOW() - INTERVAL 2 MINUTE AND p_status = 0 AND deleted = 0`;
+
+  con.query(query, (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return;
+    }
+
+    // Process the results (e.g., send an API request for each row)
+    results.forEach(row => {
+      // Your API request logic here
+
+      console.log('Processing row:', row.r_stock);
+      let param = row.id;
+      let cart_id = row.cartid;
+
+      const deleterow = "update awt_reservstock set deleted = 1 where id = ?"
+
+      con.query(deleterow, [param], (err, data) => {
+        if (err) {
+          console.log(err)
+        } else {
+            
+          const updatecart = "update awt_cart set deleted = 1 where id = ?"
+
+          con.query(updatecart ,[cart_id], (err,data)=>{
+            if(err){
+              console.log(err)
+            }else{
+              console.log(data)
+            }
+          } )
+        }
+      })
+ 
+    });
+  });
+}
+
+
+
+cron.schedule('* * * * *', () => {
+  console.log('Running scheduled task');
+  checkRows();
+});
+

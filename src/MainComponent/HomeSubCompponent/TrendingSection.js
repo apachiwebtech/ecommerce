@@ -147,7 +147,7 @@ const TrendingSection = () => {
                                                                             <Link
                                                                                 class="button"
                                                                                 onClick={() => {
-                                                                                    addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, "1", item.v_id);
+                                                                                    addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, "1", item.v_id ,item.gst);
                                                                                     notify();
                                                                                 }}
                                                                             >

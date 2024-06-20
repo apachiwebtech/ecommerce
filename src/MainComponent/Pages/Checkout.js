@@ -162,6 +162,9 @@ const Checkout = () => {
         getcartdata()
     }, [])
 
+
+
+
     const navigate = useNavigate()
 
     const onhandlesubmit = (e) => {
@@ -199,15 +202,15 @@ const Checkout = () => {
             axios.post(`${BASE_URL}/place_order`, data)
                 .then((res) => {
                     console.log(res)
-         
-                        if(res.data){
-                            alert("order placed")
-                            Cookies.remove(`orderid`)
-                            navigate('/thankyou')
-                            Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
-                        }
-                    
-                      
+
+                    if (res.data) {
+                        alert("order placed")
+                        Cookies.remove(`orderid`)
+                        navigate('/thankyou')
+                        Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
+                    }
+
+
                 })
                 .catch((err) => {
                     console.log(err)
@@ -281,6 +284,33 @@ const Checkout = () => {
     }, 0);
 
 
+    // const navigate = useNavigate()
+
+    const handleapicheck = () => {
+        const data = {
+            user_id: "1",
+            price: "200",
+            phone: "9326476448",
+            name: "satyam"
+        }
+        axios.post(`${BASE_URL}/payment`, data)
+            .then((res) => {
+             console.log(res)
+
+             if(res.data.success == true){
+                 window.location.href = res.data.url
+
+             }
+
+               
+            })
+    };
+
+
+
+
+
+
     return (
         <div>
             <div id="site-main" class="site-main">
@@ -299,7 +329,13 @@ const Checkout = () => {
                             </div>
                         </div>
 
+
+
                         <div id="content" class="site-content" role="main">
+
+                            <div>
+                                <button onClick={handleapicheck}>Api check</button>
+                            </div>
 
                             <div class="section-padding">
                                 <div class="section-container p-l-r">
@@ -337,7 +373,7 @@ const Checkout = () => {
                                                                         <p class="form-row form-row-wide validate-required col-lg-6">
                                                                             <label>Country / Region <span class="required" title="required">*</span></label>
                                                                             <span class="input-wrapper">
-                                                                                <select name="country" class="country-select custom-select" value={value.country}  onChange={onhandlechange}>
+                                                                                <select name="country" class="country-select custom-select" value={value.country} onChange={onhandlechange}>
                                                                                     <option value="">Select a country / region…</option>
                                                                                     <option value="1">India</option>
 
@@ -430,24 +466,24 @@ const Checkout = () => {
                                                                     </p>
                                                                 </div>
                                                                 <div className='row'>
-                                                                <p class="form-row form-row-last validate-required col-lg-6 col-md-6 col-12">
-                                                                            <label>Mobile <span class="required" title="required">*</span></label>
-                                                                            <span class="input-wrapper"><input type="number" class="input-text" name="mobile" value={value.smobile} onChange={onhandlechange} /></span>
-                                                                            {errors.smobile && <span className='text-danger'>{errors.smobile}</span>}
-                                                                        </p>
+                                                                    <p class="form-row form-row-last validate-required col-lg-6 col-md-6 col-12">
+                                                                        <label>Mobile <span class="required" title="required">*</span></label>
+                                                                        <span class="input-wrapper"><input type="number" class="input-text" name="smobile" value={value.smobile} onChange={onhandlechange} /></span>
+                                                                        {errors.smobile && <span className='text-danger'>{errors.smobile}</span>}
+                                                                    </p>
 
-                                                                <p class="form-row form-row-wide address-field validate-required col-lg-6 col-md-6 col-12">
-                                                                    <label for="shipping_country" class="">Country / Region <span class="required" title="required">*</span></label>
-                                                                    <span class="input-wrapper">
-                                                                        <select name="scountry" defaultValue="1" class="state-select custom-select" value={value.scountry} onChange={onhandlechange}>
-                                                                            <option value="">Select a country / region…</option>
-                                                                            <option value="1" selected>India</option>
+                                                                    <p class="form-row form-row-wide address-field validate-required col-lg-6 col-md-6 col-12">
+                                                                        <label for="shipping_country" class="">Country / Region <span class="required" title="required">*</span></label>
+                                                                        <span class="input-wrapper">
+                                                                            <select name="scountry" defaultValue="1" class="state-select custom-select" value={value.scountry} onChange={onhandlechange}>
+                                                                                <option value="">Select a country / region…</option>
+                                                                                <option value="1" selected>India</option>
 
-                                                                        </select>
-                                                                    </span>
-                                                                    {errors.scountry && <span className='text-danger'>{errors.scountry}
-                                                                    </span>}
-                                                                </p>
+                                                                            </select>
+                                                                        </span>
+                                                                        {errors.scountry && <span className='text-danger'>{errors.scountry}
+                                                                        </span>}
+                                                                    </p>
                                                                 </div>
                                                                 <p class="form-row address-field validate-required form-row-wide">
                                                                     <label>Address <span class="required" title="required">*</span></label>

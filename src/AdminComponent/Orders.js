@@ -1,13 +1,12 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { BASE_URL } from './BaseUrl'
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import InnerHeader from './InnerHeader';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { dark } from '@mui/material/styles/createPalette';
+import axios from 'axios';
+import React, { useEffect, useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { BASE_URL } from './BaseUrl';
+import InnerHeader from './InnerHeader';
+
 const Orders = () => {
+  
     const [order, setOrderData] = useState([])
     const [filteredData, setFilteredData] = useState([]);
     const [value, setValue] = useState({
@@ -54,6 +53,8 @@ const Orders = () => {
         getOrderdata()
     }, [])
 
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const filteredResult = order.filter(item => {
@@ -92,6 +93,7 @@ const Orders = () => {
     return (
         <div class="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
+          
             <div class="main-panel">
                 <div class="content-wrapper">
                     <div class="row">
