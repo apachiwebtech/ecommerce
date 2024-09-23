@@ -155,6 +155,7 @@ const ProductCatalog = () => {
                           <th>Vendor Name</th>
                           <th>Price</th>
                           <th>Images</th>
+                          <th>Tags</th>
                           <th>Status</th>
                           <th>Action</th>
                         </tr>
@@ -183,7 +184,12 @@ const ProductCatalog = () => {
                                 size="medium"
                                 variant="outlined"
                               >Add</Button></Link></td>}
-
+                              {roleaccess >= 2 && <td><Link to={`/webapp/addtags/${item.id}/${item.title}`}><Button
+                                color="primary"
+                                disabled={false}
+                                size="medium"
+                                variant="outlined"
+                              >Add</Button></Link></td>}
 
                               <td>
                                 {item.active == 1 ? <FormControlLabel

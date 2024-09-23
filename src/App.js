@@ -3,7 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/js/bootstrap.min.js';
 import Cookies from 'js-cookie';
 import { Component, useEffect, useState } from 'react';
-import { Outlet, createBrowserRouter, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, createHashRouter, useNavigate, useLocation } from 'react-router-dom';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import AdminUser from './AdminComponent/AdminUser';
 import Banner from './AdminComponent/Banner';
@@ -60,6 +60,7 @@ import OrderView from './MainComponent/Pages/ProfileComponent/OrderView';
 import RoleAssignment from './AdminComponent/RoleAssignment';
 import AddRole from './AdminComponent/AddRole';
 
+
 // vendor Component
 
 import VendorSettingPages from './VendorComponents/VendorSettingPages';
@@ -101,12 +102,19 @@ import ProductStock from './VendorComponents/ProductStock';
 import custdecryptedUserId from './Utils/CustUserid';
 import ThankYou from './MainComponent/Pages/ThankYouPage';
 import MyDocument from './AdminComponent/MyDocument';
+import Tags from './AdminComponent/Tags';
+import Terms from './MainComponent/Pages/Terms';
+import Privacy from './MainComponent/Pages/Privacy';
+import ShippingPolicy from './MainComponent/Pages/ShippingPolicy';
+import Refund from './MainComponent/Pages/Refund';
+import PaymentFailed from './MainComponent/Pages/PaymentFailed';
+import CommingSoon from './MainComponent/CommingSoon';
 
 
 
 
 
-const Router = createBrowserRouter([
+const Router = createHashRouter([
   {
     path: '/weblog',
     element: <WebLogin />
@@ -128,6 +136,10 @@ const Router = createBrowserRouter([
     element: <AddProductImg />
   },
   {
+    path: '/webapp/addtags/:product_id/:product_name',
+    element: <Tags />
+  },
+  {
     path: '/vendor/addimages/:product_id',
     element: <AddProductImg />
   },
@@ -137,6 +149,10 @@ const Router = createBrowserRouter([
     children: [
       {
         path: '/',
+        element: <CommingSoon />
+      },
+      {
+        path: '/dash',
         element: <DashBoard />
       },
       {
@@ -147,7 +163,7 @@ const Router = createBrowserRouter([
         path: '/:brand_id',
         element: <ShopProduct />
       },
- 
+
       {
         path: '/shopwishlist',
         element: <ShopWishlist />
@@ -161,10 +177,14 @@ const Router = createBrowserRouter([
         element: <ShopProduct />
       },
       {
-        path: '/thankyou',
+        path: '/payment-success',
         element: <ThankYou />
       },
- 
+      {
+        path: '/payment-failure',
+        element: <PaymentFailed />
+      },
+
       {
         path: '/contact',
         element: <Contact />
@@ -172,6 +192,22 @@ const Router = createBrowserRouter([
       {
         path: '/sitefaq',
         element: <SiteFaq />
+      },
+      {
+        path: '/terms',
+        element: <Terms />
+      },
+      {
+        path: '/privacy',
+        element: <Privacy />
+      },
+      {
+        path: '/shippingpolicy',
+        element: <ShippingPolicy />
+      },
+      {
+        path: '/refund',
+        element: <Refund />
       },
       {
         path: '/about',
@@ -185,7 +221,7 @@ const Router = createBrowserRouter([
         path: '/vendorregister',
         element: <VendorRegister />
       },
-    
+
       {
         path: '/shoproduct/:groupslug',
         element: <ShopProduct />
@@ -300,7 +336,7 @@ const Router = createBrowserRouter([
         path: '/webapp/Aboutus',
         element: <AboutUS />
       },
-    
+
       {
         path: '/webapp/producttag',
         element: <ProductTag />
@@ -333,8 +369,8 @@ const Router = createBrowserRouter([
         path: '/webapp/orders',
         element: <Orders />
       },
-    
-   
+
+
 
 
       {
@@ -351,7 +387,7 @@ const Router = createBrowserRouter([
         path: '/webapp/reviewcomment',
         element: <ReviewComment />
       },
-   
+
 
       {
         path: '/webapp/socialmedia',
@@ -400,8 +436,8 @@ const Router = createBrowserRouter([
 
 
   {
-    path : '/vendor',
-    element : <VendorApp/>,
+    path: '/vendor',
+    element: <VendorApp />,
     errorElement: <PageNotFound />,
     children: [
       {
@@ -412,7 +448,7 @@ const Router = createBrowserRouter([
         path: '/vendor/addProduct/:update_id',
         element: <AddProduct />
       },
- 
+
       {
         path: '/vendor/vendormaster',
         element: <VendorMaster />
@@ -456,8 +492,8 @@ const Router = createBrowserRouter([
         element: <VendorSettingPages />
       },
 
-   
-      
+
+
     ]
   }
 ])
@@ -572,7 +608,7 @@ function VendorApp() {
     <>
       <div className="container-scroller d-flex">
         {/* <Header /> */}
-        <VendorHeader/>
+        <VendorHeader />
         <Outlet />
       </div>
     </>
@@ -605,7 +641,7 @@ function App() {
   };
 
 
-  
+
 
   useEffect(() => {
     window.scrollTo(0, 0);

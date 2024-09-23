@@ -53,6 +53,18 @@ const SiteFooter = () => {
 														<Link to='/contact'>Contact US</Link>
 													</li>
 													<li>
+														<Link to='/terms' >Terms & Conditions</Link>
+													</li>
+													<li>
+														<Link to='/privacy' >Privacy Policy</Link>
+													</li>
+													<li>
+														<Link to='/shippingpolicy' >Shipping Policy</Link>
+													</li>
+													<li>
+														<Link to='/refund' >Return & Refund</Link>
+													</li>
+													<li>
 														<Link to='/sitefaq' >Faq</Link>
 													</li>
 													<li>

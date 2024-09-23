@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { RouterProvider } from 'react-router-dom';
 import Router from './App';
 import store from './Store'
+import './vercel.json'
 import { Provider } from 'react-redux';
 // import 'bootstrap/dist/css/bootstrap.css';
 

@@ -15,6 +15,7 @@ import Cookies from 'js-cookie';
 import Loader from './Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoleData } from '../Store/Role/role-action';
+import decryptedUserId from '../Utils/UserID';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -306,7 +307,7 @@ const VendorForm = () => {
             formData.append('account_no', value.account_no);
             formData.append('ifsc_code', value.ifsc_code);
             formData.append('u_id', vendor.id);
-            formData.append('user_id', Cookies.get('userid'));
+            formData.append('user_id', decryptedUserId());
 
             fetch(`${BASE_URL}/add_vendor`, {
                 method: 'POST',

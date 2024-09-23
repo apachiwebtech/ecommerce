@@ -1915,8 +1915,6 @@ app.post('/getproductlisting', (req, res) => {
 
 
 
-
-
   let sql;
   let param;
 
@@ -4008,19 +4006,19 @@ function checkRows() {
         if (err) {
           console.log(err)
         } else {
-            
+
           const updatecart = "update awt_cart set deleted = 1 where id = ?"
 
-          con.query(updatecart ,[cart_id], (err,data)=>{
-            if(err){
+          con.query(updatecart, [cart_id], (err, data) => {
+            if (err) {
               console.log(err)
-            }else{
+            } else {
               console.log(data)
             }
-          } )
+          })
         }
       })
- 
+
     });
   });
 }
@@ -4032,3 +4030,109 @@ cron.schedule('* * * * *', () => {
   checkRows();
 });
 
+
+app.post('/nodeapp/orderadd', (req, res) => {
+
+  let locationid = req.body.locationid;
+  let firstname = req.body.firstname;
+  let order_id = req.body.order_id;
+  let mobile = req.body.mobile;
+  let email = req.body.email;
+  let totalPrice = req.body.totalPrice;
+  let date = new Date();
+  let placed = "incart";
+  let v_id = req.body.v_id;
+  let v_id_str = String(v_id);
+
+
+
+  const sql = "update `order` set vendor_id = ?, location_id = ? ,firstname = ? , mobileno = ? , email = ? , payment_date = ? , order_date = ? , updated_date = ? ,totalamt = ?  , orderstatus = 0  where id = ?  and deleted = 0"
+
+  con.query(sql, [v_id_str, locationid, firstname, mobile, email, date, date, date, totalPrice, order_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+
+      const updatecart = "update `awt_cart` set orderstatus = 0 where orderid = ?"
+
+      con.query(updatecart, [order_id], (err, data) => {
+        if (err) {
+          return res.json(err)
+        } else {
+
+          const sql = "select * from `order` where `ostatus` != 'incart'"
+
+          con.query(sql, (err, data) => {
+            if (err) {
+              return res.json(err)
+            } else {
+
+
+              const count = data.length
+              const ordercount = count + 1
+              const currentDate = new Date();
+              const day = String(currentDate.getDate()).padStart(2, '0');
+              const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero based
+              const year = currentDate.getFullYear().toString().substr(-2);
+
+              const orderno = "UMI" + "-" + year + month + day + "-" + ordercount;
+              const sql = "update `order` set `orderno` = ? , `ostatus` = ?  where `id`  = ?"
+
+              con.query(sql, [orderno, placed, order_id], (err, data) => {
+                if (err) {
+                  return res.json(err)
+                } else {
+
+                  const getcart = 'select  ac.* , ap.upload_image from `awt_cart` ac left join `awt_product` as ap on ac.proid = ap.id where  ac.orderid = ? and ac.deleted = 0'
+
+                  con.query(getcart, [order_id], (err, data) => {
+                    if (err) {
+                      return res.json(err)
+                    } else {
+
+                      return res.json(data)
+
+
+
+                    }
+                  })
+
+                }
+              })
+
+
+              //   const checkorderno = "select * from `order` where orderno IS NULL and  id =? "
+
+              //   con.query(checkorderno, [order_id], (err, data) => {
+              //     if (err) {
+              //       return res.json(err)
+              //     } else {
+              //       const datacount = data.length
+
+              //       if (datacount == 1) {
+
+
+              //       } else {
+              //          return res.json("Already have orderno")
+
+
+              //       }
+              //     }
+              //   })
+
+
+
+
+
+            }
+          })
+        }
+      })
+
+
+
+
+
+    }
+  })
+})

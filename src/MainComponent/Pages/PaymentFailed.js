@@ -4,16 +4,16 @@ import { Link } from 'react-router-dom';
 import check from '../../assets/images/check.png';
 import { useLocation } from 'react-router-dom';
 
-const ThankYou = () => {
+const PaymentFailed = () => {
 
     const Name = localStorage.getItem('Name')
-    const OrderNo = Cookies.get('orderno')
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const transactionId = queryParams.get('transactionid');
    
-    console.log(transactionId)
+    console.log(transactionId , "dnjkad")
+    alert(transactionId)
 
     return (
         <div>
@@ -32,8 +32,8 @@ const ThankYou = () => {
                                         <div class="">
                                             <div class="block-widget-wrap text-center my-5">
                                                 <img src={check} style={{width : "100px"}} alt='logo' />
-                                                <h1 className='my-2'>Thank You </h1>
-                                                <p>Dear <b>{Name}</b> ,Your transactionid is <b>{transactionId}</b> ,Your Order No is <b>#{OrderNo}</b> and your shipment will process soon...</p>
+                                                <h1 className='my-2 text-danger'>PAYMENT FAILED</h1>
+                                                <p>Dear <b>{Name}</b> ,Your transactionid is <b>{transactionId}</b></p>
                                                 <Link style={{color : "blue",textDecoration : "underline"}} to="/profile/order">Click here to check more details</Link>
                                             </div>
                                         </div>
@@ -48,4 +48,4 @@ const ThankYou = () => {
     )
 }
 
-export default ThankYou;
+export default PaymentFailed;

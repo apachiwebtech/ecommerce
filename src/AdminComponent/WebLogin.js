@@ -102,9 +102,10 @@ const WebLogin = () => {
 
             const role = res.data.data[0].role
             const ciphertext = CryptoJS.AES.encrypt(res.data.id.toString(), encryptionKey).toString();
-            
-            Cookies.set('userid', ciphertext, { expires: 2 });
+         
+            Cookies.set('userid', ciphertext, { expires: 2 }); 
             Cookies.set('role', role, { expires: 2 });
+      
            
             navigate('/webapp')
           }

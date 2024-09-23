@@ -167,10 +167,22 @@ const Checkout = () => {
 
     const navigate = useNavigate()
 
+
+    const handlepayment = () => {
+
+    };
+
     const onhandlesubmit = (e) => {
         e.preventDefault()
 
         if (validateForm()) {
+
+            const paydata = {
+                user_id: localStorage.getItem('Name'),
+                price: totalPrice,
+                phone: "9326476448",
+                name: custdecryptedUserId()
+            }
             const data = {
                 firstname: value.firstname,
                 lastname: value.lastname,
@@ -199,22 +211,37 @@ const Checkout = () => {
                 user_id: custdecryptedUserId()
             }
 
-            axios.post(`${BASE_URL}/place_order`, data)
+            axios.post(`${BASE_URL}/payment`, paydata)
                 .then((res) => {
-                    console.log(res)
 
-                    if (res.data) {
-                        alert("order placed")
-                        Cookies.remove(`orderid`)
-                        navigate('/thankyou')
-                        Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
+
+                    if (res.data.success == true) {
+
+                        
+                        axios.post(`${BASE_URL}/place_order`, data)
+                        .then((res) => {
+                            console.log(res)
+                            
+                            if (res.data) {
+                                alert("order placed")
+                                Cookies.remove(`orderid`)
+                                navigate('/thankyou')
+                                Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
+                            }
+                            
+                            
+                        })
+                     
+                        
+                        window.location.href = res.data.url
                     }
 
 
                 })
-                .catch((err) => {
-                    console.log(err)
-                })
+
+
+
+         
         }
 
 
@@ -286,25 +313,7 @@ const Checkout = () => {
 
     // const navigate = useNavigate()
 
-    const handleapicheck = () => {
-        const data = {
-            user_id: "1",
-            price: "200",
-            phone: "9326476448",
-            name: "satyam"
-        }
-        axios.post(`${BASE_URL}/payment`, data)
-            .then((res) => {
-             console.log(res)
 
-             if(res.data.success == true){
-                 window.location.href = res.data.url
-
-             }
-
-               
-            })
-    };
 
 
 
@@ -333,9 +342,7 @@ const Checkout = () => {
 
                         <div id="content" class="site-content" role="main">
 
-                            <div>
-                                <button onClick={handleapicheck}>Api check</button>
-                            </div>
+
 
                             <div class="section-padding">
                                 <div class="section-container p-l-r">
