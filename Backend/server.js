@@ -14,53 +14,53 @@ dotenv.config();
 
 
 const storage = multer.diskStorage({
-  destination: '../public_html/ecomuploads/', // 
+  destination: '../public_html/ecomuploads/', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage2 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/banner', // 
+  destination: '../public_html/ecomuploads/banner', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage3 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/gallery', // 
+  destination: '../public_html/ecomuploads/gallery', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage4 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/brand', // 
+  destination: '../public_html/ecomuploads/brand', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage5 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/sizechart', // 
+  destination: '../public_html/ecomuploads/sizechart', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage6 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/category', // 
+  destination: '../public_html/ecomuploads/category', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage7 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/group', // 
+  destination: '../public_html/ecomuploads/group', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage8 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/productimg', // 
+  destination: '../public_html/ecomuploads/productimg', //
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
@@ -4136,3 +4136,8 @@ app.post('/nodeapp/orderadd', (req, res) => {
     }
   })
 })
+
+
+//Start
+
+

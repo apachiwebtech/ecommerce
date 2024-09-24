@@ -147,12 +147,12 @@ const Router = createHashRouter([
     path: '/',
     element: <App />,
     children: [
+      // {
+      //   path: '/',
+      //   element: <CommingSoon />
+      // },
       {
         path: '/',
-        element: <CommingSoon />
-      },
-      {
-        path: '/dash',
         element: <DashBoard />
       },
       {
