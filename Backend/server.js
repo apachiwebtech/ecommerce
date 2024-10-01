@@ -2,65 +2,66 @@ const express = require('express')
 const app = express()
 const mysql = require('mysql')
 const cors = require('cors')
-const dotenv = require('dotenv')
 const path = require('path');
 const multer = require('multer');
+const dotenv = require('dotenv')
 const bodyParser = require('body-parser');
 var session = require('express-session')
-var cookieParser = require('cookie-parser')
-const Razorpay = require("razorpay");
+var cookieParser = require('cookie-parser');
 const cron = require('node-cron')
+const crypto = require('crypto');
+const axios = require('axios');
 dotenv.config();
 
 
 const storage = multer.diskStorage({
-  destination: '../public_html/ecomuploads/', //
+  destination: '../../ecomuploads/', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage2 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/banner', //
+  destination: '../../ecomuploads/banner', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage3 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/gallery', //
+  destination: '../../ecomuploads/gallery', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage4 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/brand', //
+  destination: '../../ecomuploads/brand', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage5 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/sizechart', //
+  destination: '../../ecomuploads/sizechart', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage6 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/category', //
+  destination: '../../ecomuploads/category', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 const storage7 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/group', //
+  destination: '../../ecomuploads/group', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const storage8 = multer.diskStorage({
-  destination: '../public_html/ecomuploads/productimg', //
+  destination: '../../ecomuploads/productimg', // 
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
@@ -76,9 +77,9 @@ const upload7 = multer({ storage: storage7 });
 const upload8 = multer({ storage: storage8 });
 
 app.use(express.json());
+
 app.use(bodyParser.json());
 app.use(cookieParser());
-
 app.use(session({
   secret: 'secret',
   resave: false,
@@ -90,31 +91,32 @@ app.use(session({
   }
 }))
 
-// app.use(session({
-//   secret: 'your-secret-key',
-//   resave: true,
-//   saveUninitialized: true,
-// }));
+// const con = mysql.createPool({
+//   host: 'localhost',
+//   user: 'icasasuc_micasasucasa',
+//   password: 'oSPC2)TF&8e,',
+//   database: 'icasasuc_micasasucasa',
+//   timezone: '+05:30'
+// })
 
-
-
-const con = mysql.createConnection({
+const con = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: '',
   database: 'ecommerce',
-})
+});
 
-con.connect((err) => {
+con.getConnection((err, connection) => {
   if (err) {
-    console.log('err');
+    console.error('Error connecting to the database:', err);
   } else {
-    console.log('success');
+    console.log('Successfully connected to the database');
+    connection.release(); // Release the connection back to the pool
   }
 });
 
 app.get('/', (req, res) => {
-  return res.json('from the backend side');
+  return res.json('from the backend side new');
 });
 
 app.listen('8081', () => {
@@ -127,6 +129,14 @@ app.use(
     credentials: true
   })
 );
+
+// app.use(function (req, res, next) {
+//   res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
+
 
 // const verifyJwt = (req, res, next) => {
 //   const token = req.headers["access-token"];
@@ -145,7 +155,7 @@ app.use(
 // }
 
 // app.get('/checkauth', verifyJwt, (req, res) => {
-//   return res.json({ status: 1 })
+//   return res.json({status : 1})
 // })
 
 // app.post('/login', (req, res) => {
@@ -157,17 +167,60 @@ app.use(
 
 //   con.query(sql, [email, password, role], (err, data) => {
 //     if (err) {
-//       return res.json(err);
-//     } else {
+//       console.error("Database error:", err);
+//       return res.status(500).json({ error: "Internal server error" });
+//    } else {
 //       if (data.length === 1) {
 //         const id = data[0].id;
 //         const token = jwt.sign({ id }, "jwtSecretkey", { expiresIn: 300 })
 
-//         return res.json({ Login: true, token, data })
-//         // return res.json({id : id})
+//         return res.json(data)
 //       } else {
 //         return res.json({ err: "email or password is wrong" })
 //       }
+//     }
+//   })
+// })
+
+// app.post('/login', (req, res) => {
+//   let email = req.body.email;
+//   let password = req.body.password;
+//   let role = req.body.role;
+
+//   const sql = "select * from awt_adminuser where email = ? and password = ? and role = ? and deleted = 0"
+
+//   con.query(sql, [email, password, role], (err, data) => {
+//     if (err) {
+//      return res.json(err)
+//     } else {
+//       if (data.length === 1) {
+//         const id = data[0].id;
+//         return res.json({id : id})
+//       }
+//     }
+//   })
+// })
+
+// app.post('/customerlogin', (req, res) => {
+//   let email = req.body.email;
+//   let password = req.body.password;
+
+//   const sql = "select * from awt_customers where email = ? and password = ? and deleted = 0"
+
+//   con.query(sql, [email, password], (err, data) => {
+//     if (err) {
+//       return res.json(err);
+//     } else {
+//       if (data.length > 0) {
+//         const id = data[0].id;
+
+
+//         req.session.id = id
+//         console.log(req.session.id)
+//         return res.json({ data, keyid: req.session.id, id: id })
+//       }
+
+
 //     }
 //   })
 // })
@@ -627,7 +680,7 @@ app.post('/vendor_update', (req, res) => {
 app.get('/vendor_data', (req, res) => {
 
 
-  const sql = "select * from awt_vendor where deleted = 0"
+  const sql = "select * from awt_vendor where deleted = 0 order by id desc"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -663,10 +716,14 @@ app.post('/add_adminuser', (req, res) => {
   let mobile = req.body.mobile;
   let email = req.body.email;
   let password = req.body.password;
-  let role = "2";
   let created_date = new Date()
   let u_id = req.body.u_id;
-  let user_id = req.body.user_id
+  let user_id = req.body.user_id;
+  let role = req.body.role;
+  let address = req.body.address;
+  let city = req.body.city;
+  let state = req.body.state;
+  let pincode = req.body.pincode;
 
   let sql;
   let param;
@@ -674,12 +731,12 @@ app.post('/add_adminuser', (req, res) => {
   if (u_id == undefined) {
 
 
-    sql = "insert into awt_adminuser(`firstname`,`lastname`,`mobile`,`email`,`password`,`role`,`created_date`,`created_by`) values(?,?,?,?,?,?,?,?)"
-    param = [firstname, lastname, mobile, email, password, role, created_date, user_id]
+    sql = "insert into awt_adminuser(`firstname`,`lastname`,`mobile`,`email`,`password`,`role`,`created_date`,`created_by`,`address`,`city`,`state`,`pincode`) values(?,?,?,?,?,?,?,?,?,?,?,?)"
+    param = [firstname, lastname, mobile, email, password, role, created_date, user_id, address, city, state, pincode]
 
   } else {
-    sql = "update awt_adminuser set firstname = ?, lastname = ?,mobile = ?, email = ?, password = ?, role = ?,updated_date = ?, updated_by = ? where id = ?"
-    param = [firstname, lastname, mobile, email, password, role, created_date, user_id, u_id]
+    sql = "update awt_adminuser set firstname = ?, lastname = ?,mobile = ?, email = ?, password = ?, role = ?,updated_date = ?, updated_by = ? , address = ? , city = ? , state = ? ,pincode = ?  where id = ?"
+    param = [firstname, lastname, mobile, email, password, role, created_date, user_id, address, city, state, pincode, u_id]
   }
 
   con.query(sql, param, (err, data) => {
@@ -714,7 +771,7 @@ app.post('/adminuser_update', (req, res) => {
 
 app.get('/adminuser_data', (req, res) => {
 
-  const sql = "select * from awt_adminuser where deleted = 0 and role = 2"
+  const sql = "select * from awt_adminuser where deleted = 0 order by id desc"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -726,13 +783,15 @@ app.get('/adminuser_data', (req, res) => {
   })
 
 })
+
 app.post('/adminuser_delete', (req, res) => {
 
   let adminuser_id = req.body.adminuser_id;
+  let date = new Date()
 
-  const sql = "update awt_adminuser set deleted = 1 where id = ?"
+  const sql = "update awt_adminuser set deleted = 1 , deleted_date = ? where id = ?"
 
-  con.query(sql, [adminuser_id], (err, data) => {
+  con.query(sql, [date, adminuser_id], (err, data) => {
     if (err) {
       return res.json(err)
     }
@@ -815,6 +874,21 @@ app.get('/category_data', (req, res) => {
   })
 
 })
+app.get('/blogcategory_data', (req, res) => {
+
+  const sql = "select * from awt_blogcategory where deleted = 0 "
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
 app.post('/category_delete', (req, res) => {
 
   let cat_id = req.body.cat_id;
@@ -891,7 +965,7 @@ app.post('/group_update', (req, res) => {
 
 app.get('/group_data', (req, res) => {
 
-  const sql = "select * from awt_group where deleted = 0 "
+  const sql = "select * from awt_group where deleted = 0 limit 3"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -1000,6 +1074,165 @@ app.post('/subcategory_delete', (req, res) => {
 
 })
 
+app.post('/add_blogcat', (req, res) => {
+  let user_id = req.body.user_id
+  let title = req.body.title;
+  let slug = req.body.slug;
+  let description = req.body.description;
+  let created_date = new Date()
+  let u_id = req.body.u_id;
+
+  let sql;
+  let param;
+
+  if (u_id == undefined) {
+    sql = "insert into awt_blogcategory(`title`,`slug`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
+    param = [title, slug, description, user_id, created_date]
+  } else {
+    sql = "update awt_blogcategory set  title = ?, slug = ? , description = ? , updated_by = ?, updated_date = ? where id = ?"
+    param = [title, slug, description, user_id, created_date, u_id]
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+app.post('/blogcat_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+  const sql = "select * from awt_blogcategory where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.get('/blogcat_data', (req, res) => {
+
+  const sql = "select * from awt_blogcategory where deleted = 0 "
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+app.post('/blogcat_delete', (req, res) => {
+
+  let cat_id = req.body.cat_id;
+
+  const sql = "update awt_blogcategory set deleted = 1 where id = ?"
+
+  con.query(sql, [cat_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+
+app.post('/add_blog', (req, res) => {
+  let blogcat_id = req.body.blogcat_id;
+  let user_id = req.body.user_id
+  let title = req.body.title;
+  let slug = req.body.slug;
+  let description = req.body.description;
+  let created_date = new Date()
+  let u_id = req.body.u_id;
+
+
+  let sql;
+  let param;
+
+  if (u_id == undefined) {
+    sql = "insert into awt_blog(`blogcat_id`,`title`,`slug`,`description`,`created_by`,`created_date`) values(?,?,?,?,?,?)"
+    param = [blogcat_id, title, slug, description, user_id, created_date]
+  } else {
+    sql = "update awt_blog set blogcat_id = ?, title = ?, slug = ? , description = ? , updated_by = ?, updated_date = ? where id = ?"
+    param = [blogcat_id, title, slug, description, user_id, created_date, u_id]
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+app.post('/blog_update', (req, res) => {
+
+  let u_id = req.body.u_id;
+  const sql = "select * from awt_blog where id = ?"
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.get('/blog_data', (req, res) => {
+
+  const sql = "select * from awt_blog where deleted = 0 "
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+app.post('/blog_delete', (req, res) => {
+
+  let cat_id = req.body.cat_id;
+
+  const sql = "update awt_blog set deleted = 1 where id = ?"
+
+  con.query(sql, [cat_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
 app.post('/add_brand', upload4.single('logo'), (req, res) => {
   let user_id = req.body.user_id
   let image = req.file.filename
@@ -1011,12 +1244,43 @@ app.post('/add_brand', upload4.single('logo'), (req, res) => {
   let sql;
   let param;
   if (uid == "undefined") {
-    sql = "insert into awt_brand(`title`,`logo`,`description`,`created_by`,`created_date`) values(?,?,?,?,?)"
-    param = [title, image, description, user_id, created_date]
+    sql = "insert into awt_brand(`title`,`logo`,`description`,`created_by`,`created_date`,`approve`) values(?,?,?,?,?,?)"
+    param = [title, image, description, user_id, created_date, 1]
   } else {
 
     sql = "update awt_brand set title = ?, logo = ?,description = ?,updated_by = ?, updated_date = ? where id =?";
     param = [title, image, description, user_id, created_date, uid]
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+app.post('/add_vendor_brand', upload4.single('logo'), (req, res) => {
+  let user_id = req.body.user_id
+  let image = req.file.filename
+  let title = req.body.title;
+  let description = req.body.description;
+  let created_date = new Date()
+  let uid = req.body.uid
+
+  let sql;
+  let param;
+  if (uid == "undefined") {
+    sql = "insert into awt_brand(`v_id`,`title`,`logo`,`description`,`created_by`,`created_date`) values(?,?,?,?,?,?)"
+    param = [user_id, title, image, description, user_id, created_date]
+  } else {
+
+    sql = "update awt_brand set v_id = ?, title = ?, logo = ?,description = ?,updated_by = ?, updated_date = ? ,approve = 0 where id =?";
+    param = [user_id, title, image, description, user_id, created_date, uid]
   }
 
   con.query(sql, param, (err, data) => {
@@ -1051,7 +1315,7 @@ app.post('/brand_update', (req, res) => {
 
 app.get('/Brand_data', (req, res) => {
 
-  const sql = "select * from awt_brand where deleted = 0 "
+  const sql = "select * from awt_brand where deleted = 0 and approve = 1"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -1079,22 +1343,7 @@ app.post('/Brand_delete', (req, res) => {
   })
 
 })
-app.post('/Brand_delete', (req, res) => {
 
-  let cat_id = req.body.cat_id;
-
-  const sql = "update awt_brand set deleted = 1 where id = ?"
-
-  con.query(sql, [cat_id], (err, data) => {
-    if (err) {
-      return res.json(err)
-    }
-    else {
-      return res.json(data)
-    }
-  })
-
-})
 
 
 app.post('/add_color', (req, res) => {
@@ -1229,7 +1478,14 @@ app.post('/update_social', (req, res) => {
 app.post('/add_banner', upload2.single('image'), (req, res) => {
 
   let title = req.body.title;
-  let banner = req.file.filename;
+  let banner;
+
+  if (req.body.filename == undefined) {
+    banner = req.body.image
+  } else {
+    banner = req.file.filename;
+  }
+
   let link = req.body.link;
   let target = req.body.target;
   let view = req.body.viewid;
@@ -1377,7 +1633,7 @@ app.post('/gallery_update_data', (req, res) => {
 
 app.get(`/order_detail`, (req, res) => {
 
-  const sql = 'select * from `order` where deleted = 0'
+  const sql = 'select * from `order` where deleted = 0 and orderno != "" order by id desc';
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -1386,6 +1642,22 @@ app.get(`/order_detail`, (req, res) => {
       return res.json(data)
     }
   })
+})
+
+app.post(`/vendor_order_detail`, (req, res) => {
+
+  let vendor_id = req.body.vendor_id
+
+  const sql = 'select * from `order` where deleted = 0  and FIND_IN_SET( ?, `v_id`)'
+
+  con.query(sql, [vendor_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+
 })
 
 app.post(`/getsubcategory`, (req, res) => {
@@ -1433,6 +1705,27 @@ app.post('/product_update', (req, res) => {
 
 })
 
+app.post('/update_proqty', (req, res) => {
+
+  let order_id = req.body.order_id;
+  let p_id = req.body.p_id;
+  let pqty = req.body.pqty;
+
+  const sql = "update `awt_cart` set `pqty` = ? where `orderid` = ? and `proid` = ?"
+
+  con.query(sql, [pqty, order_id, p_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+
+
 
 
 app.post(`/add_product`, upload5.fields([
@@ -1451,8 +1744,10 @@ app.post(`/add_product`, upload5.fields([
   let d_price = req.body.d_price;
   let description = req.body.description;
   let specification = req.body.specification;
+  let gst = req.body.gst;
   // let sizeimage = req.file.filename;
   let date = new Date()
+  let approve = 0
   let uid = req.body.uid;
 
   let sql;
@@ -1485,14 +1780,14 @@ app.post(`/add_product`, upload5.fields([
 
 
       if (uid == "undefined") {
-        sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+        sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`gst`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
-        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id]
+        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst]
       }
       else {
-        sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?,catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? where id = ? `;
+        sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?,catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? ,approve = 0 ,gst = ? where id = ? `;
 
-        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, uid]
+        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst, uid]
       }
 
 
@@ -1501,7 +1796,22 @@ app.post(`/add_product`, upload5.fields([
         if (err) {
           return res.json(err)
         } else {
-          return res.json("Data Added Successfully")
+          const insertedid = data.insertId
+          if (insertedid) {
+
+            const sql = "insert into awt_productstock(`pro_id`,`stock`,`created_date`) values(?,?,?)"
+
+            con.query(sql, [insertedid, 0, date], (err, data) => {
+              if (err) {
+                return res.json(err)
+              } else {
+                return res.json("Data Added Successfully")
+              }
+            })
+          } else {
+            return res.json("Data Added Successfully")
+          }
+
         }
       })
     }
@@ -1599,19 +1909,29 @@ app.get('/product_single_img', (req, res) => {
 })
 
 app.post(`/product_img_data`, (req, res) => {
-
   let product_id = req.body.product_id;
 
-  const sql = "select ap.id ,ap.image1, ap.image2,ap.image3,ap.image4,ac.title , ac.colorcode from awt_productimg as ap left join awt_color as ac on ac.id = ap.color_id  where ap.product_id = ? and ap.deleted = 0";
+  const sql = "SELECT ap.id, ap.image1, ap.image2, ap.image3, ap.image4, ac.title, ac.colorcode FROM awt_productimg AS ap LEFT JOIN awt_color AS ac ON ac.id = ap.color_id WHERE ap.product_id = ? AND ap.deleted = 0";
 
   con.query(sql, [product_id], (err, data) => {
     if (err) {
-      return res.json(err)
+      return res.json(err);
     } else {
-      return res.json(data)
+      // Process data to create an array of images for each product
+      const result = data.map(item => {
+        return {
+          id: item.id,
+          title: item.title,
+          colorcode: item.colorcode,
+          images: [item.image1, item.image2, item.image3, item.image4].filter(image => image !== null && image !== "") // Filter out any null or empty images
+        };
+      });
+      return res.json(result);
     }
-  })
-})
+  });
+});
+
+
 
 app.post(`/product_img_delete`, (req, res) => {
 
@@ -1631,7 +1951,7 @@ app.post(`/product_img_delete`, (req, res) => {
 
 app.get('/trending_products', (req, res) => {
 
-  const sql = 'select aap.id , aap.title ,aap.catid, aap.slug,aap.description, aap.price,aap.disc_price , ap.image1,ap.image2 from awt_add_product as aap left join awt_productimg as ap on ap.product_id = aap.id where aap.trending = 1 and aap.active = 1 and aap.deleted = 0 group by ap.product_id;'
+  const sql = 'select aap.id,aap.v_id,aap.gst, aap.title ,aap.catid, aap.slug,aap.description, aap.price,aap.disc_price , ap.image1,ap.image2 from awt_add_product as aap left join awt_productimg as ap on ap.product_id = aap.id where aap.trending = 1 and aap.active = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id;'
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -1652,6 +1972,17 @@ app.post('/addToCart', async (req, res) => {
   let p_qty = req.body.p_qty;
   let date = new Date();
   let v_id = req.body.v_id
+  let gst = req.body.gst
+
+  let totalprice = price * p_qty
+
+  let cgstper = gst / 2;
+  let sgstper = gst / 2;
+
+  let cgst = (totalprice * cgstper) / 100
+  let sgst = (totalprice * sgstper) / 100
+  let totalgst = cgst + sgst
+
 
   if (!orderid) {
     const sql = 'INSERT INTO `order` (`userid`,`created_date`) VALUES (?,?)';
@@ -1663,9 +1994,9 @@ app.post('/addToCart', async (req, res) => {
 
         const Inorderid = data.insertId
 
-        const sql = 'INSERT INTO `awt_cart` (`orderid`,`v_id`,`proid`,`pname`,`catid`,`price`,`pqty`,`created_date`) values (?,?,?,?,?,?,?,?)';
+        const sql = 'INSERT INTO `awt_cart` (`orderid`,`v_id`,`proid`,`pname`,`catid`,`price`,`pqty`,`cgst`,`sgst`,`totalgst`,`totalprice`,`created_date`) values (?,?,?,?,?,?,?,?,?,?,?,?)';
 
-        con.query(sql, [Inorderid, v_id, product_id, pro_name, catid, price, p_qty, date], (err, cartdata) => {
+        con.query(sql, [Inorderid, v_id, product_id, pro_name, catid, price, p_qty, cgst, sgst, totalgst, totalprice, date], (err, cartdata) => {
           if (err) {
             return res.json(err)
           } else {
@@ -1707,15 +2038,15 @@ app.post('/addToCart', async (req, res) => {
       if (err) {
         return res.json(err)
       } else {
-        const sql = "select * from awt_cart where orderid = ? and proid = ?";
+        const sql = "select * from awt_cart where orderid = ? and proid = ? and deleted = 0";
 
         con.query(sql, [orderid, product_id], (err, data) => {
           if (err) {
             return res.json(err)
           } else {
             if (data.length == 0) {
-              const sql = 'INSERT INTO `awt_cart` (`orderid`,`v_id`,`proid`,`pname`,`catid`,`price`,`pqty`,`created_date`) values (?,?,?,?,?,?,?,?)';
-              con.query(sql, [orderid, v_id, product_id, pro_name, catid, price, p_qty, date], (err, cartdata) => {
+              const sql = 'INSERT INTO `awt_cart` (`orderid`,`v_id`,`proid`,`pname`,`catid`,`price`,`pqty`,`created_date`,`cgst`,`sgst`,`totalgst`,`totalprice`) values (?,?,?,?,?,?,?,?,?,?,?,?)';
+              con.query(sql, [orderid, v_id, product_id, pro_name, catid, price, p_qty, date, cgst, sgst, totalgst, totalprice], (err, cartdata) => {
                 if (err) {
                   return res.json(err)
                 } else {
@@ -1734,14 +2065,14 @@ app.post('/addToCart', async (req, res) => {
                 }
               })
             } else {
-              const sql = 'update `awt_cart` set  pname = ?, catid = ?, price = ?, pqty = ? , created_date = ? , deleted = 0 where orderid = ? and proid = ?';
+              const sql = 'update `awt_cart` set  pname = ?, catid = ?, price = ?, pqty = ? , created_date = ? , deleted = 0,cgst =?, sgst = ? , totalgst = ? ,totalprice = ?  where orderid = ? and proid = ?';
 
-              con.query(sql, [pro_name, catid, price, p_qty, date, orderid, product_id], (err, data) => {
+              con.query(sql, [pro_name, catid, price, p_qty, date, cgst, sgst, totalgst, totalprice, orderid, product_id], (err, data) => {
                 if (err) {
                   return res.json(err)
                 } else {
 
-                  const updatereservstock = "update awt_reservstock set r_stock = ? where orderid = ? and proid = ?"
+                  const updatereservstock = "update awt_reservstock set r_stock = ? , deleted = 0 where orderid = ? and proid = ? "
 
                   con.query(updatereservstock, [p_qty, orderid, product_id], (err, data) => {
                     if (err) {
@@ -1772,9 +2103,9 @@ app.post('/addToCart', async (req, res) => {
         return res.json(err)
       } else {
         if (data.length == 0) {
-          const sql = 'INSERT INTO `awt_cart` (`orderid`,`v_id`,`proid`,`pname`,`catid`,`price`,`pqty`,`created_date`) values (?,?,?,?,?,?,?,?)';
+          const sql = 'INSERT INTO `awt_cart` (`orderid`,`v_id`,`proid`,`pname`,`catid`,`price`,`pqty`,`created_date`,`cgst`,`sgst`,`totalgst`,`totalprice`) values (?,?,?,?,?,?,?,?,?,?,?,?)';
 
-          con.query(sql, [orderid, v_id, product_id, pro_name, catid, price, p_qty, date], (err, cartdata) => {
+          con.query(sql, [orderid, v_id, product_id, pro_name, catid, price, p_qty, date, cgst, sgst, totalgst, totalprice], (err, cartdata) => {
             if (err) {
               return res.json(err)
             } else {
@@ -1786,21 +2117,19 @@ app.post('/addToCart', async (req, res) => {
                 if (err) {
                   return res.json(err)
                 } else {
-
-
                   return res.json(data)
                 }
               })
             }
           })
         } else {
-          const sql = 'update `awt_cart` set  pname = ?,catid = ?,price = ?, pqty = ? , created_date = ? , deleted = 0 where orderid = ? and proid = ?';
+          const sql = 'update `awt_cart` set  pname = ?,catid = ?,price = ?, pqty = ? , created_date = ? , deleted = 0 , cgst =? ,sgst = ? ,totalgst = ? , totalprice = ? where orderid = ? and proid = ?';
 
-          con.query(sql, [pro_name, catid, price, p_qty, date, orderid, product_id], (err, data) => {
+          con.query(sql, [pro_name, catid, price, p_qty, date, cgst, sgst, totalgst, totalprice, orderid, product_id], (err, data) => {
             if (err) {
               return res.json(err)
             } else {
-              const updatereservstock = "update awt_reservstock set r_stock = ? where orderid = ? and proid = ?"
+              const updatereservstock = "update awt_reservstock set r_stock = ? ,deleted = 0 where orderid = ? and proid = ?"
 
               console.log(p_qty, orderid, product_id)
 
@@ -1877,33 +2206,29 @@ app.post('/getproductDetails', (req, res) => {
 
   let productslug = req.body.productslug;
 
-  const sql = 'select aap.* , ac.title as category ,aps.stock from awt_add_product as aap left join awt_category as ac on ac.id = aap.catid left join awt_productstock as aps on aps.pro_id = aap.id   where aap.slug = ? and aap.deleted = 0'
+  const checkreservstock = "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0;"
 
-  con.query(sql, [productslug], (err, data) => {
+  con.query(checkreservstock, [productslug], (err, data) => {
     if (err) {
       return res.json(err)
     } else {
-      return res.json(data)
+      const totalRStock = data.reduce((total, row) => total + Number(row.r_stock), 0);
+
+
+      const sql = 'select aap.* , ac.title as category ,aps.stock from awt_add_product as aap left join awt_category as ac on ac.id = aap.catid left join awt_productstock as aps on aps.pro_id = aap.id  where aap.slug = ? and aap.deleted = 0'
+
+      con.query(sql, [productslug], (err, data) => {
+        if (err) {
+          return res.json(err)
+        } else {
+          return res.json({ data: data, r_stock: totalRStock })
+        }
+      })
     }
   })
-})
 
-app.post('/update_proqty', (req, res) => {
 
-  let order_id = req.body.order_id;
-  let p_id = req.body.p_id;
-  let pqty = req.body.pqty;
 
-  const sql = "update `awt_cart` set `pqty` = ? where `orderid` = ? and `proid` = ?"
-
-  con.query(sql, [pqty, order_id, p_id], (err, data) => {
-    if (err) {
-      return res.json(err)
-    }
-    else {
-      return res.json(data)
-    }
-  })
 
 })
 
@@ -1912,27 +2237,163 @@ app.post('/getproductlisting', (req, res) => {
   let groupslug = req.body.groupslug;
   let catslug = req.body.catslug;
   let subcatslug = req.body.subcatslug;
-
-
+  let brand_id = req.body.brand_id;
+  let brandid = req.body.brandid;
+  let sort = req.body.sort;
+  let price = req.body.price;
 
   let sql;
   let param;
+  param = []
 
-  if (catslug == undefined && subcatslug == undefined) {
+  if (brand_id) {
+    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,aap.gst,ag.title,aap.slug , ab.title ,ab.logo from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where '
 
-    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.slug from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 group by ap.product_id'
+    if (brand_id) {
+      sql += "aap.b_id = ? and aap.active = 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
-    param = [groupslug]
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      param.push(brand_id);
+    }
+
+    if ( price && brand_id ) {
+      sql += "disc_price BETWEEN 0 AND ? and aap.b_id = ? and aap.active = 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      param.push(price,brand_id)
+    }
+
+
+  }
+  else if (catslug == undefined && subcatslug == undefined) {
+
+    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where '
+
+    if ( price && groupslug && brandid) {
+      sql += "aap.b_id = ? and aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      param.push(brandid ,price,groupslug)
+    } 
+    
+    if ( price && groupslug && !brandid) {
+      sql += "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      param.push(price,groupslug)
+    } 
+
+    if (!price) {
+      sql += " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      param.push(groupslug);
+    }
+
+
+
   }
   else if (subcatslug == undefined) {
 
-    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.slug from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 group by ap.product_id'
-    param = [catslug]
+    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo  from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where '
+
+
+    if ( price && catslug ) {
+      sql += "disc_price BETWEEN 0 AND ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      param.push(price,catslug)
+    }
+
+    if (!price) {
+      sql += "ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      param.push(catslug);
+    }
+
+
+   
 
   } else {
 
-    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.slug from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_productimg as ap on ap.product_id = aap.id where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 group by ap.product_id'
-    param = [subcatslug]
+    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where '
+
+    if ( price && subcatslug ) {
+      sql += "disc_price BETWEEN 0 AND ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      param.push(price,subcatslug)
+    }
+
+    if (!price) {
+      sql += "ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      param.push(subcatslug);
+    }
+    
+
   }
 
 
@@ -1946,6 +2407,48 @@ app.post('/getproductlisting', (req, res) => {
   })
 })
 
+
+app.post(`/getbrand`, (req, res) => {
+  let groupslug = req.body.groupslug;
+  let catslug = req.body.catslug;
+  let subcatslug = req.body.subcatslug;
+  let brand_id = req.body.brand_id;
+
+  let sql;
+  let param;
+
+  if (brand_id) {
+    sql = 'select ab.id , ab.title ,ab.logo from awt_add_product as aap left join awt_brand as ab on aap.b_id = ab.id where aap.b_id = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 group by aap.b_id'
+
+    param = [brand_id]
+  }
+  else if (catslug == undefined && subcatslug == undefined) {
+
+    sql = 'select  ab.id, ab.title ,ab.logo from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_brand as ab on aap.b_id = ab.id where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 group by aap.b_id'
+
+    param = [groupslug]
+  }
+  else if (subcatslug == undefined) {
+
+    sql = 'select ab.id, ab.title ,ab.logo  from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid  left join awt_brand as ab on aap.b_id = ab.id where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 group by aap.b_id';
+    param = [catslug]
+
+  } else {
+
+    sql = 'select ab.id, ab.title ,ab.logo from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_brand as ab on aap.b_id = ab.id where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 group by aap.b_id'
+    param = [subcatslug]
+  }
+
+
+  con.query(sql, param, (err, data) => {
+
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
 
 app.post('/addToWishList', async (req, res, next) => {
   try {
@@ -2001,7 +2504,7 @@ app.post('/getUserWishList', async (req, res, next) => {
     const userId = req.body.userId;
 
 
-    const sql = 'SELECT awl.id, awl.user_id, adp.id AS prod_id, adp.v_id, adp.b_id, adp.catid, adp.scatid,adp.title, adp.description, adp.specification, adp.price, adp.disc_price, adp.size_image FROM `awt_wishlist` AS awl LEFT JOIN `awt_add_product` AS adp ON adp.id = awl.prod_id WHERE awl.user_id = ? AND awl.deleted = 0';
+    const sql = 'SELECT awl.id, awl.user_id, adp.id AS prod_id, adp.v_id, adp.b_id, adp.catid, adp.scatid,adp.title, adp.description, adp.specification, adp.price, adp.disc_price, adp.size_image ,ap.image1 FROM `awt_wishlist` AS awl LEFT JOIN `awt_add_product` AS adp ON adp.id = awl.prod_id left join `awt_productimg` as ap on ap.product_id = awl.prod_id   WHERE awl.user_id = ? AND awl.deleted = 0 GROUP BY ap.product_id';
 
     const data = await new Promise((resolve, reject) => {
       con.query(sql, [userId], (error, data) => {
@@ -2045,7 +2548,7 @@ app.post('/getcartData', (req, res) => {
 
   let order_id = req.body.order_id;
 
-  const sql = 'select ac.id, ac.orderid,ac.proid,ac.pname,ac.catid,ac.price,ac.pqty,ap.image1 from `awt_cart` as ac LEFT JOIN awt_productimg as ap on ap.product_id = ac.proid where ac.orderid = ? and ac.deleted = 0 GROUP by ap.product_id'
+  const sql = 'select ac.cgst ,ac.sgst, ac.id,ac.v_id,ac.orderid,ac.proid,ac.pname,ac.catid,ac.price,ac.pqty,ap.image1 from `awt_cart` as ac LEFT JOIN awt_productimg as ap on ap.product_id = ac.proid where ac.orderid = ? and ac.deleted = 0 GROUP by ap.product_id'
 
   con.query(sql, [order_id], (err, data) => {
     if (err) {
@@ -2055,6 +2558,7 @@ app.post('/getcartData', (req, res) => {
     }
   })
 })
+
 
 app.post('/removecartitem', (req, res) => {
 
@@ -2066,10 +2570,21 @@ app.post('/removecartitem', (req, res) => {
     if (err) {
       return res.json(err)
     } else {
-      return res.json(data)
+
+      const updatereserv = "update awt_reservstock set deleted = 1 where cartid = ?"
+
+      con.query(updatereserv, [cart_id], (err, data) => {
+        if (err) {
+          return res.json(err)
+        } else {
+          return res.json(data)
+        }
+      })
     }
   })
 })
+
+
 app.post('/getcartcount', (req, res) => {
 
   let order_id = req.body.order_id;
@@ -2113,6 +2628,7 @@ app.get(`/state`, (req, res) => {
 })
 
 app.post('/place_order', (req, res) => {
+
   let firstname = req.body.firstname;
   let lastname = req.body.lastname;
   let country = req.body.country;
@@ -2122,7 +2638,6 @@ app.post('/place_order', (req, res) => {
   let state = req.body.state;
   let postcode = req.body.postcode;
   let orderNotes = req.body.orderNotes;
-
   let sfirstname = req.body.sfirstname;
   let slastname = req.body.slastname;
   let scountry = req.body.scountry;
@@ -2131,19 +2646,161 @@ app.post('/place_order', (req, res) => {
   let scity = req.body.scity;
   let sstate = req.body.sstate;
   let spostcode = req.body.spostcode;
-
+  let totalamt = req.body.totalamt;
+  let paymode = req.body.paymode;
   let order_id = req.body.order_id
+  let user_id = req.body.user_id
+  let mobile = req.body.mobile
+  let pending = "pending";
+  let vendor_id = req.body.vendor_id;
 
 
-  // const sql = "insert into `order`(`firstname`,`lastname`,`country`,`address1`,`landmark`,`city`,`state`,`postcode`,`order_comments`,`sfirstname`,`slastname`,`scountry`,`shipaddress`,`shiplandmark`,`shipcity`,`shipstate`,`shippostcode`) values(?,?)"
+  const date = new Date()
 
-  const sql = "update `order` set firstname = ?, lastname = ? , country =?,address1 = ? ,landmark = ? , city1 = ? , state = ? , postcode = ?, order_comments = ? ,sfirstname = ? , slastname= ? ,scountry = ?, shipaddress = ? , shiplandmark = ? , shipcity = ? , shipstate = ? , shippostcode = ? where id = ? ";
 
-  con.query(sql, [firstname, lastname, country, address, landmark, city, state, postcode, orderNotes, sfirstname, slastname, scountry, saddress, slandmark, scity, sstate, spostcode, order_id], (err, data) => {
+  const checkaddress = "select * from `awt_address` where `uid` = ? and `deleted` = 0"
+
+  con.query(checkaddress, [user_id], (err, data) => {
     if (err) {
       return res.json(err)
     } else {
-      return res.json(data)
+      if (data.length == 0) {
+        const insert = "insert into awt_address(`uid`,`firstname`,`lastname`,`mobile`,`address`,`state`,`city`,`pincode`,`created_date`,`default`) values(?,?,?,?,?,?,?,?,?,?)"
+
+
+        con.query(insert, [user_id, firstname, lastname, mobile, address, state, city, postcode, date, 1], (err, data) => {
+          if (err) {
+            return res.json(err)
+          } else {
+
+            //  const removestock = "insert into awt_productstockremove(`pro_id` , `stock` ,`created_date`, `created_by` )"
+            //  con.query(removestock )
+
+            console.log(res.data)
+          }
+        })
+      }
+    }
+  })
+
+
+
+
+  const sql = "update `order` set  v_id = ?,firstname = ?, lastname = ? , country =?,address1 = ? ,landmark = ? , city1 = ? , state = ? , postcode = ?, order_comments = ? ,sfirstname = ? , slastname= ? ,scountry = ?, shipaddress = ? , shiplandmark = ? , shipcity = ? , shipstate = ? , shippostcode = ?,totalamt = ?,paymode = ? where id = ? ";
+
+  con.query(sql, [vendor_id, firstname, lastname, country, address, landmark, city, state, postcode, orderNotes, sfirstname, slastname, scountry, saddress, slandmark, scity, sstate, spostcode, totalamt, paymode, order_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      const sql = "select * from `order` where `orderno` != '' "
+
+      con.query(sql, (err, data) => {
+        if (err) {
+          return res.json(err)
+        } else {
+          const count = data.length
+          const ordercount = count + 1
+
+          const currentDate = new Date();
+          const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+          const utcDate = currentDate.getTime() + (currentDate.getTimezoneOffset() * 60 * 1000);
+          const istDate = new Date(utcDate + istOffset);
+
+          const day = String(istDate.getDate()).padStart(2, '0');
+          const month = String(istDate.getMonth() + 1).padStart(2, '0'); // Months are zero based
+          const year = istDate.getFullYear().toString().substr(-2);
+
+          const orderno = "MISU" + "-" + year + month + day + "-" + ordercount
+
+          const sql = "update `order` set `orderno` = ? , `ostatus` = ? , order_date = ? where `id`  = ?"
+
+          con.query(sql, [orderno, pending, currentDate, order_id], (err, data) => {
+            if (err) {
+              return res.json(err)
+            } else {
+
+              const checkcart = "select * from `awt_cart` where orderid = ? and deleted = 0"
+
+
+              con.query(checkcart, [order_id], (err, data) => {
+                if (err) {
+                  return res.json(err)
+                } else {
+
+                  const param = data.map((items) => {
+                    return [
+                      items.proid,
+                      items.pqty,
+                      new Date(),
+                      user_id
+                    ]
+                  })
+
+
+                  const updateremovestock = "insert into awt_productstockremove(`pro_id`,`stock`,`created_date`,`updated_by`) values ?"
+
+                  con.query(updateremovestock, [param], (err, data) => {
+                    if (err) {
+                      return res.json(err)
+                    } else {
+
+
+                      const updatePromises = param.map(item => {
+                        const [pro_id, stock] = item;
+                        const getproductstock = "UPDATE `awt_productstock` SET stock = stock - ? WHERE pro_id = ?";
+                        return new Promise((resolve, reject) => {
+                          con.query(getproductstock, [stock, pro_id], (err, data) => {
+                            if (err) {
+                              reject(err);
+                            } else {
+                              resolve(data);
+                            }
+                          });
+                        });
+                      });
+
+
+                      Promise.all(updatePromises)
+                        .then(results => {
+                          const updatereservstock = "update awt_reservstock set p_status = 1 where orderid = ?"
+
+                          con.query(updatereservstock, [order_id], (err, data) => {
+                            if (err) {
+                              return res.json(err)
+                            } else {
+                              const orderno = "select orderno from `order` where id = ?"
+
+                              con.query(orderno, [order_id], (err, data) => {
+                                if (err) {
+                                  return res.json(err)
+                                }
+                                else {
+                                  return res.json(data)
+                                }
+                              })
+                            }
+                          })
+                        })
+                        .catch(err => {
+                          // At least one update failed
+                          res.json(err);
+                        });
+
+
+
+
+                    }
+                  })
+                }
+              })
+
+
+
+
+            }
+          })
+        }
+      })
     }
 
   })
@@ -2160,7 +2817,16 @@ app.post('/getcolorimg', (req, res) => {
     if (err) {
       return res.json(err)
     } else {
-      return res.json(data)
+      // Process data to create an array of images for each product
+      const result = data.map(item => {
+        return {
+          id: item.id,
+          product_id: item.product_id,
+          color_id: item.color_id,
+          images: [item.image1, item.image2, item.image3, item.image4].filter(image => image !== null && image !== "") // Filter out any null or empty images
+        };
+      });
+      return res.json(result);
     }
   })
 })
@@ -2229,6 +2895,7 @@ app.post(`/updateprofiledetails`, (req, res) => {
     }
   })
 })
+
 
 
 
@@ -2405,7 +3072,6 @@ app.post('/address_delete', (req, res) => {
 })
 
 
-
 app.post('/address_update', (req, res) => {
 
   let u_id = req.body.u_id;
@@ -2449,12 +3115,11 @@ app.post('/update_default', (req, res) => {
 
 })
 
-
 app.post('/profile_order', (req, res) => {
 
   let user_id = req.body.user_id;
 
-  const sql = "select * from `order` where  `userid` = ? and `ostatus` !='incart' "
+  const sql = "select * from `order` where  `userid` = ? and `ostatus` !='incart' and orderno != '' "
 
   con.query(sql, [user_id], (err, data) => {
     if (err) {
@@ -2500,6 +3165,7 @@ app.post('/order_view', (req, res) => {
   })
 
 })
+
 app.post('/order_status_update', (req, res) => {
 
   let order_id = req.body.order_id;
@@ -2551,6 +3217,7 @@ app.post('/addorderid', (req, res) => {
   })
 
 })
+
 
 
 
@@ -2736,8 +3403,6 @@ app.post('/assign_role', (req, res) => {
 
 
 })
-
-
 
 app.post('/getRoleData', (req, res) => {
   let role = req.body.role;
@@ -2957,26 +3622,26 @@ app.post('/addVendorUser', (req, res, next) => {
 })
 
 
-// app.post('/changepassword', (req, res, next) => {
+app.post('/changepassword', (req, res, next) => {
 
-//   try {
-//     const sql = 'UPDATE awt_vendor SET password = ? WHERE id = ?';
-//     const { password, cnf_password, vendor_id } = req.body;
-//     console.log(password, cnf_password, vendor_id);
+  try {
+    const sql = 'UPDATE awt_vendor SET password = ? WHERE id = ?';
+    const { password, cnf_password, vendor_id } = req.body;
+    console.log(password, cnf_password, vendor_id);
 
-//     const hashedPassword = md5(password);
-//     con.query(sql, [hashedPassword], (err, data) => {
-//       if (err) {
-//         res.json(err);
-//       } else {
-//         res.json(data)
-//       }
-//     })
-//   } catch (error) {
-//     res.json(error);
-//   }
+    const hashedPassword = md5(password);
+    con.query(sql, [hashedPassword], (err, data) => {
+      if (err) {
+        res.json(err);
+      } else {
+        res.json(data)
+      }
+    })
+  } catch (error) {
+    res.json(error);
+  }
 
-// })
+})
 
 app.post(`/vendor_product_data`, (req, res) => {
 
@@ -3326,7 +3991,7 @@ app.post(`/add_return_order`, (req, res) => {
   let products = req.body.products;
   let order_id = req.body.order_id;
   let user_id = req.body.user_id;
-
+  let reasonid = req.body.reasonid;
 
   const getreturncount = "select * from `awt_return_exchange`"
 
@@ -3343,9 +4008,9 @@ app.post(`/add_return_order`, (req, res) => {
 
       const returnno = "RTN" + "-" + year + month + day + "-" + ordercount
 
-      const insertreturnorder = "insert into awt_return_exchange(`orderid`, `user_id`,`return_no`,`return_date`,`created_date`) values(?,?,?,?,?)"
+      const insertreturnorder = "insert into awt_return_exchange(`orderid`,`reason`,`user_id`,`return_no`,`return_date`,`created_date`) values(?,?,?,?,?,?)"
 
-      con.query(insertreturnorder, [order_id, user_id, returnno, currentDate, currentDate], (err, data) => {
+      con.query(insertreturnorder, [order_id, reasonid, user_id, returnno, currentDate, currentDate], (err, data) => {
         if (err) {
           return res.json(err)
         } else {
@@ -3476,13 +4141,20 @@ app.post('/add_cancellation', (req, res) => {
       return res.json(err)
     }
     else {
-      return res.json(data)
-      // return res.json("Data Added Successfully!")
+      if (data.insertId == 0) {
+        return res.json("Date Updated Successfully")
+
+      } else {
+        return res.json("Data Added Successfully!")
+      }
+      // return res.json(data)
+
     }
 
 
   })
 })
+
 
 
 app.post('/cancellation_update', (req, res) => {
@@ -3533,9 +4205,6 @@ app.post('/cancellation_delete', (req, res) => {
   })
 
 })
-
-
-
 
 app.get('/getreason', (req, res) => {
   const sql = "select * from awt_cancellation_reason where deleted = 0"
@@ -3944,200 +4613,191 @@ app.post(`/vendor_product_stock`, (req, res) => {
 })
 
 
-// app.post(`/getstock` , (req,res)=>{
-//   let pro_id = req.body.pro_id ;
+app.post(`/getstock`, (req, res) => {
+  let pro_id = req.body.pro_id;
 
-//   const sql = "select id,pro_id,stock from `awt_productstock` where pro_id = ?"
+  const sql = "select id,pro_id,stock from `awt_productstock` where pro_id = ?"
 
-//   con.query(sql , [pro_id] , (err,data) =>{
-//     if(err){
-//       return res.json(err)
-//     }else{
-//       return res.json(data)
-//     }
-//   })
-// })
-
-app.post('/payment', async (req, res) => {
-  try {
-    const razorpay = new Razorpay({
-      key_id: process.env.RAZORPAY_KEY_ID,
-      key_secret: process.env.RAZORPAY_SECRET,
-    });
-
-    const options = req.body;
-
-    const order = await razorpay.orders.create(options);
-
-    if (!order) {
-      return res.status(500).send("error");
-    }
-    res.json(order);
-
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("error");
-  }
-})
-
-
-
-function checkRows() {
-  const query = `SELECT * FROM awt_reservstock WHERE created_date < NOW() - INTERVAL 2 MINUTE AND p_status = 0 AND deleted = 0`;
-
-  con.query(query, (err, results) => {
-    if (err) {
-      console.error('Error executing query:', err);
-      return;
-    }
-
-    // Process the results (e.g., send an API request for each row)
-    results.forEach(row => {
-      // Your API request logic here
-
-      console.log('Processing row:', row.r_stock);
-      let param = row.id;
-      let cart_id = row.cartid;
-
-      const deleterow = "update awt_reservstock set deleted = 1 where id = ?"
-
-      con.query(deleterow, [param], (err, data) => {
-        if (err) {
-          console.log(err)
-        } else {
-
-          const updatecart = "update awt_cart set deleted = 1 where id = ?"
-
-          con.query(updatecart, [cart_id], (err, data) => {
-            if (err) {
-              console.log(err)
-            } else {
-              console.log(data)
-            }
-          })
-        }
-      })
-
-    });
-  });
-}
-
-
-
-cron.schedule('* * * * *', () => {
-  console.log('Running scheduled task');
-  checkRows();
-});
-
-
-app.post('/nodeapp/orderadd', (req, res) => {
-
-  let locationid = req.body.locationid;
-  let firstname = req.body.firstname;
-  let order_id = req.body.order_id;
-  let mobile = req.body.mobile;
-  let email = req.body.email;
-  let totalPrice = req.body.totalPrice;
-  let date = new Date();
-  let placed = "incart";
-  let v_id = req.body.v_id;
-  let v_id_str = String(v_id);
-
-
-
-  const sql = "update `order` set vendor_id = ?, location_id = ? ,firstname = ? , mobileno = ? , email = ? , payment_date = ? , order_date = ? , updated_date = ? ,totalamt = ?  , orderstatus = 0  where id = ?  and deleted = 0"
-
-  con.query(sql, [v_id_str, locationid, firstname, mobile, email, date, date, date, totalPrice, order_id], (err, data) => {
+  con.query(sql, [pro_id], (err, data) => {
     if (err) {
       return res.json(err)
     } else {
-
-      const updatecart = "update `awt_cart` set orderstatus = 0 where orderid = ?"
-
-      con.query(updatecart, [order_id], (err, data) => {
-        if (err) {
-          return res.json(err)
-        } else {
-
-          const sql = "select * from `order` where `ostatus` != 'incart'"
-
-          con.query(sql, (err, data) => {
-            if (err) {
-              return res.json(err)
-            } else {
-
-
-              const count = data.length
-              const ordercount = count + 1
-              const currentDate = new Date();
-              const day = String(currentDate.getDate()).padStart(2, '0');
-              const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero based
-              const year = currentDate.getFullYear().toString().substr(-2);
-
-              const orderno = "UMI" + "-" + year + month + day + "-" + ordercount;
-              const sql = "update `order` set `orderno` = ? , `ostatus` = ?  where `id`  = ?"
-
-              con.query(sql, [orderno, placed, order_id], (err, data) => {
-                if (err) {
-                  return res.json(err)
-                } else {
-
-                  const getcart = 'select  ac.* , ap.upload_image from `awt_cart` ac left join `awt_product` as ap on ac.proid = ap.id where  ac.orderid = ? and ac.deleted = 0'
-
-                  con.query(getcart, [order_id], (err, data) => {
-                    if (err) {
-                      return res.json(err)
-                    } else {
-
-                      return res.json(data)
-
-
-
-                    }
-                  })
-
-                }
-              })
-
-
-              //   const checkorderno = "select * from `order` where orderno IS NULL and  id =? "
-
-              //   con.query(checkorderno, [order_id], (err, data) => {
-              //     if (err) {
-              //       return res.json(err)
-              //     } else {
-              //       const datacount = data.length
-
-              //       if (datacount == 1) {
-
-
-              //       } else {
-              //          return res.json("Already have orderno")
-
-
-              //       }
-              //     }
-              //   })
-
-
-
-
-
-            }
-          })
-        }
-      })
-
-
-
-
-
+      return res.json(data)
     }
   })
 })
 
 
-//Start
+
+
+
+// function checkRows() {
+//   const query = `SELECT * FROM awt_reservstock WHERE created_date < CONVERT_TZ(NOW(), @@session.time_zone, '+05:30') - INTERVAL 15 MINUTE AND p_status = 0 AND deleted = 0`;
+
+//   con.query(query, (err, results) => {
+//     if (err) {
+//       console.error('Error executing query:', err);
+//       return;
+//     }
+
+//     // Process the results (e.g., send an API request for each row)
+//     results.forEach(row => {
+//       // Your API request logic here
+
+//       console.log('Processing row:', row.r_stock);
+//       let param = row.id;
+//       let cart_id = row.cartid;
+
+//       const deleterow = "update awt_reservstock set deleted = 1 where id = ?"
+
+//       con.query(deleterow, [param], (err, data) => {
+//         if (err) {
+//           console.log(err)
+//         } else {
+
+//           const updatecart = "update awt_cart set deleted = 1 where id = ?"
+
+//           con.query(updatecart, [cart_id], (err, data) => {
+//             if (err) {
+//               console.log(err)
+//             } else {
+//               console.log(data)
+//             }
+//           })
+//         }
+//       })
+
+//     });
+//   });
+// }
+
+
+// cron.schedule('* * * * *', () => {
+//   console.log('Running scheduled task');
+//   checkRows();
+// });
+
+
+// payment api *************************
+
+app.post('/payment', async (req, res) => {
+  const { user_id, price, phone, name } = req.body;
+
+  const merchantTransactionId = 'M' + Date.now();
+
+  const data = {
+    merchantId: process.env.MERCHANT_ID,
+    merchantTransactionId: merchantTransactionId,
+    merchantUserId: 'MUID' + user_id,
+    name: name,
+    amount: price * 100,
+    redirectUrl: `https://nodejs.micasasucasa.in/payment/validate/${merchantTransactionId}`,
+    redirectMode: 'REDIRECT',
+    mobileNumber: phone,
+    paymentInstrument: {
+      type: 'PAY_PAGE'
+    }
+  };
+
+
+  const payload = JSON.stringify(data);
+  const payloadMain = Buffer.from(payload).toString('base64');
+
+  const keyIndex = 1; // Adjust based on your configuration
+  const string = payloadMain + '/pg/v1/pay' + process.env.SALT_KEY;
+  const sha256 = crypto.createHash('sha256').update(string).digest('hex');
+  const checksum = sha256 + '###' + keyIndex;
+
+  const prod_URL = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+
+  const options = {
+    method: 'POST',
+    url: prod_URL,
+    headers: {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+      'X-VERIFY': checksum
+    },
+    data: {
+      request: payloadMain
+    }
+  };
+
+  try {
+    const response = await axios.request(options);
+
+
+    res.status(200).send({
+      url: response.data.data.instrumentResponse.redirectInfo.url,
+      transactionid: response.data.data.merchantTransactionId,
+      success: response.data.success
+    });
+  } catch (error) {
+    console.error(`Payment Error: ${error.message}`);
+    res.status(500).send({ message: error.message, success: false });
+  }
+
+});
+
+
+
+app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
+  const PHONE_PE_HOST_URL = "https://api.phonepe.com/apis/hermes";
+  const MERCHANT_ID = process.env.MERCHANT_ID;
+  const SALT_INDEX = 1;
+  const SALT_KEY = process.env.SALT_KEY;
+
+  const { merchantTransactionId } = req.params;
+
+  if (merchantTransactionId) {
+    const statusUrl = `${PHONE_PE_HOST_URL}/pg/v1/status/${MERCHANT_ID}/` + merchantTransactionId;
+
+    // generate X-VERIFY
+    const string = `/pg/v1/status/${MERCHANT_ID}/` + merchantTransactionId + SALT_KEY;
+    const sha256 = crypto.createHash('sha256').update(string).digest('hex');
+    const xVerifyChecksum = sha256 + "###" + SALT_INDEX;
+
+    try {
+      const response = await axios.get(statusUrl, {
+        headers: {
+          "Content-Type": "application/json",
+          "X-VERIFY": xVerifyChecksum,
+          "X-MERCHANT-ID": MERCHANT_ID,  // Corrected this line
+          accept: "application/json",
+        },
+      });
+
+      if (response.data && response.data.code === "PAYMENT_SUCCESS") {
+        // Redirect to FE payment success status page
+        res.redirect(`https://micasasucasa.in/#/payment-success?transactionid=${merchantTransactionId}`);
+      } else {
+        // Redirect to FE payment failure / pending status page
+        res.redirect(`https://micasasucasa.in/#/payment-failure?transactionid=${merchantTransactionId}`);
+      }
+    } catch (error) {
+      console.error(`Payment validation failed: ${error.message}`);
+      res.status(500).send({ message: "Payment verification failed", success: false });
+    }
+  } else {
+    res.status(400).send({ message: "Invalid Transaction ID", success: false });
+  }
+});
+
+app.post('/getrelatedproduct', (req, res) => {
+  let { catid } = req.body;
+
+  const sql = "select aap.id, aap.title, aap.slug, aap.description, aap.description, aap.specification,aap.price,aap.disc_price, aap.size_image,aap.gst,aap.v_id,aap.catid,ap.image1,ap.image2 from awt_add_product as aap left join awt_productimg as ap on aap.id = ap.product_id where aap.catid = ? and aap.deleted = 0 and ap.deleted = 0 and aap.active= 1 and aap.approve = 1"
+
+  con.query(sql, [catid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+
+
 
 

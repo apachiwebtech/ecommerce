@@ -109,6 +109,7 @@ import ShippingPolicy from './MainComponent/Pages/ShippingPolicy';
 import Refund from './MainComponent/Pages/Refund';
 import PaymentFailed from './MainComponent/Pages/PaymentFailed';
 import CommingSoon from './MainComponent/CommingSoon';
+import TestCorousel from './MainComponent/Pages/TestCorousel';
 
 
 
@@ -144,6 +145,10 @@ const Router = createHashRouter([
     element: <AddProductImg />
   },
   {
+    path: '/scarouser',
+    element: <TestCorousel />
+  },
+  {
     path: '/',
     element: <App />,
     children: [
@@ -159,6 +164,7 @@ const Router = createHashRouter([
         path: '/shopcart',
         element: <ShopCart />
       },
+  
       {
         path: '/:brand_id',
         element: <ShopProduct />
@@ -169,7 +175,7 @@ const Router = createHashRouter([
         element: <ShopWishlist />
       },
       {
-        path: '/detailpage/:productslug',
+        path: '/product/:productslug',
         element: <DetailPage />
       },
       {

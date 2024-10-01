@@ -146,7 +146,7 @@ const ProductCard = (props) => {
                         <div className="hot">Hot</div>
                     </div> : <></>}
                     <div className="product-thumb-hover">
-                        <Link to={`/detailpage/${props.slug}`} >
+                        <Link to={`/product/${props.slug}`} >
                             <img width="600" height="600" src={`${IMG_URL}/productimg/` + props.image1} className="post-image" alt="" />
                             <img width="600" height="600" src={`${IMG_URL}/productimg/` + props.image2} className="hover-image back" alt="" />
                         </Link>
@@ -181,7 +181,7 @@ const ProductCard = (props) => {
                 </div>
                 <div className="products-content">
                     <div className="contents text-center">
-                        <h3 className="product-title"><Link to={`/detailpage/${props.slug}`}>{props.title}</Link></h3>
+                        <h3 className="product-title"><Link to={`/product/${props.slug}`}>{props.title}</Link></h3>
                         {props.disc_price ? (<span className="price">
                             <del aria-hidden="true"><span>₹{props.price}</span></del>
                             <ins><span>₹{props.disc_price}</span></ins>

@@ -4,6 +4,8 @@ import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { Helmet } from "react-helmet";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 function srcset(image, size, rows = 1, cols = 1) {
     return {
@@ -25,6 +27,15 @@ const ImageGallery = () => {
                 setData(res.data)
             })
     }
+
+    useEffect(() => {
+        // Initialize Fancybox after component mounts
+        Fancybox.bind("[data-fancybox]", {});
+        return () => {
+            // Cleanup Fancybox bindings
+            Fancybox.destroy();
+        };
+    }, []);
 
     useEffect(() => {
         getimages()
@@ -78,21 +89,40 @@ const ImageGallery = () => {
                                                 </ImageList> */}
 
                                                 <ImageList
-                                                    sx={{ width: "100%" ,height : "auto" }}
+                                                    sx={{ width: "100%", height: "auto" }}
                                                     variant="quilted"
                                                     cols={3}
-                                                    // rowHeight={500}
+                                                // rowHeight={500}
                                                 >
                                                     {data.map((item) => (
                                                         <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
                                                             <img
-                                                                {...srcset(`${IMG_URL}/gallery/${item.upload_image}`,  item.rows, item.cols)}
+                                                                {...srcset(`${IMG_URL}/gallery/${item.upload_image}`, item.rows, item.cols)}
                                                                 alt={item.title}
                                                                 loading="lazy"
                                                             />
                                                         </ImageListItem>
                                                     ))}
                                                 </ImageList>
+
+
+                                                {data && data.map((item, index) => (
+
+
+                                                
+
+                                                    <a
+                                                    data-fancybox="gallery"
+                                                    href={`${IMG_URL}/gallery/${item?.upload_image}`}
+                                                    data-caption="Caption for this image"
+                                                  >
+                                                    <img
+                                                      src={`${IMG_URL}/gallery/${item?.upload_image}`}
+                                                      alt="Thumbnail"
+                                                    />
+                                                  </a>
+
+                                                ))}
 
 
                                             </div>

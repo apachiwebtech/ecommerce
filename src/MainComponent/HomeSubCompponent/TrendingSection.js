@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
-
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Slider from 'react-slick';
+// import Slider from 'react-slick';
 import axios from 'axios'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { Link } from 'react-router-dom'
@@ -18,6 +15,11 @@ import LoginForm from '../Authentication/LoginForm'
 import { Cookie } from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import { getCartCount } from '../../Store/Cart/cart-action';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Zoom, Mousewheel, Navigation, Thumbs } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+
 
 var settings = {
     dots: false,
@@ -92,11 +94,29 @@ const TrendingSection = () => {
                         <div class="block-content">
                             <div class="content-product-list slick-wrap">
                                 <div class="slick-sliders products-list grid" data-slidestoscroll="true" data-dots="false" data-nav="1" data-columns4="1" data-columns3="2" data-columns2="3" data-columns1="3" data-columns1440="4" data-columns="4">
-                                    <Slider {...settings}>
+                                    <Swiper spaceBetween={20}
+                                        slidesPerView={4}
+                                        modules={[ Navigation, Thumbs]}
+                                        navigation
+                                        breakpoints={{
+                                            320: {
+                                                slidesPerView: 2,
+                                            },
+                                            640: {
+                                                slidesPerView: 3,
+                                            },
+                                            768: {
+                                                slidesPerView: 4,
+                                            },
+                                            1024: {
+                                                slidesPerView: 5,
+                                            },
+                                        }}>
 
                                         {data.map((item) => {
                                             return (
-                                                <div class="item-product slick-slide">
+                                                <SwiperSlide>
+                                                <div class="item-product ">
                                                     <div class="items">
                                                         <div class="products-entry clearfix product-wapper">
                                                             <div class="products-thumb">
@@ -104,7 +124,7 @@ const TrendingSection = () => {
                                                                     <div class=""><i className='icon-heart'/></div>
                                                                 </div> */}
                                                                 <div class="product-thumb-hover">
-                                                                    <Link to={`/detailpage/${item.slug}`} >
+                                                                    <Link to={`/product/${item.slug}`} >
                                                                         <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image1} class="post-image" alt="" />
 
                                                                         <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image2} class="hover-image back" alt="" />
@@ -137,7 +157,7 @@ const TrendingSection = () => {
                                                             </div>
                                                             <div class="products-content">
                                                                 <div class="contents">
-                                                                    <h3 class="product-title"><Link to={`/detailpage/${item.slug}`}>{item.title}</Link></h3>
+                                                                    <h3 class="product-title"><Link to={`/product/${item.slug}`}>{item.title}</Link></h3>
                                                                     <span className="price">
                                                                         <del aria-hidden="true"><span>₹{item.price}</span></del>
                                                                         <ins><span>₹{item.disc_price}</span></ins>
@@ -147,7 +167,7 @@ const TrendingSection = () => {
                                                                             <Link
                                                                                 class="button"
                                                                                 onClick={() => {
-                                                                                    addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, "1", item.v_id ,item.gst);
+                                                                                    addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, "1", item.v_id, item.gst);
                                                                                     notify();
                                                                                 }}
                                                                             >
@@ -161,6 +181,7 @@ const TrendingSection = () => {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                </SwiperSlide>
                                             )
                                         })}
 
@@ -174,7 +195,9 @@ const TrendingSection = () => {
 
 
 
-                                    </Slider>
+                                    </Swiper>
+
+                             
 
 
 

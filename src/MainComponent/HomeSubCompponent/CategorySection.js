@@ -27,7 +27,7 @@ const CategorySection = () => {
     getTrendingData()
   }, [])
   return (
-    <section class="section section-padding m-b-60">
+    <section class="section section-padding m-b-60 py-5 bg-dark">
       <div class="section-container">
 
         <div class="block block-banners layout-1 banners-effect">

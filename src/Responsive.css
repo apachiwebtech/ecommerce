@@ -1949,6 +1949,7 @@
 
   .mob-left-view {
     transform: translateX(0%) !important;
+    overflow-y: auto;
   }
   .mob-left-sidebar-close {
     display: block !important;

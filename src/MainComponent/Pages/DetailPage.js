@@ -14,11 +14,30 @@ import custdecryptedUserId from '../../Utils/CustUserid';
 import { addToWishList } from '../../Store/WishList/wishlist-actions';
 import Cookies from 'js-cookie';
 import LoginForm from '../Authentication/LoginForm';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import the carousel styles
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Zoom, Mousewheel, Navigation, Thumbs } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/thumbs';
+
 const DetailPage = () => {
 
+	const [activeIndex, setActiveIndex] = useState();
+	const [isMobile, setIsMobile] = useState(false);
 
+
+	const handleSlideClick = (index) => {
+		setActiveIndex(index);
+
+		localStorage.setItem('initial' , index)		
+		window.location.reload()
+
+	};
+
+	const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
 	var settings = {
 		dots: false,
@@ -42,11 +61,14 @@ const DetailPage = () => {
 
 	const { productslug } = useParams()
 	const [productdata, setProductdata] = useState([])
+	const [catid, setCatid] = useState('')
 	const [image, setProductImg] = useState([])
 	const [value, setValue] = useState(1)
 	const [colorimg, setImgcolordata] = useState([]);
 	const [open, setOpen] = useState(false);
-	const [r_stock, setReservestock] = useState()
+	const [r_stock, setReservestock] = useState();
+	const [relatedproduct, setRelatedProduct] = useState([])
+
 	const handleToggle = (e) => {
 		setOpen(!open);
 	}
@@ -65,7 +87,7 @@ const DetailPage = () => {
 			.then((res) => {
 				setProductdata(res.data.data)
 				setReservestock(res.data.r_stock)
-
+				getrelatedproduct(res.data.data[0].catid)
 				if (res.data) {
 					getProductImage(res.data.data[0].id)
 
@@ -78,6 +100,18 @@ const DetailPage = () => {
 			})
 	}
 
+	const getrelatedproduct = async (catid) => {
+		const data = {
+			catid: catid
+		}
+		axios.post(`${BASE_URL}/getrelatedproduct`, data)
+			.then((res) => {
+				setRelatedProduct(res.data)
+			})
+	}
+
+
+
 
 	async function getProductImage(id) {
 
@@ -89,7 +123,7 @@ const DetailPage = () => {
 			.then((res) => {
 				console.log(res)
 				setProductImg(res.data)
-				setImgcolordata(res.data[0])
+				setImgcolordata(res.data[0].images)
 
 			})
 			.catch((err) => {
@@ -106,13 +140,17 @@ const DetailPage = () => {
 		axios.post(`${BASE_URL}/getcolorimg`, data)
 			.then((res) => {
 				console.log(res)
-				setImgcolordata(res.data[0])
+				setImgcolordata(res.data[0].images)
 			})
 	}
 
 
 
+
+
+
 	useEffect(() => {
+
 		getProductDetails()
 
 	}, [productslug])
@@ -133,6 +171,21 @@ const DetailPage = () => {
 
 	}
 
+	useEffect(() => {
+		// Update the state based on screen width
+		const handleResize = () => {
+			setIsMobile(window.innerWidth <= 768); // Define 768px as the breakpoint for mobile
+		};
+
+		// Attach the event listener on mount and remove it on cleanup
+		window.addEventListener("resize", handleResize);
+
+		// Call the function initially to set the state
+		handleResize();
+
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
 
 	return (
 
@@ -152,7 +205,7 @@ const DetailPage = () => {
 												</h1>
 											</div>
 											<div class="breadcrumbs">
-												<Link href="index.html">Home</Link><span class="delimiter"></span><Link href="shop-grid-left.html">Shop</Link><span class="delimiter"></span>{item.title}
+												<Link to={`/`}>Home</Link><span class="delimiter"></span><Link href="shop-grid-left.html">Shop</Link><span class="delimiter"></span>{item.title}
 											</div>
 										</div>
 
@@ -167,96 +220,83 @@ const DetailPage = () => {
 
 														<div class="row">
 															<div class="product-images col-lg-7 col-md-12 col-12">
-																<div class="row">
-																	<div class="col-md-2">
-																		<div class="content-thumbnail-scroll">
-																			<div class="image-thumbnail slick-carousel slick-vertical" data-asnavfor=".image-additional" data-centermode="true" data-focusonselect="true" data-columns4="5" data-columns3="4" data-columns2="4" data-columns1="4" data-columns="4" data-nav="true" data-vertical="&quot;true&quot;" data-verticalswiping="&quot;true&quot;">
-																				<Slider {...settings2}>
-
-																					{colorimg.image1 && <div class="img-item slick-slide">
-																						<span class="img-thumbnail-scroll">
-																							<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image1} alt="" />
-																						</span>
-																					</div>}
-																					{colorimg.image2 &&
-																						<div class="img-item slick-slide">
-																							<span class="img-thumbnail-scroll">
-																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image2} alt="" />
-																							</span>
-																						</div>
-																					}
-																					{colorimg.image3 &&
-																						<div class="img-item slick-slide">
-																							<span class="img-thumbnail-scroll">
-																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image3} alt="" />
-																							</span>
-																						</div>
-																					}
-
-																					{colorimg.image3 &&
-																						<div class="img-item slick-slide">
-																							<span class="img-thumbnail-scroll">
-																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
-																							</span>
-																						</div>
-																					}
-
-
-
-
-
-
-
-																				</Slider>
+																<div className="row">
+																	<div className="col-md-2">
+																		<div className="content-thumbnail-scroll">
+																			<div className="image-thumbnail slick-carousel slick-vertical">
+																				<Swiper
+																					spaceBetween={isMobile ? 1 : 1}
+																					slidesPerView={isMobile ? 3 : 3}
+																					modules={[Mousewheel, Navigation, Thumbs]}
+																					navigation
+																					direction={isMobile ? "horizontal" : "vertical"}
+																					mousewheel
+																					watchSlidesProgress={true}
+																					breakpoints={{
+																						320: {
+																							slidesPerView: 3,
+																						},
+																						640: {
+																							slidesPerView: 3,
+																						},
+																						768: {
+																							slidesPerView: 3,
+																						},
+																						1024: {
+																							slidesPerView: 3,
+																						},
+																					}}
+																				>
+																					{colorimg.map((item, index) => {
+																						if (item !== "") {
+																							return (
+																								<SwiperSlide key={index} onClick={() => handleSlideClick(index)}>
+																									<div className="img-item slick-slide">
+																										<span className="img-thumbnail-scroll">
+																											<img
+																												width="600"
+																												height="600"
+																												src={`${IMG_URL}/productimg/` + item}
+																												alt=""
+																											/>
+																										</span>
+																									</div>
+																								</SwiperSlide>
+																							);
+																						}
+																						return null;
+																					})}
+																				</Swiper>
 																			</div>
 																		</div>
 																	</div>
 
-
-																	<div class="col-md-10">
-
-																		<div class="scroll-image main-image">
-																			<div class="image-additional" data-asnavfor=".image-thumbnail" data-fade="true" data-columns4="1" data-columns3="1" data-columns2="1" data-columns1="1" data-columns="1" data-nav="true">
-																				<Slider {...settings} >
-
-																					{colorimg?.image1 &&
-																						<div class="img-item ">
-																							<span class="img-thumbnail-scroll">
-																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image1} alt="" />
-																							</span>
-																						</div>
-																					}
-
-																					{colorimg.image2 &&
-																						<div class="img-item ">
-																							<span class="img-thumbnail-scroll">
-																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image2} alt="" />
-																							</span>
-																						</div>
-																					}
-
-																					{colorimg.image3 &&
-																						<div class="img-item ">
-																							<span class="img-thumbnail-scroll">
-																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image3} alt="" />
-																							</span>
-																						</div>
-																					}
-
-																					{colorimg.image4 &&
-																						<div class="img-item ">
-																							<span class="img-thumbnail-scroll">
-																								<img width="600" height="600" src={`${IMG_URL}/productimg/` + colorimg?.image4} alt="" />
-																							</span>
-																						</div>
-																					}
-
-																				</Slider>
-
+																	<div className="col-md-10">
+																		<div className="scroll-image main-image">
+																			<div className="image-additional">
+																				<Swiper initialSlide={localStorage.getItem("initial") || activeIndex} navigation modules={[Mousewheel, Navigation, Thumbs]}>
+																					{colorimg.map((item, index) => {
+																						if (item !== "") {
+																							return (
+																								<SwiperSlide key={index}>
+																									<div className="img-item">
+																										<span className="img-thumbnail-scroll">
+																											<img
+																												width="600"
+																												height="600"
+																												src={`${IMG_URL}/productimg/` + item}
+																												alt=""
+																											/>
+																										</span>
+																									</div>
+																								</SwiperSlide>
+																							);
+																						}
+																						return null;
+																					})}
+																				</Swiper>
 																			</div>
 																		</div>
-
-
 																	</div>
 																</div>
 															</div>
@@ -375,7 +415,6 @@ const DetailPage = () => {
 																	</div> */}
 
 
-
 																	{/* <div class="btn-compare" data-title="Compare">
 																		<button class="product-btn">Compare</button>
 																	</div> */}
@@ -410,17 +449,17 @@ const DetailPage = () => {
 																	<li className='nav-item'>
 																		<Link class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</Link>
 																	</li>
-																	<li className='nav-item'>
+																	{/* <li className='nav-item'>
 
 
 																		<Link class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Reviews (1)</Link>
-																	</li>
+																	</li> */}
 																</ul>
 															</nav>
 															<div class="tab-content" id="nav-tabContent">
 																<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"><p dangerouslySetInnerHTML={{ __html: item.specification }} /></div>
-																<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">.tt..</div>
-																<div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">.kk..</div>
+																<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">CommingSoon...</div>
+																{/* <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">.kk..</div> */}
 															</div>
 
 														</div>
@@ -435,216 +474,95 @@ const DetailPage = () => {
 															<div class="block-content">
 																<div class="content-product-list slick-wrap">
 																	<div class="slick-sliders products-list grid" data-slidestoscroll="true" data-dots="false" data-nav="1" data-columns4="1" data-columns3="2" data-columns2="3" data-columns1="3" data-columns1440="4" data-columns="4">
-																		<div class="item-product slick-slide">
-																			<div class="items">
-																				<div class="products-entry clearfix product-wapper">
-																					<div class="products-thumb">
-																						<div class="product-lable">
-																							<div class="hot">Hot</div>
-																						</div>
-																						<div class="product-thumb-hover">
-																							<Link href="shop-details.html">
-																								<img width="600" height="600" src={product2} alt="" />
-																								<img width="600" height="600" src={product2} alt="" />
-																							</Link>
-																						</div>
-																						<div class="product-button">
-																							<div class="btn-add-to-cart" data-title="Add to cart">
-																								<Link rel="nofollow" href="#" class="product-btn button">Add to cart</Link>
-																							</div>
-																							<div class="btn-wishlist" data-title="Wishlist">
-																								<button class="product-btn">Add to wishlist</button>
-																							</div>
-																							<div class="btn-compare" data-title="Compare">
-																								<button class="product-btn">Compare</button>
-																							</div>
-																							<span class="product-quickview" data-title="Quick View">
-																								<Link href="#" class="quickview quickview-button">Quick View <i class="icon-search"></i></Link>
-																							</span>
-																						</div>
-																					</div>
-																					<div class="products-content">
-																						<div class="contents text-center">
-																							<h3 class="product-title"><Link href="shop-details.html">Zunkel Schwarz</Link></h3>
-																							<div class="rating">
-																								<div class="star star-5"></div>
-																							</div>
-																							<span class="price">$100.00</span>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
-																		<div class="item-product slick-slide">
-																			<div class="items">
-																				<div class="products-entry clearfix product-wapper">
-																					<div class="products-thumb">
-																						<div class="product-lable">
-																							<div class="hot">Hot</div>
-																						</div>
-																						<div class="product-thumb-hover">
-																							<Link href="shop-details.html">
-																								<img width="600" height="600" src={product2} alt="" />
-																								<img width="600" height="600" src={product2} alt="" />
-																							</Link>
-																						</div>
-																						<div class="product-button">
-																							<div class="btn-add-to-cart" data-title="Add to cart">
-																								<Link rel="nofollow" href="#" class="product-btn button">Add to cart</Link>
-																							</div>
-																							<div class="btn-wishlist" data-title="Wishlist">
-																								<button class="product-btn">Add to wishlist</button>
-																							</div>
-																							<div class="btn-compare" data-title="Compare">
-																								<button class="product-btn">Compare</button>
-																							</div>
-																							<span class="product-quickview" data-title="Quick View">
-																								<Link href="#" class="quickview quickview-button">Quick View <i class="icon-search"></i></Link>
-																							</span>
-																						</div>
-																					</div>
-																					<div class="products-content">
-																						<div class="contents text-center">
-																							<h3 class="product-title"><Link href="shop-details.html">Namaste Vase</Link></h3>
-																							<div class="rating">
-																								<div class="star star-4"></div>
-																							</div>
-																							<span class="price">$200.00</span>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
-																		<div class="item-product slick-slide">
-																			<div class="items">
-																				<div class="products-entry clearfix product-wapper">
-																					<div class="products-thumb">
-																						<div class="product-lable">
-																							<div class="hot">Hot</div>
-																						</div>
-																						<div class="product-thumb-hover">
-																							<Link href="shop-details.html">
-																								<img width="600" height="600" src={product2} alt="" />
-																								<img width="600" height="600" src={product2} alt="" />
-																							</Link>
-																						</div>
-																						<div class="product-button">
-																							<div class="btn-add-to-cart" data-title="Add to cart">
-																								<Link rel="nofollow" href="#" class="product-btn button">Add to cart</Link>
-																							</div>
-																							<div class="btn-wishlist" data-title="Wishlist">
-																								<button class="product-btn">Add to wishlist</button>
-																							</div>
-																							<div class="btn-compare" data-title="Compare">
-																								<button class="product-btn">Compare</button>
-																							</div>
-																							<span class="product-quickview" data-title="Quick View">
-																								<Link href="#" class="quickview quickview-button">Quick View <i class="icon-search"></i></Link>
-																							</span>
-																						</div>
-																					</div>
-																					<div class="products-content">
-																						<div class="contents text-center">
-																							<h3 class="product-title"><Link href="shop-details.html">Chair Oak Matt Lacquered</Link></h3>
-																							<div class="rating">
-																								<div class="star star-0"></div>
-																							</div>
-																							<span class="price">$150.00</span>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
-																		<div class="item-product slick-slide">
-																			<div class="items">
-																				<div class="products-entry clearfix product-wapper">
-																					<div class="products-thumb">
-																						<div class="product-lable">
-																							<div class="onsale">-33%</div>
-																						</div>
-																						<div class="product-thumb-hover">
-																							<Link href="shop-details.html">
-																								<img width="600" height="600" src={product2} alt="" />
-																								<img width="600" height="600" src={product2} alt="" />
-																							</Link>
-																						</div>
-																						<div class="product-button">
-																							<div class="btn-add-to-cart" data-title="Add to cart">
-																								<Link rel="nofollow" href="#" class="product-btn button">Add to cart</Link>
-																							</div>
-																							<div class="btn-wishlist" data-title="Wishlist">
-																								<button class="product-btn">Add to wishlist</button>
-																							</div>
-																							<div class="btn-compare" data-title="Compare">
-																								<button class="product-btn">Compare</button>
-																							</div>
-																							<span class="product-quickview" data-title="Quick View">
-																								<Link href="#" class="quickview quickview-button">Quick View <i class="icon-search"></i></Link>
-																							</span>
-																						</div>
-																					</div>
-																					<div class="products-content">
-																						<div class="contents text-center">
-																							<h3 class="product-title"><Link href="shop-details.html">Pillar Dining Table Round</Link></h3>
-																							<div class="rating">
-																								<div class="star star-5"></div>
-																							</div>
-																							<span class="price">
-																								<del aria-hidden="true"><span>$150.00</span></del>
-																								<ins><span>$100.00</span></ins>
-																							</span>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
+																		<Swiper
+																			spaceBetween={20}
+																			slidesPerView={5}
+																			mousewheel={true}
+																			navigation
+																			breakpoints={{
+																				320: {
+																					slidesPerView: 2,
+																				},
+																				640: {
+																					slidesPerView: 3,
+																				},
+																				768: {
+																					slidesPerView: 4,
+																				},
+																				1024: {
+																					slidesPerView: 5,
+																				},
+																			}}
+																			modules={[Mousewheel, Navigation, Thumbs]}
+																			onSlideChange={() => console.log('slide change')}
+																			onSwiper={(swiper) => console.log(swiper)}
+																		>
 
-																		<div class="item-product slick-slide">
-																			<div class="items">
-																				<div class="products-entry clearfix product-wapper">
-																					<div class="products-thumb">
-																						<div class="product-lable">
-																							<div class="onsale">-7%</div>
-																						</div>
-																						<div class="product-thumb-hover">
-																							<Link href="shop-details.html">
-																								<img width="600" height="600" src={product2} alt="" />
-																								<img width="600" height="600" src={product2} alt="" />
-																							</Link>
-																						</div>
-																						<div class="product-button">
-																							<div class="btn-add-to-cart" data-title="Add to cart">
-																								<Link rel="nofollow" href="#" class="product-btn button">Add to cart</Link>
+																			{relatedproduct.map((item) => {
+																				return (
+																					<SwiperSlide>
+																						<div class="">
+
+																							<div class="products-entry clearfix product-wapper">
+																								<div class="products-thumb">
+																									<div class="product-lable">
+																										<div class="hot">Hot</div>
+																									</div>
+																									<div class="product-thumb-hover">
+																										<Link to={``}>
+																											<img style={{ height: "200px" }} src={`${IMG_URL}/productimg/` + item.image1} alt="" />
+																										</Link>
+																									</div>
+																									<div class="product-button">
+																										<div class="btn-add-to-cart" data-title="Add to cart">
+																											<Link rel="nofollow" href="#" class="product-btn button" 
+																												onClick={() => {
+																													addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, "1", item.v_id, item.gst);
+																													notify();
+																												}}>Add to cart</Link>
+																										</div>
+																										<div class="btn-wishlist" data-title="Wishlist">
+																											{!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
+
+																												handleToggle()
+																											}}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
+																												addWishList(item.id)
+																												wishify()
+
+
+																											}}>Add to wishlist</button>}
+																										</div>
+
+																									</div>
+																								</div>
+																								<div class="products-content">
+																									<div class="contents text-center">
+																										<h3 class="product-title"><Link href="shop-details.html">{item.title}</Link></h3>
+																										{/* <div class="rating">
+																											<div class="star star-5"></div>
+																										</div> */}
+																										{item.disc_price ? (<span className="price">
+																											<del aria-hidden="true"><span>₹{item.price}</span></del>
+																											<ins><span>₹{item.disc_price}</span></ins>
+																										</span>) :
+																											(<span className="price">{item.price}</span>)
+																										}
+																									</div>
+																								</div>
 																							</div>
-																							<div class="btn-wishlist" data-title="Wishlist">
-																								<button class="product-btn">Add to wishlist</button>
-																							</div>
-																							<div class="btn-compare" data-title="Compare">
-																								<button class="product-btn">Compare</button>
-																							</div>
-																							<span class="product-quickview" data-title="Quick View">
-																								<Link href="#" class="quickview quickview-button">Quick View <i class="icon-search"></i></Link>
-																							</span>
+
+
 																						</div>
-																						<div class="product-stock">
-																							<span class="stock">Out Of Stock</span>
-																						</div>
-																					</div>
-																					<div class="products-content">
-																						<div class="contents text-center">
-																							<h3 class="product-title"><Link href="shop-details.html">Amp Pendant Light Large</Link></h3>
-																							<div class="rating">
-																								<div class="star star-4"></div>
-																							</div>
-																							<span class="price">
-																								<del aria-hidden="true"><span>$150.00</span></del>
-																								<ins><span>$140.00</span></ins>
-																							</span>
-																						</div>
-																					</div>
-																				</div>
-																			</div>
-																		</div>
+																					</SwiperSlide>
+																				)
+
+																			})}
+
+																		</Swiper>
+
+
+
+
 																	</div>
 																</div>
 															</div>
@@ -660,6 +578,7 @@ const DetailPage = () => {
 
 					</div>
 				</div>
+				{open && <LoginForm setOpen={setOpen} open={open} />}
 			</div>
 		</div>
 	)

@@ -1,8 +1,10 @@
 import React from 'react'
-import logo from '../../assets/frontimg/logo.png'
+// import logo from '../../assets/frontimg/logo.png'
 import payments from '../../assets/frontimg/payments.png'
 import '../../Style.css'
 import { Link } from 'react-router-dom'
+import logo2 from  '../../assets/images/mica.png'
+
 const SiteFooter = () => {
 	const handleTop = () =>{
 		window.scrollTo(0, 0);
@@ -17,7 +19,7 @@ const SiteFooter = () => {
 								<div className="row">
 									<div className="col-lg-3 col-md-6">
 										<div className="block block-image">
-											<img width="100" src={logo} alt="logo.png" />
+											<img width="100" src={logo2} alt="logo.png" />
 										</div>
 									</div>
 									<div className="col-lg-3 col-md-6">
@@ -25,17 +27,12 @@ const SiteFooter = () => {
 											<h2 className="block-title">Contact Us</h2>
 											<div className="block-content">
 												<ul>
+													
 													<li>
-														<a href="page-contact.html">616.774.0561</a>
+														<a href="tel:8989000066">Mo.: +91 8989000066</a>
 													</li>
 													<li>
-														<a href="page-contact.html">866.453.4748</a>
-													</li>
-													<li>
-														<a href="page-contact.html">HR Fax: 810.222.5439</a>
-													</li>
-													<li>
-														<a href="page-contact.html">sales@ruperfurniture.com</a>
+														<a href="mailto:info@micasasucasa.in">info@micasasucasa.in</a>
 													</li>
 												</ul>
 											</div>

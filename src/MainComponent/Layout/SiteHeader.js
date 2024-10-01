@@ -148,7 +148,7 @@ const SiteHeader = (cartCount) => {
 												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{count}</span></div>
 											</Link>
 
-											<div className="dropdown-menu cart-popup">
+											<div className="dropdown-menu ">
 												<div className="cart-empty-wrap">
 													<ul className="cart-list">
 														<li className="empty">
@@ -377,7 +377,7 @@ const SiteHeader = (cartCount) => {
 														<div class={searchtoggle ? `wrapper-search wrapper-open` : `wrapper-search `}>
 															<form role="search" method="get" class="search-from ajax-search" action="" style={{ position: "relative" }}>
 																<div class="search-box">
-																	<button className='close-searchbar' onClick={() =>toggleSidebar()}>
+																	<button className='close-searchbar' onClick={handlesearch}>
 																		<Icon path={mdiClose} size={1}  style={{ float: "right" }} />
 																	</button>
 																	{/* <button id="searchsubmit" class="btn" type="submit">
@@ -392,14 +392,14 @@ const SiteHeader = (cartCount) => {
 																			<ul className="products-list">
 																				{products.map((item) => {
 																					return (
-																						<Link to={`/detailpage/${item.slug}`} >
+																						<Link to={`/product/${item.slug}`} >
 																							<li className="product-item my-2">
 																								<a href="shop-details.html" className="product-image">
 																									<img onClick={searchclose} src={`${IMG_URL}/productimg/` + item.image1} alt='product6' />
 																								</a>
 																								<div onClick={searchclose} className="product-content">
 																									<h2 className="product-title">
-																										<Link to={`/detailpage/${item.slug}`} >
+																										<Link to={`/product/${item.slug}`} >
 																											{item.title}
 																										</Link>
 																									</h2>
@@ -426,10 +426,10 @@ const SiteHeader = (cartCount) => {
 																	<div class="content-menu_search">
 																		<label>Suggested</label>
 																		<ul id="menu_search" class="menu">
-																			<li><a href="#">Furniture</a></li>
-																			<li><a href="#">Home Décor</a></li>
-																			<li><a href="#">Industrial</a></li>
-																			<li><a href="#">Kitchen</a></li>
+																			<li><Link to={`/shoproduct/${banner[0]?.slug}`}>Furniture</Link></li>
+																			<li><a href="#">Accessories</a></li>
+																			<li><a href="#">Kitchen & Dining</a></li>
+
 																		</ul>
 																	</div>
 																</div>

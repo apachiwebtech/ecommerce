@@ -532,7 +532,7 @@ const AddProductImg = () => {
                                                     return (
                                                         <tr>
                                                             <td>{index + 1}</td>
-                                                            <td>{item.image1 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image1} alt='' /> : <></>}{item.image2 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image2} alt='' /> : <></>}{item.image3 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image3} alt='' /> : <></>}{item.image4 !== "" ? <img src={`${IMG_URL}/productimg/` + item.image4} alt='' /> : <></>}</td>
+                                                            <td>{item.images[0] ? <img src={`${IMG_URL}/productimg/` + item.images[0]} alt='' /> : <></>}{item.images[1]? <img src={`${IMG_URL}/productimg/` + item.images[1]} alt='' /> : <></>}{item.images[2] ? <img src={`${IMG_URL}/productimg/` + item.images[2]} alt='' /> : <></>}{item.images[3] && <img src={`${IMG_URL}/productimg/` + item.images[3]} alt='' /> }</td>
                                                             <td>{item.title}</td>
                                                             <td>
                                                                 {roleaccess > 3 && <Link>

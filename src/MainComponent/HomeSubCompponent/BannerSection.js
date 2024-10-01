@@ -5,6 +5,12 @@ import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 import { Link } from 'react-router-dom';
+
+// import { Swiper, SwiperSlide } from 'swiper/react';
+// import { Zoom, Mousewheel, Navigation, Thumbs } from 'swiper/modules';
+// import 'swiper/css';
+// import 'swiper/css/navigation';
+
 const BannerSection = () => {
     const [banner, setBanner] = useState([])
 
@@ -36,7 +42,46 @@ const BannerSection = () => {
     return (
         <section class="section">
 
+
+
             <div class="block block-sliders">
+
+
+                {/* <Swiper spaceBetween={20}
+                    slidesPerView={1}
+                    modules={[Navigation, Thumbs]}
+                    navigation
+
+                >
+
+                    {banner?.map((item) => {
+                        return (
+                            <SwiperSlide>
+                                <div class="item slick-slide">
+                                    <div class="item-content">
+                                        <div class="content-image">
+                                            <img width="1920" height="1080" src={`${IMG_URL}/banner/${item.upload_image}`} alt="Slider" />
+                                        </div>
+                                        <div class="section-padding">
+                                            <div class="section-container">
+                                                <div class="item-info horizontal-start vertical-middle">
+                                                    <div class="content">
+                                                        <h2 class="title-slider">{item.title}</h2>
+                                                        <div class="description-slider">{item.description} </div>
+                                                        <Link to={item.link} class="button-slider button-white" target={item.target} >SHOP NOW</Link>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </SwiperSlide>
+                        )
+
+
+                    })}
+                </Swiper> */}
+
                 <Slider {...settings}>
 
                     {banner?.map((item) => {
@@ -44,7 +89,7 @@ const BannerSection = () => {
                             <div class="item slick-slide">
                                 <div class="item-content">
                                     <div class="content-image">
-                                        <img width="1920" height="1080" src={`${IMG_URL}/banner/${item.upload_image}`}  alt="Slider" />
+                                        <img width="1920" height="1080" src={`${IMG_URL}/banner/${item.upload_image}`} alt="Slider" />
                                     </div>
                                     <div class="section-padding">
                                         <div class="section-container">
@@ -65,7 +110,7 @@ const BannerSection = () => {
 
                     })}
 
-                
+
                 </Slider>
 
 

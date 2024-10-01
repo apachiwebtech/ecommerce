@@ -448,3 +448,12 @@ li{
   position: absolute;
   right: 0px;
 }
+.swiper-vertical{
+  height: 500px;
+}
+.swiper-button-next{
+  color: #000 !important;
+}
+.swiper-button-prev{
+  color: #000 !important;
+}
