@@ -94,8 +94,8 @@ const Seo = () => {
     const rows = seodata.map((row, index) => ({ index: index + 1, ...row }));
     const columns = [
         {
-            field: 'index',
-            headerName: 'ID',
+            field: 'id',
+            headerName: 'id',
             type: 'number',
             align: 'left',
             headerAlign: 'left',

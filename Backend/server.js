@@ -11,6 +11,7 @@ var cookieParser = require('cookie-parser');
 const cron = require('node-cron')
 const crypto = require('crypto');
 const axios = require('axios');
+
 dotenv.config();
 
 
@@ -1742,6 +1743,7 @@ app.post(`/add_product`, upload5.fields([
   let subcatid = req.body.subcatid;
   let price = req.body.price;
   let d_price = req.body.d_price;
+  let customizable = req.body.customizable;
   let description = req.body.description;
   let specification = req.body.specification;
   let gst = req.body.gst;
@@ -1749,6 +1751,15 @@ app.post(`/add_product`, upload5.fields([
   let date = new Date()
   let approve = 0
   let uid = req.body.uid;
+  
+  let hsn_code = req.body.hsn_code;
+  let lbh_unit = req.body.lbh_unit;
+  let length = req.body.length;
+  let height = req.body.height;
+  let breadth = req.body.breadth;
+  let weight_unit = req.body.weight_unit;
+  let weight = req.body.weight;
+  let no_of_box = req.body.no_of_box;
 
   let sql;
   let param;
@@ -1780,14 +1791,14 @@ app.post(`/add_product`, upload5.fields([
 
 
       if (uid == "undefined") {
-        sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`gst`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+        sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`gst`,`customizable`,`length`,`breadth`,`height`,`no_of_box`,`weight`,`hsn_code`,`lbh_unit`,`weight_unit`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
-        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst]
+        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst,customizable,length,breadth,height,no_of_box,weight,hsn_code,lbh_unit,weight_unit]
       }
       else {
-        sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?,catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? ,approve = 0 ,gst = ? where id = ? `;
+        sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?,catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? ,approve = 0 ,gst = ?,customizable= ?,length = ? ,breadth = ? ,height = ? ,no_of_box = ? ,weight = ? ,hsn_code = ? ,lbh_unit = ? ,weight_unit = ?  where id = ? `;
 
-        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst, uid]
+        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst,customizable,length,breadth,height,no_of_box,weight,hsn_code,lbh_unit,weight_unit, uid]
       }
 
 
@@ -1809,7 +1820,7 @@ app.post(`/add_product`, upload5.fields([
               }
             })
           } else {
-            return res.json("Data Added Successfully")
+            return res.json(data)
           }
 
         }
@@ -1951,16 +1962,44 @@ app.post(`/product_img_delete`, (req, res) => {
 
 app.get('/trending_products', (req, res) => {
 
-  const sql = 'select aap.id,aap.v_id,aap.gst, aap.title ,aap.catid, aap.slug,aap.description, aap.price,aap.disc_price , ap.image1,ap.image2 from awt_add_product as aap left join awt_productimg as ap on ap.product_id = aap.id where aap.trending = 1 and aap.active = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id;'
+  const sql = 'select aap.id, aap.v_id, aap.gst, aap.title, aap.catid, aap.slug, aap.description, aap.price, aap.disc_price, ap.image1, ap.image2, aps.stock,aap.customizable from awt_add_product as aap left join awt_productimg as ap on ap.product_id = aap.id LEFT JOIN awt_productstock as aps on aps.pro_id = aap.id where aap.trending = 1 and aap.active = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id;';
 
-  con.query(sql, (err, data) => {
+  con.query(sql, (err, products) => {
     if (err) {
-      return res.json(err)
+      return res.json(err);
     } else {
-      return res.json(data)
+      // Create an array of promises to handle the second query for each product
+      const promises = products.map((product) => {
+        const { slug } = product;
+
+        const checkreservstock = 'select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0';
+
+        return new Promise((resolve, reject) => {
+          con.query(checkreservstock, [slug], (err, reservStockData) => {
+            if (err) {
+              reject(err);
+            } else {
+              const totalRStock = reservStockData.reduce((total, row) => total + Number(row.r_stock), 0);
+              product.r_stock = totalRStock;
+              resolve(product); // Resolve with the product data and r_stock
+            }
+          });
+        });
+      });
+
+      // Wait for all promises to complete
+      Promise.all(promises)
+        .then((results) => {
+          // Once all queries are done, send the combined result
+          res.json(results);
+        })
+        .catch((err) => {
+          res.json(err); // Handle any errors
+        });
     }
-  })
-})
+  });
+});
+
 
 app.post('/addToCart', async (req, res) => {
   let userid = req.body.userId;
@@ -2232,12 +2271,55 @@ app.post('/getproductDetails', (req, res) => {
 
 })
 
+// app.post('/getproductlisting', (req, res) => {
+
+//   let groupslug = req.body.groupslug;
+//   let catslug = req.body.catslug;
+//   let subcatslug = req.body.subcatslug;
+//   let brand_id = req.body.brand_id;
+
+//   let sql;
+//   let param;
+
+//   if (brand_id) {
+//     sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,aap.gst,ag.title,aap.slug , ab.title ,ab.logo from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where aap.b_id = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id'
+
+//     param = [brand_id]
+//   }
+//   else if (catslug == undefined && subcatslug == undefined) {
+
+//     sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id'
+
+//     param = [groupslug]
+//   }
+//   else if (subcatslug == undefined) {
+
+//     sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo  from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id'
+//     param = [catslug]
+
+//   } else {
+
+//     sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id'
+//     param = [subcatslug]
+//   }
+
+
+//   con.query(sql, param, (err, data) => {
+
+//     if (err) {
+//       return res.json(err)
+//     } else {
+//       return res.json(data)
+//     }
+//   })
+// })
+
 app.post('/getproductlisting', (req, res) => {
 
   let groupslug = req.body.groupslug;
   let catslug = req.body.catslug;
   let subcatslug = req.body.subcatslug;
-  let brand_id = req.body.brand_id;
+  // let brand_id = req.body.brand_id;
   let brandid = req.body.brandid;
   let sort = req.body.sort;
   let price = req.body.price;
@@ -2246,58 +2328,45 @@ app.post('/getproductlisting', (req, res) => {
   let param;
   param = []
 
-  if (brand_id) {
-    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,aap.gst,ag.title,aap.slug , ab.title ,ab.logo from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where '
 
-    if (brand_id) {
-      sql += "aap.b_id = ? and aap.active = 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+  if (catslug == undefined && subcatslug == undefined) {
+
+    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where '
+
+    if (brandid && groupslug && price) {
+      sql += "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
       if (sort == "low") {
         sql += "order by aap.disc_price ASC";
       }
 
       if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, groupslug, price)
+    }
+    if (brandid && groupslug && !price) {
+      sql += "aap.b_id = ? and  ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
         sql += "order by aap.disc_price ASC";
       }
 
-      param.push(brand_id);
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, groupslug)
     }
 
-    if ( price && brand_id ) {
-      sql += "disc_price BETWEEN 0 AND ? and aap.b_id = ? and aap.active = 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-
-      if (sort == "low") {
-        sql += "order by aap.disc_price ASC";
-      }
-
-      if (sort == "high") {
-        sql += "order by aap.disc_price ASC";
-      }
-
-      param.push(price,brand_id)
-    }
-
-
-  }
-  else if (catslug == undefined && subcatslug == undefined) {
-
-    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where '
-
-    if ( price && groupslug && brandid) {
-      sql += "aap.b_id = ? and aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-
-      if (sort == "low") {
-        sql += "order by aap.disc_price ASC";
-      }
-
-      if (sort == "high") {
-        sql += "order by aap.disc_price ASC";
-      }
-
-      param.push(brandid ,price,groupslug)
-    } 
-    
-    if ( price && groupslug && !brandid) {
+    if (price && groupslug && !brandid) {
       sql += "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
       if (sort == "low") {
@@ -2305,13 +2374,17 @@ app.post('/getproductlisting', (req, res) => {
       }
 
       if (sort == "high") {
-        sql += "order by aap.disc_price ASC";
+        sql += "order by aap.disc_price DESC";
       }
 
-      param.push(price,groupslug)
-    } 
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
 
-    if (!price) {
+      param.push(price, groupslug)
+    }
+
+    if (!price && !brandid) {
       sql += " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
       if (sort == "low") {
@@ -2319,6 +2392,10 @@ app.post('/getproductlisting', (req, res) => {
       }
       if (sort == "high") {
         sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
       }
 
       param.push(groupslug);
@@ -2329,59 +2406,146 @@ app.post('/getproductlisting', (req, res) => {
   }
   else if (subcatslug == undefined) {
 
-    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo  from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where '
+    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable  from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where '
 
 
-    if ( price && catslug ) {
-      sql += "disc_price BETWEEN 0 AND ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+
+
+    if (brandid && catslug && price) {
+      sql += "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
       if (sort == "low") {
         sql += "order by aap.disc_price ASC";
       }
 
       if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, catslug, price)
+    }
+    if (brandid && catslug && !price) {
+      sql += "aap.b_id = ? and  ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
         sql += "order by aap.disc_price ASC";
       }
 
-      param.push(price,catslug)
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, catslug)
     }
 
-    if (!price) {
-      sql += "ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+    if (price && catslug && !brandid) {
+      sql += "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(price, catslug)
+    }
+
+    if (!price && !brandid) {
+      sql += " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
       if (sort == "low") {
         sql += "order by aap.disc_price ASC";
       }
       if (sort == "high") {
         sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
       }
 
       param.push(catslug);
     }
 
 
-   
+
 
   } else {
 
-    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id where '
+    sql = 'select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where '
 
-    if ( price && subcatslug ) {
-      sql += "disc_price BETWEEN 0 AND ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+
+    if (brandid && subcatslug && price) {
+      sql += "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
       if (sort == "low") {
         sql += "order by aap.disc_price ASC";
       }
 
       if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, subcatslug, price)
+    }
+    if (brandid && subcatslug && !price) {
+      sql += "aap.b_id = ? and  ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
         sql += "order by aap.disc_price ASC";
       }
 
-      param.push(price,subcatslug)
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, subcatslug)
     }
 
-    if (!price) {
-      sql += "ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+    if (price && subcatslug && !brandid) {
+      sql += "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(price, subcatslug)
+    }
+
+    if (!price && !brandid) {
+      sql += " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
       if (sort == "low") {
         sql += "order by aap.disc_price ASC";
@@ -2390,22 +2554,54 @@ app.post('/getproductlisting', (req, res) => {
         sql += "order by aap.disc_price DESC";
       }
 
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
       param.push(subcatslug);
     }
-    
+
 
   }
 
 
-  con.query(sql, param, (err, data) => {
-
+  con.query(sql, param, (err, products) => {
     if (err) {
-      return res.json(err)
+      return res.json(err);
     } else {
-      return res.json(data)
+      // Create an array of promises to handle the second query for each product
+      const promises = products.map((product) => {
+        const { slug } = product;
+
+        const checkreservstock = 'select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0';
+
+        return new Promise((resolve, reject) => {
+          con.query(checkreservstock, [slug], (err, reservStockData) => {
+            if (err) {
+              reject(err);
+            } else {
+              const totalRStock = reservStockData.reduce((total, row) => total + Number(row.r_stock), 0);
+              product.r_stock = totalRStock;
+              resolve(product); // Resolve with the product data and r_stock
+            }
+          });
+        });
+      });
+
+      // Wait for all promises to complete
+      Promise.all(promises)
+        .then((results) => {
+          // Once all queries are done, send the combined result
+          res.json(results);
+        })
+        .catch((err) => {
+          res.json(err); // Handle any errors
+        });
     }
-  })
+  });
 })
+
+
 
 
 app.post(`/getbrand`, (req, res) => {
@@ -4631,51 +4827,51 @@ app.post(`/getstock`, (req, res) => {
 
 
 
-// function checkRows() {
-//   const query = `SELECT * FROM awt_reservstock WHERE created_date < CONVERT_TZ(NOW(), @@session.time_zone, '+05:30') - INTERVAL 15 MINUTE AND p_status = 0 AND deleted = 0`;
+function checkRows() {
+  const query = `SELECT * FROM awt_reservstock WHERE created_date < CONVERT_TZ(NOW(), @@session.time_zone, '+05:30') - INTERVAL 15 MINUTE AND p_status = 0 AND deleted = 0`;
 
-//   con.query(query, (err, results) => {
-//     if (err) {
-//       console.error('Error executing query:', err);
-//       return;
-//     }
+  con.query(query, (err, results) => {
+    if (err) {
+      console.error('Error executing query:', err);
+      return;
+    }
 
-//     // Process the results (e.g., send an API request for each row)
-//     results.forEach(row => {
-//       // Your API request logic here
-
-//       console.log('Processing row:', row.r_stock);
-//       let param = row.id;
-//       let cart_id = row.cartid;
-
-//       const deleterow = "update awt_reservstock set deleted = 1 where id = ?"
-
-//       con.query(deleterow, [param], (err, data) => {
-//         if (err) {
-//           console.log(err)
-//         } else {
-
-//           const updatecart = "update awt_cart set deleted = 1 where id = ?"
-
-//           con.query(updatecart, [cart_id], (err, data) => {
-//             if (err) {
-//               console.log(err)
-//             } else {
-//               console.log(data)
-//             }
-//           })
-//         }
-//       })
-
-//     });
-//   });
-// }
+    // Process the results (e.g., send an API request for each row)
+    results.forEach(row => {
+      // Your API request logic here
 
 
-// cron.schedule('* * * * *', () => {
-//   console.log('Running scheduled task');
-//   checkRows();
-// });
+      let param = row.id;
+      let cart_id = row.cartid;
+
+      const deleterow = "update awt_reservstock set deleted = 1 where id = ?"
+
+      con.query(deleterow, [param], (err, data) => {
+        if (err) {
+          console.log(err)
+        } else {
+
+          const updatecart = "update awt_cart set deleted = 1 where id = ?"
+
+          con.query(updatecart, [cart_id], (err, data) => {
+            if (err) {
+              console.log(err)
+            } else {
+              // console.log(data)
+            }
+          })
+        }
+      })
+
+    });
+  });
+}
+
+
+cron.schedule('* * * * *', () => {
+  console.log('Running scheduled task');
+  checkRows();
+});
 
 
 // payment api *************************
@@ -4784,11 +4980,12 @@ app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
 });
 
 app.post('/getrelatedproduct', (req, res) => {
-  let { catid } = req.body;
+  let { catid ,product_id} = req.body;
 
-  const sql = "select aap.id, aap.title, aap.slug, aap.description, aap.description, aap.specification,aap.price,aap.disc_price, aap.size_image,aap.gst,aap.v_id,aap.catid,ap.image1,ap.image2 from awt_add_product as aap left join awt_productimg as ap on aap.id = ap.product_id where aap.catid = ? and aap.deleted = 0 and ap.deleted = 0 and aap.active= 1 and aap.approve = 1"
 
-  con.query(sql, [catid], (err, data) => {
+  const sql = "select aap.id, aap.title, aap.slug, aap.description, aap.description, aap.specification,aap.price,aap.disc_price, aap.size_image,aap.gst,aap.v_id,aap.catid,ap.image1,ap.image2 ,aap.customizable from awt_add_product as aap left join awt_productimg as ap on aap.id = ap.product_id where aap.catid = ? and aap.id != ? and aap.deleted = 0 and ap.deleted = 0 and aap.active= 1 and aap.approve = 1"
+
+  con.query(sql, [catid,product_id], (err, data) => {
     if (err) {
       return res.json(err)
     } else {
@@ -4797,6 +4994,53 @@ app.post('/getrelatedproduct', (req, res) => {
   })
 })
 
+
+
+app.get('/gettagdata', (req, res) => {
+
+  const sql = 'select * from awt_producttag where deleted = 0'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/getproducttag', (req, res) => {
+
+  let { product_id } = req.body;
+
+  const sql = 'select Tags from awt_add_product  where  id = ? and deleted = 0'
+
+  con.query(sql, [product_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/update_tag', (req, res) => {
+
+  let { tags, product_id } = req.body;
+
+
+  const sql = "update awt_add_product set Tags = ? where id = ?"
+
+  con.query(sql, [tags, product_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json("Data added successfully!")
+    }
+  })
+
+})
 
 
 

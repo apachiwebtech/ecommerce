@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import product2 from '../../assets/frontimg/product/2.jpg'
 import header from '../../assets/frontimg/site-header.jpg'
-import Slider from 'react-slick';
+// import Slider from 'react-slick';
 // import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick.css";
 import axios from 'axios';
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 import { Link, useParams } from 'react-router-dom';
@@ -14,8 +14,8 @@ import custdecryptedUserId from '../../Utils/CustUserid';
 import { addToWishList } from '../../Store/WishList/wishlist-actions';
 import Cookies from 'js-cookie';
 import LoginForm from '../Authentication/LoginForm';
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
-import { Carousel } from 'react-responsive-carousel';
+// import "react-responsive-carousel/lib/styles/carousel.min.css"; 
+// import { Carousel } from 'react-responsive-carousel';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Zoom, Mousewheel, Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css';
@@ -32,7 +32,7 @@ const DetailPage = () => {
 	const handleSlideClick = (index) => {
 		setActiveIndex(index);
 
-		localStorage.setItem('initial' , index)		
+		localStorage.setItem('initial', index)
 		window.location.reload()
 
 	};
@@ -87,7 +87,7 @@ const DetailPage = () => {
 			.then((res) => {
 				setProductdata(res.data.data)
 				setReservestock(res.data.r_stock)
-				getrelatedproduct(res.data.data[0].catid)
+				getrelatedproduct(res.data.data[0].catid, res.data.data[0].id)
 				if (res.data) {
 					getProductImage(res.data.data[0].id)
 
@@ -100,9 +100,10 @@ const DetailPage = () => {
 			})
 	}
 
-	const getrelatedproduct = async (catid) => {
+	const getrelatedproduct = async (catid,pro_id) => {
 		const data = {
-			catid: catid
+			catid: catid,
+			product_id : pro_id
 		}
 		axios.post(`${BASE_URL}/getrelatedproduct`, data)
 			.then((res) => {
@@ -223,9 +224,9 @@ const DetailPage = () => {
 																<div className="row">
 																	<div className="col-md-2">
 																		<div className="content-thumbnail-scroll">
-																			<div className="image-thumbnail slick-carousel slick-vertical">
+																			<div className="image-thumbnail slick-vertical">
 																				<Swiper
-																					spaceBetween={isMobile ? 1 : 1}
+																					spaceBetween={isMobile ? 1 : 0}
 																					slidesPerView={isMobile ? 3 : 3}
 																					modules={[Mousewheel, Navigation, Thumbs]}
 																					navigation
@@ -307,6 +308,11 @@ const DetailPage = () => {
 																	<del aria-hidden="true"><span>₹{item.price}</span></del>
 																	<ins><span>₹{item.disc_price}</span></ins>
 																</span>
+																{item.customizable == 1 && <div className="product-lable">
+																	<div className="hot text-light bg-success">
+																		customizable</div>
+																</div>}
+															
 																<div class="rating">
 																	<div class="star star-5"></div>
 																	<div class="review-count">
@@ -371,15 +377,18 @@ const DetailPage = () => {
 																		}}>Add to wishlist</button>}
 																	</div>
 
-																	{item.stock == null || item.stock == 0 || item.stock == r_stock ? <div>
+																	{item.stock == null || item.stock == 0 || item.stock == r_stock || item.stock < 0 ?  <div>
 																		<div class="button  text-danger" >Out Of Stock</div>
 
-																	</div> : <div class="add-to-cart-wrap ">
+																	</div> :item.customizable == 1 ? <>satya</> :  <div class="add-to-cart-wrap ">
 																		<div class="quantity">
 																			<button type="button" onClick={() => {
 
 																				if (value < item.stock - r_stock) {
 																					setValue(value + 1)
+
+																				}else{
+																					alert(`Available stock is ${item.stock - r_stock}`)
 																				}
 
 																			}} class="plus">+</button>
@@ -420,15 +429,15 @@ const DetailPage = () => {
 																	</div> */}
 																</div>
 																<div class="product-meta">
-																	<span class="sku-wrapper">SKU: <span class="sku">D2300-3-2-2</span></span>
-																	<span class="posted-in">Category: <Link href="shop-grid-left.html" rel="tag">{item.category}</Link></span>
-																	<span class="tagged-as">Tags: <Link href="shop-grid-left.html" rel="tag">Hot</Link>, <Link href="shop-grid-left.html" rel="tag">Trend</Link></span>
+																	{/* <span class="sku-wrapper">SKU: <span class="sku">D2300-3-2-2</span></span> */}
+																	<span class="posted-in">Category: <Link rel="tag">{item.category}</Link></span>
+																	<span class="tagged-as">Tags: <Link to={``} rel="tag">{item.Tags}</Link></span>
 																</div>
-																<div class="social-share">
+																{/* <div class="social-share">
 																	<Link href="#" title="Facebook" class="share-facebook" target="_blank"><i class="fa fa-facebook"></i>Facebook</Link>
 																	<Link href="#" title="Twitter" class="share-twitter"><i class="fa fa-twitter"></i>Twitter</Link>
 																	<Link href="#" title="Pinterest" class="share-pinterest"><i class="fa fa-pinterest"></i>Pinterest</Link>
-																</div>
+																</div> */}
 															</div>
 														</div>
 													</div>
@@ -505,9 +514,11 @@ const DetailPage = () => {
 
 																							<div class="products-entry clearfix product-wapper">
 																								<div class="products-thumb">
-																									<div class="product-lable">
-																										<div class="hot">Hot</div>
-																									</div>
+																								{item.customizable == 1 && 	<div className="product-lable">
+																										<div className="hot text-light bg-success">
+																											customizable</div>
+																									</div>}
+																								
 																									<div class="product-thumb-hover">
 																										<Link to={``}>
 																											<img style={{ height: "200px" }} src={`${IMG_URL}/productimg/` + item.image1} alt="" />
@@ -515,7 +526,7 @@ const DetailPage = () => {
 																									</div>
 																									<div class="product-button">
 																										<div class="btn-add-to-cart" data-title="Add to cart">
-																											<Link rel="nofollow" href="#" class="product-btn button" 
+																											<Link rel="nofollow" href="#" class="product-btn button"
 																												onClick={() => {
 																													addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, "1", item.v_id, item.gst);
 																													notify();
