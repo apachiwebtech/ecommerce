@@ -2,8 +2,14 @@ import axios from 'axios';
 import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/js/bootstrap.min.js';
 import Cookies from 'js-cookie';
-import { Component, useEffect, useState } from 'react';
-import { Outlet, createHashRouter, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, createHashRouter, useLocation, useNavigate } from 'react-router-dom';
+import '../src/MainComponent/Library/Fontawsome/Font-awsome.css';
+import '../src/MainComponent/Library/Icomoonfont/icomoon.css';
+import '../src/MainComponent/Library/elegant-icons/css/elegant.css';
+import '../src/MainComponent/Library/feather-font/css/iconfont.css';
+import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css';
+import AddProductImg from './AdminComponent/AddProductImg';
 import AdminDashBoard from './AdminComponent/AdminDashBoard';
 import AdminUser from './AdminComponent/AdminUser';
 import Banner from './AdminComponent/Banner';
@@ -12,13 +18,14 @@ import Brand from './AdminComponent/Brand';
 import Category from './AdminComponent/Category';
 import Color from './AdminComponent/Color';
 import Gallery from './AdminComponent/Gallery';
+import Group from './AdminComponent/Group';
 import Header from './AdminComponent/Header';
 import Orders from './AdminComponent/Orders';
 import PageNotFound from './AdminComponent/PageNotFound';
 import Product from './AdminComponent/Product';
-import VProduct from './VendorComponents/Product'
 import ProductApproval from './AdminComponent/ProductApproval';
 import ProductCatalog from './AdminComponent/ProductCatalog';
+import Productapprovalview from './AdminComponent/Productapprovalview';
 import ReviewComment from './AdminComponent/ReviewComment';
 import SettingPages from './AdminComponent/SettingPages';
 import SocialMedia from './AdminComponent/SocialMedia';
@@ -28,88 +35,77 @@ import VendorMaster from './AdminComponent/VendorMaster';
 import View from './AdminComponent/View';
 import WebLogin from './AdminComponent/WebLogin';
 import './App.css';
-import SiteHeader from './MainComponent/Layout/SiteHeader';
 import SiteFooter from './MainComponent/Layout/SiteFooter';
+import SiteHeader from './MainComponent/Layout/SiteHeader';
+import DetailPage from './MainComponent/Pages/DetailPage';
 import DashBoard from './MainComponent/Pages/Home';
-import ShopProduct from './MainComponent/Pages/ShopProduct'
-import '../src/MainComponent/Library/Fontawsome/Font-awsome.css'
-import '../src/MainComponent/Library/Icomoonfont/icomoon.css'
-import '../src/MainComponent/Library/elegant-icons/css/elegant.css'
-import '../src/MainComponent/Library/feather-font/css/iconfont.css'
-import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
+import ShopCart from './MainComponent/Pages/ShopCart';
+import ShopProduct from './MainComponent/Pages/ShopProduct';
+import ShopWishlist from './MainComponent/Pages/ShopWishlist';
+import SiteLoader from './MainComponent/Ui/SiteLoader';
 import './Responsive.css';
 import './Style.css';
-import Productapprovalview from './AdminComponent/Productapprovalview'
-import Group from './AdminComponent/Group';
-import AddProductImg from './AdminComponent/AddProductImg';
-import ShopCart from './MainComponent/Pages/ShopCart';
-import ShopWishlist from './MainComponent/Pages/ShopWishlist';
-import DetailPage from './MainComponent/Pages/DetailPage';
-import SiteLoader from './MainComponent/Ui/SiteLoader';
-import decryptedUserId from './Utils/UserID';
+import VProduct from './VendorComponents/Product';
 
 
-import Checkout from './MainComponent/Pages/Checkout';
-import { getCartCount } from './Store/Cart/cart-action';
 import { useDispatch } from 'react-redux';
+import AddRole from './AdminComponent/AddRole';
+import RoleAssignment from './AdminComponent/RoleAssignment';
+import Checkout from './MainComponent/Pages/Checkout';
+import OrderView from './MainComponent/Pages/ProfileComponent/OrderView';
 import Profile from './MainComponent/Pages/ProfileComponent/Profile';
-import ProfileWish from './MainComponent/Pages/ProfileComponent/ProfileWish';
 import Address from './MainComponent/Pages/ProfileComponent/ProfileAddress';
 import ProfileOrder from './MainComponent/Pages/ProfileComponent/ProfileOrders';
-import OrderView from './MainComponent/Pages/ProfileComponent/OrderView';
-import RoleAssignment from './AdminComponent/RoleAssignment';
-import AddRole from './AdminComponent/AddRole';
+import ProfileWish from './MainComponent/Pages/ProfileComponent/ProfileWish';
+import { getCartCount } from './Store/Cart/cart-action';
 
 
 // vendor Component
 
-import VendorSettingPages from './VendorComponents/VendorSettingPages';
-import VendorHeader from './VendorComponents/Header';
-import VendorUser from './VendorComponents/VendorUser';
-import VendorCategory from './VendorComponents/VendorCategory';
-import VendorOrder from './VendorComponents/Orders';
-import VendorProductCatalog from './VendorComponents/ProductCatalog';
-import AddProduct from './VendorComponents/Product';
-import VendorProduct from './VendorComponents/Product'
-import '../src/MainComponent/Library/Fontawsome/Font-awsome.css'
-import '../src/MainComponent/Library/Icomoonfont/icomoon.css'
-import '../src/MainComponent/Library/elegant-icons/css/elegant.css'
-import '../src/MainComponent/Library/feather-font/css/iconfont.css'
-import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css'
-import VendorLogin from './VendorComponents/VendorLogin';
-import BrandRequest from './AdminComponent/BrandRequest';
+import '../src/MainComponent/Library/Fontawsome/Font-awsome.css';
+import '../src/MainComponent/Library/Icomoonfont/icomoon.css';
+import '../src/MainComponent/Library/elegant-icons/css/elegant.css';
+import '../src/MainComponent/Library/feather-font/css/iconfont.css';
+import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css';
+import AboutUS from './AdminComponent/AboutUs';
+import Adminuserform from './AdminComponent/Adminuserform';
 import BlogCategory from './AdminComponent/BlogCategory';
 import BlogPosts from './AdminComponent/BlogPosts';
-import Faq from './AdminComponent/Faq';
-import AddBrand from './VendorComponents/AddBrand';
+import BrandRequest from './AdminComponent/BrandRequest';
+import Breadcrumbs from './AdminComponent/Breadcrumbs';
+import CancellationReasons from './AdminComponent/CancellationReasons';
 import Deleteduser from './AdminComponent/Deleteduser';
-import Adminuserform from './AdminComponent/Adminuserform';
-import Contact from './MainComponent/Pages/Contact';
-import VendorRegister from './MainComponent/Pages/VendorRegistration';
-import VendorRequest from './AdminComponent/VendorRequest';
+import Faq from './AdminComponent/Faq';
+import MyDocument from './AdminComponent/MyDocument';
+import ProductTag from './AdminComponent/ProductTag';
 import Returnrequest from './AdminComponent/Returnrequest';
 import Returnrequestview from './AdminComponent/Returnrequestview';
-import CancellationReasons from './AdminComponent/CancellationReasons';
+import SalesReport from './AdminComponent/SalesReport';
 import Seo from './AdminComponent/Seo';
 import SeoForm from './AdminComponent/SeoForm';
-import SiteFaq from './MainComponent/Pages/Faq';
-import AboutUS from './AdminComponent/AboutUs';
-import SalesReport from './AdminComponent/SalesReport';
-import ProductTag from './AdminComponent/ProductTag';
-import About from './MainComponent/Pages/About';
-import ImageGallery from './MainComponent/Pages/ImageGallery';
-import ProductStock from './VendorComponents/ProductStock';
-import custdecryptedUserId from './Utils/CustUserid';
-import ThankYou from './MainComponent/Pages/ThankYouPage';
-import MyDocument from './AdminComponent/MyDocument';
 import Tags from './AdminComponent/Tags';
-import Terms from './MainComponent/Pages/Terms';
-import Privacy from './MainComponent/Pages/Privacy';
-import ShippingPolicy from './MainComponent/Pages/ShippingPolicy';
-import Refund from './MainComponent/Pages/Refund';
+import VendorRequest from './AdminComponent/VendorRequest';
+import About from './MainComponent/Pages/About';
+import Contact from './MainComponent/Pages/Contact';
+import SiteFaq from './MainComponent/Pages/Faq';
+import ImageGallery from './MainComponent/Pages/ImageGallery';
 import PaymentFailed from './MainComponent/Pages/PaymentFailed';
-import CommingSoon from './MainComponent/CommingSoon';
+import Privacy from './MainComponent/Pages/Privacy';
+import Refund from './MainComponent/Pages/Refund';
+import ShippingPolicy from './MainComponent/Pages/ShippingPolicy';
+import Terms from './MainComponent/Pages/Terms';
 import TestCorousel from './MainComponent/Pages/TestCorousel';
+import ThankYou from './MainComponent/Pages/ThankYouPage';
+import VendorRegister from './MainComponent/Pages/VendorRegistration';
+import AddBrand from './VendorComponents/AddBrand';
+import VendorHeader from './VendorComponents/Header';
+import VendorOrder from './VendorComponents/Orders';
+import AddProduct from './VendorComponents/Product';
+import VendorProductCatalog from './VendorComponents/ProductCatalog';
+import ProductStock from './VendorComponents/ProductStock';
+import VendorLogin from './VendorComponents/VendorLogin';
+import VendorSettingPages from './VendorComponents/VendorSettingPages';
+import VendorUser from './VendorComponents/VendorUser';
 
 
 
@@ -378,6 +374,10 @@ const Router = createHashRouter([
       {
         path: '/webapp/orders',
         element: <Orders />
+      },
+      {
+        path: '/webapp/Breadcrumbs',
+        element: <Breadcrumbs />
       },
 
 

@@ -57,9 +57,9 @@ const Category = () => {
             isValid = false
             newErrors.slug = "slug is required"
         }
-        if (!image) {
-            isValid = false
-            newErrors.logo = "Image is required"
+        if (uid.image == undefined && !image) {
+            isValid = false;
+            newErrors.logo = "image is required";
         }
         if (!selectedOption) {
             isValid = false;
@@ -179,7 +179,13 @@ const Category = () => {
             formdata.append('title', value.title)
             formdata.append('description', value.description)
             formdata.append('slug', value.slug)
-            formdata.append('image', image)
+            if(image){
+
+                formdata.append('image', image)
+            }else{
+                formdata.append('image', uid.image)
+
+            }
             formdata.append('group_id', group_id)
             formdata.append('user_id', decryptedUserId())
             formdata.append('u_id', uid.id)
@@ -350,6 +356,9 @@ const Category = () => {
                                             <input type="file" class="form-control" id="exampleInputUsername1" onChange={handleUpload} name="image" placeholder="Enter.." />
                                             {error.logo && <span className='text-danger'>{error.logo}</span>}
 
+                                        </div>
+                                        <div>
+                                            <img style={{ width: "200px" }} src={`${IMG_URL}/category/${uid.image}`} alt="" />
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>

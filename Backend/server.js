@@ -67,6 +67,12 @@ const storage8 = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
+const storage9 = multer.diskStorage({
+  destination: '../../ecomuploads/Breadcrumbs', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
 
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
@@ -76,6 +82,7 @@ const upload5 = multer({ storage: storage5 });
 const upload6 = multer({ storage: storage6 });
 const upload7 = multer({ storage: storage7 });
 const upload8 = multer({ storage: storage8 });
+const upload9 = multer({ storage: storage9 });
 
 app.use(express.json());
 
@@ -807,13 +814,17 @@ app.post('/add_category', upload6.single('image'), (req, res) => {
   let user_id = req.body.user_id
   let title = req.body.title;
   let group_id = req.body.group_id;
-  let image = req.file.filename;
   let slug = req.body.slug;
   let description = req.body.description;
   let created_date = new Date()
   let u_id = req.body.u_id;
 
-
+  let image;
+  if (req.body.filename == undefined) {
+    image = req.body.image
+  } else {
+    image = req.file.filename;
+  }
 
 
   let sql;
@@ -910,13 +921,17 @@ app.post('/category_delete', (req, res) => {
 app.post('/add_group', upload7.single('image'), (req, res) => {
   let user_id = req.body.user_id
   let title = req.body.title;
-  let image = req.file.filename;
   let slug = req.body.slug;
   let description = req.body.description;
   let created_date = new Date()
   let u_id = req.body.u_id;
 
-
+  let image;
+  if (req.body.filename == undefined) {
+    image = req.body.image
+  } else {
+    image = req.file.filename;
+  }
 
 
   let sql;
@@ -1236,11 +1251,17 @@ app.post('/blog_delete', (req, res) => {
 
 app.post('/add_brand', upload4.single('logo'), (req, res) => {
   let user_id = req.body.user_id
-  let image = req.file.filename
   let title = req.body.title;
   let description = req.body.description;
   let created_date = new Date()
   let uid = req.body.uid
+
+  let image;
+  if (req.body.filename == undefined) {
+    image = req.body.image
+  } else {
+    image = req.file.filename;
+  }
 
   let sql;
   let param;
@@ -1565,11 +1586,17 @@ app.get('/gallery_data', (req, res) => {
 app.post('/add_gallery', upload3.single('image'), (req, res) => {
 
   let title = req.body.title;
-  let image = req.file.filename;
   let created_date = new Date()
   let user_id = "2"
   let u_id = req.body.u_id;
 
+
+  let image;
+  if (req.body.filename == undefined) {
+    image = req.body.image
+  } else {
+    image = req.file.filename;
+  }
 
   let sql;
   let param;
@@ -5044,4 +5071,105 @@ app.post('/update_tag', (req, res) => {
 
 
 
+// for Breadcrumbs/==========================================================================
 
+app.post('/add_Breadcrumbs', upload9.single('image'), (req, res) => {
+
+  let title = req.body.title;
+  let image = req.file.filename;
+  let created_date = new Date()
+  let user_id = req.body.user_id
+  let u_id = req.body.u_id;
+
+  // if (!user_id) {
+  //   return res.status(400).json({ error: 'User  ID is required' });
+  // }
+
+  let sql;
+  let param;
+
+
+  if (u_id == 'undefined') {
+    sql = "insert into awt_Breadcrumbs(`title`,`upload_image`,`created_by`,`created_date`) values(?,?,?,?)"
+    param = [title, image, user_id, created_date]
+  } else {
+    sql = "update awt_Breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = ?"
+    param = [title, image, user_id, created_date, u_id]
+  }
+
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+
+      return res.json(err)
+    }
+    else {
+
+      return res.json("Data Added Successfully!")
+    }
+
+
+  })
+})
+
+
+app.get('/Breadcrumbs_data', (req, res) => {
+
+  const sql = 'select * from awt_Breadcrumbs where deleted = 0'
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
+
+app.post('/Breadcrumbs_delete', (req, res) => {
+
+  let Breadcrumbs_id = req.body.Breadcrumbs_id;
+
+  const sql = "update awt_Breadcrumbs set deleted = 1 where id = ?"
+
+  con.query(sql, [Breadcrumbs_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.post('/Breadcrumbs_update_data', (req, res) => {
+
+  let Breadcrumbs_id = req.body.Breadcrumbs_id;
+
+  const sql = "select * from  awt_Breadcrumbs  where id = ?"
+
+  con.query(sql, [Breadcrumbs_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    }
+    else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.get(`/get_Breadcrumbs`, (req, res) => {
+
+  const sql = "select * from `awt_Breadcrumbs` where  deleted = 0"
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+
+})

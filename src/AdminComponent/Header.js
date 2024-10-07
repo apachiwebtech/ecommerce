@@ -1,4 +1,4 @@
-import { mdiAccountArrowRightOutline, mdiAccountDetails, mdiAccountGroupOutline, mdiAccountOutline, mdiAccountRemoveOutline, mdiApplicationBracketsOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiFrequentlyAskedQuestions, mdiHome, mdiImageArea, mdiInformationVariantBoxOutline, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiNotebookEditOutline, mdiNut, mdiOrderBoolAscending, mdiPost, mdiRotateRight, mdiSearchWeb, mdiStarBox, mdiTagMultipleOutline, mdiViewGallery } from '@mdi/js';
+import { mdiAccountArrowRightOutline, mdiAccountDetails, mdiAccountGroupOutline, mdiAccountOutline, mdiAccountRemoveOutline, mdiApplicationBracketsOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiFrequentlyAskedQuestions, mdiHome, mdiImageArea, mdiInformationVariantBoxOutline, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiNavigationVariant, mdiNavigationVariantOutline, mdiNotebookEditOutline, mdiNut, mdiOrderBoolAscending, mdiPost, mdiRotateRight, mdiSearchWeb, mdiStarBox, mdiTagMultipleOutline, mdiViewGallery } from '@mdi/js';
 import Icon from '@mdi/react';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
@@ -329,6 +329,25 @@ const Header = () => {
               </Link>
             </li>
 
+          </ul>
+        </Collapse>
+
+
+        <li className="nav-item" onClick={() => handleToggle('Breadcrumbs')}>
+          <div className="nav-link" >
+            <Icon path={mdiNavigationVariant} size={1} className='mx-3' />
+            <span className="menu-title">Breadcrumbs</span>
+            {openStates.Breadcrumbs ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </div>
+        </li>
+        <Collapse in={openStates.Breadcrumbs} timeout="auto" unmountOnExit>
+          <ul className='inner-item'>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/Breadcrumbs'>
+                <Icon path={mdiNavigationVariantOutline} size={1} className='mx-3' />
+                <span className="menu-title">Breadcrumbs</span>
+              </Link>
+            </li>
           </ul>
         </Collapse>
 

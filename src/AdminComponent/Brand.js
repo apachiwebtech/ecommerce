@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BASE_URL } from './BaseUrl';
+import { BASE_URL, IMG_URL } from './BaseUrl';
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InnerHeader from './InnerHeader';
@@ -46,9 +46,9 @@ const Brand = () => {
             newErrors.title = "title is required"
         }
 
-        if (!image) {
-            isValid = false
-            newErrors.logo = "logo is required"
+        if (uid.logo == undefined && !image) {
+            isValid = false;
+            newErrors.logo = "logo is required";
         }
 
         setError(newErrors)
@@ -127,7 +127,13 @@ const Brand = () => {
             const formdata = new FormData();
 
             formdata.append('title', value.title)
-            formdata.append('logo', image)
+            if(image){
+
+                formdata.append('logo', image)
+            }else{
+                formdata.append('logo', uid.logo)
+
+            }
             formdata.append('description', value.description)
             formdata.append('user_id', decryptedUserId())
             formdata.append('uid', uid.id)
@@ -226,6 +232,9 @@ const Brand = () => {
                                             <input type="file" class="form-control" id="exampleInputUsername1" onChange={handleUpload} name="image" placeholder="Enter.." />
                                             {error.logo && <span className='text-danger'>{error.logo}</span>}
 
+                                        </div>
+                                        <div>
+                                            <img style={{ width: "200px" }} src={`${IMG_URL}/brand/${uid.logo}`} alt="" />
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>

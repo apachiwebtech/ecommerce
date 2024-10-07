@@ -405,7 +405,7 @@ const SiteHeader = (cartCount) => {
 														<div class="close-search"></div>
 
 														<div class={searchtoggle ? `wrapper-search wrapper-open` : `wrapper-search `}>
-															<form role="search" method="get" class="search-from ajax-search" action="" style={{ position: "relative" }}>
+															<div class="search-from ajax-search"  style={{ position: "relative" }}>
 																<div class="search-box">
 																	<button className='close-searchbar' onClick={handlesearch}>
 																		<Icon path={mdiClose} size={1}  style={{ float: "right" }} />
@@ -414,7 +414,7 @@ const SiteHeader = (cartCount) => {
 																		<i class="icon-search"></i>
 																	</button> */}
 
-																	<input id="myInput" onChange={handlechangesearch} type="text" autocomplete="off" name="s" class="input-search s" placeholder="Search..." />
+																	<input id="" onChange={handlechangesearch} type="text"   placeholder="Search..." />
 
 																	<div className="block block-products">
 																		<div className="block-title"><h2>item Product</h2></div>
@@ -463,7 +463,7 @@ const SiteHeader = (cartCount) => {
 																		</ul>
 																	</div>
 																</div>
-															</form>
+															</div>
 														</div>
 													</div>
 

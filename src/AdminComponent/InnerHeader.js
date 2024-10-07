@@ -1,12 +1,11 @@
-import React from 'react'
+import ArrowCircleLeftSharpIcon from "@mui/icons-material/ArrowCircleLeftSharp";
 import DesktopWindowsRoundedIcon from '@mui/icons-material/DesktopWindowsRounded';
+import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
-import NotificationsActiveTwoToneIcon from '@mui/icons-material/NotificationsActiveTwoTone';
-import { Link } from 'react-router-dom';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import img1 from "../assets/images/prof.png";
-import ArrowCircleLeftSharpIcon from "@mui/icons-material/ArrowCircleLeftSharp";
 
 const InnerHeader = () => {
 
@@ -55,6 +54,8 @@ const InnerHeader = () => {
                 return 'Deleted Users';
             case '/webapp/color':
                 return 'Colour';
+            case '/webapp/Breadcrumbs':
+                return 'Breadcrumbs';
             case '/webapp/product':
                 return 'Add Product';
             case location.pathname.match(/^\/addservice\/\d+$/) ? location.pathname : '':
