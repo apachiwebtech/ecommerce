@@ -457,3 +457,20 @@ li{
 .swiper-button-prev{
   color: #000 !important;
 }
+
+
+.cat-parent{
+
+}
+.cat-img{
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  
+}
+
+@media only screen and (max-width: 600px) {
+.moving-cat{
+  padding: 0px !important;
+}
+}

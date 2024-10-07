@@ -120,6 +120,10 @@ const Router = createHashRouter([
     path: '/weblog',
     element: <WebLogin />
   },
+  // {
+  //   path: '/splide',
+  //   element: <CarouselWithThumbnails />
+  // },
   {
     path: '/vendorlog',
     element: <VendorLogin />

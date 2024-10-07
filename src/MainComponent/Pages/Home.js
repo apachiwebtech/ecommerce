@@ -12,6 +12,9 @@ import custdecryptedUserId from '../../Utils/CustUserid'
 import Cookies from 'js-cookie';
 import { getCartCount } from '../../Store/Cart/cart-action'
 import { useDispatch } from 'react-redux'
+import MovingCategory from '../HomeSubCompponent/MovingCategory'
+import Advertise2 from '../HomeSubCompponent/Advertise2'
+
 
 
 
@@ -29,11 +32,15 @@ const DashBoard = () => {
 
             <BannerSection />
 
-            <CategorySection />
+            <MovingCategory/>
+
+            <AdvertiseSection />
+            <Advertise2 />
+
+            {/* <CategorySection /> */}
 
             <TrendingSection />
 
-            <AdvertiseSection />
 
             {/* <AboutSection /> */}
 

@@ -327,12 +327,42 @@ const SiteHeader = (cartCount) => {
 
 														</ul>
 													</li>
-													<li className="level-0 menu-item">
-														<Link to="/contact"><span className="menu-item-text">Contact</span></Link>
+													<li className="level-0 menu-item menu-item-has-children">
+														<Link to={`/shoproduct/${banner[3]?.slug}`}><span className="menu-item-text">{banner[3]?.title}</span></Link>
+
+														<ul className="sub-menu">
+															{cat.filter((item) => (item.group_id == banner[3]?.id)).map((item) => {
+																return (
+																	<li className="level-1 menu-item menu-item-has-children">
+																		<Link to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}><span className="menu-item-text">{item.title}</span></Link>
+																		<ul className="sub-menu">
+																			{subcat.filter((ele) => ele.cat_id == item.id).map((ele) => {
+																				return (
+																					< li >
+																						<Link to={`/shoproduct/${banner[0]?.slug}/${item.slug}/${ele.slug}`}><span className={ele.title !== null ? "menu-item-text" : ""}>{ele.title}</span></Link>
+																					</li>
+																				)
+
+																			})}
+
+
+																		</ul>
+																	</li>
+																)
+															})}
+
+
+														</ul>
 													</li>
 													<li className="level-0 menu-item">
+														<Link to="/contact"><span className="menu-item-text">Customization</span></Link>
+													</li>
+													<li className="level-0 menu-item">
+														<Link to="/contact"><span className="menu-item-text">Contact Us</span></Link>
+													</li>
+													{/* <li className="level-0 menu-item">
 														<Link to="/vendorregister"><span className="menu-item-text">Vendor Request</span></Link>
-													</li>
+													</li> */}
 												</ul>
 											</nav>
 										</div>
