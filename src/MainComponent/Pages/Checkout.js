@@ -4,8 +4,10 @@ import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { useNavigate, useParams } from 'react-router-dom'
 import custdecryptedUserId from '../../Utils/CustUserid'
 import Cookies from 'js-cookie'
+import { Helmet } from "react-helmet";
 
 const Checkout = () => {
+  const [data, setData] = useState([])
   const [state, setState] = useState([])
   const [cart, setCart] = useState([])
   const [errors, setErrors] = useState({})
@@ -333,13 +335,30 @@ const Checkout = () => {
 
 
 
+  async function getmetadetail() {
+    const data = {
+        page_id: 2
+    }
+    axios.post(`${BASE_URL}/getmetadetail`, data)
+        .then((res) => {
+            setData(res.data[0])
+        })
+}
 
+useEffect(() => {
+    getmetadetail()
+}, [])
 
 
 
   return (
     <div>
       <div id="site-main" class="site-main">
+                 <Helmet>
+                    <title>{data.seo_title}</title>
+                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
+                    <meta name="author" content={data.seo_title} />
+                </Helmet>
         <div id="main-content" class="main-content">
           <div id="primary" class="content-area">
             <div id="title" class="page-title">

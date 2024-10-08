@@ -22,9 +22,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/thumbs';
+import { Helmet } from "react-helmet";
 
 const DetailPage = () => {
-
+    const [data, setData] = useState([])
 	const [activeIndex, setActiveIndex] = useState();
 	const [isMobile, setIsMobile] = useState(false);
 
@@ -186,11 +187,28 @@ const DetailPage = () => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
+	async function getmetadetail() {
+        const data = {
+            page_id: 4
+        }
+        axios.post(`${BASE_URL}/getmetadetail`, data)
+            .then((res) => {
+                setData(res.data[0])
+            })
+    }
 
+    useEffect(() => {
+        getmetadetail()
+    }, [])
 	return (
 
 		<div>
 			<div id="site-main" class="site-main">
+				<Helmet>
+                    <title>{data.seo_title}</title>
+                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
+                    <meta name="author" content={data.seo_title} />
+                </Helmet>
 				<div id="main-content" class="main-content">
 					<ToastContainer theme="dark" position="bottom-right" />
 					<div id="primary" class="content-area">

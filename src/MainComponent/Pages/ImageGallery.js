@@ -7,6 +7,7 @@ import ImageListItem from '@mui/material/ImageListItem';
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
+
 function srcset(image, size, rows = 1, cols = 1) {
     return {
         src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
@@ -18,6 +19,8 @@ function srcset(image, size, rows = 1, cols = 1) {
 
 const ImageGallery = () => {
     const [data, setData] = useState([])
+    const [metadata, setMeta] = useState([])
+
 
 
     async function getimages() {
@@ -25,6 +28,16 @@ const ImageGallery = () => {
         axios.get(`${BASE_URL}/get_gallery`, data)
             .then((res) => {
                 setData(res.data)
+            })
+    }
+
+    async function getmetadetail() {
+        const data = {
+            page_id: 7
+        }
+        axios.post(`${BASE_URL}/getmetadetail`, data)
+            .then((res) => {
+                setMeta(res.data[0])
             })
     }
 
@@ -39,15 +52,16 @@ const ImageGallery = () => {
 
     useEffect(() => {
         getimages()
+        getmetadetail()
     }, [])
 
     return (
         <div>
             <div id="site-main" class="site-main">
                 <Helmet>
-                    <title>{data.seo_title}</title>
-                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.top_desc }} />
-                    <meta name="author" content={data.seo_title} />
+                    <title>{metadata.seo_title}</title>
+                    <meta name="description" content={metadata.seo_desc} dangerouslySetInnerHTML={{ __html: metadata.top_desc }} />
+                    <meta name="author" content={metadata.seo_title} />
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">

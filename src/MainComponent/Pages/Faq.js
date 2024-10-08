@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet";
 
 const SiteFaq = () => {
     const [data, setData] = useState([])
+    const [metadata, setMeta] = useState([])
 
     async function getmetadetail() {
 
@@ -14,17 +15,28 @@ const SiteFaq = () => {
             })
     }
 
+    async function getmetadetails() {
+        const data = {
+            page_id: 5
+        }
+        axios.post(`${BASE_URL}/getmetadetail`, data)
+            .then((res) => {
+                setMeta(res.data[0])
+            })
+    }
+
     useEffect(() => {
         getmetadetail()
+        getmetadetails()
     }, [])
 
     return (
         <div>
             <div id="site-main" class="site-main">
                 <Helmet>
-                    <title>{data.seo_title}</title>
-                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
-                    <meta name="author" content={data.seo_title} />
+                    <title>{metadata.seo_title}</title>
+                    <meta name="description" content={metadata.seo_desc} dangerouslySetInnerHTML={{ __html: metadata.seo_desc }} />
+                    <meta name="author" content={metadata.seo_title} />
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">

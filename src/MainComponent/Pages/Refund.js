@@ -6,8 +6,10 @@ import { Helmet } from "react-helmet";
 const Refund = () => {
 
     const [data, setData] = useState([])
+    const [metadata, setMeta] = useState([])
 
-    async function getmetadetail() {
+
+    async function getmetadetail_refund() {
 
         axios.get(`${BASE_URL}/getfaq`, data)
             .then((res) => {
@@ -15,17 +17,27 @@ const Refund = () => {
             })
     }
 
+    async function getmetadetail() {
+        const data = {
+            page_id: 10
+        }
+        axios.post(`${BASE_URL}/getmetadetail`, data)
+            .then((res) => {
+                setMeta(res.data[0])
+            })
+    }
+
     useEffect(() => {
-        // getmetadetail()
+        getmetadetail()
     }, [])
 
     return (
         <div>
             <div id="site-main" class="site-main">
                 <Helmet>
-                    <title>{data.seo_title}</title>
-                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
-                    <meta name="author" content={data.seo_title} />
+                    <title>{metadata.seo_title}</title>
+                    <meta name="description" content={metadata.seo_desc} dangerouslySetInnerHTML={{ __html: metadata.seo_desc }} />
+                    <meta name="author" content={metadata.seo_title} />
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">

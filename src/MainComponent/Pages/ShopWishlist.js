@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import product1 from '../../assets/frontimg/product/1.jpg'
 import { useDispatch, useSelector } from 'react-redux';
 import { getWishList, } from '../../Store/WishList/wishlist-actions';
@@ -8,10 +8,13 @@ import empty from '../../assets/frontimg/empty.gif'
 import custdecryptedUserId from '../../Utils/CustUserid';
 import { Link } from 'react-router-dom';
 import { getCartCount } from '../../Store/Cart/cart-action';
-import { IMG_URL } from '../../AdminComponent/BaseUrl';
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 import addToCart from '../../Utils/AddtoCart';
-const ShopWishlist = () => {
+import { Helmet } from "react-helmet";
+import axios from 'axios';
 
+const ShopWishlist = () => {
+    const [data, setData] = useState([])
     const dispatch = useDispatch();
     const wishList = useSelector((state) => state.wishlist.wishList);
 
@@ -36,12 +39,30 @@ const ShopWishlist = () => {
         dispatch(getWishList(userId));
     }, [])
 
-    
+    async function getmetadetail() {
+        const data = {
+            page_id: 14
+        }
+        axios.post(`${BASE_URL}/getmetadetail`, data)
+            .then((res) => {
+                setData(res.data[0])
+            })
+    }
+
+    useEffect(() => {
+        getmetadetail()
+    }, [])
+
 
     return (
         <div id="page" class="hfeed page-wrapper">
             <ToastContainer theme="dark"     position="bottom-right" />
             <div id="site-main" class="site-main">
+            <Helmet>
+                    <title>{data.seo_title}</title>
+                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
+                    <meta name="author" content={data.seo_title} />
+                </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
                         <div id="title" class="page-title">

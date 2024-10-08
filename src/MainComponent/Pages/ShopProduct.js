@@ -11,9 +11,10 @@ import Icon from '@mdi/react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getProducts } from '../../Store/Products/product-actions'
 import { FormControl, MenuItem, Select } from '@mui/material'
+import { Helmet } from "react-helmet";
 
 const ShopProduct = () => {
-
+    const [data, setData] = useState([])
     const [products, setProducts] = useState([])
     const [group, setGroup] = useState([])
     const [brand, setBrand] = useState([])
@@ -140,10 +141,27 @@ const ShopProduct = () => {
    }
 
 
+   async function getmetadetail() {
+    const data = {
+        page_id: 13
+    }
+    axios.post(`${BASE_URL}/getmetadetail`, data)
+        .then((res) => {
+            setData(res.data[0])
+        })
+}
 
+useEffect(() => {
+    getmetadetail()
+}, [])
 
     return (
         <div><div id="site-main" className="site-main">
+            <Helmet>
+                    <title>{data.seo_title}</title>
+                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
+                    <meta name="author" content={data.seo_title} />
+                </Helmet>
             <div id="main-content" className="main-content">
 
                 <div id="primary" className="content-area">

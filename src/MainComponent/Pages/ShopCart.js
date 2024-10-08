@@ -9,8 +9,10 @@ import empty from '../../assets/frontimg/empty.gif'
 import LoginForm from '../Authentication/LoginForm'
 import { getCartCount } from '../../Store/Cart/cart-action'
 import { useDispatch } from 'react-redux'
+import { Helmet } from "react-helmet";
 
 const ShopCart = ({ fetchcount }) => {
+  const [data, setData] = useState([])
   const [cart, setCart] = useState([])
   const [quantities, setQuantities] = useState({});
   const [open, setOpen] = useState(false);
@@ -128,11 +130,29 @@ const ShopCart = ({ fetchcount }) => {
     return acc + itemTotal;
   }, 0);
 
+  async function getmetadetail() {
+    const data = {
+        page_id: 12
+    }
+    axios.post(`${BASE_URL}/getmetadetail`, data)
+        .then((res) => {
+            setData(res.data[0])
+        })
+}
+
+useEffect(() => {
+    getmetadetail()
+}, [])
 
   return (
     <div>
       <div id="page" class="hfeed page-wrapper">
         <div id="site-main" class="site-main">
+                <Helmet>
+                    <title>{data.seo_title}</title>
+                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
+                    <meta name="author" content={data.seo_title} />
+                </Helmet>
           <div id="main-content" class="main-content">
             <div id="primary" class="content-area">
               <div id="title" class="page-title">

@@ -1,8 +1,11 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BASE_URL } from '../../AdminComponent/BaseUrl'
+import { Helmet } from "react-helmet";
+
 
 const VendorRegister = () => {
+    const [data, setData] = useState([])
     const [errors, setErrors] = useState({});
     const [value, setValue] = useState({
         firstname: "",
@@ -12,7 +15,6 @@ const VendorRegister = () => {
         mobile: "",
 
     })
-
 
     const handlechange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -84,9 +86,28 @@ const VendorRegister = () => {
 
     }
 
+    async function getmetadetail() {
+        const data = {
+            page_id: 17
+        }
+        axios.post(`${BASE_URL}/getmetadetail`, data)
+            .then((res) => {
+                setData(res.data[0])
+            })
+    }
+
+    useEffect(() => {
+        getmetadetail()
+    }, [])
+
     return (
         <div>
             <div id="site-main" class="site-main">
+                <Helmet>
+                    <title>{data.seo_title}</title>
+                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
+                    <meta name="author" content={data.seo_title} />
+                </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
                         <div id="title" class="page-title">
