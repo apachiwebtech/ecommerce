@@ -1,4 +1,4 @@
-import { mdiAccountArrowRightOutline, mdiAccountDetails, mdiAccountGroupOutline, mdiAccountOutline, mdiAccountRemoveOutline, mdiApplicationBracketsOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiFrequentlyAskedQuestions, mdiHome, mdiImageArea, mdiInformationVariantBoxOutline, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiNavigationVariant, mdiNavigationVariantOutline, mdiNotebookEditOutline, mdiNut, mdiOrderBoolAscending, mdiPost, mdiRotateRight, mdiSearchWeb, mdiStarBox, mdiTagMultipleOutline, mdiViewGallery } from '@mdi/js';
+import { mdiAccountArrowRightOutline, mdiAccountDetails, mdiAccountGroupOutline, mdiAccountOutline, mdiAccountRemoveOutline, mdiAdvertisements, mdiApplicationBracketsOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiFrequentlyAskedQuestions, mdiImageArea, mdiInformationVariantBoxOutline, mdiKeyboardCaps, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiNavigationVariant, mdiNavigationVariantOutline, mdiNotebookEditOutline, mdiNut, mdiOrderBoolAscending, mdiPost, mdiRotateRight, mdiSearchWeb, mdiSelectMultipleMarker, mdiStarBox, mdiTagMultipleOutline, mdiViewGallery } from '@mdi/js';
 import Icon from '@mdi/react';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
@@ -351,6 +351,35 @@ const Header = () => {
           </ul>
         </Collapse>
 
+        <li className="nav-item" onClick={() => handleToggle('Advertise')}>
+          <div className="nav-link" >
+            <Icon path={mdiAdvertisements} size={1} className='mx-3' />
+            <span className="menu-title">Advertisements</span>
+            {openStates.Advertise ? <ExpandLess className='mx-3' /> : <ExpandMore className='mx-3' />}
+          </div>
+        </li>
+        <Collapse in={openStates.Advertise} timeout="auto" unmountOnExit>
+          <ul className='inner-item'>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/Advertise'>
+                <Icon path={mdiAdvertisements} size={1} className='mx-3' />
+                <span className="menu-title">Advertisements</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/SlotMaster'>
+                <Icon path={mdiKeyboardCaps} size={1} className='mx-3' />
+                <span className="menu-title">SlotMaster</span>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/LocationMaster'>
+                <Icon path={mdiSelectMultipleMarker} size={1} className='mx-3' />
+                <span className="menu-title">LocationMaster</span>
+              </Link>
+            </li>
+          </ul>
+        </Collapse>
 
         <li className="nav-item" onClick={() => handleToggle('report')}>
           <div className="nav-link" >

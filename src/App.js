@@ -69,6 +69,7 @@ import '../src/MainComponent/Library/feather-font/css/iconfont.css';
 import '../src/MainComponent/Library/wpbingofont/css/wpbingofont.css';
 import AboutUS from './AdminComponent/AboutUs';
 import Adminuserform from './AdminComponent/Adminuserform';
+import Advertisements from './AdminComponent/Advertisements';
 import BlogCategory from './AdminComponent/BlogCategory';
 import BlogPosts from './AdminComponent/BlogPosts';
 import BrandRequest from './AdminComponent/BrandRequest';
@@ -106,6 +107,7 @@ import ProductStock from './VendorComponents/ProductStock';
 import VendorLogin from './VendorComponents/VendorLogin';
 import VendorSettingPages from './VendorComponents/VendorSettingPages';
 import VendorUser from './VendorComponents/VendorUser';
+import Advertise from './AdminComponent/Advertise';
 
 
 
@@ -378,6 +380,10 @@ const Router = createHashRouter([
       {
         path: '/webapp/Breadcrumbs',
         element: <Breadcrumbs />
+      },,
+      {
+        path: '/webapp/advertise',
+        element: <Advertise />
       },
 
 
