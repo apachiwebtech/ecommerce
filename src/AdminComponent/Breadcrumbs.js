@@ -3,19 +3,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import decryptedUserId from '../Utils/UserID';
 import { BASE_URL, IMG_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 
-const Gallery = () => {
 
+const Breadcrumbs = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [errors, setErrors] = useState({})
     const [image, setImage] = useState()
     const [uid , setUpdateData] = useState([])
-    const [gallery, setGallery] = useState([])
+    const [Breadcrumbs, setBreadcrumbs] = useState([])
     const [value, setValue] = useState({
         title: "" || uid.title,
-        image: '',
+        image: '' || uid.upload_image,
 
 
     })
@@ -36,7 +37,7 @@ const Gallery = () => {
         }
         if (uid.upload_image == undefined && !image) {
             isValid = false;
-            newErrors.image = "Banner is required";
+            newErrors.image = "Breadcrumbs is required";
         }
 
 
@@ -53,11 +54,11 @@ const Gallery = () => {
 
 
 
-    async function getGalleryData() {
-        axios.get(`${BASE_URL}/gallery_data`)
+    async function getBreadcrumbsData() {
+        axios.get(`${BASE_URL}/Breadcrumbs_data`)
             .then((res) => {
 
-                setGallery(res.data)
+                setBreadcrumbs(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -65,7 +66,7 @@ const Gallery = () => {
     }
 
     useEffect(() => {
-        getGalleryData()
+        getBreadcrumbsData()
     }, [])
 
     const handleClick = (id) => {
@@ -86,9 +87,9 @@ const Gallery = () => {
 
     const handleupdateId = (id) =>{
         const data = {
-            gallery_id : id
+            Breadcrumbs_id : id
         }
-        axios.post(`${BASE_URL}/gallery_update_data`,data)
+        axios.post(`${BASE_URL}/Breadcrumbs_update_data`,data)
         .then((res)=>{
             console.log(res)
             setUpdateData(res.data[0])
@@ -99,13 +100,11 @@ const Gallery = () => {
 
 
         const data = {
-            gallery_id: id
+            Breadcrumbs_id: id
         }
-
-
-        axios.post(`${BASE_URL}/gallery_delete`, data)
+        axios.post(`${BASE_URL}/Breadcrumbs_delete`, data)
             .then((res) => {
-                getGalleryData()
+                getBreadcrumbsData()
             })
 
             .catch((err) => {
@@ -134,11 +133,12 @@ const Gallery = () => {
 
             }
             formdata.append('u_id', uid.id)
+            formdata.append('user_id', decryptedUserId())
 
-            axios.post(`${BASE_URL}/add_gallery`, formdata)
+            axios.post(`${BASE_URL}/add_Breadcrumbs`, formdata)
                 .then((res) => {
                     alert(res.data)
-                    getGalleryData()
+                    getBreadcrumbsData()
                     if (res.data) {
                         //    navigate('/vendormaster')
                         setValue({
@@ -177,7 +177,7 @@ const Gallery = () => {
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Image / Video</h4>
+                                    <h4 class="card-title">Add Breadcrumbs Image</h4>
 
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
@@ -186,12 +186,12 @@ const Gallery = () => {
                                             {errors.title && <div className="text-danger">{errors.title}</div>}
                                         </div>
                                         <div class="form-group">
-                                            <label for="image">Image / Video</label>
+                                            <label for="image">Image</label>
                                             <input type="file" class="form-control" id="image" placeholder="" name='image' onChange={handleUpload} />
                                             {errors.image && <div className="text-danger">{errors.image}</div>}
                                         </div>
                                         <div>
-                                            <img style={{ width: "200px" }} src={`${IMG_URL}/gallery/${uid.upload_image}`} alt="" />
+                                            <img style={{ width: "200px" }} src={`${IMG_URL}/Breadcrumbs/${uid.upload_image}`} alt="" />
                                         </div>
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                         <button type='button' onClick={()=>{
@@ -206,7 +206,7 @@ const Gallery = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title"> List Of Gallery </h4>
+                                            <h4 class="card-title"> List Of Breadcrumbs </h4>
 
                                         </div>
 
@@ -234,7 +234,7 @@ const Gallery = () => {
                                             <tbody>
 
                                                 {
-                                                    gallery.map((item, index) => {
+                                                    Breadcrumbs.map((item, index) => {
                                                         return (
                                                             <tr >
                                                                 <td>
@@ -280,5 +280,4 @@ const Gallery = () => {
 
     )
 }
-
-export default Gallery;
+export default Breadcrumbs

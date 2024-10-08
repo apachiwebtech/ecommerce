@@ -96,7 +96,7 @@ const TrendingSection = () => {
                                 <div class="slick-sliders products-list grid" data-slidestoscroll="true" data-dots="false" data-nav="1" data-columns4="1" data-columns3="2" data-columns2="3" data-columns1="3" data-columns1440="4" data-columns="4">
                                     <Swiper spaceBetween={20}
                                         slidesPerView={4}
-                                        modules={[ Navigation, Thumbs]}
+                                        modules={[Navigation, Thumbs]}
                                         navigation
                                         breakpoints={{
                                             320: {
@@ -116,71 +116,82 @@ const TrendingSection = () => {
                                         {data.map((item) => {
                                             return (
                                                 <SwiperSlide>
-                                                <div class="item-product ">
-                                                    <div class="items">
-                                                        <div class="products-entry clearfix product-wapper">
-                                                            <div class="products-thumb">
-                                                                {/* <div class="product-lable">
-                                                                    <div class=""><i className='icon-heart'/></div>
-                                                                </div> */}
-                                                                <div class="product-thumb-hover">
-                                                                    <Link to={`/product/${item.slug}`} >
-                                                                        <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image1} class="post-image" alt="" />
+                                                    <div class="item-product ">
+                                                        <div class="items">
+                                                            <div class="products-entry clearfix product-wapper">
+                                                                <div class="products-thumb">
+                                                                {item.customizable == 1 &&  <div className="product-lable">
+                                                                       <div className="hot text-light bg-success">
+                                                                            customizable</div>
+                                                                    </div> }
+                                                                   
+                                                                    <div class="product-thumb-hover">
+                                                                        <Link to={`/product/${item.slug}`} >
+                                                                            <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image1} class="post-image" alt="" />
 
-                                                                        <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image2} class="hover-image back" alt="" />
+                                                                            <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image2} class="hover-image back" alt="" />
 
-                                                                    </Link>
-                                                                </div>
-                                                                <div class="product-button">
-                                                                    <div class="btn-wishlist" data-title="Wishlist">
-
-                                                                        {!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
-
-                                                                            handleToggle()
-                                                                        }}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
-                                                                            addWishList(item.id)
-                                                                            wishify()
-
-
-                                                                        }}>Add to wishlist</button>}
-
-
+                                                                        </Link>
                                                                     </div>
+                                                                    <div class="product-button">
+                                                                        <div class="btn-wishlist" data-title="Wishlist">
 
-                                                                    {/* <div class="btn-compare" data-title="Compare">
+                                                                            {!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
+
+                                                                                handleToggle()
+                                                                            }}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
+                                                                                addWishList(item.id)
+                                                                                wishify()
+
+
+                                                                            }}>Add to wishlist</button>}
+
+
+                                                                        </div>
+
+                                                                        {/* <div class="btn-compare" data-title="Compare">
                                                                         <button class="product-btn">Compare</button>
                                                                     </div>
                                                                     <span class="product-quickview" data-title="Quick View">
                                                                         <Link href="#" class="quickview quickview-button">Quick View <i class="icon-search"></i></Link>
                                                                     </span> */}
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="products-content">
-                                                                <div class="contents">
-                                                                    <h3 class="product-title"><Link to={`/product/${item.slug}`}>{item.title}</Link></h3>
-                                                                    <span className="price">
-                                                                        <del aria-hidden="true"><span>₹{item.price}</span></del>
-                                                                        <ins><span>₹{item.disc_price}</span></ins>
-                                                                    </span>
-                                                                    <div class="btn-add-to-cart">
-                                                                        <div data-title="Add to cart">
-                                                                            <Link
-                                                                                class="button"
-                                                                                onClick={() => {
-                                                                                    addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, "1", item.v_id, item.gst);
-                                                                                    notify();
-                                                                                }}
-                                                                            >
-                                                                                Add to cart
-                                                                            </Link>
+                                                                <div class="products-content">
+                                                                    <div class="contents">
+                                                                        <h3 class="product-title"><Link to={`/product/${item.slug}`}>{item.title}</Link></h3>
+                                                                        <span className="price">
+                                                                            <del aria-hidden="true"><span>₹{item.price}</span></del>
+                                                                            <ins><span>₹{item.disc_price}</span></ins>
+                                                                        </span>
+                                                                        <div class="btn-add-to-cart">
+
+                                                                            {item.stock == null || item.stock == 0 || item.stock == item.r_stock || item.stock < 0 ? <div data-title="Out of stock">
+                                                                                <Link
+                                                                                    to={``}
+                                                                                    className='text-danger'
+                                                                                >
+                                                                                    Out of stock
+                                                                                </Link>
+                                                                            </div> : <div data-title="Add to cart">
+                                                                                <Link
+                                                                                    class="button"
+                                                                                    onClick={() => {
+                                                                                        addToCart(item.id, item.title, item.catid, item.disc_price, dispatch, "1", item.v_id, item.gst);
+                                                                                        notify();
+                                                                                    }}
+                                                                                >
+                                                                                    Add to cart
+                                                                                </Link>
+                                                                            </div>}
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
 
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
                                                 </SwiperSlide>
                                             )
                                         })}
@@ -197,7 +208,7 @@ const TrendingSection = () => {
 
                                     </Swiper>
 
-                             
+
 
 
 

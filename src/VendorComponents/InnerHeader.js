@@ -30,6 +30,8 @@ const InnerHeader = () => {
                 return 'Add Brand';
             case '/vendor/productstock':
                 return 'Product Stock';
+            case '/vendor/Breadcrumbs':
+                return 'Breadcrumbs';
          
 
             default:

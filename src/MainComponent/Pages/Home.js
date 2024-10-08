@@ -13,6 +13,9 @@ import Cookies from 'js-cookie';
 import { getCartCount } from '../../Store/Cart/cart-action'
 import { useDispatch } from 'react-redux'
 import { Helmet } from "react-helmet";
+import MovingCategory from '../HomeSubCompponent/MovingCategory'
+import Advertise2 from '../HomeSubCompponent/Advertise2'
+
 
 
 
@@ -47,11 +50,15 @@ useEffect(() => {
 
             <BannerSection />
 
-            <CategorySection />
+            <MovingCategory/>
+
+            <AdvertiseSection />
+            <Advertise2 />
+
+            {/* <CategorySection /> */}
 
             <TrendingSection />
 
-            <AdvertiseSection />
 
             {/* <AboutSection /> */}
 

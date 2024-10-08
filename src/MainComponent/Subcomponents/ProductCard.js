@@ -31,110 +31,12 @@ const ProductCard = (props) => {
     }
 
 
+
+
     const notify = () => toast("Product added to the cart");
     const wishify = () => toast("Product added to the wishlist");
 
-    // const addToCart = async (pro_id) => {
-    //     console.log(pro_id, "0000")
-
-    //     if (!Cookies.get("orderid") && !Cookies.get("custuserid")) {
-    //         const randomUserId = Math.random().toString(36).substring(2);
-
-    //         const user = {
-    //             id: randomUserId,
-    //             pro_id: pro_id
-    //         }
-
-
-
-    //         const response = await fetch(`${BASE_URL}/addToCart`, {
-    //             method: "POST",
-    //             body: JSON.stringify({
-    //                 userId: user.id,
-    //                 pro_id: user.pro_id,
-    //                 pro_name: props.title,
-    //                 catid: props.catid,
-    //                 price: props.price,
-    //                 p_qty: "1"
-
-    //             }),
-    //             headers: {
-    //                 "Content-type": "application/json"
-    //             }
-    //         })
-
-    //         const apiData = await response.json();
-    //         Cookies.set("orderid", apiData[0].orderid)
-
-    //     } else if (Cookies.get("custuserid") && !Cookies.get("orderid") ) {
-
-
-    //         const user = {
-    //             id: custdecryptedUserId(),
-    //             pro_id: pro_id
-    //         }
-
-
-    //         const response = await fetch(`${BASE_URL}/addToCart`, {
-    //             method: "POST",
-    //             body: JSON.stringify({
-    //                 userId: user.id,
-    //                 pro_id: user.pro_id,
-    //                 pro_name: props.title,
-    //                 catid: props.catid,
-    //                 price: props.price,
-    //                 p_qty: "1"
-
-    //             }),
-    //             headers: {
-    //                 "Content-type": "application/json"
-    //             }
-    //         })
-
-    //         const apiData = await response.json();
-    //         Cookies.set("orderid", apiData[0].orderid)
-    //     }
-
-    //     else if ((Cookies.get("custuserid") && Cookies.get("orderid")) || Cookies.get("orderid") ) {
-
-    //         const user = {
-    //             id: custdecryptedUserId(),
-    //             orderid: Cookies.get("orderid"),
-    //             pro_id: pro_id
-    //         }
-
-
-
-    //         const response = await fetch(`${BASE_URL}/addToCart`, {
-    //             method: "POST",
-    //             body: JSON.stringify({
-    //                 userId: user.id,
-    //                 orderid: user.orderid,
-    //                 pro_id: user.pro_id,
-    //                 pro_name: props.title,
-    //                 catid: props.catid,
-    //                 price: props.price,
-    //                 p_qty: "1"
-    //             }),
-    //             headers: {
-    //                 "Content-type": "application/json"
-    //             }
-    //         })
-
-    //         const apiData = await response.json();
-
-
-    //     }
-
-    // }
-
-
-
-
-
-
-
-
+   
 
 
     return (
@@ -142,29 +44,30 @@ const ProductCard = (props) => {
             <div className="products-entry clearfix product-wapper">
                 <ToastContainer theme="dark"     position="bottom-right" />
                 <div className="products-thumb">
-                    {props.trending === 1 ? <div className="product-lable">
-                        <div className="hot">Hot</div>
-                    </div> : <></>}
+                {props.customizable == 1 && 
+                   <div className="product-lable">
+                        <div className="hot text-light bg-success">
+                        customizable</div>
+                    </div> }
                     <div className="product-thumb-hover">
+
                         <Link to={`/product/${props.slug}`} >
-                            <img width="600" height="600" src={`${IMG_URL}/productimg/` + props.image1} className="post-image" alt="" />
-                            <img width="600" height="600" src={`${IMG_URL}/productimg/` + props.image2} className="hover-image back" alt="" />
+                            <img src={`${IMG_URL}/productimg/` + props.image1} className="post-image" alt="" />
+                            <img  src={`${IMG_URL}/productimg/` + props.image2} className="hover-image back" alt="" />
                         </Link>
                     </div>
                     <div className="product-button">
-                        <div className="btn-add-to-cart" data-title="Add to cart">
+                    {props.stock == null || props.stock == 0 || props.stock == props.r_stock  || props.stock < 0 ?null :  <div className="btn-add-to-cart" data-title="Add to cart">
                             <button rel="nofollow" className="product-btn button" onClick={() => {
                                 addToCart(props.proid, props.title, props.catid, props.price , dispatch,"1", props.v_id, props.gst)
                                 notify()
 
                             }} >Add to cart</button>
-                        </div>
+                        </div>} 
+                      
+
                         <div className="btn-wishlist" data-title="Wishlist">
-                            {/* <Link to="/shopwishlist"><button className="product-btn">Add to wishlist</button></Link> */}
-                            {/* <button className="product-btn" onClick={() => {
-                                addWishList(props.proid)
-                                wishify()
-                            }}>Add to wishlist</button> */}
+                       
 
 
                             {!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
