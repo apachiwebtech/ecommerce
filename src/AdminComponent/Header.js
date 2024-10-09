@@ -360,10 +360,10 @@ const Header = () => {
         </li>
         <Collapse in={openStates.Advertise} timeout="auto" unmountOnExit>
           <ul className='inner-item'>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/Advertise'>
-                <Icon path={mdiAdvertisements} size={1} className='mx-3' />
-                <span className="menu-title">Advertisements</span>
+          <li className="nav-item">
+              <Link className="nav-link" to='/webapp/LocationMaster'>
+                <Icon path={mdiSelectMultipleMarker} size={1} className='mx-3' />
+                <span className="menu-title">LocationMaster</span>
               </Link>
             </li>
             <li className="nav-item">
@@ -373,9 +373,9 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to='/webapp/LocationMaster'>
-                <Icon path={mdiSelectMultipleMarker} size={1} className='mx-3' />
-                <span className="menu-title">LocationMaster</span>
+              <Link className="nav-link" to='/webapp/Advertise'>
+                <Icon path={mdiAdvertisements} size={1} className='mx-3' />
+                <span className="menu-title">Advertisements</span>
               </Link>
             </li>
           </ul>

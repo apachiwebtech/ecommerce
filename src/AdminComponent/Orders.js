@@ -251,10 +251,6 @@ const Orders = () => {
                                                         </tr>
                                                     )
                                                 })}
-
-
-
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -262,7 +258,6 @@ const Orders = () => {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

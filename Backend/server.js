@@ -5150,7 +5150,7 @@ app.post('/Breadcrumbs_update_data', (req, res) => {
   const sql = "select * from  awt_Breadcrumbs  where id = ?"
 
   con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
+    if (err) {                                                                  
       return res.json(err)
     }
     else {
@@ -5173,3 +5173,184 @@ app.get(`/get_Breadcrumbs`, (req, res) => {
   })
 
 })
+
+// for Slot-Master/==========================================================================
+
+app.post('/add_SlotMaster', (req, res) => {
+  const { location, slot, title, user_id } = req.body;
+  const created_date = new Date();
+
+  if (!location || !slot || !title || !user_id) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  const sql = "INSERT INTO SlotMaster (location, slot, title, created_by, created_date) VALUES (?, ?, ?, ?, ?)";
+  const params = [location, slot, title, user_id, created_date];
+
+  con.query(sql, params, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.status(201).json({ message: "SlotMaster Added Successfully!" });
+  });
+});
+
+// Read SlotMaster
+app.get('/SlotMaster_data', (req, res) => {
+  const sql = 'SELECT * FROM SlotMaster WHERE deleted = 0';
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.json(data);
+  });
+});
+
+// Update SlotMaster
+app.post('/update_SlotMaster', (req, res) => {
+  const { id, location, slot, title, user_id } = req.body;
+  const updated_date = new Date();
+
+  if (!id || !location || !slot || !title || !user_id) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  const sql = "UPDATE SlotMaster SET location = ?, slot = ?, title = ?, updated_by = ?, updated_date = ? WHERE id = ?";
+  const params = [location, slot, title, user_id, updated_date, id];
+
+  con.query(sql, params, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.json({ message: "SlotMaster Updated Successfully!" });
+  });
+});
+
+// Delete SlotMaster
+app.post('/delete_SlotMaster', (req, res) => {
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: 'ID is required' });
+  }
+
+  const sql = "UPDATE SlotMaster SET deleted = 1 WHERE id = ?";
+  const params = [id];
+
+  con.query(sql, params, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.json({ message: "SlotMaster Deleted Successfully!" });
+  });
+});
+
+// Get SlotMaster by ID
+app.post('/get_SlotMaster', (req, res) => {
+  const { id } = req.body;
+
+  if (!id) {
+    return res.status(400).json({ error: 'ID is required' });
+  }
+
+  const sql = "SELECT * FROM SlotMaster WHERE id = ?";
+  const params = [id];
+
+  con.query(sql, params, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.json(data);
+  });
+});
+
+// for Location-Master/==========================================================================
+
+app.get('/LocationMaster_data', (req, res) => {
+  const sql = 'SELECT * FROM awt_LocationMaster WHERE deleted = 0';
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.json(data);
+  });
+});
+
+// for Advertisement/==========================================================================
+
+app.post('/add_advertisement', (req, res) => {
+  const { slot, type, title, link, target, created_by } = req.body;
+  if (!slot || !type || !title) {
+    return res.status(400).json({ error: 'Slot, Type, and Title are required' });
+  }
+
+  const sql = "INSERT INTO awt_advertisements (slot, type, title, link, target, created_by) VALUES (?, ?, ?, ?, ?, ?)";
+  const params = [slot, type, title, link, target, created_by];
+
+  con.query(sql, params, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.status(201).json({ message: "Advertisement Added Successfully!" });
+  });
+});
+
+// Read Advertisements
+app.get('/advertisements', (req, res) => {
+  const sql = 'SELECT * FROM awt_advertisements WHERE deleted = 0';
+  con.query(sql, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.json(data);
+  });
+});
+
+// Update Advertisement
+app.post('/update_advertisement', (req, res) => {
+  const { id, slot, type, title, link, target, status, updated_by } = req.body;
+  if (!id || !slot || !type || !title) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+
+  const sql = "UPDATE awt_advertisements SET slot = ?, type = ?, title = ?, link = ?, target = ?, status = ?, updated_by = ? WHERE id = ?";
+  const params = [slot, type, title, link, target, status, updated_by, id];
+
+  con.query(sql, params, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.json({ message: "Advertisement Updated Successfully!" });
+  });
+});
+
+// Delete Advertisement (soft delete)
+app.post('/delete_advertisement', (req, res) => {
+  const { id } = req.body;
+  if (!id) {
+    return res.status(400).json({ error: 'ID is required' });
+  }
+
+  const sql = "UPDATE awt_advertisements SET deleted = 1 WHERE id = ?";
+  con.query(sql, [id], (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.json({ message: "Advertisement Deleted Successfully!" });
+  });
+});
+
+
+

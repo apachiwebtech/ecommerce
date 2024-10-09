@@ -1,5 +1,5 @@
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/css/bootstrap.css';
 import Loader from "./Loader";
 import React, { useEffect, useState } from 'react';
 import { BASE_URL } from './BaseUrl';

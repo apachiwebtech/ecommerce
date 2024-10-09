@@ -108,6 +108,8 @@ import VendorLogin from './VendorComponents/VendorLogin';
 import VendorSettingPages from './VendorComponents/VendorSettingPages';
 import VendorUser from './VendorComponents/VendorUser';
 import Advertise from './AdminComponent/Advertise';
+import LocationMaster from './AdminComponent/LocationMaster';
+import SlotMaster from './AdminComponent/SlotMaster';
 
 
 
@@ -384,6 +386,14 @@ const Router = createHashRouter([
       {
         path: '/webapp/advertise',
         element: <Advertise />
+      },
+      {
+        path: '/webapp/LocationMaster',
+        element: <LocationMaster />
+      },
+      {
+        path: '/webapp/SlotMaster',
+        element: <SlotMaster />
       },
 
 
