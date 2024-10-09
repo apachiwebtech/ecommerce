@@ -46,8 +46,6 @@ import SiteLoader from './MainComponent/Ui/SiteLoader';
 import './Responsive.css';
 import './Style.css';
 import VProduct from './VendorComponents/Product';
-
-
 import { useDispatch } from 'react-redux';
 import AddRole from './AdminComponent/AddRole';
 import RoleAssignment from './AdminComponent/RoleAssignment';
@@ -110,6 +108,7 @@ import VendorUser from './VendorComponents/VendorUser';
 import Advertise from './AdminComponent/Advertise';
 import LocationMaster from './AdminComponent/LocationMaster';
 import SlotMaster from './AdminComponent/SlotMaster';
+import CustomizeRequest from './AdminComponent/CustomizeRequest';
 
 
 
@@ -309,6 +308,10 @@ const Router = createHashRouter([
       {
         path: '/webapp/vendorrequest',
         element: <VendorRequest />
+      },
+      {
+        path: '/webapp/customization',
+        element: <CustomizeRequest />
       },
       {
         path: '/webapp/returnrequest',
@@ -645,8 +648,6 @@ function VendorApp() {
 
 
 function App() {
-  const [loader, setLoader] = useState(true)
-  const location = useLocation();
   const { pathname } = useLocation();
 
   const [cartCount, setCartCount] = useState(0);
@@ -679,15 +680,8 @@ function App() {
   useEffect(() => {
     dispatch(getCartCount())
 
-    setLoader(true);
 
-    const timeoutId = setTimeout(() => {
-      setLoader(false);
-    }, 1000);
-
-
-    return () => clearTimeout(timeoutId);
-  }, [location.pathname]);
+  }, []);
 
 
 
@@ -695,7 +689,6 @@ function App() {
     <>
       <ScrollToTop />
       {/* <div id="page" class="hfeed page-wrapper"> */}
-      {loader && <SiteLoader />}
       <SiteHeader cartCount={cartCount} />
       <Outlet fetchcount={fetchCartCount} />
       <SiteFooter />

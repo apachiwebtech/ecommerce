@@ -50,12 +50,12 @@ const ShopCart = ({ fetchcount }) => {
   const handleDecrease = (itemId, proid) => {
     setQuantities(prevQuantities => ({
       ...prevQuantities,
-      [itemId]: Math.max((prevQuantities[itemId] || 0) - 1, 0)
+      [itemId]: Math.max((prevQuantities[itemId] || 0) - 1, 1)
     }));
 
 
     const data = {
-      pqty: quantities[itemId] - 1,
+      pqty: quantities[itemId] ,
       order_id: Cookies.get(`orderid`),
       p_id: proid
     }

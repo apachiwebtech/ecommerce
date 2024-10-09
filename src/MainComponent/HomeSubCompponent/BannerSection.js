@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 // import 'swiper/css';
 // import 'swiper/css/navigation';
 
-const BannerSection = () => {
+const BannerSection = ({ setLoader }) => {
     const [banner, setBanner] = useState([])
 
     var settings = {
@@ -28,6 +28,12 @@ const BannerSection = () => {
             .then((res) => {
                 console.log(res.data)
                 setBanner(res.data)
+
+                const timeoutId = setTimeout(() => {
+                    setLoader(false);
+                }, 500);
+
+                return () => clearTimeout(timeoutId);
             })
             .catch((err) => {
                 console.log(err)

@@ -104,7 +104,7 @@ html {
 }
 body {
   margin: 0;
-  font-family: Barlow Semi Condensed;
+  font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.8;
@@ -125,7 +125,7 @@ h4,
 h5,
 h6 {
   margin-bottom: 0.5rem;
-  font-family: Barlow Semi Condensed;
+  font-family: "Montserrat", sans-serif;
   font-weight: 400;
   line-height: 1.2;
   color: #000;
@@ -1764,7 +1764,7 @@ ul.slick-dots li.slick-active button {
   position: static;
   display: table;
   float: left;
-  padding: 0 18px;
+  padding: 0 9px;
   line-height: 24px;
   z-index: 999999;
 }
@@ -1803,9 +1803,9 @@ ul.slick-dots li.slick-active button {
 .site-navigation ul > li.level-0 > a {
   position: relative;
   text-transform: capitalize;
-  font-family: Barlow Semi Condensed;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 12px;
   background-color: transparent;
   color: #000;
   display: table;
@@ -5683,7 +5683,7 @@ ul.slick-dots li.slick-active button {
   margin-bottom: 25px;
 }
 .block-testimonial.layout-2 .testimonial-content .item .testimonial-excerpt {
-  font-family: Barlow Semi Condensed;
+  font-family: "Montserrat", sans-serif;
   font-size: 16px;
   font-style: normal;
   line-height: 1.8;

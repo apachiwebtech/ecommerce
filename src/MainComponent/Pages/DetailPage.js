@@ -23,17 +23,33 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/thumbs';
 import { Helmet } from "react-helmet";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
 
 const DetailPage = () => {
-    const [data, setData] = useState([])
+
+	const [data, setData] = useState([])
 	const [activeIndex, setActiveIndex] = useState();
 	const [isMobile, setIsMobile] = useState(false);
-
+	const [inquiry, setInquiry] = useState('')
+	const theme = useTheme();
+	const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
 	const handleSlideClick = (index) => {
 		setActiveIndex(index);
 
 		localStorage.setItem('initial', index)
+
+		const id = localStorage.getItem('proid')
+
+
 		window.location.reload()
 
 	};
@@ -67,12 +83,22 @@ const DetailPage = () => {
 	const [value, setValue] = useState(1)
 	const [colorimg, setImgcolordata] = useState([]);
 	const [open, setOpen] = useState(false);
+	const [open2, setOpen2] = useState(false);
 	const [r_stock, setReservestock] = useState();
 	const [relatedproduct, setRelatedProduct] = useState([])
 
 	const handleToggle = (e) => {
 		setOpen(!open);
 	}
+
+	const handleClickOpen = () => {
+		setOpen2(true);
+	};
+
+	const handleClose = () => {
+		setOpen2(false);
+	};
+
 	const notify = () => toast("Product added to the cart");
 
 
@@ -92,6 +118,8 @@ const DetailPage = () => {
 				if (res.data) {
 					getProductImage(res.data.data[0].id)
 
+					localStorage.setItem('proid', res.data.data[0].id)
+
 				}
 
 				// setproductid(res.data[0].id)
@@ -101,10 +129,10 @@ const DetailPage = () => {
 			})
 	}
 
-	const getrelatedproduct = async (catid,pro_id) => {
+	const getrelatedproduct = async (catid, pro_id) => {
 		const data = {
 			catid: catid,
-			product_id : pro_id
+			product_id: pro_id
 		}
 		axios.post(`${BASE_URL}/getrelatedproduct`, data)
 			.then((res) => {
@@ -188,30 +216,56 @@ const DetailPage = () => {
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
-	async function getmetadetail() {
-        const data = {
-            page_id: 4
-        }
-        axios.post(`${BASE_URL}/getmetadetail`, data)
-            .then((res) => {
-                setData(res.data[0])
-            })
-    }
 
-    useEffect(() => {
-        getmetadetail()
-    }, [])
+
+	async function getmetadetail() {
+		const data = {
+			page_id: 4
+		}
+		axios.post(`${BASE_URL}/getmetadetail`, data)
+			.then((res) => {
+				setData(res.data[0])
+			})
+	}
+
+	useEffect(() => {
+		getmetadetail()
+	}, [])
+
+
+	const sendInquiry = (id) => {
+
+		const data = {
+			inquiry: inquiry,
+			product_id: id,
+			email: localStorage.getItem('ecom_email'),
+			mobile: localStorage.getItem('ecom_mobile'),
+			user_id: custdecryptedUserId(),
+			name: localStorage.getItem('Name') + '' + localStorage.getItem('lastname')
+		}
+
+		axios.post(`${BASE_URL}/sendinquiry`, data)
+			.then((res) => {
+				alert("Data submitted")
+				setOpen2(false)
+				const notify2 = () => toast("Inquiry sent successfully");
+				notify2()
+			})
+
+	}
+
+
 	return (
 
 		<div>
 			<div id="site-main" class="site-main">
 				<Helmet>
-                    <title>{data.seo_title}</title>
-                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
-                    <meta name="author" content={data.seo_title} />
-                </Helmet>
+					<title>{data.seo_title}</title>
+					<meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
+					<meta name="author" content={data.seo_title} />
+				</Helmet>
 				<div id="main-content" class="main-content">
-					<ToastContainer theme="dark" position="bottom-right" />
+					<ToastContainer theme="dark" position="top-right" />
 					<div id="primary" class="content-area">
 						{productdata?.map((item) => {
 							return (
@@ -238,53 +292,34 @@ const DetailPage = () => {
 													<div class="section-container p-l-r">
 
 														<div class="row">
-															<div class="product-images col-lg-7 col-md-12 col-12">
+															<div className="product-images col-lg-7 col-md-12 col-12">
 																<div className="row">
 																	<div className="col-md-2">
 																		<div className="content-thumbnail-scroll">
 																			<div className="image-thumbnail slick-vertical">
 																				<Swiper
 																					spaceBetween={isMobile ? 1 : 0}
-																					slidesPerView={isMobile ? 3 : 3}
+																					slidesPerView={3}
 																					modules={[Mousewheel, Navigation, Thumbs]}
 																					navigation
 																					direction={isMobile ? "horizontal" : "vertical"}
 																					mousewheel
 																					watchSlidesProgress={true}
-																					breakpoints={{
-																						320: {
-																							slidesPerView: 3,
-																						},
-																						640: {
-																							slidesPerView: 3,
-																						},
-																						768: {
-																							slidesPerView: 3,
-																						},
-																						1024: {
-																							slidesPerView: 3,
-																						},
-																					}}
 																				>
-																					{colorimg.map((item, index) => {
-																						if (item !== "") {
-																							return (
-																								<SwiperSlide key={index} onClick={() => handleSlideClick(index)}>
-																									<div className="img-item slick-slide">
-																										<span className="img-thumbnail-scroll">
-																											<img
-																												width="600"
-																												height="600"
-																												src={`${IMG_URL}/productimg/` + item}
-																												alt=""
-																											/>
-																										</span>
-																									</div>
-																								</SwiperSlide>
-																							);
-																						}
-																						return null;
-																					})}
+																					{colorimg.map((item, index) => (
+																						<SwiperSlide key={index}>
+																							<div className="img-item slick-slide" onClick={() => handleSlideClick(index)}>
+																								<span className="img-thumbnail-scroll">
+																									<img
+																										width="600"
+																										height="600"
+																										src={`${IMG_URL}/productimg/` + item}
+																										alt=""
+																									/>
+																								</span>
+																							</div>
+																						</SwiperSlide>
+																					))}
 																				</Swiper>
 																			</div>
 																		</div>
@@ -293,26 +328,27 @@ const DetailPage = () => {
 																	<div className="col-md-10">
 																		<div className="scroll-image main-image">
 																			<div className="image-additional">
-																				<Swiper initialSlide={localStorage.getItem("initial") || activeIndex} navigation modules={[Mousewheel, Navigation, Thumbs]}>
-																					{colorimg.map((item, index) => {
-																						if (item !== "") {
-																							return (
-																								<SwiperSlide key={index}>
-																									<div className="img-item">
-																										<span className="img-thumbnail-scroll">
-																											<img
-																												width="600"
-																												height="600"
-																												src={`${IMG_URL}/productimg/` + item}
-																												alt=""
-																											/>
-																										</span>
-																									</div>
-																								</SwiperSlide>
-																							);
-																						}
-																						return null;
-																					})}
+																				{/* Main image swiper showing based on activeIndex */}
+																				<Swiper
+																					initialSlide={activeIndex}
+																					onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)} // Keeps state in sync with Swiper
+																					navigation
+																					modules={[Mousewheel, Navigation, Thumbs]}
+																				>
+																					{colorimg.map((item, index) => (
+																						<SwiperSlide key={index}>
+																							<div className="img-item">
+																								<span className="img-thumbnail-scroll">
+																									<img
+																										width="600"
+																										height="600"
+																										src={`${IMG_URL}/productimg/` + item}
+																										alt=""
+																									/>
+																								</span>
+																							</div>
+																						</SwiperSlide>
+																					))}
 																				</Swiper>
 																			</div>
 																		</div>
@@ -330,7 +366,7 @@ const DetailPage = () => {
 																	<div className="hot text-light bg-success">
 																		customizable</div>
 																</div>}
-															
+
 																<div class="rating">
 																	<div class="star star-5"></div>
 																	<div class="review-count">
@@ -381,7 +417,7 @@ const DetailPage = () => {
 																	</table>
 																</div>
 
-																<div class="buttons">
+																<div class="buttons d-flex align-items-center">
 																	<div class="btn-wishlist d-block" data-title="Wishlist">
 																		{/* <button class="product-btn">Add to wishlist</button> */}
 																		{!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
@@ -395,17 +431,20 @@ const DetailPage = () => {
 																		}}>Add to wishlist</button>}
 																	</div>
 
-																	{item.stock == null || item.stock == 0 || item.stock == r_stock || item.stock < 0 ?  <div>
+																	{item.stock == null || item.stock == 0 || item.stock == r_stock || item.stock < 0 ? <div>
 																		<div class="button  text-danger" >Out Of Stock</div>
 
-																	</div> :item.customizable == 1 ? <>satya</> :  <div class="add-to-cart-wrap ">
+																	</div> : item.customizable == 1 ? <div>
+																		<button className='inquiry-button bg-success text-light' onClick={handleClickOpen}>Send Inquiry</button>
+
+																	</div> : <div class="add-to-cart-wrap ">
 																		<div class="quantity">
 																			<button type="button" onClick={() => {
 
 																				if (value < item.stock - r_stock) {
 																					setValue(value + 1)
 
-																				}else{
+																				} else {
 																					alert(`Available stock is ${item.stock - r_stock}`)
 																				}
 
@@ -420,6 +459,7 @@ const DetailPage = () => {
 																			}
 																			} class="minus" >-</button>
 																		</div>
+
 																		<div class="btn-add-to-cart">
 																			<div class="button" onClick={() => {
 
@@ -434,6 +474,48 @@ const DetailPage = () => {
 																			}}  >Add to cart</div>
 																		</div>
 																	</div>}
+
+																	<Dialog
+																		open={open2}
+																		onClose={handleClose}
+
+																		maxWidth={"lg"}
+																		PaperProps={{
+																			component: 'form',
+																			onSubmit: (event) => {
+																				event.preventDefault();
+																				const formData = new FormData(event.currentTarget);
+																				const formJson = Object.fromEntries(formData.entries());
+																				const email = formJson.email;
+																				console.log(email);
+																				handleClose();
+																			},
+																		}}
+																	>
+
+																		<DialogContent style={{ width: "700px" }}>
+																			<DialogContentText>
+																				Please write the customization here..
+																			</DialogContentText>
+																			<TextField
+																				autoFocus
+																				required
+																				margin="dense"
+																				id="name"
+																				name="email"
+																				onChange={(e) => setInquiry(e.target.value)}
+																				multiline
+																				rows={4}
+																				type="email"
+																				fullWidth
+																				variant="standard"
+																			/>
+																		</DialogContent>
+																		<DialogActions>
+																			<Button sx={{ color: "black" }} onClick={handleClose}>Close</Button>
+																			<Button sx={{ color: "black" }} type="button" onClick={() => sendInquiry(item.id)}>Send</Button>
+																		</DialogActions>
+																	</Dialog>
 
 
 
@@ -532,11 +614,11 @@ const DetailPage = () => {
 
 																							<div class="products-entry clearfix product-wapper">
 																								<div class="products-thumb">
-																								{item.customizable == 1 && 	<div className="product-lable">
+																									{item.customizable == 1 && <div className="product-lable">
 																										<div className="hot text-light bg-success">
 																											customizable</div>
 																									</div>}
-																								
+
 																									<div class="product-thumb-hover">
 																										<Link to={``}>
 																											<img style={{ height: "200px" }} src={`${IMG_URL}/productimg/` + item.image1} alt="" />

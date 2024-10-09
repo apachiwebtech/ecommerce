@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux'
 import { Helmet } from "react-helmet";
 import MovingCategory from '../HomeSubCompponent/MovingCategory'
 import Advertise2 from '../HomeSubCompponent/Advertise2'
+import SiteLoader from '../Ui/SiteLoader'
 
 
 
@@ -22,35 +23,38 @@ import Advertise2 from '../HomeSubCompponent/Advertise2'
 const DashBoard = () => {
 
   const [data, setData] = useState([])
+  const [loader, setLoader] = useState(true)
 
   async function getmetadetail() {
     const data = {
-        page_id: 6
+      page_id: 6
     }
     axios.post(`${BASE_URL}/getmetadetail`, data)
-        .then((res) => {
-            setData(res.data[0])
-        })
-}
+      .then((res) => {
+        setData(res.data[0])
+      })
+  }
 
-useEffect(() => {
+  useEffect(() => {
     getmetadetail()
-}, [])
+  }, [])
 
   return (
     <div id="site-main" class="site-main">
-                <Helmet>
-                    <title>{data.seo_title}</title>
-                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
-                    <meta name="author" content={data.seo_title} />
-                </Helmet>
+            {loader && <SiteLoader />}
+      <Helmet>
+        <title>{data.seo_title}</title>
+        <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
+        <meta name="author" content={data.seo_title} />
+      </Helmet>
+
       <div id="main-content" class="main-content">
         <div id="primary" class="content-area">
           <div id="content" class="site-content" role="main">
 
-            <BannerSection />
+            <BannerSection setLoader={setLoader} />
 
-            <MovingCategory/>
+            <MovingCategory />
 
             <AdvertiseSection />
             <Advertise2 />

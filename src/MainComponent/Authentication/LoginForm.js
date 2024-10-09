@@ -206,10 +206,14 @@ function LoginForm({ open, setOpen }) {
                         const id = res.data[0].email; // Define id here
                         const value = res.data[0].value; // Define id here
                         const name = res.data[0].firstname;
+                        const Lastname = res.data[0].lastname;
                         const otp = res.data[0].otp;
+                        const Mobile = res.data[0].mobile;
                         localStorage.setItem("ecom_email", id)
                         localStorage.setItem("ecom_value", value)
+                        localStorage.setItem("ecom_mobile", Mobile)
                         localStorage.setItem("Name", name)
+                        localStorage.setItem("lastname", Lastname)
                         // localStorage.setItem('otp', otp)
                     }
                     else {
@@ -271,7 +275,7 @@ function LoginForm({ open, setOpen }) {
                         localStorage.setItem("ecom_email", id)
                         localStorage.setItem("ecom_value", value)
                         localStorage.setItem("ecom_mobile", Mobile)
-                        localStorage.setItem("firstname", firstname)
+                        localStorage.setItem("Name", firstname)
                         localStorage.setItem("lastname", lastname)
                     } else {
                         setExist(res.data)
@@ -371,7 +375,7 @@ function LoginForm({ open, setOpen }) {
             otp: mergedOtp,
             email: localStorage.getItem("ecom_email"),
             value: localStorage.getItem("ecom_value"),
-            firstname: localStorage.getItem("firstname"),
+            firstname: localStorage.getItem("Name"),
             lastname: localStorage.getItem("lastname"),
             mobile: localStorage.getItem("ecom_mobile"),
         }

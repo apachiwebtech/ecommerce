@@ -1,8 +1,8 @@
+import Loader from "./Loader";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import React, { useState, useEffect } from "react";
 import InnerHeader from "./InnerHeader";
-import Loader from "./Loader";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";

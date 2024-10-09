@@ -76,7 +76,7 @@ media
 .prod_flex{
   display: flex;
   color:#001737;
-  font-family: "Source Sans Pro", sans-serif;
+  /* font-family: "Source Sans Pro", sans-serif; */
 }
 .weight{
   font-weight:400;
@@ -473,4 +473,13 @@ li{
 .moving-cat{
   padding: 0px !important;
 }
+}
+
+
+
+.inquiry-button{
+  padding: 10px 50px;
+  /* background-color: #0073cf; */
+  text-transform: uppercase;
+  font-weight: 600;
 }

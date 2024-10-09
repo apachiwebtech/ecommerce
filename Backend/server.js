@@ -11,8 +11,13 @@ var cookieParser = require('cookie-parser');
 const cron = require('node-cron')
 const crypto = require('crypto');
 const axios = require('axios');
+// var { SendMailClient } = require("zeptomail");
 
 dotenv.config();
+
+// const url = "api.zeptomail.in/";
+// const token = "Zoho-enczapikey PHtE6r1cRrzji298oEdTtqS6EMKnMdssrOtleFJF5YxDAvAKTE1Uo40pwzXi+h4jUaIRFP6amo5gs7ufu+LUdj3sYWsfCGqyqK3sx/VYSPOZsbq6x00ZtVsbdEDdV47nc9Nt0SHTuN3ZNA==";
+
 
 
 const storage = multer.diskStorage({
@@ -231,6 +236,33 @@ app.use(
 
 //     }
 //   })
+// })
+
+
+//this is for zepto api
+
+// app.get('/api', (req, res) => {
+//   let client = new SendMailClient({ url, token });
+
+//   client.sendMail({
+//     "from":
+//     {
+//       "address": "satyamsatkr875@gmail.com",
+//       "name": "noreply"
+//     },
+//     "to":
+//       [
+//         {
+//           "email_address":
+//           {
+//             "address": "satyamsatkr875@gmail.com",
+//             "name": "satyam"
+//           }
+//         }
+//       ],
+//     "subject": "Test Email",
+//     "htmlbody": "<div><b> Test email sent successfully.</b></div>",
+//   }).then((resp) => console.log("success")).catch((error) => console.log(error));
 // })
 
 app.post('/customerlogin', (req, res) => {
@@ -1778,7 +1810,7 @@ app.post(`/add_product`, upload5.fields([
   let date = new Date()
   let approve = 0
   let uid = req.body.uid;
-  
+
   let hsn_code = req.body.hsn_code;
   let lbh_unit = req.body.lbh_unit;
   let length = req.body.length;
@@ -1820,12 +1852,12 @@ app.post(`/add_product`, upload5.fields([
       if (uid == "undefined") {
         sql = 'insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`gst`,`customizable`,`length`,`breadth`,`height`,`no_of_box`,`weight`,`hsn_code`,`lbh_unit`,`weight_unit`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
-        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst,customizable,length,breadth,height,no_of_box,weight,hsn_code,lbh_unit,weight_unit]
+        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst, customizable, length, breadth, height, no_of_box, weight, hsn_code, lbh_unit, weight_unit]
       }
       else {
         sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?,catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? ,approve = 0 ,gst = ?,customizable= ?,length = ? ,breadth = ? ,height = ? ,no_of_box = ? ,weight = ? ,hsn_code = ? ,lbh_unit = ? ,weight_unit = ?  where id = ? `;
 
-        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst,customizable,length,breadth,height,no_of_box,weight,hsn_code,lbh_unit,weight_unit, uid]
+        param = [title, v_id, b_id, groupid, catid, subcatid, slug, description, specification, price, d_price, sizeupload, date, user_id, gst, customizable, length, breadth, height, no_of_box, weight, hsn_code, lbh_unit, weight_unit, uid]
       }
 
 
@@ -1961,8 +1993,10 @@ app.post(`/product_img_data`, (req, res) => {
           id: item.id,
           title: item.title,
           colorcode: item.colorcode,
-          images: [item.image1, item.image2, item.image3, item.image4].filter(image => image !== null && image !== "") // Filter out any null or empty images
+          images: [item.image1, item.image2, item.image3, item.image4].filter(image => image !== null && image !== ""),
+
         };
+
       });
       return res.json(result);
     }
@@ -5007,12 +5041,12 @@ app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
 });
 
 app.post('/getrelatedproduct', (req, res) => {
-  let { catid ,product_id} = req.body;
+  let { catid, product_id } = req.body;
 
 
   const sql = "select aap.id, aap.title, aap.slug, aap.description, aap.description, aap.specification,aap.price,aap.disc_price, aap.size_image,aap.gst,aap.v_id,aap.catid,ap.image1,ap.image2 ,aap.customizable from awt_add_product as aap left join awt_productimg as ap on aap.id = ap.product_id where aap.catid = ? and aap.id != ? and aap.deleted = 0 and ap.deleted = 0 and aap.active= 1 and aap.approve = 1"
 
-  con.query(sql, [catid,product_id], (err, data) => {
+  con.query(sql, [catid, product_id], (err, data) => {
     if (err) {
       return res.json(err)
     } else {
@@ -5075,8 +5109,14 @@ app.post('/update_tag', (req, res) => {
 
 app.post('/add_Breadcrumbs', upload9.single('image'), (req, res) => {
 
+  let image;
+
   let title = req.body.title;
-  let image = req.file.filename;
+  if (req.body.filename == undefined) {
+    image = req.body.image
+  } else {
+    image = req.file.filename;
+  }
   let created_date = new Date()
   let user_id = req.body.user_id
   let u_id = req.body.u_id;
@@ -5090,10 +5130,10 @@ app.post('/add_Breadcrumbs', upload9.single('image'), (req, res) => {
 
 
   if (u_id == 'undefined') {
-    sql = "insert into awt_Breadcrumbs(`title`,`upload_image`,`created_by`,`created_date`) values(?,?,?,?)"
+    sql = "insert into awt_breadcrumbs(`title`,`upload_image`,`created_by`,`created_date`) values(?,?,?,?)"
     param = [title, image, user_id, created_date]
   } else {
-    sql = "update awt_Breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = ?"
+    sql = "update awt_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = ?"
     param = [title, image, user_id, created_date, u_id]
   }
 
@@ -5115,7 +5155,7 @@ app.post('/add_Breadcrumbs', upload9.single('image'), (req, res) => {
 
 app.get('/Breadcrumbs_data', (req, res) => {
 
-  const sql = 'select * from awt_Breadcrumbs where deleted = 0'
+  const sql = 'select * from awt_breadcrumbs where deleted = 0'
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -5130,7 +5170,7 @@ app.post('/Breadcrumbs_delete', (req, res) => {
 
   let Breadcrumbs_id = req.body.Breadcrumbs_id;
 
-  const sql = "update awt_Breadcrumbs set deleted = 1 where id = ?"
+  const sql = "update awt_breadcrumbs set deleted = 1 where id = ?"
 
   con.query(sql, [Breadcrumbs_id], (err, data) => {
     if (err) {
@@ -5147,7 +5187,7 @@ app.post('/Breadcrumbs_update_data', (req, res) => {
 
   let Breadcrumbs_id = req.body.Breadcrumbs_id;
 
-  const sql = "select * from  awt_Breadcrumbs  where id = ?"
+  const sql = "select * from  awt_breadcrumbs  where id = ?"
 
   con.query(sql, [Breadcrumbs_id], (err, data) => {
     if (err) {                                                                  
@@ -5162,7 +5202,7 @@ app.post('/Breadcrumbs_update_data', (req, res) => {
 
 app.get(`/get_Breadcrumbs`, (req, res) => {
 
-  const sql = "select * from `awt_Breadcrumbs` where  deleted = 0"
+  const sql = "select * from `awt_breadcrumbs` where  deleted = 0"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -5352,5 +5392,34 @@ app.post('/delete_advertisement', (req, res) => {
   });
 });
 
+app.post(`/sendinquiry`, (req, res) => {
+
+  let { product_id, inquiry, email, mobile, user_id, name } = req.body;
+  const date = new Date()
+
+  const sql = "insert into awt_productinquiry(`user_id`,`product_id`, `inquiry_description`,`name`,`email`,`mobile`,`created_date`) values(?,?,?,?,?,?,?)"
+
+  con.query(sql, [user_id, product_id, inquiry, name, email, mobile, date], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+
+})
+
+app.get(`/getcustomrequest` , (req,res) =>{
+
+  const sql = "SELECT ap.*,aap.title,aap.slug FROM `awt_productinquiry` as ap left join awt_add_product as aap on aap.id = ap.product_id where ap.deleted = 0"
+
+  con.query(sql , (err,data) =>{
+    if(err){
+      return res.json(err)
+    }else{
+      return res.json(data)
+    }
+  })
+})
 
 

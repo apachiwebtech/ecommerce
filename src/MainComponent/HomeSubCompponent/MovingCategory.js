@@ -23,10 +23,6 @@ import 'swiper/css/navigation';
 
 
 
-
-
-
-
 const MovingCategory = () => {
 
 
@@ -85,9 +81,11 @@ const MovingCategory = () => {
                                             return (
                                                 <SwiperSlide>
                                                     <div className='text-center'>
+                                                    <Link to={`/shoproduct/${item?.slug}`}>
                                                         <div className='cat-parent' style={{background:"#EEE3E7"}}>
                                                             <img className='cat-img' src={`${IMG_URL}/group/${item?.image}`} alt="Banner" />
                                                         </div>
+                                                        </Link>
                                                         <div>
                                                         <h4 className='mt-2 '>{item.title}</h4>
                                                         </div>

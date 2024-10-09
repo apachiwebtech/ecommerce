@@ -44,7 +44,8 @@
 /* === Import template variables === */
 /*-------------------------------------------------------------------*/
 /* === SCSS Compass Functions === */
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900");
+/* @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900"); */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @-moz-keyframes flash {
   0% {
     opacity: 1;
@@ -11551,6 +11552,9 @@ input[type="button"].btn-block {
   border-bottom: 0;
   border-left: 0.3em solid transparent;
 }
+.dropdown-toggle::after {
+display: none !important;
+}
 
 .dropdown-toggle:empty::after {
   margin-left: 0;
@@ -18700,7 +18704,7 @@ pre {
 code {
   padding: 5px;
   color: #f83e37;
-  font-family: "Source Sans Pro", sans-serif;
+  /* font-family: "Source Sans Pro", sans-serif; */
   font-weight: 300;
   font-size: 0.875rem;
   border-radius: 4px;
@@ -18780,7 +18784,7 @@ code {
 }
 
 .preview-list .preview-item .preview-item-content p .content-category {
-  font-family: 'source-sans-pro-semibold', sans-serif;
+  /* font-family: 'source-sans-pro-semibold', sans-serif; */
   padding-right: 15px;
   border-right: 1px solid #f3f3f3;
 }
@@ -20216,7 +20220,7 @@ dl li {
 
 /* Dropdowns */
 .dropdown .dropdown-toggle:after {
-  border-top: 0;
+  /* border-top: 0;
   border-right: 0;
   border-left: 0;
   border-bottom: 0;
@@ -20227,7 +20231,7 @@ dl li {
   vertical-align: middle;
   line-height: .625rem;
   font-size: 1.25rem;
-  margin-left: 0;
+  margin-left: 0; */
 }
 
 .dropdown .dropdown-menu {
@@ -20508,7 +20512,7 @@ dl li {
 .sidebar {
   min-height: calc(100vh - 65px);
   background: #223e9c;
-  font-family: "Source Sans Pro", sans-serif;
+  /* font-family: "Source Sans Pro", sans-serif; */
   font-weight: 600;
   padding: 0;
   z-index: 11;

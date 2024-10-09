@@ -148,7 +148,7 @@ const SiteHeader = (cartCount) => {
 												<div className="icons-cart"><i className="icon-large-paper-bag"></i><span className="cart-count">{count}</span></div>
 											</Link>
 
-											<div className="dropdown-menu ">
+											{/* <div className="dropdown-menu ">
 												<div className="cart-empty-wrap">
 													<ul className="cart-list">
 														<li className="empty">
@@ -188,7 +188,7 @@ const SiteHeader = (cartCount) => {
 														<Link href="shop-checkout.html" className="button btn checkout btn-default">Check out</Link>
 													</div>
 												</div>
-											</div>
+											</div> */}
 										</div>
 									</div>
 								</div>
