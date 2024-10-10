@@ -1,13 +1,12 @@
-import Loader from "./Loader";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import React, { useState, useEffect } from "react";
-import InnerHeader from "./InnerHeader";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { BASE_URL } from "./BaseUrl";
+import InnerHeader from "./InnerHeader";
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -52,11 +51,9 @@ const Advertise = () => {
   const [titleValue, setTitleValue] = useState("");
   const [linkValue, setLinkValue] = useState("");
   const [targetValue, setTargetValue] = useState("");
-  const [formValue, setFormValue] = useState({ location: '' });
+  const [formValue, setFormValue] = useState({ location: "" });
   const [locations, setLocations] = useState([]);
   const [errors, setErrors] = useState({});
-
-
 
   useEffect(() => {
     fetchLocations();
@@ -75,7 +72,6 @@ const Advertise = () => {
   const handleChange = (event) => {
     setFormValue({ ...formValue, [event.target.name]: event.target.value });
   };
-
 
   const handleAddClick = () => {
     setShowForm(true);
@@ -105,7 +101,7 @@ const Advertise = () => {
       title: titleValue,
       link: linkValue,
       target: targetValue,
-      created_by: 1, // Replace with actual user ID
+      created_by: 1,
     };
 
     try {
@@ -185,26 +181,26 @@ const Advertise = () => {
                       <div className="row mb-3">
                         <div className="col-md-4">
                           <label>Location</label>
-                      <select
-                        className="form-control"
-                        name="location"
-                        value={formValue.location}
-                        onChange={handleChange}
-                      >
-                        <option value="">Select a location</option>
-                        {locations.map((loc) => (
-                          <option key={loc.id} value={loc.location}>
-                            {loc.location}
-                          </option>
-                        ))}
-                      </select>
-                      {errors.location && (
-                        <div className="text-danger">{errors.location}</div>
-                      )}
+                          <select
+                            className="form-control"
+                            name="location"
+                            value={formValue.location}
+                            onChange={handleChange}
+                          >
+                            <option value="">Select a location</option>
+                            {locations.map((loc) => (
+                              <option key={loc.id} value={loc.name}>
+                                {loc.name}
+                              </option>
+                            ))}
+                          </select>
+                          {errors.location && (
+                            <div className="text-danger">{errors.location}</div>
+                          )}
                         </div>
                         <div className="col-md-4">
                           <label>Slot:</label>
-                          <select
+                          {/* <select
                             value={selectedSlot}
                             onChange={(e) => setSelectedSlot(e.target.value)}
                             className="form-control"
@@ -213,6 +209,13 @@ const Advertise = () => {
                             <option value="">Select Slot</option>
                             <option value="Slot-1">Slot-1</option>
                             <option value="Slot-2">Slot-2</option>
+                          </select> */}
+                          <select class="form-control" id="exampleFormControlSelect1" name='slot' value={selectedSlot} onChange={(e) => setSelectedSlot(e.target.value)}>
+                            <option selected>Select Slot</option>
+                            <option value={`1`}>1</option>
+                            <option value={`2`}>2</option>
+                            <option value={`3`}>3</option>
+                            <option value={`4`}>4</option>
                           </select>
                         </div>
                         <div className="col-md-4">
@@ -262,11 +265,25 @@ const Advertise = () => {
                             required
                           >
                             <option value="">Select Target Type</option>
-                            <option value="On Page">On Page</option>
-                            <option value="Diff.. Page">Diff.. Page</option>
+                            <option value="On Page">same</option>
+                            <option value="Diff.. Page">blank</option>
                           </select>
                         </div>
                       </div>
+
+                      <div className="row mb-3">
+                        <div className="col-md-4">
+                          <div className="form-group">
+                            <label htmlFor="ban_img">Banner Image<span className='text-danger'>*</span></label>
+                            <input type="file" className="form-control" id="ban_img" placeholder="" name='banner'/>
+                            {errors.banner && <div className="text-danger">{errors.banner}</div>}
+                          </div>
+                          {/* <div>
+                            <img style={{ width: "200px" }} src={`${IMG_URL}/banner/${uid.upload_image}`} alt="" />
+                          </div> */}
+                        </div>
+                      </div>
+                        
                       <button type="submit" className="btn btn-primary mr-2">
                         {editId
                           ? "Update Advertisement"

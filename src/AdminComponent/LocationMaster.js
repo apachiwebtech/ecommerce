@@ -16,6 +16,29 @@ const LocationMaster = () => {
     }
   };
 
+
+  const updateSlot = async (id, selectedSlot) => {
+    try {
+      const response = await fetch(`${BASE_URL}/updateSlot`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id, slot: selectedSlot }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      
+      const result = await response.json();
+      console.log(result); // Log success message or handle it accordingly
+    } catch (error) {
+      console.error('Error updating slot:', error);
+    }
+  };
+
+
   useEffect(() => {
     fetchLocations();
   }, []);
@@ -50,7 +73,7 @@ const LocationMaster = () => {
                         <tr key={loc.id}>
                           <td>{loc.id}</td>
                           <td>{loc.name}</td>
-                          <td>  <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='role'>
+                          <td><select class="form-control form-control-lg" id="exampleFormControlSelect1" name='role' onChange={(e) => updateSlot(loc.id, e.target.value)}>
                             <option selected>Select Slot</option>
                             <option value={`1`}>1</option>
                             <option value={`2`}>2</option>

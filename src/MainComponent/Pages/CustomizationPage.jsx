@@ -1,11 +1,10 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { BASE_URL } from '../../AdminComponent/BaseUrl'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
-
+import { BASE_URL } from '../../AdminComponent/BaseUrl';
 
 const CustomizationPage = () => {
-    const [data, setData] = useState([])
+    const [data, setData] = useState([]);
     const [errors, setErrors] = useState({});
     const [value, setValue] = useState({
         firstname: "",
@@ -13,17 +12,21 @@ const CustomizationPage = () => {
         email: "",
         message: "",
         mobile: "",
-
-    })
+        image: null,
+    });
 
     const handlechange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-    }
+        if (e.target.name === 'image') {
+            setValue((prev) => ({ ...prev, image: e.target.files[0] }));
+        } else {
+            setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+        }
+    };
+    
 
     const validateForm = () => {
         let errors = {};
         let isValid = true;
-
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(value.email)) {
@@ -44,48 +47,46 @@ const CustomizationPage = () => {
             errors.mobile = "Mobile number must be between 10 ";
         }
 
-
         setErrors(errors);
 
         return isValid;
     };
 
-
     const handlesubmit = (e) => {
-        e.preventDefault()
-
+        e.preventDefault();
+        
         if (validateForm()) {
-            const data = {
-                firstname: value.firstname,
-                lastname: value.lastname,
-                email: value.email,
-                mobile: value.mobile,
-                message: value.message
-            }
-
-            console.log(data)
-
-            axios.post(`${BASE_URL}/vendor_regitration_request`, data)
-                .then((res) => {
-                    console.log(res)
-                    if (res.data) {
-                        alert("Form Submitted")
-
-                        setValue({
-                            firstname: "",
-                            lastname: "",
-                            email: "",
-                            message: "",
-                            mobile: "",
-
-                        })
-                    }
-                })
+            const formData = new FormData();
+            formData.append('name', `${value.firstname} ${value.lastname}`);
+            formData.append('inquiry', value.message);
+            formData.append('email', value.email);
+            formData.append('mobile', value.mobile);
+            formData.append('image', value.image);  // Ensure image is appended
+    
+            // Double-check that the image is not null
+            console.log("Image being sent:", value.image);  
+    
+            axios.post(`${BASE_URL}/sendinquiry`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then((res) => {
+                if (res.data) {
+                    alert("Form Submitted");
+                    setValue({
+                        firstname: "",
+                        lastname: "",
+                        email: "",
+                        message: "",
+                        mobile: "",
+                        image: null,
+                    });
+                }
+            });
         }
-
-
-    }
-
+    };
+    
     async function getmetadetail() {
         const data = {
             page_id: 17
@@ -122,20 +123,18 @@ const CustomizationPage = () => {
                                 </div>
                             </div>
                         </div>
-
+    
                         <div id="content" class="site-content" role="main">
                             <div class="page-contact">
-
                                 <section class="section section-padding  m-b-0">
                                     <div class="section-container small">
-
                                         <div class="block block-contact-form">
                                             <div class="block-widget-wrap">
                                                 <div class="block-title">
                                                     <h2>Send us customization request.</h2>
                                                     <div class="sub-title">We’ll get back to you within two days.</div>
                                                 </div>
-
+    
                                                 <div class="block-content">
                                                     <form onSubmit={handlesubmit} action="" method="post" class="contact-form" novalidate="novalidate">
                                                         <div class="contact-us-form">
@@ -145,40 +144,35 @@ const CustomizationPage = () => {
                                                                     <span class="form-control-wrap">
                                                                         <input type="text" value={value.firstname} onChange={handlechange} name="firstname" size="40" class="form-control" aria-required="true" />
                                                                     </span>
-                                                                    {errors.firstname && (<span className="text-danger">{errors.firstname}</span>
-                                                                    )}
+                                                                    {errors.firstname && (<span className="text-danger">{errors.firstname}</span>)}
                                                                 </div>
                                                                 <div class="col-sm-12 col-md-6">
                                                                     <label class="required">Lastname</label><br />
                                                                     <span class="form-control-wrap">
                                                                         <input type="text" value={value.lastname} onChange={handlechange} name="lastname" size="40" class="form-control" aria-required="true" />
                                                                     </span>
-                                                                    {errors.lastname && (<span className="text-danger">{errors.lastname}</span>
-                                                                    )}
+                                                                    {errors.lastname && (<span className="text-danger">{errors.lastname}</span>)}
                                                                 </div>
                                                                 <div class="col-sm-12 col-md-6">
                                                                     <label class="required">Email</label><br />
                                                                     <span class="form-control-wrap">
                                                                         <input type="email" value={value.email} onChange={handlechange} name="email" size="40" class="form-control" aria-required="true" />
                                                                     </span>
-                                                                    {errors.email && (<span className="text-danger">{errors.email}</span>
-                                                                    )}
+                                                                    {errors.email && (<span className="text-danger">{errors.email}</span>)}
                                                                 </div>
                                                                 <div class="col-sm-12 col-md-6">
                                                                     <label class="required">Mobile</label><br />
                                                                     <span class="form-control-wrap">
                                                                         <input type="text" value={value.mobile} onChange={handlechange} name="mobile" size="40" class="form-control" aria-required="true" />
                                                                     </span>
-                                                                    {errors.mobile && (<span className="text-danger">{errors.mobile}</span>
-                                                                    )}
+                                                                    {errors.mobile && (<span className="text-danger">{errors.mobile}</span>)}
                                                                 </div>
                                                                 <div class="col-sm-12 col-md-6">
                                                                     <label class="required">Product Image(That you like)</label><br />
                                                                     <span class="form-control-wrap">
-                                                                        <input type="file" value={value.mobile} onChange={handlechange} name="mobile" size="40" class="form-control" aria-required="true" />
+                                                                        <input type="file" onChange={handlechange} name="image" size="40" class="form-control" aria-required="true" />
                                                                     </span>
-                                                                    {errors.mobile && (<span className="text-danger">{errors.mobile}</span>
-                                                                    )}
+                                                                    {errors.image && (<span className="text-danger">{errors.image}</span>)}
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -190,7 +184,7 @@ const CustomizationPage = () => {
                                                                 </div>
                                                             </div>
                                                             <div class="form-button">
-                                                                <input type="submit" value="Register" class="button" />
+                                                                <input type="submit" value="Submit" class="button" />
                                                             </div>
                                                         </div>
                                                     </form>

@@ -367,13 +367,13 @@ const Header = () => {
           <li className="nav-item">
               <Link className="nav-link" to='/webapp/LocationMaster'>
                 <Icon path={mdiSelectMultipleMarker} size={1} className='mx-3' />
-                <span className="menu-title">LocationMaster</span>
+                <span className="menu-title">Location Master</span>
               </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to='/webapp/SlotMaster'>
                 <Icon path={mdiKeyboardCaps} size={1} className='mx-3' />
-                <span className="menu-title">SlotMaster</span>
+                <span className="menu-title">Slot Master</span>
               </Link>
             </li>
             <li className="nav-item">

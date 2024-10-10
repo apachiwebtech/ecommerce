@@ -78,6 +78,12 @@ const storage9 = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
+const storage10 = multer.diskStorage({
+  destination: '../../ecomuploads/CustomizationPage', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
 
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
@@ -88,6 +94,7 @@ const upload6 = multer({ storage: storage6 });
 const upload7 = multer({ storage: storage7 });
 const upload8 = multer({ storage: storage8 });
 const upload9 = multer({ storage: storage9 });
+const upload10 = multer({ storage: storage10 });
 
 app.use(express.json());
 
@@ -5360,6 +5367,19 @@ app.get('/LocationMaster_data', (req, res) => {
   });
 });
 
+app.post('/updateSlot', (req, res) => {
+  const { id, slot } = req.body;
+  const sql = 'UPDATE awt_LocationMaster SET slot = ? WHERE id = ? AND deleted = 0';
+
+  con.query(sql, [slot, id], (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    return res.json({ message: 'Slot updated successfully' });
+  });
+});
+
 // for Advertisement/==========================================================================
 
 app.post('/add_advertisement', (req, res) => {
@@ -5394,18 +5414,19 @@ app.get('/advertisements', (req, res) => {
 
 // Update Advertisement
 app.post('/update_advertisement', (req, res) => {
-  const { id, slot, type, title, link, target, status, updated_by } = req.body;
+  const { id, slot, type, title, link, target, deleted } = req.body;
+
   if (!id || !slot || !type || !title) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  const sql = "UPDATE awt_advertisements SET slot = ?, type = ?, title = ?, link = ?, target = ?, status = ?, updated_by = ? WHERE id = ?";
-  const params = [slot, type, title, link, target, status, updated_by, id];
+  const sql = "UPDATE awt_advertisements SET slot = ?, type = ?, title = ?, link = ?, target = ?, deleted = ? WHERE id = ?";
+  const params = [slot, type, title, link, target, deleted || 0, id];
 
-  con.query(sql, params, (err) => {
+  con.query(sql, params, (err, results) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Database error' });
+      return res.status(500).json({ error: 'Database error', message: err.message });
     }
     return res.json({ message: "Advertisement Updated Successfully!" });
   });
@@ -5432,22 +5453,31 @@ app.post('/delete_advertisement', (req, res) => {
 
 
 
-app.post(`/sendinquiry`, (req, res) => {
-
+app.post('/sendinquiry', upload10.single('image'), (req, res) => {
   let { product_id, inquiry, email, mobile, user_id, name } = req.body;
-  const date = new Date()
+  let image = req.file.filename;
+  const date = new Date();
+  console.log("File upload:", req.file);
+  console.log("Request body:", req.body);
 
-  const sql = "insert into awt_productinquiry(`user_id`,`product_id`, `inquiry_description`,`name`,`email`,`mobile`,`created_date`) values(?,?,?,?,?,?,?)"
+  // const image = req.file ? req.file.filename : null;
 
-  con.query(sql, [user_id, product_id, inquiry, name, email, mobile, date], (err, data) => {
-    if (err) {
-      return res.json(err)
-    } else {
-      return res.json(data)
-    }
-  })
+  const sql = `
+      INSERT INTO awt_productinquiry 
+      (user_id, product_id, inquiry_description, name, email, mobile, created_date, image) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
 
-})
+  con.query(sql, [user_id, product_id, inquiry, name, email, mobile, date, image], (err, data) => {
+      if (err) {
+          console.error("Database insert error:", err);
+          return res.json(err);
+      } else {
+          return res.json(data);
+      }
+  });
+});
+
 
 app.get(`/getcustomrequest`, (req, res) => {
 

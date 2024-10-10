@@ -1,22 +1,16 @@
 
-import { Link } from 'react-router-dom'
-import logo from '../../assets/frontimg/logo.png'
-import product3 from '../../assets/frontimg/product/3.jpg'
-import product1 from '../../assets/frontimg/product/1.jpg'
-import blog1 from '../../assets/frontimg/blog/1.jpg';
-import blog2 from '../../assets/frontimg/blog/2.jpg';
-import blog3 from '../../assets/frontimg/blog/3.jpg';
-import { getCartCount, } from '../../Store/Cart/cart-action';
-import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
+import { mdiClose, mdiFacebook, mdiInstagram, mdiLinkedin, mdiPinterest } from '@mdi/js';
+import Icon from '@mdi/react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import LoginForm from '../Authentication/LoginForm';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
+import logo from '../../assets/frontimg/logo.png';
+import { getCartCount, } from '../../Store/Cart/cart-action';
 import { getWishCount } from '../../Store/WishList/wishlist-actions';
-import { mdiClose, mdiFacebook, mdiFilterVariant, mdiInstagram, mdiLinkedin, mdiPinterest } from '@mdi/js'
-import Icon from '@mdi/react'
-import { Search } from '@mui/icons-material';
+import LoginForm from '../Authentication/LoginForm';
 
 const SiteHeader = (cartCount) => {
 	const [banner, setBanner] = useState([])
@@ -355,7 +349,7 @@ const SiteHeader = (cartCount) => {
 														</ul>
 													</li>
 													<li className="level-0 menu-item">
-														<Link to="/contact"><span className="menu-item-text">Customization</span></Link>
+														<Link to="/customizationpage"><span className="menu-item-text">Customization</span></Link>
 													</li>
 													<li className="level-0 menu-item">
 														<Link to="/contact"><span className="menu-item-text">Contact Us</span></Link>
