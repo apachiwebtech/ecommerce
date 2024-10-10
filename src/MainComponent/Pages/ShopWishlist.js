@@ -12,12 +12,13 @@ import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 import addToCart from '../../Utils/AddtoCart';
 import { Helmet } from "react-helmet";
 import axios from 'axios';
+import useBreadcrumb from '../../Utils/Breadcrum';
 
 const ShopWishlist = () => {
     const [data, setData] = useState([])
     const dispatch = useDispatch();
     const wishList = useSelector((state) => state.wishlist.wishList);
-
+    const breaddata = useBreadcrumb()
     const notify = () => toast("Removing Product");
     const addify = () => toast("Product added to the cart");
     const removeWishListItem = (data) => {
@@ -65,7 +66,7 @@ const ShopWishlist = () => {
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
-                        <div id="title" class="page-title">
+                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`}}>
                             <div class="section-container">
                                 <div class="content-title-heading">
                                     <h1 class="text-title-heading">

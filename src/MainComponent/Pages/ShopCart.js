@@ -10,13 +10,14 @@ import LoginForm from '../Authentication/LoginForm'
 import { getCartCount } from '../../Store/Cart/cart-action'
 import { useDispatch } from 'react-redux'
 import { Helmet } from "react-helmet";
+import useBreadcrumb from '../../Utils/Breadcrum'
 
 const ShopCart = ({ fetchcount }) => {
   const [data, setData] = useState([])
   const [cart, setCart] = useState([])
   const [quantities, setQuantities] = useState({});
   const [open, setOpen] = useState(false);
-
+  const breaddata = useBreadcrumb()
   const orderid = Cookies.get(`orderid`)
   const handleToggle = (e) => {
     setOpen(!open);
@@ -155,7 +156,7 @@ useEffect(() => {
                 </Helmet>
           <div id="main-content" class="main-content">
             <div id="primary" class="content-area">
-              <div id="title" class="page-title">
+            <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`}}>
                 <div class="section-container">
                   <div class="content-title-heading">
                     <h1 class="text-title-heading">

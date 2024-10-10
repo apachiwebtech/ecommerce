@@ -12,7 +12,7 @@ const Breadcrumbs = () => {
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [errors, setErrors] = useState({})
     const [image, setImage] = useState()
-    const [uid , setUpdateData] = useState([])
+    const [uid, setUpdateData] = useState([])
     const [Breadcrumbs, setBreadcrumbs] = useState([])
     const [value, setValue] = useState({
         title: "" || uid.title,
@@ -21,11 +21,11 @@ const Breadcrumbs = () => {
 
     })
 
-    useEffect(()=>{
-    setValue({
-        title : uid.title
-    })
-    },[uid])
+    useEffect(() => {
+        setValue({
+            title: uid.title
+        })
+    }, [uid])
 
     const validateForm = () => {
         let isValid = true;
@@ -85,15 +85,15 @@ const Breadcrumbs = () => {
         }));
     };
 
-    const handleupdateId = (id) =>{
+    const handleupdateId = (id) => {
         const data = {
-            Breadcrumbs_id : id
+            Breadcrumbs_id: id
         }
-        axios.post(`${BASE_URL}/Breadcrumbs_update_data`,data)
-        .then((res)=>{
-            console.log(res)
-            setUpdateData(res.data[0])
-        })
+        axios.post(`${BASE_URL}/Breadcrumbs_update_data`, data)
+            .then((res) => {
+                console.log(res)
+                setUpdateData(res.data[0])
+            })
     }
 
     const handleDelete = (id) => {
@@ -125,14 +125,16 @@ const Breadcrumbs = () => {
             const formdata = new FormData()
 
             formdata.append("title", value.title)
-            if(image){
 
-                formdata.append('image', image)
-            }else{
-                formdata.append('image', uid.upload_image)
+            formdata.append('image', image)
+            // if(image){
 
-            }
-            formdata.append('u_id', uid.id)
+            // }else{
+            //     formdata.append('image', uid.upload_image)
+
+            // }
+
+            // formdata.append('u_id', uid.id)
             formdata.append('user_id', decryptedUserId())
 
             axios.post(`${BASE_URL}/add_Breadcrumbs`, formdata)
@@ -142,7 +144,7 @@ const Breadcrumbs = () => {
                     if (res.data) {
                         //    navigate('/vendormaster')
                         setValue({
-                          title : ""
+                            title: ""
                         })
 
                         setUpdateData([])
@@ -194,7 +196,7 @@ const Breadcrumbs = () => {
                                             <img style={{ width: "200px" }} src={`${IMG_URL}/Breadcrumbs/${uid.upload_image}`} alt="" />
                                         </div>
                                         <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                        <button type='button' onClick={()=>{
+                                        <button type='button' onClick={() => {
                                             window.location.reload()
                                         }} class="btn btn-light">Cancel</button>
                                     </form>
@@ -225,7 +227,7 @@ const Breadcrumbs = () => {
                                                     </th>
 
                                                     <th width="30%">
-                                                        Action
+                                                        Image
                                                     </th>
                                                 </tr>
 
@@ -245,11 +247,15 @@ const Breadcrumbs = () => {
                                                                 </td>
 
 
-                                                                <td>
+                                                                {/* <td>
                                                                     <Link><EditIcon  onClick={() =>handleupdateId(item.id)}/></Link>
                                                                     <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
 
+                                                                </td> */}
+                                                                <td>
+                                                                    <img style={{width:"100%",borderRadius:"0px",height:"auto"}} src={`${IMG_URL}/Breadcrumbs/` + item.upload_image} alt="" />
                                                                 </td>
+                                                                
                                                                 {confirmationVisibleMap[item.id] && (
                                                                     <div className='confirm-delete'>
                                                                         <p>Are you sure you want to delete?</p>

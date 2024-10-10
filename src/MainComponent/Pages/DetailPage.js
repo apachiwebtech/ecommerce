@@ -32,6 +32,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import useBreadcrumb from '../../Utils/Breadcrum';
 
 const DetailPage = () => {
 
@@ -86,6 +87,8 @@ const DetailPage = () => {
 	const [open2, setOpen2] = useState(false);
 	const [r_stock, setReservestock] = useState();
 	const [relatedproduct, setRelatedProduct] = useState([])
+
+	const breaddata = useBreadcrumb()
 
 	const handleToggle = (e) => {
 		setOpen(!open);
@@ -270,7 +273,7 @@ const DetailPage = () => {
 						{productdata?.map((item) => {
 							return (
 								<>
-									<div id="title" class="page-title">
+									<div id="title" className="page-title" style={{ backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')` }}>
 										<div class="section-container">
 											<div class="content-title-heading">
 												<h1 class="text-title-heading">
@@ -567,7 +570,13 @@ const DetailPage = () => {
 															</nav>
 															<div class="tab-content" id="nav-tabContent">
 																<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"><p dangerouslySetInnerHTML={{ __html: item.specification }} /></div>
-																<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">CommingSoon...</div>
+																<div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+																	<div>
+																		<h4 style={{ fontWeight: "600" }}>Vendor Name: <span style={{ fontWeight: "400", }}>{item.vendor_name}</span></h4>
+																		<h4 style={{ fontWeight: "600" }}>Vendor City: <span style={{ fontWeight: "400", }}>{item.city}</span></h4>
+																		<h4 style={{ fontWeight: "600" }}>Vendor State: <span style={{ fontWeight: "400", }}>{item.state}</span></h4>
+																	</div>
+																</div>
 																{/* <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">.kk..</div> */}
 															</div>
 

@@ -109,6 +109,7 @@ import Advertise from './AdminComponent/Advertise';
 import LocationMaster from './AdminComponent/LocationMaster';
 import SlotMaster from './AdminComponent/SlotMaster';
 import CustomizeRequest from './AdminComponent/CustomizeRequest';
+import CustomizationPage from './MainComponent/Pages/CustomizationPage';
 
 
 
@@ -229,6 +230,10 @@ const Router = createHashRouter([
       {
         path: '/vendorregister',
         element: <VendorRegister />
+      },
+      {
+        path: '/customizationpage',
+        element: <CustomizationPage />
       },
 
       {

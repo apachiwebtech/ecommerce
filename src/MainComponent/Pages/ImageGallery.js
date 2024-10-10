@@ -6,6 +6,7 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import useBreadcrumb from '../../Utils/Breadcrum';
 
 
 function srcset(image, size, rows = 1, cols = 1) {
@@ -21,7 +22,7 @@ const ImageGallery = () => {
     const [data, setData] = useState([])
     const [metadata, setMeta] = useState([])
 
-
+    const breaddata = useBreadcrumb()
 
     async function getimages() {
 
@@ -65,7 +66,7 @@ const ImageGallery = () => {
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
-                        <div id="title" class="page-title">
+                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`}}>
                             <div class="section-container">
                                 <div class="content-title-heading">
                                     <h1 class="text-title-heading">

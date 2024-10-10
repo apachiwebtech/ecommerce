@@ -1,13 +1,14 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { BASE_URL } from '../../AdminComponent/BaseUrl'
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { Helmet } from "react-helmet";
+import useBreadcrumb from '../../Utils/Breadcrum';
 
 const Refund = () => {
 
     const [data, setData] = useState([])
     const [metadata, setMeta] = useState([])
-
+    const breaddata = useBreadcrumb()
 
     async function getmetadetail_refund() {
 
@@ -41,7 +42,7 @@ const Refund = () => {
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
-                        <div id="title" class="page-title">
+                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`}}>
                             <div class="section-container">
                                 <div class="content-title-heading">
                                     <h1 class="text-title-heading">

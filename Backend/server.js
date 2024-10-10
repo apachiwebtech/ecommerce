@@ -1013,7 +1013,7 @@ app.post('/group_update', (req, res) => {
 
 app.get('/group_data', (req, res) => {
 
-  const sql = "select * from awt_group where deleted = 0 limit 3"
+  const sql = "select * from awt_group where deleted = 0 limit 4"
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -2315,7 +2315,7 @@ app.post('/getproductDetails', (req, res) => {
       const totalRStock = data.reduce((total, row) => total + Number(row.r_stock), 0);
 
 
-      const sql = 'select aap.* , ac.title as category ,aps.stock from awt_add_product as aap left join awt_category as ac on ac.id = aap.catid left join awt_productstock as aps on aps.pro_id = aap.id  where aap.slug = ? and aap.deleted = 0'
+      const sql = 'select aap.* , ac.title as category ,aps.stock,av.vendor_name,av.city , av.state from awt_add_product as aap left join awt_category as ac on ac.id = aap.catid left join awt_productstock as aps on aps.pro_id = aap.id LEFT JOIN awt_vendor as av on av.id = aap.v_id  where aap.slug = ? and aap.deleted = 0'
 
       con.query(sql, [productslug], (err, data) => {
         if (err) {
@@ -5109,33 +5109,23 @@ app.post('/update_tag', (req, res) => {
 
 app.post('/add_Breadcrumbs', upload9.single('image'), (req, res) => {
 
-  let image;
+
 
   let title = req.body.title;
-  if (req.body.filename == undefined) {
-    image = req.body.image
-  } else {
-    image = req.file.filename;
-  }
+  let image = req.file.filename;
   let created_date = new Date()
   let user_id = req.body.user_id
-  let u_id = req.body.u_id;
 
-  // if (!user_id) {
-  //   return res.status(400).json({ error: 'User  ID is required' });
-  // }
+
 
   let sql;
   let param;
 
 
-  if (u_id == 'undefined') {
-    sql = "insert into awt_breadcrumbs(`title`,`upload_image`,`created_by`,`created_date`) values(?,?,?,?)"
-    param = [title, image, user_id, created_date]
-  } else {
-    sql = "update awt_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = ?"
-    param = [title, image, user_id, created_date, u_id]
-  }
+
+
+  sql = "update awt_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1"
+  param = [title, image, user_id, created_date]
 
 
   con.query(sql, param, (err, data) => {
@@ -5151,6 +5141,52 @@ app.post('/add_Breadcrumbs', upload9.single('image'), (req, res) => {
 
   })
 })
+// app.post('/add_Breadcrumbs', upload9.single('image'), (req, res) => {
+
+//   let image;
+
+//   let title = req.body.title;
+//   if (req.body.filename == undefined) {
+//     image = req.body.image
+//   } else {
+//     image = req.file.filename;
+//   }
+//   let created_date = new Date()
+//   let user_id = req.body.user_id
+//   let u_id = req.body.u_id;
+
+//   // if (!user_id) {
+//   //   return res.status(400).json({ error: 'User  ID is required' });
+//   // }
+
+//   console.log(image)
+
+//   let sql;
+//   let param;
+
+
+//   if (u_id == 'undefined') {
+//     sql = "insert into awt_breadcrumbs(`title`,`upload_image`,`created_by`,`created_date`) values(?,?,?,?)"
+//     param = [title, image, user_id, created_date]
+//   } else {
+//     sql = "update awt_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = ?"
+//     param = [title, image, user_id, created_date, u_id]
+//   }
+
+
+//   con.query(sql, param, (err, data) => {
+//     if (err) {
+
+//       return res.json(err)
+//     }
+//     else {
+
+//       return res.json("Data Added Successfully!")
+//     }
+
+
+//   })
+// })
 
 
 app.get('/Breadcrumbs_data', (req, res) => {
@@ -5190,7 +5226,7 @@ app.post('/Breadcrumbs_update_data', (req, res) => {
   const sql = "select * from  awt_breadcrumbs  where id = ?"
 
   con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {                                                                  
+    if (err) {
       return res.json(err)
     }
     else {
@@ -5413,17 +5449,43 @@ app.post(`/sendinquiry`, (req, res) => {
 
 })
 
-app.get(`/getcustomrequest` , (req,res) =>{
+app.get(`/getcustomrequest`, (req, res) => {
 
   const sql = "SELECT ap.*,aap.title,aap.slug FROM `awt_productinquiry` as ap left join awt_add_product as aap on aap.id = ap.product_id where ap.deleted = 0"
 
-  con.query(sql , (err,data) =>{
-    if(err){
+  con.query(sql, (err, data) => {
+    if (err) {
       return res.json(err)
-    }else{
+    } else {
+      return res.json(data)
+    }
+  })
+})
+app.get(`/getbreadcrum`, (req, res) => {
+
+  const sql = "select * from awt_breadcrumbs where deleted = 0"
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
       return res.json(data)
     }
   })
 })
 
+app.post(`/updateread`, (req, res) => {
+
+  let { tablename, product_id } = req.body;
+
+  const sql = `update ${tablename} set isread = 1 where id = ?`
+
+  con.query(sql, [product_id], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+      return res.json(data)
+    }
+  })
+})
 

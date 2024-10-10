@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getProducts } from '../../Store/Products/product-actions'
 import { FormControl, MenuItem, Select } from '@mui/material'
 import { Helmet } from "react-helmet";
+import useBreadcrumb from '../../Utils/Breadcrum'
 
 const ShopProduct = () => {
     const [data, setData] = useState([])
@@ -20,9 +21,13 @@ const ShopProduct = () => {
     const [brand, setBrand] = useState([])
     const [toggle, setToggle] = useState(false)
     const [header, SiteHeader] = useState()
-    const [sort , setSort] = useState('')
-    const [brandid , setBrandid] = useState('')
+    const [sort, setSort] = useState('')
+    const [brandid, setBrandid] = useState('')
     const [value, setValue] = React.useState('');
+
+    const breaddata = useBreadcrumb()
+
+
 
     function valuetext(value) {
         return `₹${value}`;
@@ -61,11 +66,17 @@ const ShopProduct = () => {
     const dispatch = useDispatch();
     const productnew = useSelector((state) => state.products.products);
 
+
+
     useEffect(() => {
         dispatch(getProducts());
     }, [dispatch]);
 
-    const { groupslug, catslug, subcatslug , brand_id } = useParams()
+
+
+
+
+    const { groupslug, catslug, subcatslug, brand_id } = useParams()
 
 
     async function getproductdetails() {
@@ -73,17 +84,17 @@ const ShopProduct = () => {
             groupslug: groupslug,
             catslug: catslug,
             subcatslug: subcatslug,
-            brand_id : brand_id,
-            sort : sort,
-            price : value,
-            brandid : brandid
+            brand_id: brand_id,
+            sort: sort,
+            price: value,
+            brandid: brandid
         }
 
         axios.post(`${BASE_URL}/getproductlisting`, data)
             .then((res) => {
-                console.log(res)
+                // console.log(res)
                 setProducts(res.data)
-         
+
             })
             .catch((err) => {
                 console.log(err)
@@ -93,7 +104,7 @@ const ShopProduct = () => {
     async function getGroupData() {
         axios.get(`${BASE_URL}/group_data`)
             .then((res) => {
-                console.log(res)
+                // console.log(res)
                 setGroup(res.data)
             })
             .catch((err) => {
@@ -101,21 +112,21 @@ const ShopProduct = () => {
             })
     }
 
-    async function getbrand(){
+    async function getbrand() {
         const data = {
             groupslug: groupslug,
             catslug: catslug,
             subcatslug: subcatslug,
-            brand_id : brand_id
+            brand_id: brand_id
         }
-        axios.post(`${BASE_URL}/getbrand` , data)
-        .then((res) => {
-            console.log(res)
-            setBrand(res.data)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+        axios.post(`${BASE_URL}/getbrand`, data)
+            .then((res) => {
+                // console.log(res)
+                setBrand(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
 
@@ -123,8 +134,8 @@ const ShopProduct = () => {
         getbrand()
         getproductdetails()
         getGroupData()
-        SiteHeader(subcatslug || catslug || groupslug )
-    }, [groupslug, catslug, subcatslug,brand_id,sort,value,brandid])
+        SiteHeader(subcatslug || catslug || groupslug)
+    }, [groupslug, catslug, subcatslug, brand_id, sort, value, brandid])
 
 
 
@@ -135,37 +146,42 @@ const ShopProduct = () => {
 
 
 
-   const handlesortchange = (e) =>{
+    const handlesortchange = (e) => {
 
-    setSort(e.target.value)
-   }
-
-
-   async function getmetadetail() {
-    const data = {
-        page_id: 13
+        setSort(e.target.value)
     }
-    axios.post(`${BASE_URL}/getmetadetail`, data)
-        .then((res) => {
-            setData(res.data[0])
-        })
-}
 
-useEffect(() => {
-    getmetadetail()
-}, [])
+
+    async function getmetadetail() {
+        const data = {
+            page_id: 13
+        }
+        axios.post(`${BASE_URL}/getmetadetail`, data)
+            .then((res) => {
+                setData(res.data[0])
+            })
+    }
+
+
+    
+
+    useEffect(() => {
+        getmetadetail()
+
+   
+    }, [])
 
     return (
         <div><div id="site-main" className="site-main">
             <Helmet>
-                    <title>{data.seo_title}</title>
-                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
-                    <meta name="author" content={data.seo_title} />
-                </Helmet>
+                <title>{data.seo_title}</title>
+                <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
+                <meta name="author" content={data.seo_title} />
+            </Helmet>
             <div id="main-content" className="main-content">
 
                 <div id="primary" className="content-area">
-                    <div id="title" className="page-title">
+                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`}}>
                         <div className="section-container">
                             <div className="content-title-heading">
                                 <h1 className="text-title-heading">
@@ -173,7 +189,7 @@ useEffect(() => {
                                 </h1>
                             </div>
                             <div className="breadcrumbs" >
-                                <Link to={`/`}>Home</Link><span className="delimiter"></span><Link  style={{textTransform:"capitalize"}}>{header}</Link>
+                                <Link to={`/`}>Home</Link><span className="delimiter"></span><Link style={{ textTransform: "capitalize" }}>{header}</Link>
                             </div>
                         </div>
                     </div>
@@ -195,7 +211,7 @@ useEffect(() => {
                                                         {group.map((item) => {
                                                             return (
                                                                 <li className="current">
-                                                                    <Link onClick={toggleSidebar}  to={`/shoproduct/${item.slug}`}>{item.title}</Link>
+                                                                    <Link onClick={toggleSidebar} to={`/shoproduct/${item.slug}`}>{item.title}</Link>
                                                                 </li>
                                                             )
                                                         })}
@@ -226,7 +242,7 @@ useEffect(() => {
                                             </div>
                                         </div>
 
-                                   
+
 
                                         {/* <!-- Block Product Filter --> */}
                                         {/* <div className="block block-product-filter clearfix my-3">
@@ -249,9 +265,9 @@ useEffect(() => {
                                                 <ul className="filter-items image">
                                                     {brand.map((brand) => {
                                                         return (
-                                                            <li><span onClick={() =>{
+                                                            <li><span onClick={() => {
                                                                 setBrandid(brand.id)
-                                                            }}><img   src={`${IMG_URL}/brand/` + brand.logo} alt="Brand" /></span></li>
+                                                            }}><img src={`${IMG_URL}/brand/` + brand.logo} alt="Brand" /></span></li>
                                                         )
                                                     })}
 
@@ -335,17 +351,17 @@ useEffect(() => {
 
                                                             <FormControl sx={{ m: 0.5, minWidth: 150 }}>
                                                                 <Select
-                                                                   
+
                                                                     onChange={handlesortchange}
                                                                     // displayEmpty
                                                                     defaultValue={`default`}
                                                                     sx={{
                                                                         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                                                                             borderColor: 'rgba(0, 0, 0, 1)',
-                                                                          },
-                                                                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                                                                        },
+                                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
                                                                             borderColor: 'rgba(0, 0, 0, 1)',
-                                                                          },// Add more specific selector
+                                                                        },// Add more specific selector
                                                                     }}
                                                                 >
                                                                     <MenuItem value="default">
@@ -371,9 +387,9 @@ useEffect(() => {
                                                 <div className="products-list grid">
                                                     <div className="row">
                                                         {products?.map((product) => {
-                                                   
+
                                                             return (
-                                                                <ProductCard proid={product.proid} title={product.product_title} disc_price={product.disc_price} price={product.disc_price} image1={product.image1} image2={product.image2} trending={product.trending} catid={product.catid} slug={product.slug} v_id={product.v_id} gst={product.gst} />
+                                                                <ProductCard proid={product.proid} title={product.product_title} disc_price={product.disc_price} price={product.disc_price} image1={product.image1} image2={product.image2} trending={product.trending} catid={product.catid} slug={product.slug} v_id={product.v_id} gst={product.gst} customizable={product.customizable} stock={product.stock} r_tock={product.r_stock} />
                                                             )
                                                         })
                                                         }
@@ -381,9 +397,9 @@ useEffect(() => {
                                                     </div>
                                                 </div>
                                             </div>
-                                       
+
                                         </div>
-{/* 
+                                        {/* 
                                         <nav className="pagination">
                                             <ul className="page-numbers">
                                                 <li><a className="prev page-numbers" href="#">Previous</a></li>
