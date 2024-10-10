@@ -5392,6 +5392,10 @@ app.post('/delete_advertisement', (req, res) => {
   });
 });
 
+
+
+
+
 app.post(`/sendinquiry`, (req, res) => {
 
   let { product_id, inquiry, email, mobile, user_id, name } = req.body;

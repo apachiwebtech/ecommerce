@@ -52,6 +52,30 @@ const Advertise = () => {
   const [titleValue, setTitleValue] = useState("");
   const [linkValue, setLinkValue] = useState("");
   const [targetValue, setTargetValue] = useState("");
+  const [formValue, setFormValue] = useState({ location: '' });
+  const [locations, setLocations] = useState([]);
+  const [errors, setErrors] = useState({});
+
+
+
+  useEffect(() => {
+    fetchLocations();
+  }, []);
+
+  const fetchLocations = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/LocationMaster_data`);
+      const data = await response.json();
+      setLocations(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleChange = (event) => {
+    setFormValue({ ...formValue, [event.target.name]: event.target.value });
+  };
+
 
   const handleAddClick = () => {
     setShowForm(true);
@@ -160,6 +184,25 @@ const Advertise = () => {
                     <form onSubmit={handleSubmit}>
                       <div className="row mb-3">
                         <div className="col-md-4">
+                          <label>Location</label>
+                      <select
+                        className="form-control"
+                        name="location"
+                        value={formValue.location}
+                        onChange={handleChange}
+                      >
+                        <option value="">Select a location</option>
+                        {locations.map((loc) => (
+                          <option key={loc.id} value={loc.location}>
+                            {loc.location}
+                          </option>
+                        ))}
+                      </select>
+                      {errors.location && (
+                        <div className="text-danger">{errors.location}</div>
+                      )}
+                        </div>
+                        <div className="col-md-4">
                           <label>Slot:</label>
                           <select
                             value={selectedSlot}
@@ -185,6 +228,9 @@ const Advertise = () => {
                             <option value="Iframe">Iframe</option>
                           </select>
                         </div>
+                      </div>
+
+                      <div className="row mb-3">
                         <div className="col-md-4">
                           <label>Title:</label>
                           <input
@@ -196,9 +242,6 @@ const Advertise = () => {
                             required
                           />
                         </div>
-                      </div>
-
-                      <div className="row mb-3">
                         <div className="col-md-4">
                           <label>Link:</label>
                           <input
@@ -265,6 +308,7 @@ const Advertise = () => {
                       <thead className="table-light">
                         <tr>
                           <th scope="col">ID</th>
+                          <th scope="col">location</th>
                           <th scope="col">Slot</th>
                           <th scope="col">Title</th>
                           <th scope="col">Adv.. Type</th>
@@ -276,6 +320,7 @@ const Advertise = () => {
                         {advertisements.map((ad) => (
                           <tr key={ad.id}>
                             <td>{ad.id}</td>
+                            <td>loc-1</td>
                             <td>{ad.slot}</td>
                             <td>{ad.title}</td>
                             <td>{ad.type}</td>
