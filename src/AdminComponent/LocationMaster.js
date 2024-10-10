@@ -8,7 +8,7 @@ const LocationMaster = () => {
   // Function to fetch locations from the server
   const fetchLocations = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/LocationMaster_data`);
+      const response = await fetch(`${BASE_URL}/locationMaster_data`);
       const data = await response.json();
       setLocations(data);
     } catch (error) {
@@ -42,14 +42,25 @@ const LocationMaster = () => {
                         <th scope="col">ID</th>
                         <th scope="col">Location</th>
                         <th scope="col">Title</th>
+                        <th scope="col">Status</th>
                       </tr>
                     </thead>
                     <tbody>
                       {locations.map((loc) => (
                         <tr key={loc.id}>
                           <td>{loc.id}</td>
-                          <td>{loc.location}</td>
-                          <td>{loc.title}</td>
+                          <td>{loc.name}</td>
+                          <td>  <select class="form-control form-control-lg" id="exampleFormControlSelect1" name='role'>
+                            <option selected>Select Slot</option>
+                            <option value={`1`}>1</option>
+                            <option value={`2`}>2</option>
+                            <option value={`3`}>3</option>
+                            <option value={`4`}>4</option>
+                          </select>
+                          </td>
+                          <td>
+                              
+                          </td>
                         </tr>
                       ))}
                     </tbody>
