@@ -5,7 +5,7 @@ import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BASE_URL } from "./BaseUrl";
+import { BASE_URL, IMG_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
@@ -50,10 +50,14 @@ const Advertise = () => {
   const [selectedType, setSelectedType] = useState("");
   const [titleValue, setTitleValue] = useState("");
   const [linkValue, setLinkValue] = useState("");
+  const [videoValue, setVideoValue] = useState("");
   const [targetValue, setTargetValue] = useState("");
   const [formValue, setFormValue] = useState({ location: "" });
   const [locations, setLocations] = useState([]);
   const [errors, setErrors] = useState({});
+  const [image, setImage] = useState()
+
+
 
   useEffect(() => {
     fetchLocations();
@@ -89,28 +93,38 @@ const Advertise = () => {
     setSelectedType("");
     setTitleValue("");
     setLinkValue("");
+    setVideoValue("");
     setTargetValue("");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const data = {
-      slot: selectedSlot,
-      type: selectedType,
-      title: titleValue,
-      link: linkValue,
-      target: targetValue,
-      created_by: 1,
-    };
+    const formData = new FormData();
+    formData.append('slot', selectedSlot);
+    formData.append('type', selectedType);
+    formData.append('title', titleValue);
+    formData.append('link', linkValue);
+    formData.append('video', videoValue);
+    formData.append('target', targetValue);
+    formData.append('image', image); // Assuming 'image' is a File object from an input field
+    formData.append('created_by', 1);
 
     try {
       if (editId) {
-        data.id = editId;
-        await axios.post(`${BASE_URL}/update_advertisement`, data);
+        formData.append('id', editId);
+        await axios.post(`${BASE_URL}/update_advertisement`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         alert("Advertisement Updated Successfully!");
       } else {
-        await axios.post(`${BASE_URL}/add_advertisement`, data);
+        await axios.post(`${BASE_URL}/add_advertisement`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         alert("Advertisement Added Successfully!");
       }
       getAdvertisements();
@@ -120,6 +134,7 @@ const Advertise = () => {
       alert("Error adding/updating advertisement");
     }
   };
+
 
   const getAdvertisements = async () => {
     try {
@@ -135,8 +150,10 @@ const Advertise = () => {
     setSelectedType(advertisement.type);
     setTitleValue(advertisement.title);
     setLinkValue(advertisement.link);
+    setVideoValue(advertisement.iframe);
     setTargetValue(advertisement.target);
     setEditId(advertisement.id);
+    setImage(advertisement.image);
     setShowForm(true);
   };
 
@@ -153,6 +170,14 @@ const Advertise = () => {
     }
   };
 
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+
+    console.log(file)
+    setImage(file);
+
+  };
+
   useEffect(() => {
     getAdvertisements();
   }, []);
@@ -163,7 +188,7 @@ const Advertise = () => {
 
       <div className="main-panel">
         <div className="content-wrapper">
-          {showForm && (
+      
             <div className="row">
               <div className="col-lg-12 grid-margin stretch-card">
                 <div className="card">
@@ -219,6 +244,22 @@ const Advertise = () => {
                           </select>
                         </div>
                         <div className="col-md-4">
+                          <label>Title:</label>
+                          <input
+                            type="text"
+                            value={titleValue}
+                            onChange={(e) => setTitleValue(e.target.value)}
+                            placeholder="Enter title"
+                            className="form-control"
+                            required
+                          />
+                        </div>
+
+                      </div>
+
+                      <div className="row mb-3">
+
+                        <div className="col-md-4">
                           <label>Advertisement Type:</label>
                           <select
                             value={selectedType}
@@ -231,20 +272,31 @@ const Advertise = () => {
                             <option value="Iframe">Iframe</option>
                           </select>
                         </div>
-                      </div>
 
-                      <div className="row mb-3">
-                        <div className="col-md-4">
-                          <label>Title:</label>
+                        {selectedType == "Image" ? <div className="col-md-4">
+
+                          <div className="form-group">
+                            <label htmlFor="ban_img">Banner Image<span className='text-danger'>*</span></label>
+                            <input type="file" className="form-control" id="ban_img" placeholder="" name='banner' onChange={handleUpload} />
+                            {errors.banner && <div className="text-danger">{errors.banner}</div>}
+                          </div>
+
+                        </div> : <div className="col-md-4">
+                          <label>Video Link</label>
                           <input
                             type="text"
-                            value={titleValue}
-                            onChange={(e) => setTitleValue(e.target.value)}
-                            placeholder="Enter title"
+                            value={videoValue}
+                            onChange={(e) => setVideoValue(e.target.value)}
+                            placeholder="Enter Link"
                             className="form-control"
                             required
                           />
-                        </div>
+                        </div>}
+
+
+
+
+
                         <div className="col-md-4">
                           <label>Link:</label>
                           <input
@@ -256,6 +308,7 @@ const Advertise = () => {
                             required
                           />
                         </div>
+
                         <div className="col-md-4">
                           <label>Target:</label>
                           <select
@@ -265,25 +318,24 @@ const Advertise = () => {
                             required
                           >
                             <option value="">Select Target Type</option>
-                            <option value="On Page">same</option>
-                            <option value="Diff.. Page">blank</option>
+                            <option value="_self">same</option>
+                            <option value="_blank">blank</option>
                           </select>
                         </div>
                       </div>
 
-                      <div className="row mb-3">
+                      {/* <div className="row mb-3">
                         <div className="col-md-4">
+
                           <div className="form-group">
                             <label htmlFor="ban_img">Banner Image<span className='text-danger'>*</span></label>
-                            <input type="file" className="form-control" id="ban_img" placeholder="" name='banner'/>
+                            <input type="file" onChange={onhandleupload} className="form-control" id="ban_img" placeholder="" name='banner'/>
                             {errors.banner && <div className="text-danger">{errors.banner}</div>}
                           </div>
-                          {/* <div>
-                            <img style={{ width: "200px" }} src={`${IMG_URL}/banner/${uid.upload_image}`} alt="" />
-                          </div> */}
+                  
                         </div>
-                      </div>
-                        
+                      </div> */}
+
                       <button type="submit" className="btn btn-primary mr-2">
                         {editId
                           ? "Update Advertisement"
@@ -301,7 +353,7 @@ const Advertise = () => {
                 </div>
               </div>
             </div>
-          )}
+         
           <div className="row">
             <div className="col-lg-12 grid-margin stretch-card">
               <div className="card">
@@ -311,13 +363,7 @@ const Advertise = () => {
                       <h4 className="card-title">Advertisements </h4>
                       <p className="card-description">List of Advertisements</p>
                     </div>
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-primary h-25"
-                      onClick={handleAddClick}
-                    >
-                      ADD
-                    </button>
+               
                   </div>
 
                   <div className="table-responsive">
@@ -329,6 +375,7 @@ const Advertise = () => {
                           <th scope="col">Slot</th>
                           <th scope="col">Title</th>
                           <th scope="col">Adv.. Type</th>
+                          <th scope="col">Image</th>
                           <th scope="col">Status</th>
                           <th scope="col">Action</th>
                         </tr>
@@ -341,6 +388,7 @@ const Advertise = () => {
                             <td>{ad.slot}</td>
                             <td>{ad.title}</td>
                             <td>{ad.type}</td>
+                            <td><img  src={`${IMG_URL}/Advertisement/` + ad.image} alt=""/></td>
                             <td>
                               <FormControlLabel control={<Android12Switch />} />
                             </td>

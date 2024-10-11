@@ -370,12 +370,7 @@ const Header = () => {
                 <span className="menu-title">Location Master</span>
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to='/webapp/SlotMaster'>
-                <Icon path={mdiKeyboardCaps} size={1} className='mx-3' />
-                <span className="menu-title">Slot Master</span>
-              </Link>
-            </li>
+          
             <li className="nav-item">
               <Link className="nav-link" to='/webapp/Advertise'>
                 <Icon path={mdiAdvertisements} size={1} className='mx-3' />

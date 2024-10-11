@@ -15,6 +15,7 @@ import decryptedUserId from "../Utils/UserID";
 import img1 from "../assets/images/product_default_image.jpg";
 import { BASE_URL, IMG_URL } from '../AdminComponent/BaseUrl';
 import InnerHeader from "./InnerHeader";
+import decryptedvendorid from '../Utils/Vendorid';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -54,7 +55,7 @@ const Product = () => {
   const [group, setGroupData] = useState([])
   const [selectedOption, setSelectedCat] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
-  const [selectedOptionvendor, setSelectedVendor] = useState(null);
+  // const [selectedOptionvendor, setSelectedVendor] = useState(null);
   const [selectedOptionBrand, setSelectedBrand] = useState(null);
   const [selectedOptionSub, setSelectedSub] = useState(null);
   const [vendor, setVendorData] = useState([])
@@ -118,10 +119,7 @@ const Product = () => {
       isValid = false
       newErrors.brand = "brand is required"
     }
-    if (!selectedOptionvendor) {
-      isValid = false
-      newErrors.vendor = "vendor is required"
-    }
+
     if (!value.price) {
       isValid = false
       newErrors.price = "price is required"
@@ -251,22 +249,22 @@ const Product = () => {
     setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const HandleVendorChange = (selectedValue) => {
-    if (selectedValue) {
-      const vendorid = selectedValue.id
-      setSelectedVendor(selectedValue)
-      selectedVendorId(vendorid);
-    }
-  };
+  // const HandleVendorChange = (selectedValue) => {
+  //   if (selectedValue) {
+  //     const vendorid = selectedValue.id
+  //     setSelectedVendor(selectedValue)
+  //     selectedVendorId(vendorid);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (uid.v_id) {
-      const selected = vendor.find(option => option.id === uid.v_id);
-      setSelectedVendor(selected);
-      selectedVendorId(uid.v_id)
-    }
+  // useEffect(() => {
+  //   if (uid.v_id) {
+  //     const selected = vendor.find(option => option.id === uid.v_id);
+  //     setSelectedVendor(selected);
+  //     selectedVendorId(uid.v_id)
+  //   }
 
-  }, [uid, vendor, vendor_id]);
+  // }, [uid, vendor, vendor_id]);
 
   // console.log(vendor_id,"dd")
 
@@ -411,14 +409,14 @@ const Product = () => {
       formdata.append('uid', uid.id)
 
       if (update_id == ":update_id") {
-        formdata.append('v_id', vendor_id)
+        formdata.append('v_id', decryptedvendorid())
         formdata.append('b_id', brand_id)
         formdata.append('subcatid', subcatid)
         formdata.append('catid', catid)
         formdata.append('groupid', groupid)
 
       } else {
-        formdata.append('v_id', vendor_id)
+        formdata.append('v_id', decryptedvendorid())
         formdata.append('b_id', brand_id)
         formdata.append('catid', catid)
         formdata.append('groupid', groupid)
@@ -432,7 +430,7 @@ const Product = () => {
       formdata.append('description', value.description)
       formdata.append('sizeimage', sizeimage)
       formdata.append('specification', specification)
-      formdata.append('user_id', decryptedUserId())
+      formdata.append('user_id', decryptedvendorid())
 
 
       axios.post(`${BASE_URL}/add_product`, formdata)
@@ -570,7 +568,7 @@ const Product = () => {
 
 
                         <div class="col-md-6">
-                          <div class="form-group ">
+                          {/* <div class="form-group ">
                             <label for="category">
                               Vendor <span class="text-danger">*</span>
                               {error.vendor && <span className="text-danger">{error.vendor}</span>}
@@ -592,11 +590,11 @@ const Product = () => {
                               name="vendor"
 
                             />
-                          </div>
+                          </div> */}
 
 
                         </div>
-                        <div class="col-md-6 ">
+                        <div class="col-md-12 ">
                           <div class="form-group ">
                             <label for="prod_id">
                               Product title
@@ -1114,7 +1112,7 @@ const Product = () => {
                             </div>
                           </div>
                         </div>}
-                        
+
                       {window.location.pathname.match(/^\/webapp\/product\/\d+$/) &&
                         <div class="mt-3">
                           <div class="form-group">

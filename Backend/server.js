@@ -11,12 +11,12 @@ var cookieParser = require('cookie-parser');
 const cron = require('node-cron')
 const crypto = require('crypto');
 const axios = require('axios');
-// var { SendMailClient } = require("zeptomail");
+var { SendMailClient } = require("zeptomail")
 
 dotenv.config();
 
-// const url = "api.zeptomail.in/";
-// const token = "Zoho-enczapikey PHtE6r1cRrzji298oEdTtqS6EMKnMdssrOtleFJF5YxDAvAKTE1Uo40pwzXi+h4jUaIRFP6amo5gs7ufu+LUdj3sYWsfCGqyqK3sx/VYSPOZsbq6x00ZtVsbdEDdV47nc9Nt0SHTuN3ZNA==";
+const url = "api.zeptomail.in/";
+const token = "Zoho-enczapikey PHtE6r0JFuvp3TYv8RgI4vHqH87wZoour+5uflEV4dpDCf8GHE0H/dF9kja/qBYpU/IXFKSSy4M55OvI5b2HIT3rMTxJCGqyqK3sx/VYSPOZsbq6x00fuF4bc0DeUYHudNZs0iTQuNiX";
 
 
 
@@ -84,6 +84,12 @@ const storage10 = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
   },
 });
+const storage11 = multer.diskStorage({
+  destination: '../../ecomuploads/Advertisement', // 
+  filename: (req, file, cb) => {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  },
+});
 
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
@@ -95,6 +101,7 @@ const upload7 = multer({ storage: storage7 });
 const upload8 = multer({ storage: storage8 });
 const upload9 = multer({ storage: storage9 });
 const upload10 = multer({ storage: storage10 });
+const upload11 = multer({ storage: storage11 });
 
 app.use(express.json());
 
@@ -248,31 +255,38 @@ app.use(
 
 //this is for zepto api
 
-// app.get('/api', (req, res) => {
-//   let client = new SendMailClient({ url, token });
+app.get('/api', (req, res) => {
+  let client = new SendMailClient({ url, token });
 
-//   client.sendMail({
-//     "from":
-//     {
-//       "address": "satyamsatkr875@gmail.com",
-//       "name": "noreply"
-//     },
-//     "to":
-//       [
-//         {
-//           "email_address":
-//           {
-//             "address": "satyamsatkr875@gmail.com",
-//             "name": "satyam"
-//           }
-//         }
-//       ],
-//     "subject": "Test Email",
-//     "htmlbody": "<div><b> Test email sent successfully.</b></div>",
-//   }).then((resp) => console.log("success")).catch((error) => console.log(error));
-// })
+  client.sendMail({
+    "from": {
+      "address": "Info@micasasucasa.in",
+      "name": "noreply"
+    },
+    "to": [
+      {
+        "email_address": {
+          "address": "satyamsatkr875@gmail.com",
+          "name": "satyam"
+        }
+      }
+    ],
+    "subject": "Test Email",
+    "htmlbody": "<div><b>Test email sent successfully.</b></div>",
+  })
+  .then((resp) => {
+    return res.json(resp)
+
+  })
+  .catch((error) => {
+    console.error("Failed to send email:", error.response ? error.response.data : error.message);
+    return res.json(error)
+  });
+  
+})
 
 app.post('/customerlogin', (req, res) => {
+
   let email = req.body.email;
   let otp = req.body.otp;
 
@@ -1582,7 +1596,7 @@ app.post('/add_banner', upload2.single('image'), (req, res) => {
 
 app.get(`/banner_data`, (req, res) => {
 
-  const sql = 'select * from awt_banner '
+  const sql = 'select * from awt_banner where deleted = 0'
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -2001,6 +2015,10 @@ app.post(`/product_img_data`, (req, res) => {
           title: item.title,
           colorcode: item.colorcode,
           images: [item.image1, item.image2, item.image3, item.image4].filter(image => image !== null && image !== ""),
+          // image1:item.image1,
+          // image2:item.image2,
+          // image3:item.image3,
+          // image4:item.image4
 
         };
 
@@ -5355,8 +5373,8 @@ app.post('/get_SlotMaster', (req, res) => {
 
 // for Location-Master/==========================================================================
 
-app.get('/LocationMaster_data', (req, res) => {
-  const sql = 'SELECT * FROM awt_LocationMaster WHERE deleted = 0';
+app.get('/locationMaster_data', (req, res) => {
+  const sql = 'SELECT * FROM awt_locationmaster WHERE deleted = 0';
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -5369,7 +5387,7 @@ app.get('/LocationMaster_data', (req, res) => {
 
 app.post('/updateSlot', (req, res) => {
   const { id, slot } = req.body;
-  const sql = 'UPDATE awt_LocationMaster SET slot = ? WHERE id = ? AND deleted = 0';
+  const sql = 'UPDATE awt_locationMaster SET slot = ? WHERE id = ? AND deleted = 0';
 
   con.query(sql, [slot, id], (err, result) => {
     if (err) {
@@ -5382,22 +5400,34 @@ app.post('/updateSlot', (req, res) => {
 
 // for Advertisement/==========================================================================
 
-app.post('/add_advertisement', (req, res) => {
-  const { slot, type, title, link, target, created_by } = req.body;
-  if (!slot || !type || !title) {
-    return res.status(400).json({ error: 'Slot, Type, and Title are required' });
+app.post('/add_advertisement', upload11.single('image'), (req, res) => {
+
+  const { slot, type, title, link, target, created_by, video } = req.body;
+  let image;
+
+  if (req.file.filename == undefined) {
+    image = req.body.image
+  } else {
+    image = req.file.filename;
   }
 
-  const sql = "INSERT INTO awt_advertisements (slot, type, title, link, target, created_by) VALUES (?, ?, ?, ?, ?, ?)";
-  const params = [slot, type, title, link, target, created_by];
+  if (!slot || !type || !title) {
+
+    return res.status(400).json({ error: 'Slot, Type, and Title are required' });
+
+  }
+
+  const sql = "INSERT INTO awt_advertisements (slot, type, title, link, target,image,iframe, created_by) VALUES (?, ?, ?, ?, ?, ?,?,?)";
+  const params = [slot, type, title, link, target, image, video, created_by];
 
   con.query(sql, params, (err) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Database error' });
+      return res.status(500).json(err);
     }
     return res.status(201).json({ message: "Advertisement Added Successfully!" });
   });
+
 });
 
 // Read Advertisements
@@ -5413,15 +5443,23 @@ app.get('/advertisements', (req, res) => {
 });
 
 // Update Advertisement
-app.post('/update_advertisement', (req, res) => {
-  const { id, slot, type, title, link, target, deleted } = req.body;
+app.post('/update_advertisement', upload11.single('image'), (req, res) => {
+  const { id, slot, type, title, link, target, deleted, video } = req.body;
+
+  let image;
+
+  if (req.file.filename == undefined) {
+    image = req.body.image
+  } else {
+    image = req.file.filename;
+  }
 
   if (!id || !slot || !type || !title) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
-  const sql = "UPDATE awt_advertisements SET slot = ?, type = ?, title = ?, link = ?, target = ?, deleted = ? WHERE id = ?";
-  const params = [slot, type, title, link, target, deleted || 0, id];
+  const sql = "UPDATE awt_advertisements SET slot = ?, type = ?, title = ?, link = ?, target = ?,image = ?,iframe = ?,deleted = ? WHERE id = ?";
+  const params = [slot, type, title, link, target, image, video, deleted || 0, id];
 
   con.query(sql, params, (err, results) => {
     if (err) {
@@ -5457,8 +5495,7 @@ app.post('/sendinquiry', upload10.single('image'), (req, res) => {
   let { product_id, inquiry, email, mobile, user_id, name } = req.body;
   let image = req.file.filename;
   const date = new Date();
-  console.log("File upload:", req.file);
-  console.log("Request body:", req.body);
+
 
   // const image = req.file ? req.file.filename : null;
 
@@ -5469,12 +5506,12 @@ app.post('/sendinquiry', upload10.single('image'), (req, res) => {
   `;
 
   con.query(sql, [user_id, product_id, inquiry, name, email, mobile, date, image], (err, data) => {
-      if (err) {
-          console.error("Database insert error:", err);
-          return res.json(err);
-      } else {
-          return res.json(data);
-      }
+    if (err) {
+      console.error("Database insert error:", err);
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
   });
 });
 

@@ -42,7 +42,7 @@ const Banner = () => {
         })
     }, [uid])
 
-    console.log(uid.upload_image)
+
 
     const validateForm = () => {
         let isValid = true;
@@ -59,10 +59,6 @@ const Banner = () => {
         if (!value.link) {
             isValid = false;
             newErrors.link = "Link is required"
-        }
-        if (!value.target) {
-            isValid = false;
-            newErrors.target = "Target is required"
         }
         if (!value.target) {
             isValid = false;

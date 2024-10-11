@@ -48,12 +48,17 @@ const DetailPage = () => {
 
 		localStorage.setItem('initial', index)
 
-		const id = localStorage.getItem('proid')
-
 
 		window.location.reload()
 
 	};
+
+	useEffect(() =>{
+		setTimeout(() =>{
+			
+			localStorage.removeItem('initial')
+		},2000)
+	},[])
 
 	const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
@@ -304,7 +309,7 @@ const DetailPage = () => {
 																					spaceBetween={isMobile ? 1 : 0}
 																					slidesPerView={3}
 																					modules={[Mousewheel, Navigation, Thumbs]}
-																					navigation
+																					// navigation
 																					direction={isMobile ? "horizontal" : "vertical"}
 																					mousewheel
 																					watchSlidesProgress={true}
@@ -333,7 +338,7 @@ const DetailPage = () => {
 																			<div className="image-additional">
 																				{/* Main image swiper showing based on activeIndex */}
 																				<Swiper
-																					initialSlide={activeIndex}
+																					initialSlide={activeIndex || localStorage.getItem('initial')}
 																					onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)} // Keeps state in sync with Swiper
 																					navigation
 																					modules={[Mousewheel, Navigation, Thumbs]}

@@ -107,9 +107,9 @@ import VendorSettingPages from './VendorComponents/VendorSettingPages';
 import VendorUser from './VendorComponents/VendorUser';
 import Advertise from './AdminComponent/Advertise';
 import LocationMaster from './AdminComponent/LocationMaster';
-import SlotMaster from './AdminComponent/SlotMaster';
 import CustomizeRequest from './AdminComponent/CustomizeRequest';
 import CustomizationPage from './MainComponent/Pages/CustomizationPage';
+import MailTemp from './Utils/MailTemp';
 
 
 
@@ -119,6 +119,10 @@ const Router = createHashRouter([
   {
     path: '/weblog',
     element: <WebLogin />
+  },
+  {
+    path: '/mailtemp',
+    element: <MailTemp />
   },
   // {
   //   path: '/splide',
@@ -399,10 +403,7 @@ const Router = createHashRouter([
         path: '/webapp/LocationMaster',
         element: <LocationMaster />
       },
-      {
-        path: '/webapp/SlotMaster',
-        element: <SlotMaster />
-      },
+   
 
 
 

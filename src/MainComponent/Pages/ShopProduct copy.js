@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import product4_2 from '../../assets/frontimg/product/4-2.jpg'
 import product6_2 from '../../assets/frontimg/product/6-2.jpg'
-import { Chip, Slider } from '@mui/material'
+import { Slider } from '@mui/material'
 import axios from 'axios'
 import { Link, useParams } from 'react-router-dom'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
@@ -23,7 +23,6 @@ const ShopProduct = () => {
     const [header, SiteHeader] = useState()
     const [sort, setSort] = useState('')
     const [brandid, setBrandid] = useState('')
-    const [brandname, setBrandName] = useState('')
     const [value, setValue] = React.useState('');
 
     const breaddata = useBreadcrumb()
@@ -124,7 +123,6 @@ const ShopProduct = () => {
             .then((res) => {
                 // console.log(res)
                 setBrand(res.data)
-           
             })
             .catch((err) => {
                 console.log(err)
@@ -163,14 +161,6 @@ const ShopProduct = () => {
                 setData(res.data[0])
             })
     }
-
-
-    const handledelete = () =>{
-      setValue('')
-    }  
-    const handlbrandedelete = () =>{
-      setBrandName('')
-    }  
 
 
     
@@ -277,7 +267,6 @@ const ShopProduct = () => {
                                                         return (
                                                             <li><span onClick={() => {
                                                                 setBrandid(brand.id)
-                                                                setBrandName(brand.title)
                                                             }}><img src={`${IMG_URL}/brand/` + brand.logo} alt="Brand" /></span></li>
                                                         )
                                                     })}
@@ -339,9 +328,6 @@ const ShopProduct = () => {
                                                     <div className='mob-filter' style={{ display: "none" }}>
                                                         <Icon path={mdiFilterVariant} onClick={toggleSidebar} className='border p-1' size={1} />
                                                     </div>
-
-                                                    {value > 0 && <Chip className='mx-2' label={`0 to ${value}`} onDelete={handledelete} />}
-                                                    {brandname != '' && <Chip label={`${brandname}`} onDelete={handlbrandedelete} />}
                                                 </div>
 
 
@@ -353,8 +339,15 @@ const ShopProduct = () => {
                                                     </div>
                                                     <div className="products-topbar-right">
                                                         <div className="products-sort dropdown">
-                                                          
-                                                            
+                                                            {/* <span className="sort-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Default sorting</span>
+                                                            <ul className="sort-list dropdown-menu" x-placement="bottom-start">
+                                                                <li className="active"><a href="#">Default sorting</a></li>
+                                                                <li><a href="#">Sort by popularity</a></li>
+                                                                <li><a href="#">Sort by average rating</a></li>
+                                                                <li><a href="#">Sort by latest</a></li>
+                                                                <li><a href="#">Sort by price: low to high</a></li>
+                                                                <li><a href="#">Sort by price: high to low</a></li>
+                                                            </ul> */}
 
                                                             <FormControl sx={{ m: 0.5, minWidth: 150 }}>
                                                                 <Select

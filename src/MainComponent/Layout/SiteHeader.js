@@ -321,11 +321,11 @@ const SiteHeader = (cartCount) => {
 
 														</ul>
 													</li>
-													<li className="level-0 menu-item menu-item-has-children">
+													<li className="level-0 menu-item ">
 														<Link to={`/shoproduct/${banner[3]?.slug}`}><span className="menu-item-text">{banner[3]?.title}</span></Link>
 
-														<ul className="sub-menu">
-															{cat.filter((item) => (item.group_id == banner[3]?.id)).map((item) => {
+													{cat.length > 0 &&	<ul className="sub-menu">
+															{ cat.filter((item) => (item.group_id == banner[3]?.id)).map((item) => {
 																return (
 																	<li className="level-1 menu-item menu-item-has-children">
 																		<Link to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}><span className="menu-item-text">{item.title}</span></Link>
@@ -346,7 +346,7 @@ const SiteHeader = (cartCount) => {
 															})}
 
 
-														</ul>
+														</ul>}
 													</li>
 													<li className="level-0 menu-item">
 														<Link to="/customizationpage"><span className="menu-item-text">Customization</span></Link>

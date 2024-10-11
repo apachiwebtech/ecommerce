@@ -4,6 +4,7 @@ import InnerHeader from "./InnerHeader";
 
 const LocationMaster = () => {
   const [locations, setLocations] = useState([]);
+  const [slot, setSlot] = useState([]) 
 
   // Function to fetch locations from the server
   const fetchLocations = async () => {
@@ -17,7 +18,8 @@ const LocationMaster = () => {
   };
 
 
-  const updateSlot = async (id, selectedSlot) => {
+  const updateSlot = async (id, selectedSlot,slot) => {
+    setSlot(slot)
     try {
       const response = await fetch(`${BASE_URL}/updateSlot`, {
         method: 'POST',
@@ -73,7 +75,7 @@ const LocationMaster = () => {
                         <tr key={loc.id}>
                           <td>{loc.id}</td>
                           <td>{loc.name}</td>
-                          <td><select class="form-control form-control-lg" id="exampleFormControlSelect1" name='role' onChange={(e) => updateSlot(loc.id, e.target.value)}>
+                          <td><select class="form-control form-control-lg" id="exampleFormControlSelect1" value={slot} name='role' onChange={(e) => updateSlot(loc.id, e.target.value,loc.slot)}>
                             <option selected>Select Slot</option>
                             <option value={`1`}>1</option>
                             <option value={`2`}>2</option>
