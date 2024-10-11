@@ -285,6 +285,10 @@ app.get('/api', (req, res) => {
   
 })
 
+
+
+
+
 app.post('/customerlogin', (req, res) => {
 
   let email = req.body.email;

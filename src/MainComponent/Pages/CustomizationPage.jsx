@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Helmet } from "react-helmet";
-import { BASE_URL } from '../../AdminComponent/BaseUrl';
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
+import useBreadcrumb from '../../Utils/Breadcrum';
 
 const CustomizationPage = () => {
     const [data, setData] = useState([]);
@@ -14,6 +15,8 @@ const CustomizationPage = () => {
         mobile: "",
         image: null,
     });
+
+    const breaddata = useBreadcrumb()
 
     const handlechange = (e) => {
         if (e.target.name === 'image') {
@@ -111,7 +114,8 @@ const CustomizationPage = () => {
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
-                        <div id="title" class="page-title">
+
+                         <div id="title" className="page-title" style={{ backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')` }}>
                             <div class="section-container">
                                 <div class="content-title-heading">
                                     <h1 class="text-title-heading">
