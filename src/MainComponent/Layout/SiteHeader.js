@@ -474,7 +474,7 @@ const SiteHeader = (cartCount) => {
 			</header >
 
 			<div className={`header-mobile-sidebar ${toggle ? `mob-left-view` : ``}  `}  >
-				<div className='p-2' style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+				<div className='p-2' style={{ display: "flex", justifyContent: "space-between", alignItems: "center",background:"#F8E9D5" }}>
 					<div className="">
 						<img width="130" height="79" src={logo} alt="Ruper – Furniture HTML Theme" />
 					</div>

@@ -284,37 +284,12 @@ app.use(
 
 //this is for zepto api
 
-app.get("/api", (req, res) => {
-  let client = new SendMailClient({ url, token });
 
-  client
-    .sendMail({
-      from: {
-        address: "Info@micasasucasa.in",
-        name: "noreply",
-      },
-      to: [
-        {
-          email_address: {
-            address: "satyamsatkr875@gmail.com",
-            name: "satyam",
-          },
-        },
-      ],
-      subject: "Test Email",
-      htmlbody: "<div><b>Test email sent successfully.</b></div>",
-    })
-    .then((resp) => {
-      return res.json(resp);
-    })
-    .catch((error) => {
-      console.error(
-        "Failed to send email:",
-        error.response ? error.response.data : error.message
-      );
-      return res.json(error);
-    });
-});
+
+
+
+
+
 
 app.post("/customerlogin", (req, res) => {
   let email = req.body.email;
@@ -395,10 +370,10 @@ app.post("/customerlogin", (req, res) => {
                 <span
                   style="font-size: 16px; line-height: 30px; color: #000000;"
                   > ${new Date().toLocaleDateString("en-US", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })}</span
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}</span
                 >
               </td>
             </tr>
@@ -978,13 +953,13 @@ app.post(
                         </td>
                         <td style="text-align: right">
                           <span style="font-size: 16px; line-height: 30px; color: #000000">${new Date().toLocaleDateString(
-                            "en-US",
-                            {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            }
-                          )}</span>
+                    "en-US",
+                    {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    }
+                  )}</span>
                         </td>
                       </tr>
                     </div>
@@ -1262,51 +1237,31 @@ app.post("/adminuser_delete", (req, res) => {
 });
 
 app.post("/add_category", upload6.single("image"), (req, res) => {
-  let user_id = req.body.user_id;
-  let title = req.body.title;
-  let group_id = req.body.group_id;
-  let slug = req.body.slug;
-  let description = req.body.description;
-  let created_date = new Date();
-  let u_id = req.body.u_id;
+  const { user_id, title, group_id, slug, description, image: bodyImage, u_id } = req.body;
+  const created_date = new Date();
 
-  let image;
-  if (req.body.filename == undefined) {
-    image = req.body.image;
-  } else {
-    image = req.file.filename;
-  }
+  // Assign image from the uploaded file or request body
+  let image = req.file ? req.file.filename : bodyImage;
 
-  let sql;
-  let param;
+  let sql, param;
 
-  if (u_id == "undefined") {
-    sql =
-      "insert into awt_category(`title`,`group_id`,`slug`,`description`,`image`,`created_by`,`created_date`) values(?,?,?,?,?,?,?)";
+  if (!u_id) { // Check if u_id is undefined or null
+    sql = "INSERT INTO awt_category(`title`, `group_id`, `slug`, `description`, `image`, `created_by`, `created_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
     param = [title, group_id, slug, description, image, user_id, created_date];
   } else {
-    sql =
-      "update awt_category set title = ? ,group_id = ? ,slug = ?, description = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?";
-    param = [
-      title,
-      group_id,
-      slug,
-      description,
-      image,
-      user_id,
-      created_date,
-      u_id,
-    ];
+    sql = "UPDATE awt_category SET title = ?, group_id = ?, slug = ?, description = ?, image = ?, updated_by = ?, updated_date = ? WHERE id = ?";
+    param = [title, group_id, slug, description, image, user_id, created_date, u_id];
   }
 
   con.query(sql, param, (err, data) => {
     if (err) {
-      return res.json("Error");
+      return res.status(500).json({ error: err.message });
     } else {
-      return res.json("Data Added Successfully");
+      return res.json({ message: "Data Added Successfully" });
     }
   });
 });
+
 
 app.post("/category_update", (req, res) => {
   let u_id = req.body.u_id;
@@ -3348,223 +3303,223 @@ app.get(`/state`, (req, res) => {
   });
 });
 
-app.post("/place_order", (req, res) => {
-  let firstname = req.body.firstname;
-  let lastname = req.body.lastname;
-  let country = req.body.country;
-  let address = req.body.address;
-  let landmark = req.body.landmark;
-  let city = req.body.city;
-  let state = req.body.state;
-  let postcode = req.body.postcode;
-  let orderNotes = req.body.orderNotes;
-  let sfirstname = req.body.sfirstname;
-  let slastname = req.body.slastname;
-  let scountry = req.body.scountry;
-  let saddress = req.body.saddress;
-  let slandmark = req.body.slandmark;
-  let scity = req.body.scity;
-  let sstate = req.body.sstate;
-  let spostcode = req.body.spostcode;
-  let totalamt = req.body.totalamt;
-  let paymode = req.body.paymode;
-  let order_id = req.body.order_id;
-  let user_id = req.body.user_id;
-  let mobile = req.body.mobile;
-  let pending = "pending";
-  let vendor_id = req.body.vendor_id;
+// app.post("/place_order", (req, res) => {
+//   let firstname = req.body.firstname;
+//   let lastname = req.body.lastname;
+//   let country = req.body.country;
+//   let address = req.body.address;
+//   let landmark = req.body.landmark;
+//   let city = req.body.city;
+//   let state = req.body.state;
+//   let postcode = req.body.postcode;
+//   let orderNotes = req.body.orderNotes;
+//   let sfirstname = req.body.sfirstname;
+//   let slastname = req.body.slastname;
+//   let scountry = req.body.scountry;
+//   let saddress = req.body.saddress;
+//   let slandmark = req.body.slandmark;
+//   let scity = req.body.scity;
+//   let sstate = req.body.sstate;
+//   let spostcode = req.body.spostcode;
+//   let totalamt = req.body.totalamt;
+//   let paymode = req.body.paymode;
+//   let order_id = req.body.order_id;
+//   let user_id = req.body.user_id;
+//   let mobile = req.body.mobile;
+//   let pending = "pending";
+//   let vendor_id = req.body.vendor_id;
 
-  const date = new Date();
+//   const date = new Date();
 
-  const checkaddress =
-    "select * from `awt_address` where `uid` = ? and `deleted` = 0";
+//   const checkaddress =
+//     "select * from `awt_address` where `uid` = ? and `deleted` = 0";
 
-  con.query(checkaddress, [user_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      if (data.length == 0) {
-        const insert =
-          "insert into awt_address(`uid`,`firstname`,`lastname`,`mobile`,`address`,`state`,`city`,`pincode`,`created_date`,`default`) values(?,?,?,?,?,?,?,?,?,?)";
+//   con.query(checkaddress, [user_id], (err, data) => {
+//     if (err) {
+//       return res.json(err);
+//     } else {
+//       if (data.length == 0) {
+//         const insert =
+//           "insert into awt_address(`uid`,`firstname`,`lastname`,`mobile`,`address`,`state`,`city`,`pincode`,`created_date`,`default`) values(?,?,?,?,?,?,?,?,?,?)";
 
-        con.query(
-          insert,
-          [
-            user_id,
-            firstname,
-            lastname,
-            mobile,
-            address,
-            state,
-            city,
-            postcode,
-            date,
-            1,
-          ],
-          (err, data) => {
-            if (err) {
-              return res.json(err);
-            } else {
-              //  const removestock = "insert into awt_productstockremove(`pro_id` , `stock` ,`created_date`, `created_by` )"
-              //  con.query(removestock )
+//         con.query(
+//           insert,
+//           [
+//             user_id,
+//             firstname,
+//             lastname,
+//             mobile,
+//             address,
+//             state,
+//             city,
+//             postcode,
+//             date,
+//             1,
+//           ],
+//           (err, data) => {
+//             if (err) {
+//               return res.json(err);
+//             } else {
+//               //  const removestock = "insert into awt_productstockremove(`pro_id` , `stock` ,`created_date`, `created_by` )"
+//               //  con.query(removestock )
 
-              console.log(res.data);
-            }
-          }
-        );
-      }
-    }
-  });
+//               console.log(res.data);
+//             }
+//           }
+//         );
+//       }
+//     }
+//   });
 
-  const sql =
-    "update `order` set  v_id = ?,firstname = ?, lastname = ? , country =?,address1 = ? ,landmark = ? , city1 = ? , state = ? , postcode = ?, order_comments = ? ,sfirstname = ? , slastname= ? ,scountry = ?, shipaddress = ? , shiplandmark = ? , shipcity = ? , shipstate = ? , shippostcode = ?,totalamt = ?,paymode = ? where id = ? ";
+//   const sql =
+//     "update `order` set  v_id = ?,firstname = ?, lastname = ? , country =?,address1 = ? ,landmark = ? , city1 = ? , state = ? , postcode = ?, order_comments = ? ,sfirstname = ? , slastname= ? ,scountry = ?, shipaddress = ? , shiplandmark = ? , shipcity = ? , shipstate = ? , shippostcode = ?,totalamt = ?,paymode = ? where id = ? ";
 
-  con.query(
-    sql,
-    [
-      vendor_id,
-      firstname,
-      lastname,
-      country,
-      address,
-      landmark,
-      city,
-      state,
-      postcode,
-      orderNotes,
-      sfirstname,
-      slastname,
-      scountry,
-      saddress,
-      slandmark,
-      scity,
-      sstate,
-      spostcode,
-      totalamt,
-      paymode,
-      order_id,
-    ],
-    (err, data) => {
-      if (err) {
-        return res.json(err);
-      } else {
-        const sql = "select * from `order` where `orderno` != '' ";
+//   con.query(
+//     sql,
+//     [
+//       vendor_id,
+//       firstname,
+//       lastname,
+//       country,
+//       address,
+//       landmark,
+//       city,
+//       state,
+//       postcode,
+//       orderNotes,
+//       sfirstname,
+//       slastname,
+//       scountry,
+//       saddress,
+//       slandmark,
+//       scity,
+//       sstate,
+//       spostcode,
+//       totalamt,
+//       paymode,
+//       order_id,
+//     ],
+//     (err, data) => {
+//       if (err) {
+//         return res.json(err);
+//       } else {
+//         const sql = "select * from `order` where `orderno` != '' ";
 
-        con.query(sql, (err, data) => {
-          if (err) {
-            return res.json(err);
-          } else {
-            const count = data.length;
-            const ordercount = count + 1;
+//         con.query(sql, (err, data) => {
+//           if (err) {
+//             return res.json(err);
+//           } else {
+//             const count = data.length;
+//             const ordercount = count + 1;
 
-            const currentDate = new Date();
-            const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
-            const utcDate =
-              currentDate.getTime() +
-              currentDate.getTimezoneOffset() * 60 * 1000;
-            const istDate = new Date(utcDate + istOffset);
+//             const currentDate = new Date();
+//             const istOffset = 5.5 * 60 * 60 * 1000; // 5.5 hours in milliseconds
+//             const utcDate =
+//               currentDate.getTime() +
+//               currentDate.getTimezoneOffset() * 60 * 1000;
+//             const istDate = new Date(utcDate + istOffset);
 
-            const day = String(istDate.getDate()).padStart(2, "0");
-            const month = String(istDate.getMonth() + 1).padStart(2, "0"); // Months are zero based
-            const year = istDate.getFullYear().toString().substr(-2);
+//             const day = String(istDate.getDate()).padStart(2, "0");
+//             const month = String(istDate.getMonth() + 1).padStart(2, "0"); // Months are zero based
+//             const year = istDate.getFullYear().toString().substr(-2);
 
-            const orderno =
-              "MISU" + "-" + year + month + day + "-" + ordercount;
+//             const orderno =
+//               "MISU" + "-" + year + month + day + "-" + ordercount;
 
-            const sql =
-              "update `order` set `orderno` = ? , `oluxe` = ? , order_date = ? where `id`  = ?";
+//             const sql =
+//               "update `order` set `orderno` = ? , `ostatus` = ? , order_date = ? where `id`  = ?";
 
-            con.query(
-              sql,
-              [orderno, pending, currentDate, order_id],
-              (err, data) => {
-                if (err) {
-                  return res.json(err);
-                } else {
-                  const checkcart =
-                    "select * from `awt_cart` where orderid = ? and deleted = 0";
+//             con.query(
+//               sql,
+//               [orderno, pending, currentDate, order_id],
+//               (err, data) => {
+//                 if (err) {
+//                   return res.json(err);
+//                 } else {
+//                   const checkcart =
+//                     "select * from `awt_cart` where orderid = ? and deleted = 0";
 
-                  con.query(checkcart, [order_id], (err, data) => {
-                    if (err) {
-                      return res.json(err);
-                    } else {
-                      const param = data.map((items) => {
-                        return [items.proid, items.pqty, new Date(), user_id];
-                      });
+//                   con.query(checkcart, [order_id], (err, data) => {
+//                     if (err) {
+//                       return res.json(err);
+//                     } else {
+//                       const param = data.map((items) => {
+//                         return [items.proid, items.pqty, new Date(), user_id];
+//                       });
 
-                      const updateremovestock =
-                        "insert into awt_productstockremove(`pro_id`,`stock`,`created_date`,`updated_by`) values ?";
+//                       const updateremovestock =
+//                         "insert into awt_productstockremove(`pro_id`,`stock`,`created_date`,`updated_by`) values ?";
 
-                      con.query(updateremovestock, [param], (err, data) => {
-                        if (err) {
-                          return res.json(err);
-                        } else {
-                          const updatePromises = param.map((item) => {
-                            const [pro_id, stock] = item;
-                            const getproductstock =
-                              "UPDATE `awt_productstock` SET stock = stock - ? WHERE pro_id = ?";
-                            return new Promise((resolve, reject) => {
-                              con.query(
-                                getproductstock,
-                                [stock, pro_id],
-                                (err, data) => {
-                                  if (err) {
-                                    reject(err);
-                                  } else {
-                                    resolve(data);
-                                  }
-                                }
-                              );
-                            });
-                          });
+//                       con.query(updateremovestock, [param], (err, data) => {
+//                         if (err) {
+//                           return res.json(err);
+//                         } else {
+//                           const updatePromises = param.map((item) => {
+//                             const [pro_id, stock] = item;
+//                             const getproductstock =
+//                               "UPDATE `awt_productstock` SET stock = stock - ? WHERE pro_id = ?";
+//                             return new Promise((resolve, reject) => {
+//                               con.query(
+//                                 getproductstock,
+//                                 [stock, pro_id],
+//                                 (err, data) => {
+//                                   if (err) {
+//                                     reject(err);
+//                                   } else {
+//                                     resolve(data);
+//                                   }
+//                                 }
+//                               );
+//                             });
+//                           });
 
-                          Promise.all(updatePromises)
-                            .then((results) => {
-                              const updatereservstock =
-                                "update awt_reservstock set p_luxe = 1 where orderid = ?";
+//                           Promise.all(updatePromises)
+//                             .then((results) => {
+//                               const updatereservstock =
+//                                 "update awt_reservstock set p_status = 1 where orderid = ?";
 
-                              con.query(
-                                updatereservstock,
-                                [order_id],
-                                (err, data) => {
-                                  if (err) {
-                                    return res.json(err);
-                                  } else {
-                                    const orderno =
-                                      "select orderno from `order` where id = ?";
+//                               con.query(
+//                                 updatereservstock,
+//                                 [order_id],
+//                                 (err, data) => {
+//                                   if (err) {
+//                                     return res.json(err);
+//                                   } else {
+//                                     const orderno =
+//                                       "select orderno from `order` where id = ?";
 
-                                    con.query(
-                                      orderno,
-                                      [order_id],
-                                      (err, data) => {
-                                        if (err) {
-                                          return res.json(err);
-                                        } else {
-                                          return res.json(data);
-                                        }
-                                      }
-                                    );
-                                  }
-                                }
-                              );
-                            })
-                            .catch((err) => {
-                              // At least one update failed
-                              res.json(err);
-                            });
-                        }
-                      });
-                    }
-                  });
-                }
-              }
-            );
-          }
-        });
-      }
-    }
-  );
-});
+//                                     con.query(
+//                                       orderno,
+//                                       [order_id],
+//                                       (err, data) => {
+//                                         if (err) {
+//                                           return res.json(err);
+//                                         } else {
+//                                           return res.json(data);
+//                                         }
+//                                       }
+//                                     );
+//                                   }
+//                                 }
+//                               );
+//                             })
+//                             .catch((err) => {
+//                               // At least one update failed
+//                               res.json(err);
+//                             });
+//                         }
+//                       });
+//                     }
+//                   });
+//                 }
+//               }
+//             );
+//           }
+//         });
+//       }
+//     }
+//   );
+// });
 
 app.post("/getcolorimg", (req, res) => {
   let colorid = req.body.colorid;
@@ -5703,8 +5658,7 @@ app.get("/locationMaster_data", (req, res) => {
 
 app.post("/updateSlot", (req, res) => {
   const { id, slot } = req.body;
-  const sql =
-    "UPDATE awt_locationMaster SET slot = ? WHERE id = ? AND deleted = 0";
+  const sql = 'UPDATE awt_locationmaster SET slot = ? WHERE id = ? AND deleted = 0';
 
   con.query(sql, [slot, id], (err, result) => {
     if (err) {
@@ -5717,15 +5671,17 @@ app.post("/updateSlot", (req, res) => {
 
 // for Advertisement/==========================================================================
 
-app.post("/add_advertisement", upload11.single("image"), (req, res) => {
-  const { slot, type, title, link, target, created_by, video } = req.body;
-  let image;
+app.post('/add_advertisement', upload11.single('image'), (req, res) => {
 
-  if (req.file.filename == undefined) {
-    image = req.body.image;
+  const { slot, type, title, link, target, created_by, video, loc } = req.body;
+  let banner;
+
+  if (req.body.image) {
+    banner = req.body.image
   } else {
-    image = req.file.filename;
+    banner = req.file.filename;
   }
+
 
   if (!slot || !type || !title) {
     return res
@@ -5733,9 +5689,8 @@ app.post("/add_advertisement", upload11.single("image"), (req, res) => {
       .json({ error: "Slot, Type, and Title are required" });
   }
 
-  const sql =
-    "INSERT INTO awt_advertisements (slot, type, title, link, target,image,iframe, created_by) VALUES (?, ?, ?, ?, ?, ?,?,?)";
-  const params = [slot, type, title, link, target, image, video, created_by];
+  const sql = "INSERT INTO awt_advertisements (slot, type, title, link, target,image,iframe, created_by,location) VALUES (?, ?, ?, ?, ?, ?,?,?,?)";
+  const params = [slot, type, title, link, target, banner, video, created_by, loc];
 
   con.query(sql, params, (err) => {
     if (err) {
@@ -5766,8 +5721,8 @@ app.post("/update_advertisement", upload11.single("image"), (req, res) => {
 
   let image;
 
-  if (req.file.filename == undefined) {
-    image = req.body.image;
+  if (req.body.filename == undefined) {
+    image = req.body.image
   } else {
     image = req.file.filename;
   }
@@ -5994,7 +5949,45 @@ app.post(`/updateread`, (req, res) => {
     } else {
       return res.json(data);
     }
-  });
-});
+  })
+})
 
+app.post(`/getlocation`, (req, res) => {
+  let { locid } = req.body;
+
+  const sql = "select * from awt_locationmaster where id = ? "
+
+  con.query(sql, [locid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+
+      const slot = data[0].slot;
+
+      const getdetail = 'select * from awt_advertisements where location = ? and  slot = ? and deleted = 0'
+
+      con.query(getdetail, [locid, slot], (err, data) => {
+        if (err) {
+          return res.json(err)
+        } else {
+          return res.json(data)
+        }
+      })
+    }
+  })
+
+})
+
+app.get('/moving_category' , (req,res) =>{
+  
+  const sql = "select ac.*,ag.slug as group_slug from awt_category as ac left join awt_group as ag on ag.id = ac.group_id where ac.deleted = 0";
+
+  con.query(sql , (err,data) =>{
+    if(err){
+      return res.json(err)
+    }else{
+      return res.json(data)
+    }
+  })
+})
 

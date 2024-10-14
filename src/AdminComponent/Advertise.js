@@ -102,12 +102,13 @@ const Advertise = () => {
 
     const formData = new FormData();
     formData.append('slot', selectedSlot);
+    formData.append('loc', formValue.location);
     formData.append('type', selectedType);
     formData.append('title', titleValue);
     formData.append('link', linkValue);
     formData.append('video', videoValue);
     formData.append('target', targetValue);
-    formData.append('image', image); // Assuming 'image' is a File object from an input field
+    formData.append('image', image || 'a'); // Assuming 'image' is a File object from an input field
     formData.append('created_by', 1);
 
     try {
@@ -127,8 +128,10 @@ const Advertise = () => {
         });
         alert("Advertisement Added Successfully!");
       }
-      getAdvertisements();
-      setShowForm(false);
+      window.location.reload()
+      // getAdvertisements();
+     
+
     } catch (err) {
       console.error(err);
       alert("Error adding/updating advertisement");
@@ -214,7 +217,7 @@ const Advertise = () => {
                           >
                             <option value="">Select a location</option>
                             {locations.map((loc) => (
-                              <option key={loc.id} value={loc.name}>
+                              <option key={loc.id} value={loc.id}>
                                 {loc.name}
                               </option>
                             ))}
@@ -384,7 +387,7 @@ const Advertise = () => {
                         {advertisements.map((ad) => (
                           <tr key={ad.id}>
                             <td>{ad.id}</td>
-                            <td>loc-1</td>
+                            <td>loc-{ad.location}</td>
                             <td>{ad.slot}</td>
                             <td>{ad.title}</td>
                             <td>{ad.type}</td>

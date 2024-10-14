@@ -483,3 +483,8 @@ li{
   text-transform: uppercase;
   font-weight: 600;
 }
+
+iframe{
+  width : 100% !important;
+  height :auto !important
+}

@@ -265,6 +265,8 @@ const Category = () => {
             setSelectedOption(selectedValue);
             // Now you have the selected id, you can use it in your application logic
             setId(selectedId)
+
+            console.log(selectedId,"ID")
         }
     };
 
@@ -273,7 +275,7 @@ const Category = () => {
         if (uid.group_id) {
 
             const selected = group.find(option => option.id === uid.group_id);
-            console.log(selected, "dadad")
+          
             setSelectedOption(selected);
         }
     }, [uid, group]);

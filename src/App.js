@@ -110,6 +110,7 @@ import LocationMaster from './AdminComponent/LocationMaster';
 import CustomizeRequest from './AdminComponent/CustomizeRequest';
 import CustomizationPage from './MainComponent/Pages/CustomizationPage';
 import MailTemp from './Utils/MailTemp';
+import CommingSoon from './MainComponent/CommingSoon';
 
 
 
@@ -160,12 +161,12 @@ const Router = createHashRouter([
     path: '/',
     element: <App />,
     children: [
-      // {
-      //   path: '/',
-      //   element: <CommingSoon />
-      // },
       {
         path: '/',
+        element: <CommingSoon />
+      },
+      {
+        path: '/home',
         element: <DashBoard />
       },
       {

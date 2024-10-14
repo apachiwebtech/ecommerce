@@ -1,64 +1,86 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import banner1 from '../../assets/frontimg/banner/banner-1.jpg'
 import banner2 from '../../assets/frontimg/banner/banner-2.jpg'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Zoom, Mousewheel, Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import axios from 'axios';
+import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
+import { Link } from 'react-router-dom';
 
 const Advertise2 = () => {
+
+  const [data, setData] = useState([]);
+	const [slot, setSlot] = useState(0);
+	const [isLoading, setIsLoading] = useState(true);
+
+	async function getLocation() {
+		const requestData = { locid: 2 };
+
+		try {
+			const response = await axios.post(`${BASE_URL}/getlocation`, requestData);
+
+			setData(response.data);
+			setSlot(Number(response.data[0].slot));
+			setIsLoading(false); // Stop loading after data is fetched
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	}
+
+	useEffect(() => {
+		getLocation();
+	}, []);
+
+	if (isLoading) {
+		return <div>Loading...</div>; // Show a loading state while data is being fetched
+	}
   return (
-    <div>
-      <section class="section section-padding m-b-70">
-        <div class="section-container">
+  	<div>
+
+			<section class="section section-padding m-b-70">
+				<div class="section-container">
 
 
-          <div class="row">
-            <Swiper spaceBetween={20}
-              slidesPerView={4}
-              modules={[Navigation, Thumbs]}
-              navigation
-              breakpoints={{
-                320: {
-                  slidesPerView: 3,
-                },
-                640: {
-                  slidesPerView: 3,
-                },
-                768: {
-                  slidesPerView: 3,
-                },
-                1024: {
-                  slidesPerView: 3,
-                },
-              }}>
-              <div className='col-lg-4 mt-2'>
-                <SwiperSlide>
-                <img src={banner1} alt="" />
+					<div class="row">
+						<Swiper spaceBetween={20}
+							slidesPerView={4}
+							modules={[Navigation, Thumbs]}
+							navigation
+							breakpoints={{
+								320: {
+									slidesPerView: 1,
+								},
+								640: {
+									slidesPerView: 1
+								},
+								768: {
+									slidesPerView: slot,
+								},
+								1024: {
+									slidesPerView: slot,
+								},
+							}}>
+							{data.map((item) => {
+								return (
+									<SwiperSlide>
+									{item.type === 'Image' 
+									  ? <Link to={item.link}> <img src={`${IMG_URL}/Advertisement/` + item.image} alt={item.title} /> </Link>
+									  : <div dangerouslySetInnerHTML={{ __html: item.iframe}}>{item.ifram}</div>}
+								  </SwiperSlide>
+								  
+								)
+							})}
 
-                </SwiperSlide>
-              </div>
-              <div className='col-lg-4 mt-2'>
-              <SwiperSlide>
-                <img src={banner1} alt="" />
+						</Swiper>
 
-                </SwiperSlide>
 
-              </div>
-              <div className='col-lg-4 mt-2'>
-              <SwiperSlide>
-                <img src={banner1} alt="" />
+					</div>
 
-                </SwiperSlide>
-
-              </div>
-            </Swiper>
-
-          </div>
-
-        </div>
-      </section>
-    </div>
+				</div>
+			</section>
+		</div>
   )
 }
 

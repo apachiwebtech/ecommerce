@@ -558,11 +558,11 @@ function LoginForm({ open, setOpen }) {
                                         </div>
 
                                         <p className='text-danger' id="err"></p>
-                                        <div id='msg'>
+                                        {/* <div id='msg'>
                                             {
                                                 showOtp && <Alert severity="info" >{tostOtp}</Alert>
                                             }
-                                        </div>
+                                        </div> */}
 
 
 

@@ -2239,11 +2239,13 @@ ul.slick-dots li.slick-active button {
   background: #fff;
   margin: auto;
   position: absolute;
-  left: calc(50% - 255px);
+  /* left: calc(50% - 255px); */
+  left: 50%;
+
   top: 50%;
   padding: 30px;
   -webkit-transform: translateY(-50%);
-  transform: translateY(-50%);
+  transform: translate(-50%,-50%);
   overflow: hidden;
 }
 .form-login-register .box-form-login .active-login {

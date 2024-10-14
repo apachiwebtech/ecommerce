@@ -4,13 +4,14 @@ import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl'
 import { useNavigate, useParams } from 'react-router-dom'
 import custdecryptedUserId from '../../Utils/CustUserid'
 import Cookies from 'js-cookie'
-import { Helmet } from "react-helmet";
 
 const Checkout = () => {
-  const [data, setData] = useState([])
   const [state, setState] = useState([])
   const [cart, setCart] = useState([])
   const [errors, setErrors] = useState({})
+  const [token, settoken] = useState({})
+  const [shipping, setshipping] = useState({})
+  const [show, setshow] = useState(false)
   const [selectedPayment, setSelectedPayment] = useState('cod');
 
 
@@ -141,7 +142,6 @@ const Checkout = () => {
 
         setCart(res.data)
 
-
       })
   }
 
@@ -158,8 +158,31 @@ const Checkout = () => {
         setState(res.data)
       })
   }
+  async function api() {
+
+    axios.post(`${BASE_URL}/api`)
+      .then((res) => {
+        settoken(res.data.data)
+
+      })
+  }
+  async function get_shipping_rate() {
+    if (validateForm()) {
+      const data = {
+        "token": token,
+        "order_id": orderid,
+        "spincode": value.spostcode,
+      }
+      axios.post(`${BASE_URL}/get_shipping_rate`, data)
+        .then((res) => {
+          setshipping(res.data.data)
+          setshow(true)
+        })
+    }
+  }
 
   useEffect(() => {
+    api()
     getState()
     getcartdata()
   }, [])
@@ -176,7 +199,6 @@ const Checkout = () => {
 
   const onhandlesubmit = (e) => {
     e.preventDefault()
-
     if (validateForm()) {
 
       const paydata = {
@@ -209,6 +231,7 @@ const Checkout = () => {
         order_id: orderid,
         totalamt: totalPrice,
         paymode: selectedPayment,
+        token: token,
 
         user_id: custdecryptedUserId()
       }
@@ -216,49 +239,49 @@ const Checkout = () => {
 
       selectedPayment != 'cod' ? (
 
-      axios.post(`${BASE_URL}/payment`, paydata)
-        .then((res) => {
-          // ---?>  payment log
+        axios.post(`${BASE_URL}/payment`, paydata)
+          .then((res) => {
+            // ---?>  payment log
 
-          if (res.data.success == true) {
+            if (res.data.success == true) {
 
-            axios.post(`${BASE_URL}/place_order`, data)
-              .then((res) => {
-                console.log(res)
-
-
-                if (res.data) {
-                  alert("order placed")
-                  Cookies.remove(`orderid`)
-                  navigate('/thankyou')
-                  Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
-                }
+              axios.post(`${BASE_URL}/place_order`, data)
+                .then((res) => {
+                  console.log(res)
 
 
-              })
+                  if (res.data) {
+                    alert("order placed")
+                    Cookies.remove(`orderid`)
+                    navigate('/thankyou')
+                    Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
+                  }
 
 
-            window.location.href = res.data.url
-          }
+                })
 
 
-        })
-
-      ):(
-            axios.post(`${BASE_URL}/place_order`, data)
-              .then((res) => {
-                console.log(res)
+              window.location.href = res.data.url
+            }
 
 
-                if (res.data) {
-                  alert("order placed")
-                  Cookies.remove(`orderid`)
-                  navigate('/thankyou')
-                  Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
-                }
+          })
+
+      ) : (
+        axios.post(`${BASE_URL}/place_order`, data)
+          .then((res) => {
+            console.log(res)
 
 
-              })
+            if (res.data) {
+              alert("order placed")
+              Cookies.remove(`orderid`)
+              navigate('/thankyou')
+              Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
+            }
+
+
+          })
       )
 
 
@@ -297,8 +320,9 @@ const Checkout = () => {
     fetchAddress()
   }, [])
 
-  const onhandlechange = (e) => {
-    setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+  const onhandlechange = async (e) => {
+    await setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+
   }
 
   const handlecheckbox = () => {
@@ -335,30 +359,13 @@ const Checkout = () => {
 
 
 
-  async function getmetadetail() {
-    const data = {
-        page_id: 2
-    }
-    axios.post(`${BASE_URL}/getmetadetail`, data)
-        .then((res) => {
-            setData(res.data[0])
-        })
-}
 
-useEffect(() => {
-    getmetadetail()
-}, [])
 
 
 
   return (
     <div>
       <div id="site-main" class="site-main">
-                 <Helmet>
-                    <title>{data.seo_title}</title>
-                    <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
-                    <meta name="author" content={data.seo_title} />
-                </Helmet>
         <div id="main-content" class="main-content">
           <div id="primary" class="content-area">
             <div id="title" class="page-title">
@@ -593,145 +600,188 @@ useEffect(() => {
                           </div>
                         </div>
 
+                       { show ? (
+                         <div class="col-xl-4 col-lg-5 col-md-12 col-12">
+                         <div class="checkout-review-order">
+                           <div class="checkout-review-order-table">
+                             <div class="review-order-title">Hide</div>
+                             <div class="cart-items">
+                               {cart.map((item) => {
+
+
+                                 return (
+                                   <div class="cart-item">
+                                     <div class="info-product">
+                                       <div class="product-thumbnail">
+                                         <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image1} alt="" />
+                                       </div>
+                                       <div class="product-name">
+                                         {item.pname}
+                                         <strong class="product-quantity">QTY : {item.pqty}</strong>
+                                       </div>
+                                     </div>
+                                     <div class="product-total">
+                                       <span>₹{item.price}</span>
+                                     </div>
+                                   </div>
+                                 )
+                               })}
+
+
+                             </div>
+                             <div class="cart-subtotal">
+                               <h2>Subtotal</h2>
+                               <div class="subtotal-price">
+                                 <span>₹{totalPrice}</span>
+                               </div>
+                             </div>
+                             <div class="shipping-totals shipping">
+                               <h2>Shipping</h2>
+                               <div data-title="Shipping">
+                                 <ul class="shipping-methods custom-radio">
+                                   <li>
+                                     <input type="radio" name="shipping_method" data-index="0" value="free_shipping" class="shipping_method" checked="checked" /><label>Free shipping</label>
+                                   </li>
+                                   {/* <li>
+                                                                           <input type="radio" name="shipping_method" data-index="0" value="flat_rate" class="shipping_method" /><label>Flat rate</label>
+                                                                       </li> */}
+                                 </ul>
+                               </div>
+                             </div>
+                             <div class="order-total">
+                               <h2>Total</h2>
+                               <div class="total-price">
+                                 <strong>
+                                   <span>₹{totalPrice}</span>
+                                 </strong>
+                               </div>
+                             </div>
+                           </div>
+                           <div id="payment" class="checkout-payment">
+
+                             <ul className="payment-methods methods custom-radio">
+                               <li hidden className="payment-method">
+                                 <input
+                                   className="form-check-input"
+                                   type="radio"
+                                   name="exampleRadios"
+                                   id="exampleRadios1"
+                                   value="bank-transfer"
+                                   checked={selectedPayment === 'bank-transfer'}
+                                   onChange={handlePaymentChange}
+                                   disabled
+                                 />
+                                 <label className="form-check-label" htmlFor="exampleRadios1">
+                                   Direct bank transfer
+                                 </label>
+                                 <div className="payment-box">
+                                   <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
+                                 </div>
+                               </li>
+                               <li hidden className="payment-method">
+                                 <input
+                                   className="form-check-input"
+                                   type="radio"
+                                   name="exampleRadios"
+                                   id="exampleRadios2"
+                                   value="check"
+                                   checked={selectedPayment === 'check'}
+                                   onChange={handlePaymentChange}
+
+                                 />
+                                 <label className="form-check-label" htmlFor="exampleRadios2">
+                                   Check payments
+                                 </label>
+                                 <div className="payment-box">
+                                   <p>Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
+                                 </div>
+                               </li>
+                               <li className="payment-method">
+                                 <input
+                                   className="form-check-input"
+                                   type="radio"
+                                   name="exampleRadios"
+                                   id="exampleRadios3"
+                                   value="cod"
+                                   checked={selectedPayment === 'cod'}
+                                   onChange={handlePaymentChange}
+                                 />
+                                 <label className="form-check-label" htmlFor="exampleRadios3">
+                                   Cash on delivery
+                                 </label>
+                                 <div className="payment-box">
+                                   <p>Pay with cash upon delivery.</p>
+                                 </div>
+                               </li>
+                               <li className="payment-method">
+                                 <input
+                                   className="form-check-input"
+                                   type="radio"
+                                   name="exampleRadios"
+                                   id="exampleRadios4"
+                                   value="paypal"
+                                   checked={selectedPayment === 'paypal'}
+                                   onChange={handlePaymentChange}
+                                 />
+                                 <label className="form-check-label" htmlFor="exampleRadios4">
+                                   Online
+                                 </label>
+                                 <div className="payment-box">
+                                   <p>Pay via any UPI app or card.</p>
+                                 </div>
+                               </li>
+                             </ul>
+                             <div class="form-row place-order">
+                               <div class="terms-and-conditions-wrapper">
+                                 <div class="privacy-policy-text"></div>
+                               </div>
+                               <button type="submit" class="button alt" name="checkout_place_order" value="Place order">Place order</button>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       ) : (
                         <div class="col-xl-4 col-lg-5 col-md-12 col-12">
-                          <div class="checkout-review-order">
-                            <div class="checkout-review-order-table">
-                              <div class="review-order-title">Product</div>
-                              <div class="cart-items">
-                                {cart.map((item) => {
+                        <div class="checkout-review-order">
+                          <div class="checkout-review-order-table">
+                            <div class="review-order-title">Product</div>
+                            <div class="cart-items">
+                              {cart.map((item) => {
 
 
-                                  return (
-                                    <div class="cart-item">
-                                      <div class="info-product">
-                                        <div class="product-thumbnail">
-                                          <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image1} alt="" />
-                                        </div>
-                                        <div class="product-name">
-                                          {item.pname}
-                                          <strong class="product-quantity">QTY : {item.pqty}</strong>
-                                        </div>
+                                return (
+                                  <div class="cart-item">
+                                    <div class="info-product">
+                                      <div class="product-thumbnail">
+                                        <img width="600" height="600" src={`${IMG_URL}/productimg/` + item.image1} alt="" />
                                       </div>
-                                      <div class="product-total">
-                                        <span>₹{item.price}</span>
+                                      <div class="product-name">
+                                        {item.pname}
+                                        <strong class="product-quantity">QTY : {item.pqty}</strong>
                                       </div>
                                     </div>
-                                  )
-                                })}
+                                    <div class="product-total">
+                                      <span>₹{item.price}</span>
+                                    </div>
+                                  </div>
+                                )
+                              })}
 
 
-                              </div>
-                              <div class="cart-subtotal">
-                                <h2>Subtotal</h2>
-                                <div class="subtotal-price">
-                                  <span>₹{totalPrice}</span>
-                                </div>
-                              </div>
-                              <div class="shipping-totals shipping">
-                                <h2>Shipping</h2>
-                                <div data-title="Shipping">
-                                  <ul class="shipping-methods custom-radio">
-                                    <li>
-                                      <input type="radio" name="shipping_method" data-index="0" value="free_shipping" class="shipping_method" checked="checked" /><label>Free shipping</label>
-                                    </li>
-                                    {/* <li>
-                                                                            <input type="radio" name="shipping_method" data-index="0" value="flat_rate" class="shipping_method" /><label>Flat rate</label>
-                                                                        </li> */}
-                                  </ul>
-                                </div>
-                              </div>
-                              <div class="order-total">
-                                <h2>Total</h2>
-                                <div class="total-price">
-                                  <strong>
-                                    <span>₹{totalPrice}</span>
-                                  </strong>
-                                </div>
-                              </div>
                             </div>
-                            <div id="payment" class="checkout-payment">
-
-                              <ul className="payment-methods methods custom-radio">
-                                <li hidden className="payment-method">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="exampleRadios"
-                                    id="exampleRadios1"
-                                    value="bank-transfer"
-                                    checked={selectedPayment === 'bank-transfer'}
-                                    onChange={handlePaymentChange}
-                                    disabled
-                                  />
-                                  <label className="form-check-label" htmlFor="exampleRadios1">
-                                    Direct bank transfer
-                                  </label>
-                                  <div className="payment-box">
-                                    <p>Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
-                                  </div>
-                                </li>
-                                <li hidden className="payment-method">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="exampleRadios"
-                                    id="exampleRadios2"
-                                    value="check"
-                                    checked={selectedPayment === 'check'}
-                                    onChange={handlePaymentChange}
-
-                                  />
-                                  <label className="form-check-label" htmlFor="exampleRadios2">
-                                    Check payments
-                                  </label>
-                                  <div className="payment-box">
-                                    <p>Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</p>
-                                  </div>
-                                </li>
-                                <li className="payment-method">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="exampleRadios"
-                                    id="exampleRadios3"
-                                    value="cod"
-                                    checked={selectedPayment === 'cod'}
-                                    onChange={handlePaymentChange}
-                                  />
-                                  <label className="form-check-label" htmlFor="exampleRadios3">
-                                    Cash on delivery
-                                  </label>
-                                  <div className="payment-box">
-                                    <p>Pay with cash upon delivery.</p>
-                                  </div>
-                                </li>
-                                <li className="payment-method">
-                                  <input
-                                    className="form-check-input"
-                                    type="radio"
-                                    name="exampleRadios"
-                                    id="exampleRadios4"
-                                    value="paypal"
-                                    checked={selectedPayment === 'paypal'}
-                                    onChange={handlePaymentChange}
-                                  />
-                                  <label className="form-check-label" htmlFor="exampleRadios4">
-                                    Online
-                                  </label>
-                                  <div className="payment-box">
-                                    <p>Pay via any UPI app or card.</p>
-                                  </div>
-                                </li>
-                              </ul>
-                              <div class="form-row place-order">
-                                <div class="terms-and-conditions-wrapper">
-                                  <div class="privacy-policy-text"></div>
-                                </div>
-                                <button type="submit" class="button alt" name="checkout_place_order" value="Place order">Place order</button>
-                              </div>
+                            <div class="cart-subtotal">
+                              <h2>Subtotal</h2>
+                              <div class="subtotal-price">
+                                <span>₹{totalPrice}</span>
+                              </div>  
                             </div>
                           </div>
+
+                              <button type="button" onClick={get_shipping_rate} class="button alt w-100 p-2 bg-dark text-light" name="checkout_place_order" value="Place order">Confirm Order</button>
                         </div>
+                      </div>
+                       )
+                       }
                       </div>
                     </form>
                   </div>

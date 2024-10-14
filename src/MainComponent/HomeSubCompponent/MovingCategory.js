@@ -30,7 +30,7 @@ const MovingCategory = () => {
 
 
     async function getTrendingData() {
-        axios.get(`${BASE_URL}/group_data`)
+        axios.get(`${BASE_URL}/moving_category`)
             .then((res) => {
                 console.log(res)
                 setCat(res.data)
@@ -81,9 +81,9 @@ const MovingCategory = () => {
                                             return (
                                                 <SwiperSlide>
                                                     <div className='text-center'>
-                                                    <Link to={`/shoproduct/${item?.slug}`}>
+                                                    <Link to={`/shoproduct/${item.group_slug}/${item?.slug}`}>
                                                         <div className='cat-parent' style={{background:"#EEE3E7"}}>
-                                                            <img className='cat-img' src={`${IMG_URL}/group/${item?.image}`} alt="Banner" />
+                                                            <img className='cat-img' src={`${IMG_URL}/category/${item?.image}`} alt="Banner" />
                                                         </div>
                                                         </Link>
                                                         <div>
