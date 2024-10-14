@@ -214,7 +214,7 @@ app.use(
 // }
 
 // app.get('/checkauth', verifyJwt, (req, res) => {
-//   return res.json({status : 1})
+//   return res.json({luxe : 1})
 // })
 
 // app.post('/login', (req, res) => {
@@ -227,7 +227,7 @@ app.use(
 //   con.query(sql, [email, password, role], (err, data) => {
 //     if (err) {
 //       console.error("Database error:", err);
-//       return res.status(500).json({ error: "Internal server error" });
+//       return res.luxe(500).json({ error: "Internal server error" });
 //    } else {
 //       if (data.length === 1) {
 //         const id = data[0].id;
@@ -372,7 +372,7 @@ app.post("/customerlogin", (req, res) => {
         margin: 0 auto;
         padding: 45px 30px 60px;
         background: #c4e6f562;
-        background-image: url(https://cdn.tapetender70er.de/media/image/5c/5c/2d/385008-1_warp-beauty-08_518x389.jpg);
+        background-image: url(https://encycolorpedia.com/f8e9d5.png);
         background-repeat: no-repeat;
         background-size: 800px 452px;
         background-position: top center;
@@ -963,7 +963,7 @@ app.post(
               style="margin: 0; font-family: 'Poppins', sans-serif; background: #ffffff; font-size: 14px;"
             >
               <div
-                style="max-width: 680px; margin: 0 auto; padding: 45px 30px 60px; background: #c4e6f562; background-image: url(https://cdn.tapetender70er.de/media/image/5c/5c/2d/385008-1_warp-beauty-08_518x389.jpg); background-repeat: no-repeat; background-size: 800px 452px; background-position: top center; font-size: 14px; color: #434343;"
+                style="max-width: 680px; margin: 0 auto; padding: 45px 30px 60px; background: #c4e6f562; background-image: url(https://encycolorpedia.com/f8e9d5.png); background-repeat: no-repeat; background-size: 800px 452px; background-position: top center; font-size: 14px; color: #434343;"
               >
                 <header>
                   <table style="width: 100%">
@@ -1099,13 +1099,13 @@ app.post("/vendor_approve", (req, res) => {
   });
 });
 
-app.post("/vendor_status", (req, res) => {
+app.post("/vendor_luxe", (req, res) => {
   let vendor_id = req.body.vendor_id;
-  let status = req.body.status;
+  let luxe = req.body.luxe;
 
   const sql = "update awt_vendor set  active = ? where id = ?";
 
-  con.query(sql, [status, vendor_id], (err, data) => {
+  con.query(sql, [luxe, vendor_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -2228,6 +2228,32 @@ app.post(
   }
 );
 
+
+
+// for adding Luxe in awt_add_product===================================================================
+app.post("/add_lux", (req, res) => {
+  const { product_id } = req.body;
+  const { product_luxe } = req.body;
+
+  if (!product_luxe) {
+    return res.luxe(400).json({ error: "Product luxe is required" });
+  }
+
+  const sql = "UPDATE awt_add_product SET luxe = ? WHERE id = ?";
+  const params = [product_luxe, product_id];
+
+  con.query(sql, params, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res
+        .luxe(500)
+        .json({ error: "Database error", message: err.message });
+    }
+    return res.json({ message: "luxe Updated Successfully!" });
+  });
+});
+
+
 app.post(
   "/add_product_img",
   upload8.fields([
@@ -2287,14 +2313,14 @@ app.get(`/product_data`, (req, res) => {
   });
 });
 
-app.post("/product_status", (req, res) => {
+app.post("/product_luxe", (req, res) => {
   let product_id = req.body.product_id;
-  let status = req.body.status;
+  let luxe = req.body.luxe;
   let column = req.body.column;
 
   const sql = `update awt_add_product set  ${column} = ? where id = ?`;
 
-  con.query(sql, [status, product_id], (err, data) => {
+  con.query(sql, [luxe, product_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -2373,7 +2399,7 @@ app.get("/trending_products", (req, res) => {
         const { slug } = product;
 
         const checkreservstock =
-          "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0";
+          "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_luxe = 0";
 
         return new Promise((resolve, reject) => {
           con.query(checkreservstock, [slug], (err, reservStockData) => {
@@ -2760,7 +2786,7 @@ app.post("/getproductDetails", (req, res) => {
   let productslug = req.body.productslug;
 
   const checkreservstock =
-    "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0;";
+    "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_luxe = 0;";
 
   con.query(checkreservstock, [productslug], (err, data) => {
     if (err) {
@@ -3080,7 +3106,7 @@ app.post("/getproductlisting", (req, res) => {
         const { slug } = product;
 
         const checkreservstock =
-          "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0";
+          "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_luxe = 0";
 
         return new Promise((resolve, reject) => {
           con.query(checkreservstock, [slug], (err, reservStockData) => {
@@ -3446,7 +3472,7 @@ app.post("/place_order", (req, res) => {
               "MISU" + "-" + year + month + day + "-" + ordercount;
 
             const sql =
-              "update `order` set `orderno` = ? , `ostatus` = ? , order_date = ? where `id`  = ?";
+              "update `order` set `orderno` = ? , `oluxe` = ? , order_date = ? where `id`  = ?";
 
             con.query(
               sql,
@@ -3495,7 +3521,7 @@ app.post("/place_order", (req, res) => {
                           Promise.all(updatePromises)
                             .then((results) => {
                               const updatereservstock =
-                                "update awt_reservstock set p_status = 1 where orderid = ?";
+                                "update awt_reservstock set p_luxe = 1 where orderid = ?";
 
                               con.query(
                                 updatereservstock,
@@ -3850,7 +3876,7 @@ app.post("/profile_order", (req, res) => {
   let user_id = req.body.user_id;
 
   const sql =
-    "select * from `order` where  `userid` = ? and `ostatus` !='incart' and orderno != '' ";
+    "select * from `order` where  `userid` = ? and `oluxe` !='incart' and orderno != '' ";
 
   con.query(sql, [user_id], (err, data) => {
     if (err) {
@@ -3879,7 +3905,7 @@ app.post("/order_view", (req, res) => {
   let order_id = req.body.order_id;
 
   const sql =
-    "select id, sfirstname,slastname,orderno,order_date,ostatus,paymode,shipaddress,paymode,pstatus,shipcity,shippostcode,totalamt from `order` where `id` = ? and deleted = 0";
+    "select id, sfirstname,slastname,orderno,order_date,oluxe,paymode,shipaddress,paymode,pluxe,shipcity,shippostcode,totalamt from `order` where `id` = ? and deleted = 0";
 
   con.query(sql, [order_id], (err, data) => {
     if (err) {
@@ -3890,13 +3916,13 @@ app.post("/order_view", (req, res) => {
   });
 });
 
-app.post("/order_status_update", (req, res) => {
+app.post("/order_luxe_update", (req, res) => {
   let order_id = req.body.order_id;
-  let order_status = req.body.order_status;
+  let order_luxe = req.body.order_luxe;
 
-  const sql = "update `order` set `ostatus` = ?  where  id = ?";
+  const sql = "update `order` set `oluxe` = ?  where  id = ?";
 
-  con.query(sql, [order_status, order_id], (err, data) => {
+  con.query(sql, [order_luxe, order_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -3917,7 +3943,7 @@ app.post("/addorderid", (req, res) => {
     } else {
       if (data) {
         const sql =
-          "select id from `order` where `userid` = ? and `ostatus` = 'incart' order by `id` desc limit 1";
+          "select id from `order` where `userid` = ? and `oluxe` = 'incart' order by `id` desc limit 1";
 
         con.query(sql, [user_id], (err, data) => {
           if (err) {
@@ -4157,10 +4183,10 @@ app.post("/vendorlogin", (req, res) => {
   });
 });
 
-app.post("/product_status", (req, res) => {
-  const { id, status } = req.body;
+app.post("/product_luxe", (req, res) => {
+  const { id, luxe } = req.body;
 
-  console.log(id, status);
+  console.log(id, luxe);
 
   const sql = "SELECT approve FROM awt_temp_add_product WHERE id = ?";
 
@@ -4378,7 +4404,7 @@ app.post("/getBrandProducts", (req, res, next) => {
 
   con.query(sql, [b_id], (error, data) => {
     if (error) {
-      res.status(500).json({
+      res.luxe(500).json({
         message: "cannot get brand data",
         error: error,
       });
@@ -4538,7 +4564,7 @@ app.post("/getProductsByPriceRange", (req, res, next) => {
 
   con.query(sql, [range], (error, data) => {
     if (error) {
-      res.status(500).json(error);
+      res.luxe(500).json(error);
       return;
     }
 
@@ -4623,15 +4649,15 @@ app.post(`/vendor_request_approve`, (req, res) => {
   let firstname = req.body.firstname;
   let vendor_id = req.body.vendor_id;
   let lastname = req.body.lastname;
-  let status = req.body.status;
+  let luxe = req.body.luxe;
   let email = req.body.email;
   let mobile = req.body.mobile;
 
   const fullname = firstname + " " + lastname;
 
-  const sql = "update `Vendor_registration` set status = ? where id = ?";
+  const sql = "update `Vendor_registration` set luxe = ? where id = ?";
 
-  con.query(sql, [status, vendor_id], (err, data) => {
+  con.query(sql, [luxe, vendor_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -4729,7 +4755,7 @@ app.post("/getreturnorderno", (req, res) => {
 
 app.get("/return_request", (req, res) => {
   const sql =
-    "select are.id, are.user_id, are.orderid , are.return_no , are.return_amount, are.return_date, are.status, ac.firstname, ac.lastname, ac.email from `awt_return_exchange` as are left join `awt_customers` as ac on are.user_id = ac.id ";
+    "select are.id, are.user_id, are.orderid , are.return_no , are.return_amount, are.return_date, are.luxe, ac.firstname, ac.lastname, ac.email from `awt_return_exchange` as are left join `awt_customers` as ac on are.user_id = ac.id ";
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -4744,7 +4770,7 @@ app.post("/return_order_view", (req, res) => {
   let order_id = req.body.order_id;
 
   const sql =
-    "select are.id, are.user_id, are.orderid , are.return_no , are.return_amount, are.return_date, are.status, o.firstname as username , o.orderno ,o.address1,o.city1 ,o.state , o.postcode , o.sfirstname , o.slastname ,o.shipaddress , o.shipcity, o.shippostcode , o.paymode , o.ostatus , o.order_date , o.totalamt  from `awt_return_exchange` as are left join `order` as o on o.id = are.orderid  where are.id = ?";
+    "select are.id, are.user_id, are.orderid , are.return_no , are.return_amount, are.return_date, are.luxe, o.firstname as username , o.orderno ,o.address1,o.city1 ,o.state , o.postcode , o.sfirstname , o.slastname ,o.shipaddress , o.shipcity, o.shippostcode , o.paymode , o.oluxe , o.order_date , o.totalamt  from `awt_return_exchange` as are left join `order` as o on o.id = are.orderid  where are.id = ?";
 
   con.query(sql, [order_id], (err, data) => {
     if (err) {
@@ -4770,13 +4796,13 @@ app.post("/getreturncartData", (req, res) => {
   });
 });
 
-app.post("/return_status_update", (req, res) => {
+app.post("/return_luxe_update", (req, res) => {
   let return_id = req.body.return_id;
-  let return_status = req.body.return_status;
+  let return_luxe = req.body.return_luxe;
 
-  const sql = "update `awt_return_exchange` set `status` = ?  where  id = ?";
+  const sql = "update `awt_return_exchange` set `luxe` = ?  where  id = ?";
 
-  con.query(sql, [return_status, return_id], (err, data) => {
+  con.query(sql, [return_luxe, return_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -5239,7 +5265,7 @@ app.post(`/getstock`, (req, res) => {
 });
 
 function checkRows() {
-  const query = `SELECT * FROM awt_reservstock WHERE created_date < CONVERT_TZ(NOW(), @@session.time_zone, '+05:30') - INTERVAL 15 MINUTE AND p_status = 0 AND deleted = 0`;
+  const query = `SELECT * FROM awt_reservstock WHERE created_date < CONVERT_TZ(NOW(), @@session.time_zone, '+05:30') - INTERVAL 15 MINUTE AND p_luxe = 0 AND deleted = 0`;
 
   con.query(query, (err, results) => {
     if (err) {
@@ -5327,14 +5353,14 @@ app.post("/payment", async (req, res) => {
   try {
     const response = await axios.request(options);
 
-    res.status(200).send({
+    res.luxe(200).send({
       url: response.data.data.instrumentResponse.redirectInfo.url,
       transactionid: response.data.data.merchantTransactionId,
       success: response.data.success,
     });
   } catch (error) {
     console.error(`Payment Error: ${error.message}`);
-    res.status(500).send({ message: error.message, success: false });
+    res.luxe(500).send({ message: error.message, success: false });
   }
 });
 
@@ -5347,18 +5373,18 @@ app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
   const { merchantTransactionId } = req.params;
 
   if (merchantTransactionId) {
-    const statusUrl =
-      `${PHONE_PE_HOST_URL}/pg/v1/status/${MERCHANT_ID}/` +
+    const luxeUrl =
+      `${PHONE_PE_HOST_URL}/pg/v1/luxe/${MERCHANT_ID}/` +
       merchantTransactionId;
 
     // generate X-VERIFY
     const string =
-      `/pg/v1/status/${MERCHANT_ID}/` + merchantTransactionId + SALT_KEY;
+      `/pg/v1/luxe/${MERCHANT_ID}/` + merchantTransactionId + SALT_KEY;
     const sha256 = crypto.createHash("sha256").update(string).digest("hex");
     const xVerifyChecksum = sha256 + "###" + SALT_INDEX;
 
     try {
-      const response = await axios.get(statusUrl, {
+      const response = await axios.get(luxeUrl, {
         headers: {
           "Content-Type": "application/json",
           "X-VERIFY": xVerifyChecksum,
@@ -5368,12 +5394,12 @@ app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
       });
 
       if (response.data && response.data.code === "PAYMENT_SUCCESS") {
-        // Redirect to FE payment success status page
+        // Redirect to FE payment success luxe page
         res.redirect(
           `https://micasasucasa.in/#/payment-success?transactionid=${merchantTransactionId}`
         );
       } else {
-        // Redirect to FE payment failure / pending status page
+        // Redirect to FE payment failure / pending luxe page
         res.redirect(
           `https://micasasucasa.in/#/payment-failure?transactionid=${merchantTransactionId}`
         );
@@ -5381,11 +5407,11 @@ app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
     } catch (error) {
       console.error(`Payment validation failed: ${error.message}`);
       res
-        .status(500)
+        .luxe(500)
         .send({ message: "Payment verification failed", success: false });
     }
   } else {
-    res.status(400).send({ message: "Invalid Transaction ID", success: false });
+    res.luxe(400).send({ message: "Invalid Transaction ID", success: false });
   }
 });
 
@@ -5482,7 +5508,7 @@ app.post("/add_Breadcrumbs", upload9.single("image"), (req, res) => {
 //   let u_id = req.body.u_id;
 
 //   // if (!user_id) {
-//   //   return res.status(400).json({ error: 'User  ID is required' });
+//   //   return res.luxe(400).json({ error: 'User  ID is required' });
 //   // }
 
 //   console.log(image)
@@ -5570,7 +5596,7 @@ app.post("/add_SlotMaster", (req, res) => {
   const created_date = new Date();
 
   if (!location || !slot || !title || !user_id) {
-    return res.status(400).json({ error: "All fields are required" });
+    return res.luxe(400).json({ error: "All fields are required" });
   }
 
   const sql =
@@ -5580,9 +5606,9 @@ app.post("/add_SlotMaster", (req, res) => {
   con.query(sql, params, (err) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.luxe(500).json({ error: "Database error" });
     }
-    return res.status(201).json({ message: "SlotMaster Added Successfully!" });
+    return res.luxe(201).json({ message: "SlotMaster Added Successfully!" });
   });
 });
 
@@ -5593,7 +5619,7 @@ app.get("/SlotMaster_data", (req, res) => {
   con.query(sql, (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.luxe(500).json({ error: "Database error" });
     }
     return res.json(data);
   });
@@ -5605,7 +5631,7 @@ app.post("/update_SlotMaster", (req, res) => {
   const updated_date = new Date();
 
   if (!id || !location || !slot || !title || !user_id) {
-    return res.status(400).json({ error: "All fields are required" });
+    return res.luxe(400).json({ error: "All fields are required" });
   }
 
   const sql =
@@ -5615,7 +5641,7 @@ app.post("/update_SlotMaster", (req, res) => {
   con.query(sql, params, (err) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.luxe(500).json({ error: "Database error" });
     }
     return res.json({ message: "SlotMaster Updated Successfully!" });
   });
@@ -5626,7 +5652,7 @@ app.post("/delete_SlotMaster", (req, res) => {
   const { id } = req.body;
 
   if (!id) {
-    return res.status(400).json({ error: "ID is required" });
+    return res.luxe(400).json({ error: "ID is required" });
   }
 
   const sql = "UPDATE SlotMaster SET deleted = 1 WHERE id = ?";
@@ -5635,7 +5661,7 @@ app.post("/delete_SlotMaster", (req, res) => {
   con.query(sql, params, (err) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.luxe(500).json({ error: "Database error" });
     }
     return res.json({ message: "SlotMaster Deleted Successfully!" });
   });
@@ -5646,7 +5672,7 @@ app.post("/get_SlotMaster", (req, res) => {
   const { id } = req.body;
 
   if (!id) {
-    return res.status(400).json({ error: "ID is required" });
+    return res.luxe(400).json({ error: "ID is required" });
   }
 
   const sql = "SELECT * FROM SlotMaster WHERE id = ?";
@@ -5655,7 +5681,7 @@ app.post("/get_SlotMaster", (req, res) => {
   con.query(sql, params, (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.luxe(500).json({ error: "Database error" });
     }
     return res.json(data);
   });
@@ -5669,7 +5695,7 @@ app.get("/locationMaster_data", (req, res) => {
   con.query(sql, (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.luxe(500).json({ error: "Database error" });
     }
     return res.json(data);
   });
@@ -5683,7 +5709,7 @@ app.post("/updateSlot", (req, res) => {
   con.query(sql, [slot, id], (err, result) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.luxe(500).json({ error: "Database error" });
     }
     return res.json({ message: "Slot updated successfully" });
   });
@@ -5703,7 +5729,7 @@ app.post("/add_advertisement", upload11.single("image"), (req, res) => {
 
   if (!slot || !type || !title) {
     return res
-      .status(400)
+      .luxe(400)
       .json({ error: "Slot, Type, and Title are required" });
   }
 
@@ -5714,10 +5740,10 @@ app.post("/add_advertisement", upload11.single("image"), (req, res) => {
   con.query(sql, params, (err) => {
     if (err) {
       console.error(err);
-      return res.status(500).json(err);
+      return res.luxe(500).json(err);
     }
     return res
-      .status(201)
+      .luxe(201)
       .json({ message: "Advertisement Added Successfully!" });
   });
 });
@@ -5728,7 +5754,7 @@ app.get("/advertisements", (req, res) => {
   con.query(sql, (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.luxe(500).json({ error: "Database error" });
     }
     return res.json(data);
   });
@@ -5747,7 +5773,7 @@ app.post("/update_advertisement", upload11.single("image"), (req, res) => {
   }
 
   if (!id || !slot || !type || !title) {
-    return res.status(400).json({ error: "All fields are required" });
+    return res.luxe(400).json({ error: "All fields are required" });
   }
 
   const sql =
@@ -5768,7 +5794,7 @@ app.post("/update_advertisement", upload11.single("image"), (req, res) => {
     if (err) {
       console.error(err);
       return res
-        .status(500)
+        .luxe(500)
         .json({ error: "Database error", message: err.message });
     }
     return res.json({ message: "Advertisement Updated Successfully!" });
@@ -5779,14 +5805,14 @@ app.post("/update_advertisement", upload11.single("image"), (req, res) => {
 app.post("/delete_advertisement", (req, res) => {
   const { id } = req.body;
   if (!id) {
-    return res.status(400).json({ error: "ID is required" });
+    return res.luxe(400).json({ error: "ID is required" });
   }
 
   const sql = "UPDATE awt_advertisements SET deleted = 1 WHERE id = ?";
   con.query(sql, [id], (err) => {
     if (err) {
       console.error(err);
-      return res.status(500).json({ error: "Database error" });
+      return res.luxe(500).json({ error: "Database error" });
     }
     return res.json({ message: "Advertisement Deleted Successfully!" });
   });
@@ -5828,12 +5854,8 @@ app.post("/sendinquiry", upload10.single("image"), (req, res) => {
             },
           ],
           subject: "customization request Mail",
-          htmlbody: `<div
-      style="margin: 0; font-family: 'Poppins', sans-serif; background: #ffffff; font-size: 14px;"
-    >
-      <div
-        style="max-width: 680px; margin: 0 auto; padding: 45px 30px 60px; background: #c4e6f562; background-image: url(https://cdn.tapetender70er.de/media/image/5c/5c/2d/385008-1_warp-beauty-08_518x389.jpg); background-repeat: no-repeat; background-size: 800px 452px; background-position: top center; font-size: 14px; color: #434343;"
-      >
+          htmlbody: `<divstyle="margin: 0; font-family: 'Poppins', sans-serif; background: #ffffff; font-size: 14px;">
+      <div style="max-width: 680px; margin: 0 auto; padding: 45px 30px 60px; background: #c4e6f562; background-image: url(https://encycolorpedia.com/f8e9d5.png); background-repeat: no-repeat; background-size: 800px 452px; background-position: top center; font-size: 14px; color: #434343;">
         <header>
           <table style="width: 100%">
             <div>
@@ -5974,3 +5996,5 @@ app.post(`/updateread`, (req, res) => {
     }
   });
 });
+
+
