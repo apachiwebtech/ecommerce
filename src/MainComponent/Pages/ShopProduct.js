@@ -310,7 +310,8 @@ const ShopProduct = () => {
 
                                                                         {featured.disc_price ?
                                                                             (<span className="price">
-                                                                                <del aria-hidden="true"><span>₹{featured.price}</span></del>
+                                                                                {featured.price !== 0 && featured.price !== featured.disc_price ? (
+                                                                                <del aria-hidden="true"><span>₹{featured.price}</span></del>  ) : null}
                                                                                 <ins><span>₹{featured.disc_price}</span></ins>
                                                                             </span>) :
                                                                             (<span className="price">₹{featured.price}</span>)

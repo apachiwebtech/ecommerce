@@ -367,12 +367,12 @@ const DetailPage = () => {
 															<div class="product-info col-lg-5 col-md-12 col-12 ">
 																<h1 class="title">{item.title}</h1>
 																<span class="price">
-																	<del aria-hidden="true"><span>₹{item.price}</span></del>
+																{item.price !== 0 && item.price !== item.disc_price ? (
+																	<del aria-hidden="true"><span>₹{item.price}</span></del>  ) : null}
 																	<ins><span>₹{item.disc_price}</span></ins>
 																</span>
 																{item.customizable == 1 && <div className="product-lable">
-																	<div className="hot text-light bg-success">
-																		customizable</div>
+																	<div className="hot text-dark" style={{ backgroundColor: "#fbecd6" }}> customizable</div>
 																</div>}
 
 																<div class="rating">
@@ -629,8 +629,7 @@ const DetailPage = () => {
 																							<div class="products-entry clearfix product-wapper">
 																								<div class="products-thumb">
 																									{item.customizable == 1 && <div className="product-lable">
-																										<div className="hot text-light bg-success">
-																											customizable</div>
+																										<div className="hot text-dark" style={{ backgroundColor: "#fbecd6" }}> customizable</div>
 																									</div>}
 
 																									<div class="product-thumb-hover">
@@ -667,7 +666,8 @@ const DetailPage = () => {
 																											<div class="star star-5"></div>
 																										</div> */}
 																										{item.disc_price ? (<span className="price">
-																											<del aria-hidden="true"><span>₹{item.price}</span></del>
+																											{item.price !== 0 && item.price !== item.disc_price ? (
+																											<del aria-hidden="true"><span>₹{item.price}</span></del>  ) : null}
 																											<ins><span>₹{item.disc_price}</span></ins>
 																										</span>) :
 																											(<span className="price">{item.price}</span>)

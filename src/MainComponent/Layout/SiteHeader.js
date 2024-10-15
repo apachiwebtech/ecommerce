@@ -433,7 +433,8 @@ const SiteHeader = (cartCount) => {
 
 																									{item.disc_price ?
 																										(<span className="price">
-																											<del aria-hidden="true"><span>₹{item.price}</span></del>
+																											{item.price !== 0 && item.price !== item.disc_price ? (
+																											<del aria-hidden="true"><span>₹{item.price}</span></del>  ) : null}
 																											<ins><span>₹{item.disc_price}</span></ins>
 																										</span>) :
 																										(<span className="price">₹{item.price}</span>)
