@@ -283,7 +283,7 @@ const Header = () => {
 
 
           </ul>
-        </Collapse>
+        </Collapse>~
 
         <li className="nav-item" onClick={() => handleToggle('home')}>
           <div className="nav-link" >

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,7 +13,7 @@ import addToCart from '../../../Utils/AddtoCart';
 const ProfileWish = () => {
     const dispatch = useDispatch();
     const wishList = useSelector((state) => state.wishlist.wishList);
-
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const notify = () => toast("Removing Product");
     const addify = () => toast("Product added to the cart");
 
@@ -42,7 +42,16 @@ const ProfileWish = () => {
     return (
         <div className='row p-5'>
             <div className='col-lg-4 col-md-4 col-12'>
-                <ProfileSidebar />
+                <button
+                    className='btn btn-primary d-md-none' 
+                    onClick={() => setSidebarOpen(!sidebarOpen)} 
+                    style={{ marginBottom: "1rem" }}>
+                    {sidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+                </button>
+               
+                <div style={{ display: (sidebarOpen || window.innerWidth > 768) ? 'block' : 'none', transition: 'all 0.3s ease-in-out',}}>
+                    <ProfileSidebar />
+                </div>
             </div>
             <div className='col-lg-8 col-md-4 col-12'>
                 <div id="page" class="hfeed page-wrapper">

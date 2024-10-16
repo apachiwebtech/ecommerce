@@ -113,7 +113,7 @@ const Contact = () => {
                         zIndex: 1000,
                         transform: "translateY(-50%)",
                     }}>
-                    <Link to="/vendorregister"><button className="btn btn-success" style={{ writingMode: "vertical-rl", textOrientation: "mixed" }}> Vendor Register </button></Link>
+                    <Link to="/vendorregister"><button className="btn fw-bold" style={{ writingMode: "vertical-rl", textOrientation: "mixed", backgroundColor:"#000000", color:"#fff" }}> Vendor Register </button></Link>
                 </div>
                 <Helmet>
                     <title>{data.seo_title}</title>

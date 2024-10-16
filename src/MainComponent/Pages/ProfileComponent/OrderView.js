@@ -6,7 +6,7 @@ import custdecryptedUserId from '../../../Utils/CustUserid';
 import { useParams } from 'react-router-dom';
 
 const OrderView = () => {
-
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [order, setOrder] = useState([])
     const [cart, setCart] = useState([])
 
@@ -58,7 +58,16 @@ const OrderView = () => {
         <div className='row p-5'>
 
             <div className='col-lg-4 col-md-4 col-12'>
-                <ProfileSidebar />
+                <button
+                    className='btn btn-primary d-md-none' 
+                    onClick={() => setSidebarOpen(!sidebarOpen)} 
+                    style={{ marginBottom: "1rem" }}>
+                    {sidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+                </button>
+               
+                <div style={{ display: (sidebarOpen || window.innerWidth > 768) ? 'block' : 'none', transition: 'all 0.3s ease-in-out',}}>
+                    <ProfileSidebar />
+                </div>
             </div>
             <div className='col-lg-8 col-md-4 col-12'>
 

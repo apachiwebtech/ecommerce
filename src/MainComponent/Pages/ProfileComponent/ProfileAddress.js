@@ -27,7 +27,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 const Address = () => {
     const [open, setOpen] = React.useState(false);
-
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -297,7 +297,16 @@ const Address = () => {
                 theme="dark"
             />
             <div className='col-lg-4 col-md-4 col-12'>
-                <ProfileSidebar />
+                <button
+                    className='btn btn-primary d-md-none' 
+                    onClick={() => setSidebarOpen(!sidebarOpen)} 
+                    style={{ marginBottom: "1rem" }}>
+                    {sidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+                </button>
+               
+                <div style={{ display: (sidebarOpen || window.innerWidth > 768) ? 'block' : 'none', transition: 'all 0.3s ease-in-out',}}>
+                    <ProfileSidebar />
+                </div>
             </div>
             <div className='col-lg-8 col-md-4 col-12'>
                 <div className='row'>

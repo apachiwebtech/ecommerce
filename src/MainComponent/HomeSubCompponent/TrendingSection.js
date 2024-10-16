@@ -164,7 +164,7 @@ const TrendingSection = () => {
                                           position: "absolute",
                                           top: "0",
                                           left: "0",
-                                          zIndex: "10",
+                                          zIndex: "1",
                                         }}
                                       >
                                         <div
