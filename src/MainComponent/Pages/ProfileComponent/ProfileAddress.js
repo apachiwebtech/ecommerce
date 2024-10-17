@@ -298,9 +298,9 @@ const Address = () => {
             />
             <div className='col-lg-4 col-md-4 col-12'>
                 <button
-                    className='btn btn-primary d-md-none' 
+                    className='btn  d-md-none' 
                     onClick={() => setSidebarOpen(!sidebarOpen)} 
-                    style={{ marginBottom: "1rem" }}>
+                    style={{ marginBottom: "1rem",backgroundColor:"#000000", color:"#ffffff" }}>
                     {sidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
                 </button>
                

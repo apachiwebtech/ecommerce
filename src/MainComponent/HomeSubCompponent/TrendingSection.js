@@ -155,7 +155,6 @@ const TrendingSection = () => {
                                       style={{ position: "relative" }}
                                     >
                                       <div
-                                        className="triangle"
                                         style={{
                                           width: "0px",
                                           height: "0px",
@@ -167,7 +166,7 @@ const TrendingSection = () => {
                                           zIndex: "1",
                                         }}
                                       >
-                                        <div
+                                        <div className="triangle"
                                           style={{
                                             position: "absolute",
                                             top: "-90px",
@@ -181,7 +180,7 @@ const TrendingSection = () => {
                                           }}
                                         ></div>
                                       </div>
-                                      <div
+                                      <div className="luxe"
                                         style={{
                                           position: "absolute",
                                           top: "8px",
@@ -193,11 +192,13 @@ const TrendingSection = () => {
                                         Luxe
                                       </div>
                                       <div
-                                        className="hot text-dark"
+                                        className="hot text-light mqs"
                                         style={{
-                                          backgroundColor: "#fbecd6",
+                                          backgroundColor: "#000000",
                                           zIndex: "1",
                                           padding: "5px",
+                                          // top: window.innerWidth <= 481 ? "20px" : "175px",
+                                          // fontSize: window.innerWidth <= 481 ? "12px" : "12px",
                                         }}
                                       >
                                         customizable
@@ -273,7 +274,8 @@ const TrendingSection = () => {
                                       </Link>
                                     </h3>
                                     <span className="price">
-                                      {item.price !== 0 && item.price !== item.disc_price ? (
+                                      {item.price !== 0 &&
+                                      item.price !== item.disc_price ? (
                                         <del aria-hidden="true">
                                           <span>₹{item.price}</span>
                                         </del>

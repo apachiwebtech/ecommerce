@@ -372,7 +372,7 @@ const DetailPage = () => {
 																	<ins><span>₹{item.disc_price}</span></ins>
 																</span>
 																{item.customizable == 1 && <div className="product-lable">
-																	<div className="hot text-dark" style={{ backgroundColor: "#fbecd6" }}> customizable</div>
+																	<div className="hot text-light" style={{ backgroundColor: "#000000" }}> customizable</div>
 																</div>}
 
 																<div class="rating">
@@ -629,7 +629,7 @@ const DetailPage = () => {
 																							<div class="products-entry clearfix product-wapper">
 																								<div class="products-thumb">
 																									{item.customizable == 1 && <div className="product-lable">
-																										<div className="hot text-dark" style={{ backgroundColor: "#fbecd6" }}> customizable</div>
+																										<div className="hot text-light" style={{ backgroundColor: "#000000" }}> customizable</div>
 																									</div>}
 
 																									<div class="product-thumb-hover">

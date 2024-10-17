@@ -17,7 +17,6 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import "../../../App.css"
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -167,11 +166,7 @@ const ProfileOrder = () => {
         <button
           className="btn d-md-none"
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          style={{
-            marginBottom: "1rem",
-            backgroundColor: "#000000",
-            color: "#ffffff",
-          }}
+          style={{ marginBottom: "1rem", backgroundColor:"#000000", color:"#ffffff"}}
         >
           {sidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
         </button>
@@ -199,7 +194,7 @@ const ProfileOrder = () => {
               <table
                 border="1"
                 style={{ borderColor: "#f7f7f7" }}
-                class="table table-bordered "
+                class="table"
               >
                 <thead>
                   <tr>
@@ -424,6 +419,104 @@ const ProfileOrder = () => {
                             </Button>
                           </DialogActions>
                         </BootstrapDialog>
+
+                        {/* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <table>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th width="60%">Product</th>
+                                                                            <th width="30%">Qty</th>
+                                                                            <th width="10%">Select</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {cart.map((item, index) => {
+                                                                            return (
+                                                                                <tr>
+
+                                                                                    <td>
+                                                                                        <div className='d-flex align-items-center'>
+                                                                                            <img style={{ width: "50px", height: "50px" }} src={`${IMG_URL}/productimg/` + item.image1} className="" alt="" />
+                                                                                            <p className='p-2'>{item.pname}</p>
+                                                                                        </div>
+
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div className="quantity2">
+                                                                                            <button type="button" className="minus" onClick={() => handleDecrease(item.id)} >-</button>
+
+                                                                                            <input type="number" className="qty" step="1" min="0" max="" name="quantity" value={quantities[item.id] || 1} title="Qty" size="4" placeholder="" inputMode="numeric" autoComplete="off" />
+
+                                                                                            <button type="button" onClick={() => handleIncrease(item.id, item.pqty)
+                                                                                            } className="plus">+</button>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="">
+                                                                                            <input type="checkbox" value="" id="flexCheckDefault" onChange={() => handleCheckboxChange(item)} />
+                                                                                        </div>
+                                                                                    </td>
+
+                                                                                </tr>
+                                                                            )
+                                                                        })}
+
+                                                                    </tbody>
+
+                                                                </table>
+                                                                <Autocomplete
+                                                                    disablePortal
+                                                                    id="combo-box-demo"
+                                                                    options={reason}
+                                                                    InputLabelProps={{
+                                                                        shrink: true,  // This makes the label move up when there's a value
+                                                                    }}
+
+                                                                    placeholder="brand"
+                                                                    getOptionLabel={(option) => option.title}
+                                                                    getOptionSelected={(option, value) => option.id === value.id}
+                                                                    sx={{ width: "50%", border: "none", borderColor: "lightgrey", borderRadius: "5px" }}
+                                                                    renderInput={(params) => <TextField   {...params} label="Select Reason" />}
+                                                                    onChange={(event, value) => HandleReason(value)}
+                                                                    name="vendor"
+
+                                                                />
+                                                                {error.reason && <span className='text-danger'>{error.reason}</span>}
+                                                            </div>
+                                                            <div class="">
+                                                                <Autocomplete
+                                                                    disablePortal
+                                                                    id="combo-box-demo"
+                                                                    options={reason}
+                                                                    InputLabelProps={{
+                                                                        shrink: true,  // This makes the label move up when there's a value
+                                                                    }}
+
+                                                                    placeholder="brand"
+                                                                    getOptionLabel={(option) => option.title}
+                                                                    getOptionSelected={(option, value) => option.id === value.id}
+                                                                    sx={{ width: "50%", border: "none", borderColor: "lightgrey", borderRadius: "5px" }}
+                                                                    renderInput={(params) => <TextField   {...params} label="Select Reason" />}
+                                                                    onChange={(event, value) => HandleReason(value)}
+                                                                    name="vendor"
+
+                                                                />
+                                                                {error.reason && <span className='text-danger'>{error.reason}</span>}
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button onClick={handleSaveChanges} type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                                                        </div>
+                                                    </div>
+                                                </div> */}
                       </tr>
                     );
                   })}
@@ -433,7 +526,6 @@ const ProfileOrder = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };

@@ -10,7 +10,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { BASE_URL, IMG_URL } from "../../AdminComponent/BaseUrl";
 import logo from "../../assets/frontimg/logo.png";
 import { getCartCount } from "../../Store/Cart/cart-action";
@@ -26,6 +26,9 @@ const SiteHeader = (cartCount) => {
   const [toggle, setToggle] = useState(false);
   const [searchtoggle, setsearchtoggle] = useState(false);
   const custuser_id = Cookies.get("custuserid");
+
+  const location = useLocation();
+  const isHomePage = location.pathname === "/home";
   async function getTrendingData() {
     axios
       .get(`${BASE_URL}/group_data`)
@@ -120,20 +123,53 @@ const SiteHeader = (cartCount) => {
 										<button type="button" id="show-megamenu" onClick={toggleSidebar} className="navbar-toggle"></button>
 									</div>
 								</div> */}
+
+                {/* {location.pathname !== "/home" && (
+                  <div className="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-left">
+                    <div className="navbar-header">
+                      <button
+                        type="button"
+                        id="back-button"
+                        onClick={() => window.history.back()}
+                        style={{ backgroundColor: "#F8E9D5" }}
+                      >
+                        <i
+                          class="fa fa-chevron-circle-left"
+                          aria-hidden="true"
+                          style={{ fontSize: "24px" }}
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                )} */}
                 <div className="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-left">
                   <div className="navbar-header">
-                    <button
-                      type="button"
-                      id="back-button"
-                      onClick={() => window.history.back()}
-                      style={{ backgroundColor: "#F8E9D5" }}
-                    >
-                      <i
-                        class="fa fa-chevron-circle-left"
-                        aria-hidden="true"
-                        style={{ fontSize: "24px" }}
-                      ></i>
-                    </button>
+                    {!isHomePage ? (
+                      // Back button for all pages except Home.js
+                      <button
+                        type="button"
+                        id="back-button"
+                        onClick={() => window.history.back()}
+                        style={{ backgroundColor: "#F8E9D5" }}
+                      >
+                        <i
+                          className="fa fa-chevron-circle-left"
+                          style={{ fontSize: "24px" }}
+                        ></i>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        id="show-megamenu"
+                        onClick={toggleSidebar}
+                        className="navbar-toggle"
+                      >
+                        {/* <i
+                          className="fa fa-bars"
+                          style={{ fontSize: "24px" }}
+                        ></i> */}
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -218,16 +254,25 @@ const SiteHeader = (cartCount) => {
 
           <div className="header-mobile-fixed">
             <div className="shop-page">
-              <Link href="shop-grid-left.html">
-                <i className="wpb-icon-shop"></i>
-              </Link>
+                <Link href="shop-grid-left.html">
+                  <i className="wpb-icon-shop"></i>
+                </Link>
             </div>
 
             <div className="my-account">
               <div className="login-header">
-                <Link to="/profile">
-                  <i className="wpb-icon-user"></i>
-                </Link>
+                {!Cookies.get(`custuserid`) ? (
+                  <Link onClick={() => {
+                      handleToggle();
+                    }}
+                  >
+                    <i className="wpb-icon-user"></i>
+                  </Link>
+                ) : (
+                  <Link to="/profile">
+                    <i className="wpb-icon-user"></i>
+                  </Link>
+                )}
               </div>
             </div>
 
@@ -238,12 +283,21 @@ const SiteHeader = (cartCount) => {
             </div>
 
             <div className="wishlist-box">
-              <Link to="/shopwishlist">
-                <i className="wpb-icon-heart"></i>
-              </Link>
+              {!Cookies.get(`custuserid`) ? (
+                <div  onClick={() => {
+                  handleToggle();
+                }}>
+                  <i className="wpb-icon-heart"></i>
+                </div>
+              ) : (
+                <Link to="/shopwishlist">
+                  <i className="wpb-icon-heart"></i>
+                </Link>
+              )}
             </div>
 
-{/* after clickinh searct on mobile view start /==================================================== */}
+            {open && <LoginForm setOpen={setOpen} open={open} />}
+            {/* after clickinh searct on mobile view start /==================================================== */}
             <div className="ruper-topcart dropdown light">
               <div className="dropdown mini-cart top-cart">
                 <div className="remove-cart-shadow"></div>
@@ -386,9 +440,7 @@ const SiteHeader = (cartCount) => {
                 </div>
               </div>
             </div>
-{/* after clickinh searct on mobile view ecd /==================================================== */}
-
-
+            {/* after clickinh searct on mobile view ecd /==================================================== */}
           </div>
         </div>
 

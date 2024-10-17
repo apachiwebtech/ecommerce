@@ -99,9 +99,9 @@ const ProductCard = (props) => {
                 Luxe
               </div>
               <div
-                className="hot text-dark"
+                className="hot text-light"
                 style={{
-                  backgroundColor: "#fbecd6",
+                  backgroundColor: "#000000",
                   zIndex: "1",
                   padding: "5px",
                 }}
