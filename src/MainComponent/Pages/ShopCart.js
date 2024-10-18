@@ -174,7 +174,8 @@ useEffect(() => {
                   <div class="section-container p-l-r">
                     <div class="shop-cart">
                       <div class="row">
-                        <div class="col-xl-8 col-lg-12 col-md-12 col-12">
+                        
+                        {/* <div class="col-xl-8 col-lg-12 col-md-12 col-12">
                           <div className='text-center'>
                             {cart.length == 0 && <img src={empty} alt='' />}
                             {cart.length == 0 && <h3>Your cart is empty</h3>}
@@ -195,9 +196,6 @@ useEffect(() => {
                                 <tbody>
                                   {cart?.map((item) => {
                                     const total = item.price * (quantities[item.id] || item.pqty);
-
-
-
                                     return (
                                       <tr className="cart-item">
                                         <td className="product-thumbnail">
@@ -229,24 +227,62 @@ useEffect(() => {
 
                                         <td className="product-remove">
                                           <Link onClick={() => handledelete(item.id)} className="remove">×</Link>
-                                          {/* <div className="cart-total">
-                                            <span>Total: ₹{totalPrice}</span>
-                                          </div> */}
                                         </td>
                                       </tr>
                                     );
                                   })}
-
-
-
-
-
                                 </tbody>
                               </table>}
-                             
+                            </div>
+                          </form>
+                        </div> */}
+                        <div className="col-xl-8 col-lg-12 col-md-12 col-12">
+                          <div className='text-center'>
+                            {cart.length === 0 && <img src={empty} alt='' style={{ width: '100px', margin: '20px 0' }} />}
+                            {cart.length === 0 && <h3 className="text-muted">Your cart is empty</h3>}
+                          </div>
+                          <form className="cart-form" action="" method="post">
+                            <div className="table-responsive">
+                              {cart.length !== 0 && (
+                                <div className="row">
+                                  {cart.map((item) => {
+                                    const total = item.price * (quantities[item.id] || item.pqty);
+                                    return (
+                                      <div className="col-12 mb-3" key={item.id}>
+                                        <div className="card shadow-sm">
+                                          <div className="card-body d-flex align-items-center">
+                                            <div style={{ width: '60px', height: '60px', overflow: 'hidden', borderRadius: '50%', background: 'lightgrey', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight:'15px' }}>
+                                              <img src={`${IMG_URL}/productimg/${item.image1}`} className="img-fluid" alt="" />
+                                            </div>
+                                            <div className="flex-grow-1 ms-3">
+                                              <h5 className="product-name">
+                                                <Link className="text-dark">{item.pname}</Link>
+                                              </h5>
+                                              <p className="product-price">Price: <span className="fw-bold">₹{item.price}</span></p>
+                                              <div className="product-quantity">
+                                                <div className="quantity">
+                                                  <button type="button" className="minus" onClick={() => handleDecrease(item.id, item.proid , item.pqty)}>-</button>
+                                                  <input type="number" className="qty" step="1" min="0" max="" name="quantity" value={quantities[item.id] || item.pqty} title="Qty" size="4" placeholder="" inputMode="numeric" autoComplete="off" />
+                                                  <button type="button" onClick={() => handleIncrease(item.id, item.proid)} className="plus">+</button>
+                                                </div>
+                                              </div>
+                                              <p className="product-subtotal mt-2">Subtotal: <span className="product-subtotal fw-bold">₹{total}</span></p>
+                                            </div>
+                                            <div className="product-remove">
+                                            <Link onClick={() => {if (window.confirm("Are you sure you want to remove this item from the cart?")) {handledelete(item.id);} }} className="remove text-danger">Remove</Link>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
                             </div>
                           </form>
                         </div>
+
+
 
                         <div class="col-xl-4 col-lg-12 col-md-12 col-12">
                           {cart.length !== 0 &&      <div class="cart-totals">

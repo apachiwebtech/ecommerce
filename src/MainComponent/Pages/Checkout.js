@@ -182,7 +182,7 @@ const Checkout = () => {
   }
 
   useEffect(() => {
-    api()
+    // api()
     getState()
     getcartdata()
   }, [])

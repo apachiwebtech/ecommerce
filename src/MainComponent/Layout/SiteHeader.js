@@ -40,6 +40,9 @@ const SiteHeader = (cartCount) => {
         console.log(err);
       });
   }
+  const closeSideheader = () => {
+    toggleSidebar();
+  };
 
   const toggleSidebar = () => {
     setToggle(!toggle);
@@ -262,12 +265,12 @@ const SiteHeader = (cartCount) => {
             <div className="my-account">
               <div className="login-header">
                 {!Cookies.get(`custuserid`) ? (
-                  <Link onClick={() => {
+                  <div onClick={() => {
                       handleToggle();
                     }}
                   >
                     <i className="wpb-icon-user"></i>
-                  </Link>
+                  </div>
                 ) : (
                   <Link to="/profile">
                     <i className="wpb-icon-user"></i>
@@ -934,17 +937,17 @@ const SiteHeader = (cartCount) => {
         <hr className="m-0" />
         <div className="mobile-cat p-3">
           <h5>
-            <Link to={`/shoproduct/${banner[0]?.slug}`}>
+            <Link to={`/shoproduct/${banner[0]?.slug}`} onClick={closeSideheader}>
               <span className="menu-item-text">{banner[0]?.title}</span>
             </Link>
           </h5>
           <h5>
-            <Link to={`/shoproduct/${banner[1]?.slug}`}>
+            <Link to={`/shoproduct/${banner[1]?.slug}`}  onClick={closeSideheader}>
               <span className="menu-item-text">{banner[1]?.title}</span>
             </Link>
           </h5>
           <h5>
-            <Link to={`/shoproduct/${banner[2]?.slug}`}>
+            <Link to={`/shoproduct/${banner[2]?.slug}`}  onClick={closeSideheader}>
               <span className="menu-item-text">{banner[2]?.title}</span>
             </Link>
           </h5>

@@ -519,28 +519,4 @@ iframe{
     top: 4px !important;
 }
 }
-@media screen and (min-device-width: 360px) and (max-device-width: 645px) {
-  .my-account-orders {
-    font-size: 14px; 
-  }
-  thead tr th{
-    font-size: 12px !important;
-  }
-  tr td{
-    font-size: 10px !important;
-  }
-  
 
-  .table th, .table td {
-    padding: 5px; 
-  }
-
-  .btn {
-    font-size: 5px; 
-    padding: 5px 5px; 
-  }
-
-  
-
-  
-}
