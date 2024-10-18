@@ -17,7 +17,6 @@ import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
-import "../../../App.css"
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -186,254 +185,330 @@ const ProfileOrder = () => {
         </div>
       </div>
 
-      <div className="col-lg-8 col-md-4 col-12">
+      <div className="col-lg-8 col-md-10 col-sm-12 mx-auto">
         <div className="row">
           <div className="p-3">
             <h2>YOUR ORDERS :</h2>
           </div>
         </div>
+        <div className="my-account-orders">
+          {order.map((item) => {
+            const timestamp = item.order_date;
+            const date = new Date(timestamp);
+            const day = String(date.getDate()).padStart(2, "0");
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const year = String(date.getFullYear()).slice();
+            const formattedDate = `${day}-${month}-${year}`;
 
-        <div class="tab-pane border" id="orders" role="tabpanel">
-          <div class="my-account-orders">
-            <div class="table-responsive">
-              <table
-                border="1"
-                style={{ borderColor: "#f7f7f7" }}
-                class="table table-bordered "
-              >
-                <thead>
-                  <tr>
-                    <th style={{ width: "20%" }}>Order#</th>
-                    <th style={{ width: "25%" }}>Date Purchased</th>
-                    <th style={{ width: "20%" }}>Total</th>
-                    <th style={{ width: "15%" }}>Status</th>
-                    <th style={{ width: "15%" }}>Return</th>
-                    <th style={{ width: "5%" }}>View</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.map((item) => {
-                    const timestamp = item.order_date;
-                    const date = new Date(timestamp);
-
-                    const day = String(date.getDate()).padStart(2, "0");
-                    const month = String(date.getMonth() + 1).padStart(2, "0");
-                    const year = String(date.getFullYear()).slice();
-
-                    const formattedDate = `${day}-${month}-${year}`;
-
-                    return (
-                      <tr>
-                        <td>{item.orderno}</td>
-                        <td>{formattedDate}</td>
-                        <td>₹{item.totalamt}</td>
-                        <td>
-                          {item.ostatus === "Delivered" ? (
-                            <span className="text-success">Delivered</span>
-                          ) : item.ostatus === "Dispatched" ? (
-                            <span className="text-success">Dispatched</span>
-                          ) : item.ostatus === "Cancelled" ? (
-                            <span className="text-danger">Cancelled</span>
-                          ) : item.ostatus === "Confirm" ? (
-                            <span className="text-Success">Cancelled</span>
-                          ) : (
-                            <span className="text-warning">Pending</span>
-                          )}
-                        </td>
-                        <td>
-                          {orderid.some((ele) => ele.orderid == item.id) ? (
-                            <p>Processing..</p>
-                          ) : (
-                            <button
-                              onClick={() => {
-                                getcartdata(item.id);
-                                setError({});
-                              }}
-                              className="btn btn-danger btn-sm"
-                            >
-                              Return{" "}
-                            </button>
-                          )}
-                        </td>
-                        <td>
-                          <Link to={`/profile/order/${item.id}`}>
-                            <Icon path={mdiFileEye} size={1} />
-                          </Link>
-                        </td>
-
-                        <BootstrapDialog
-                          onClose={handleClose}
-                          aria-labelledby="customized-dialog-title"
-                          open={open}
+            return (
+              <div className="card mb-3" key={item.id}>
+                <div className="card-body">
+                  <h6 className="card-title">Order# {item.orderno}</h6>
+                  <p className="card-text">
+                    <strong>Date Purchased:</strong> {formattedDate}
+                  </p>
+                  <p className="card-text">
+                    <strong>Total:</strong> ₹{item.totalamt}
+                  </p>
+                  <p className="card-text">
+                    <strong>Status:</strong>{" "}
+                    {item.ostatus === "Delivered" ? (
+                      <span className="text-success">Delivered</span>
+                    ) : item.ostatus === "Dispatched" ? (
+                      <span className="text-success">Dispatched</span>
+                    ) : item.ostatus === "Cancelled" ? (
+                      <span className="text-danger">Cancelled</span>
+                    ) : item.ostatus === "Confirm" ? (
+                      <span className="text-success">Confirmed</span>
+                    ) : (
+                      <span className="text-warning">Pending</span>
+                    )}
+                  </p>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      {orderid.some((ele) => ele.orderid === item.id) ? (
+                        <span>Processing..</span>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            getcartdata(item.id);
+                            setError({});
+                          }}
+                          className="btn btn-danger btn-sm"
                         >
-                          <DialogTitle
-                            sx={{ m: 0, p: 2, width: "600px" }}
-                            id="customized-dialog-title"
-                          >
-                            Modal title
-                          </DialogTitle>
-                          <IconButton
-                            aria-label="close"
-                            onClick={handleClose}
-                            sx={{
-                              position: "absolute",
-                              right: 8,
-                              top: 8,
-                              color: (theme) => theme.palette.grey[500],
-                            }}
-                          >
-                            <CloseIcon />
-                          </IconButton>
-                          <DialogContent dividers>
-                            <table>
-                              <thead>
+                          Return
+                        </button>
+                      )}
+                    </div>
+                    <Link
+                      to={`/profile/order/${item.id}`}
+                      className="btn btn-info btn-sm"
+                    >
+                      <Icon path={mdiFileEye} size={1} />
+                    </Link>
+
+                    <BootstrapDialog
+                      onClose={handleClose}
+                      aria-labelledby="customized-dialog-title"
+                      open={open}
+                    >
+                      <DialogTitle
+                        sx={{ m: 0, p: 2, width: "600px" }}
+                        id="customized-dialog-title"
+                      >
+                        Modal title
+                      </DialogTitle>
+                      <IconButton
+                        aria-label="close"
+                        onClick={handleClose}
+                        sx={{
+                          position: "absolute",
+                          right: 8,
+                          top: 8,
+                          color: (theme) => theme.palette.grey[500],
+                        }}
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                      <DialogContent dividers>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th width="60%">Product</th>
+                              <th width="30%">Qty</th>
+                              <th width="10%">Select</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {cart.map((item, index) => {
+                              return (
                                 <tr>
-                                  <th width="60%">Product</th>
-                                  <th width="30%">Qty</th>
-                                  <th width="10%">Select</th>
+                                  <td>
+                                    <div className="d-flex align-items-center">
+                                      <img
+                                        style={{
+                                          width: "50px",
+                                          height: "50px",
+                                        }}
+                                        src={
+                                          `${IMG_URL}/productimg/` + item.image1
+                                        }
+                                        className=""
+                                        alt=""
+                                      />
+                                      <p className="p-2">{item.pname}</p>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div className="quantity2">
+                                      <button
+                                        type="button"
+                                        className="minus"
+                                        onClick={() => handleDecrease(item.id)}
+                                      >
+                                        -
+                                      </button>
+
+                                      <input
+                                        type="number"
+                                        className="qty"
+                                        step="1"
+                                        min="0"
+                                        max=""
+                                        name="quantity"
+                                        value={quantities[item.id] || 1}
+                                        title="Qty"
+                                        size="4"
+                                        placeholder=""
+                                        inputMode="numeric"
+                                        autoComplete="off"
+                                      />
+
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleIncrease(item.id, item.pqty)
+                                        }
+                                        className="plus"
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="">
+                                      <input
+                                        type="checkbox"
+                                        value=""
+                                        id="flexCheckDefault"
+                                        onChange={() =>
+                                          handleCheckboxChange(item)
+                                        }
+                                      />
+                                    </div>
+                                  </td>
                                 </tr>
-                              </thead>
-                              <tbody>
-                                {cart.map((item, index) => {
-                                  return (
-                                    <tr>
-                                      <td>
-                                        <div className="d-flex align-items-center">
-                                          <img
-                                            style={{
-                                              width: "50px",
-                                              height: "50px",
-                                            }}
-                                            src={
-                                              `${IMG_URL}/productimg/` +
-                                              item.image1
-                                            }
-                                            className=""
-                                            alt=""
-                                          />
-                                          <p className="p-2">{item.pname}</p>
-                                        </div>
-                                      </td>
-                                      <td>
-                                        <div className="quantity2">
-                                          <button
-                                            type="button"
-                                            className="minus"
-                                            onClick={() =>
-                                              handleDecrease(item.id)
-                                            }
-                                          >
-                                            -
-                                          </button>
+                              );
+                            })}
+                          </tbody>
+                        </table>
 
-                                          <input
-                                            type="number"
-                                            className="qty"
-                                            step="1"
-                                            min="0"
-                                            max=""
-                                            name="quantity"
-                                            value={quantities[item.id] || 1}
-                                            title="Qty"
-                                            size="4"
-                                            placeholder=""
-                                            inputMode="numeric"
-                                            autoComplete="off"
-                                          />
-
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              handleIncrease(item.id, item.pqty)
-                                            }
-                                            className="plus"
-                                          >
-                                            +
-                                          </button>
-                                        </div>
-                                      </td>
-                                      <td>
-                                        <div class="">
-                                          <input
-                                            type="checkbox"
-                                            value=""
-                                            id="flexCheckDefault"
-                                            onChange={() =>
-                                              handleCheckboxChange(item)
-                                            }
-                                          />
-                                        </div>
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
-                              </tbody>
-                            </table>
-
-                            <div class="">
-                              <Autocomplete
-                                disablePortal
-                                id="combo-box-demo"
-                                options={reason}
-                                InputLabelProps={{
-                                  shrink: true, // This makes the label move up when there's a value
-                                }}
-                                placeholder="brand"
-                                getOptionLabel={(option) => option.title}
-                                getOptionSelected={(option, value) =>
-                                  option.id === value.id
-                                }
-                                sx={{
-                                  width: "50%",
-                                  border: "none",
-                                  borderColor: "lightgrey",
-                                  borderRadius: "5px",
-                                }}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    label="Select Reason"
-                                  />
-                                )}
-                                onChange={(event, value) => HandleReason(value)}
-                                name="vendor"
-                              />
-                              {error.reason && (
-                                <p
-                                  className="text-danger float-right "
-                                  style={{ display: "block" }}
-                                >
-                                  {error.reason}
-                                </p>
-                              )}
-
-                              {error.checkbox && (
-                                <span className="text-danger float-right">
-                                  {error.checkbox}
-                                </span>
-                              )}
-                            </div>
-                          </DialogContent>
-                          <DialogActions>
-                            <Button
-                              sx={{ color: "#000" }}
-                              autoFocus
-                              onClick={handleSaveChanges}
+                        <div class="">
+                          <Autocomplete
+                            disablePortal
+                            id="combo-box-demo"
+                            options={reason}
+                            InputLabelProps={{
+                              shrink: true, // This makes the label move up when there's a value
+                            }}
+                            placeholder="brand"
+                            getOptionLabel={(option) => option.title}
+                            getOptionSelected={(option, value) =>
+                              option.id === value.id
+                            }
+                            sx={{
+                              width: "50%",
+                              border: "none",
+                              borderColor: "lightgrey",
+                              borderRadius: "5px",
+                            }}
+                            renderInput={(params) => (
+                              <TextField {...params} label="Select Reason" />
+                            )}
+                            onChange={(event, value) => HandleReason(value)}
+                            name="vendor"
+                          />
+                          {error.reason && (
+                            <p
+                              className="text-danger float-right "
+                              style={{ display: "block" }}
                             >
-                              Save changes
-                            </Button>
-                          </DialogActions>
-                        </BootstrapDialog>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                              {error.reason}
+                            </p>
+                          )}
+
+                          {error.checkbox && (
+                            <span className="text-danger float-right">
+                              {error.checkbox}
+                            </span>
+                          )}
+                        </div>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button
+                          sx={{ color: "#000" }}
+                          autoFocus
+                          onClick={handleSaveChanges}
+                        >
+                          Save changes
+                        </Button>
+                      </DialogActions>
+                    </BootstrapDialog>
+
+                    {/* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <table>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th width="60%">Product</th>
+                                                                            <th width="30%">Qty</th>
+                                                                            <th width="10%">Select</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        {cart.map((item, index) => {
+                                                                            return (
+                                                                                <tr>
+
+                                                                                    <td>
+                                                                                        <div className='d-flex align-items-center'>
+                                                                                            <img style={{ width: "50px", height: "50px" }} src={`${IMG_URL}/productimg/` + item.image1} className="" alt="" />
+                                                                                            <p className='p-2'>{item.pname}</p>
+                                                                                        </div>
+
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div className="quantity2">
+                                                                                            <button type="button" className="minus" onClick={() => handleDecrease(item.id)} >-</button>
+
+                                                                                            <input type="number" className="qty" step="1" min="0" max="" name="quantity" value={quantities[item.id] || 1} title="Qty" size="4" placeholder="" inputMode="numeric" autoComplete="off" />
+
+                                                                                            <button type="button" onClick={() => handleIncrease(item.id, item.pqty)
+                                                                                            } className="plus">+</button>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="">
+                                                                                            <input type="checkbox" value="" id="flexCheckDefault" onChange={() => handleCheckboxChange(item)} />
+                                                                                        </div>
+                                                                                    </td>
+
+                                                                                </tr>
+                                                                            )
+                                                                        })}
+
+                                                                    </tbody>
+
+                                                                </table>
+                                                                <Autocomplete
+                                                                    disablePortal
+                                                                    id="combo-box-demo"
+                                                                    options={reason}
+                                                                    InputLabelProps={{
+                                                                        shrink: true,  // This makes the label move up when there's a value
+                                                                    }}
+
+                                                                    placeholder="brand"
+                                                                    getOptionLabel={(option) => option.title}
+                                                                    getOptionSelected={(option, value) => option.id === value.id}
+                                                                    sx={{ width: "50%", border: "none", borderColor: "lightgrey", borderRadius: "5px" }}
+                                                                    renderInput={(params) => <TextField   {...params} label="Select Reason" />}
+                                                                    onChange={(event, value) => HandleReason(value)}
+                                                                    name="vendor"
+
+                                                                />
+                                                                {error.reason && <span className='text-danger'>{error.reason}</span>}
+                                                            </div>
+                                                            <div class="">
+                                                                <Autocomplete
+                                                                    disablePortal
+                                                                    id="combo-box-demo"
+                                                                    options={reason}
+                                                                    InputLabelProps={{
+                                                                        shrink: true,  // This makes the label move up when there's a value
+                                                                    }}
+
+                                                                    placeholder="brand"
+                                                                    getOptionLabel={(option) => option.title}
+                                                                    getOptionSelected={(option, value) => option.id === value.id}
+                                                                    sx={{ width: "50%", border: "none", borderColor: "lightgrey", borderRadius: "5px" }}
+                                                                    renderInput={(params) => <TextField   {...params} label="Select Reason" />}
+                                                                    onChange={(event, value) => HandleReason(value)}
+                                                                    name="vendor"
+
+                                                                />
+                                                                {error.reason && <span className='text-danger'>{error.reason}</span>}
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button onClick={handleSaveChanges} type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                                                        </div>
+                                                    </div>
+                                                </div> */}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-
     </div>
   );
 };
