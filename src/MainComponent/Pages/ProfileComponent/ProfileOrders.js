@@ -172,7 +172,7 @@ const ProfileOrder = () => {
             color: "#ffffff",
           }}
         >
-          {sidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
+          {sidebarOpen ? "Hide Menu" : "Show Menu"}
         </button>
 
         <div

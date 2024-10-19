@@ -489,17 +489,6 @@ iframe{
   height :auto !important
 }
 
-
-
-
-
-
-
-
-
-
-
-
 @media screen and (min-device-width: 360px) and (max-device-width: 481px) { 
   .triangle {
     width: 75px !important;
@@ -519,4 +508,27 @@ iframe{
     top: 4px !important;
 }
 }
+
+@media (max-width: 510px) and (min-width: 410px) {
+  .buttons {
+    flex-direction: column; 
+  }
+
+  .btn-wishlist, 
+  .add-to-cart-wrap, 
+  .inquiry-button {
+    width: 100%; 
+    margin-bottom: 10px; 
+  }
+
+  .quantity {
+    justify-content: center; 
+  }
+
+  .btn-add-to-cart .button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 

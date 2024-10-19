@@ -301,7 +301,7 @@ const Address = () => {
                     className='btn  d-md-none' 
                     onClick={() => setSidebarOpen(!sidebarOpen)} 
                     style={{ marginBottom: "1rem",backgroundColor:"#000000", color:"#ffffff" }}>
-                    {sidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+                    {sidebarOpen ? 'Hide Menu' : 'Show Menu'}
                 </button>
                
                 <div style={{ display: (sidebarOpen || window.innerWidth > 768) ? 'block' : 'none', transition: 'all 0.3s ease-in-out',}}>
@@ -406,50 +406,52 @@ const Address = () => {
                 </BootstrapDialog>
 
 
-                <div class="tab-pane border" id="orders" role="tabpanel">
-                    <div class="my-account-orders">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th style={{ width: "70%" }}>Address</th>
-                                        <th>Default</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {data.map((item) => {
-                                        return (
-                                            <tr>
-                                                <td>{item.address}</td>
-                                                <td>
-                                                    {item.default == 1 ? <button className='btn btn-xs text-light rounded' style={{ background: "#76885B" }}>Default</button> : <button onClick={() =>handleDefault(item.id)} className='btn btn-xs text-dark rounded' style={{ background: "lightgrey" }}>Setdefault</button>}
-
-
-
-                                                </td>
-                                                <td><Link onClick={() => handleUpdate(item.id)} ><Icon path={mdiPencilOutline} size={1} /></Link>
-                                                    <Link onClick={() => handleClick(item.id)}> <Icon path={mdiCloseCircleOutline} size={1} /></Link>
-                                                </td>
-                                                {confirmationVisibleMap[item.id] && (
-                                                    <div className=''>
-                                                        <p>Are you sure you want to delete?</p>
-                                                        <button onClick={() => handleDelete(item.id)} className='bg-dark text-light rounded'>OK</button>
-                                                        <button onClick={() => handleCancel(item.id)} className='mx-2 rounded'>Cancel</button>
-                                                    </div>
-                                                )}
-
-                                            </tr>
-                                        )
-                                    })}
-
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
+                <div className="tab-pane border" id="orders" role="tabpanel">
+    <div className="my-account-orders">
+        <div className="table-responsive">
+            <table className="table table-bordered">
+                <thead className="thead-light">
+                    <tr>
+                        <th style={{ width: "70%" }}>Address</th>
+                        <th>Default</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map((item) => {
+                        return (
+                            <tr key={item.id}>
+                                <td className="text-truncate" style={{ maxWidth: '400px' }}>{item.address}</td>
+                                <td>
+                                    {item.default == 1 ? (
+                                        <button className="btn btn-sm text-light rounded" style={{ background: "#76885B" }}>Default</button>
+                                    ) : (
+                                        <button onClick={() => handleDefault(item.id)} className="btn btn-sm text-dark rounded" style={{ background: "lightgrey" }}>Set Default</button>
+                                    )}
+                                </td>
+                                <td>
+                                    <Link onClick={() => handleUpdate(item.id)}>
+                                        <Icon path={mdiPencilOutline} size={1} />
+                                    </Link>
+                                    <Link onClick={() => handleClick(item.id)}>
+                                        <Icon path={mdiCloseCircleOutline} size={1} />
+                                    </Link>
+                                </td>
+                                {confirmationVisibleMap[item.id] && (
+                                    <div className=''>
+                                        <p>Are you sure you want to delete?</p>
+                                        <button onClick={() => handleDelete(item.id)} className='bg-dark text-light rounded'>OK</button>
+                                        <button onClick={() => handleCancel(item.id)} className='mx-2 rounded'>Cancel</button>
+                                    </div>
+                                )}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 
 

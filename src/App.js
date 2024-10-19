@@ -516,7 +516,7 @@ const Router = createHashRouter([
       },
 
       {
-        path: '/vendor/view',
+        path: '/vendor/view/:orderid',
         element: <View />
       },
       {

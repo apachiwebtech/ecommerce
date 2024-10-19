@@ -119,7 +119,7 @@ const Profile = () => {
                     className='btn d-md-none' 
                     onClick={() => setSidebarOpen(!sidebarOpen)} 
                     style={{ marginBottom: "1rem",backgroundColor:"#000000", color:"#ffffff" }}>
-                    {sidebarOpen ? 'Hide Sidebar' : 'Show Sidebar'}
+                    {sidebarOpen ? 'Hide Menu' : 'Show Menu'}
                 </button>
                
                 <div style={{ display: (sidebarOpen || window.innerWidth > 768) ? 'block' : 'none', transition: 'all 0.3s ease-in-out',}}>

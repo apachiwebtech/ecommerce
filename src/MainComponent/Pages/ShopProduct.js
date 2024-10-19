@@ -338,11 +338,11 @@ const ShopProduct = () => {
                                                         </div>
                                                     </div>
                                                     <div className='mob-filter' style={{ display: "none" }}>
-                                                        <Icon path={mdiFilterVariant} onClick={toggleSidebar} className='border p-1' size={1} />
-                                                    </div>
+                                                        <Icon path={mdiFilterVariant} onClick={toggleSidebar} className='border p-1' size={2} />
 
                                                     {value > 0 && <Chip className='mx-2' label={`0 to ${value}`} onDelete={handledelete} />}
                                                     {brandname != '' && <Chip label={`${brandname}`} onDelete={handlbrandedelete} />}
+                                                    </div>
                                                 </div>
 
 

@@ -51,7 +51,7 @@ const ProfileSidebar = () => {
                     <h5><Icon path={mdiMapMarkerOutline} size={1} /> Address </h5>
                 </div>
             </Link>
-            <Link to="/" onClick={handlelogout}>
+            <Link to="/" onClick={(e) => {  e.preventDefault(); if (window.confirm("Are you sure you want to sign out?")) {handlelogout();}}}>
                 <div className='py-2'>
                     <h5><Icon path={mdiLocationExit} size={1} /> Sign Out </h5>
                 </div>

@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { BASE_URL } from '../AdminComponent/BaseUrl';
 import InnerHeader from './InnerHeader';
 import decryptedvendorid from '../Utils/Vendorid';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { Link } from 'react-router-dom';
 
 const Orders = () => {
     const [order, setOrderData] = useState([])
@@ -243,9 +245,9 @@ const Orders = () => {
 
                                                                 <button className='bt btn-sm btn-primary'>Print Invoice</button>
                                                             </td>
-                                                            {/* <td>
-                                                                <Link to={`/webapp/view/${item.id}`}><RemoveRedEyeIcon className='text-primary' /></Link>
-                                                            </td> */}
+                                                            <td>
+                                                                <Link to={`/vendor/view/${item.id}`}><RemoveRedEyeIcon className='text-primary' /></Link>
+                                                            </td>
                                                         </tr>
                                                     )
                                                 })}

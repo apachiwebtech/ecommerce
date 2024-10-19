@@ -33,6 +33,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import useBreadcrumb from '../../Utils/Breadcrum';
+import '../.././App.css'
 
 const DetailPage = () => {
 
@@ -425,7 +426,7 @@ const DetailPage = () => {
 																	</table>
 																</div>
 
-																<div class="buttons d-flex align-items-center">
+																<div class="buttons col-12 col-md-6 d-flex justify-content-center align-items-center mb-3">
 																	<div class="btn-wishlist d-block" data-title="Wishlist">
 																		{/* <button class="product-btn">Add to wishlist</button> */}
 																		{!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
@@ -445,7 +446,7 @@ const DetailPage = () => {
 																	</div> : item.customizable == 1 ? <div>
 																		<button className='inquiry-button bg-success text-light' onClick={handleClickOpen}>Send Inquiry</button>
 
-																	</div> : <div class="add-to-cart-wrap ">
+																	</div> : <div class="add-to-cart-wrap">
 																		<div class="quantity">
 																			<button type="button" onClick={() => {
 
@@ -467,8 +468,8 @@ const DetailPage = () => {
 																			}
 																			} class="minus" >-</button>
 																		</div>
-
-																		<div class="btn-add-to-cart">
+														
+																		<div class="btn-add-to-cart ">
 																			<div class="button" onClick={() => {
 
 																				if (item.stock == null) {
@@ -480,6 +481,7 @@ const DetailPage = () => {
 
 
 																			}}  >Add to cart</div>
+																		
 																		</div>
 																	</div>}
 
@@ -536,6 +538,8 @@ const DetailPage = () => {
 																		<button class="product-btn">Compare</button>
 																	</div> */}
 																</div>
+
+																
 																<div class="product-meta">
 																	{/* <span class="sku-wrapper">SKU: <span class="sku">D2300-3-2-2</span></span> */}
 																	<span class="posted-in">Category: <Link rel="tag">{item.category}</Link></span>
