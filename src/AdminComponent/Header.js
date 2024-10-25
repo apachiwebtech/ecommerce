@@ -1,4 +1,4 @@
-import { mdiAccountArrowRightOutline, mdiAccountDetails, mdiAccountGroupOutline, mdiAccountOutline, mdiAccountRemoveOutline, mdiAdvertisements, mdiApplicationBracketsOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiFrequentlyAskedQuestions, mdiImageArea, mdiInformationVariantBoxOutline, mdiKeyboardCaps, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiNavigationVariant, mdiNavigationVariantOutline, mdiNotebookEditOutline, mdiNut, mdiOrderBoolAscending, mdiPost, mdiRotateRight, mdiSearchWeb, mdiSelectMultipleMarker, mdiStarBox, mdiTagMultipleOutline, mdiTools, mdiViewGallery } from '@mdi/js';
+import { mdiAccountArrowRightOutline, mdiAccountDetails, mdiAccountGroupOutline, mdiAccountOutline, mdiAccountRemoveOutline, mdiAdvertisements, mdiApplicationBracketsOutline, mdiApps, mdiCartOutline, mdiCheckDecagram, mdiFormatColorFill, mdiFormatListBulletedSquare, mdiFrequentlyAskedQuestions, mdiImageArea, mdiInformationVariantBoxOutline, mdiLandPlotsCircle, mdiLinkVariant, mdiMap, mdiMenu, mdiNavigationVariant, mdiNavigationVariantOutline, mdiNotebookEditOutline, mdiNut, mdiOrderBoolAscending, mdiPost, mdiRotateRight, mdiSearchWeb, mdiSelectMultipleMarker, mdiStarBox, mdiTagMultipleOutline, mdiTools, mdiViewGallery } from '@mdi/js';
 import Icon from '@mdi/react';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
@@ -283,7 +283,7 @@ const Header = () => {
 
 
           </ul>
-        </Collapse>~
+        </Collapse>
 
         <li className="nav-item" onClick={() => handleToggle('home')}>
           <div className="nav-link" >

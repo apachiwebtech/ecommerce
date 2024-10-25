@@ -15,8 +15,44 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoleData } from '../Store/Role/role-action';
+import Switch from '@mui/material/Switch';
+import { styled } from "@mui/material/styles";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 
+
+const Android12Switch = styled(Switch)(({ theme }) => ({
+    padding: 8,
+    "& .MuiSwitch-track": {
+      borderRadius: 22 / 2,
+      "&::before, &::after": {
+        content: '""',
+        position: "absolute",
+        top: "50%",
+        transform: "translateY(-50%)",
+        width: 16,
+        height: 16,
+      },
+      "&::before": {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+          theme.palette.getContrastText(theme.palette.primary.main)
+        )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
+        left: 12,
+      },
+      "&::after": {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+          theme.palette.getContrastText(theme.palette.primary.main)
+        )}" d="M19,13H5V11H19V13Z" /></svg>')`,
+        right: 12,
+      },
+    },
+    "& .MuiSwitch-thumb": {
+      boxShadow: "none",
+      width: 16,
+      height: 16,
+      margin: 2,
+    },
+  }));
 
 const Category = () => {
 
@@ -30,19 +66,29 @@ const Category = () => {
     const [cid, setCid] = useState("")
     const [loader, setLoader] = useState(false)
     const [group_id, setId] = useState("")
+    const [products, setProducts] = useState([]);
     const [value, setValue] = useState({
         title: "" || uid.title,
         slug: "" || uid.slug,
         description: "" || uid.description,
     })
 
+    // useEffect(() => {
+    //     setValue({
+    //         title: uid.title,
+    //         description: uid.description,
+    //         slug: uid.slug,
+    //     })
+    // }, [uid])
     useEffect(() => {
-        setValue({
-            title: uid.title,
-            description: uid.description,
-            slug: uid.slug,
-        })
-    }, [uid])
+        if (uid) {
+            setValue({
+                title: uid.title || "",
+                description: uid.description || "",
+                slug: uid.slug || "",
+            });
+        }
+    }, [uid]);
 
     const validateForm = () => {
         let isValid = true
@@ -97,6 +143,23 @@ const Category = () => {
     }, [])
 
 
+
+
+
+    const handleToggle = (id, currentStatus) => {
+        const newStatus = currentStatus === 1 ? 0 : 1;
+        console.log("Toggling ID:", id, "New Status:", newStatus);
+        axios.post(`${BASE_URL}/toggle_category`, { toggle_id: id, status: newStatus })
+            .then(() => {
+                // Update local state to reflect the change
+                setCatData(prev => prev.map(item => 
+                    item.id === id ? { ...item, Moving_Category: newStatus } : item
+                ));
+            })
+            .catch(err => {
+                console.error("Error toggling category status:", err);
+            });
+    };
 
     const handleClick = (id) => {
         setCid(id)
@@ -241,6 +304,23 @@ const Category = () => {
                 )
             }
         },
+        
+        {
+            field: 'Moving_Category',
+            headerName: 'Moving Category',
+            flex: 1,
+            renderCell: (params) => (
+                <FormControlLabel
+                    control={
+                        <Android12Switch
+                            checked={params.row.Moving_Category === 1}
+                            onChange={() => handleToggle(params.row.id, params.row.Moving_Category)}
+                        />
+                    }
+                    label=""
+                />
+            ),
+        },
         {
             field: 'actions',
             type: 'actions',
@@ -277,6 +357,9 @@ const Category = () => {
             const selected = group.find(option => option.id === uid.group_id);
           
             setSelectedOption(selected);
+            console.log(selected,"^^^^")
+
+            setId(selected.id)
         }
     }, [uid, group]);
 
