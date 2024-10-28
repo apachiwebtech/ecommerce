@@ -214,7 +214,7 @@ app.use(
 // }
 
 // app.get('/checkauth', verifyJwt, (req, res) => {
-//   return res.json({luxe : 1})
+//   return res.json({status : 1})
 // })
 
 // app.post('/login', (req, res) => {
@@ -227,7 +227,7 @@ app.use(
 //   con.query(sql, [email, password, role], (err, data) => {
 //     if (err) {
 //       console.error("Database error:", err);
-//       return res.luxe(500).json({ error: "Internal server error" });
+//       return res.status(500).json({ error: "Internal server error" });
 //    } else {
 //       if (data.length === 1) {
 //         const id = data[0].id;
@@ -347,7 +347,7 @@ app.post("/customerlogin", (req, res) => {
         margin: 0 auto;
         padding: 45px 30px 60px;
         background: #c4e6f562;
-        background-image: url(https://encycolorpedia.com/f8e9d5.png);
+        background-image: url(https://cdn.tapetender70er.de/media/image/5c/5c/2d/385008-1_warp-beauty-08_518x389.jpg);
         background-repeat: no-repeat;
         background-size: 800px 452px;
         background-position: top center;
@@ -429,7 +429,7 @@ app.post("/customerlogin", (req, res) => {
             </p>
             <p
               style="
-         
+
                 margin-top: 60px;
                 font-size: 40px;
                 font-weight: 600;
@@ -482,7 +482,7 @@ app.post("/customerlogin", (req, res) => {
         >
           Micasasucasa
         </p>
-      
+
         <div style="margin: 0; margin-top: 16px;">
           <a href="" target="_blank" style="display: inline-block;">
             <img
@@ -938,7 +938,7 @@ app.post(
               style="margin: 0; font-family: 'Poppins', sans-serif; background: #ffffff; font-size: 14px;"
             >
               <div
-                style="max-width: 680px; margin: 0 auto; padding: 45px 30px 60px; background: #c4e6f562; background-image: url(https://encycolorpedia.com/f8e9d5.png); background-repeat: no-repeat; background-size: 800px 452px; background-position: top center; font-size: 14px; color: #434343;"
+                style="max-width: 680px; margin: 0 auto; padding: 45px 30px 60px; background: #c4e6f562; background-image: url(https://cdn.tapetender70er.de/media/image/5c/5c/2d/385008-1_warp-beauty-08_518x389.jpg); background-repeat: no-repeat; background-size: 800px 452px; background-position: top center; font-size: 14px; color: #434343;"
               >
                 <header>
                   <table style="width: 100%">
@@ -965,7 +965,7 @@ app.post(
                     </div>
                   </table>
                 </header>
-        
+
                 <main>
                   <div
                     style="margin: 0; margin-top: 70px; padding: 92px 30px 115px; background: #ffffff; border-radius: 30px; text-align: center;"
@@ -996,7 +996,7 @@ app.post(
                       </a>
                     </div>
                   </div>
-        
+
                   <p
                     style="max-width: 400px; margin: 0 auto; margin-top: 90px; text-align: center; font-weight: 500; color: #8c8c8c;"
                   >
@@ -1004,14 +1004,14 @@ app.post(
                     <a href="mailto:Info@micasasucasa.in" style="color: #499fb6; text-decoration: none">Info@micasasucasa.in</a>
                   </p>
                 </main>
-        
+
                 <footer
                   style="width: 100%; max-width: 490px; margin: 20px auto 0; text-align: center; border-top: 1px solid #e6ebf1;"
                 >
                   <p style="margin: 0; margin-top: 40px; font-size: 16px; font-weight: 600; color: #434343;">
                     Micasasucasa
                   </p>
-        
+
                   <div style="margin: 0; margin-top: 16px">
                     <a href="" target="_blank" style="display: inline-block">
                       <img
@@ -1074,13 +1074,13 @@ app.post("/vendor_approve", (req, res) => {
   });
 });
 
-app.post("/vendor_luxe", (req, res) => {
+app.post("/vendor_status", (req, res) => {
   let vendor_id = req.body.vendor_id;
-  let luxe = req.body.luxe;
+  let status = req.body.status;
 
   const sql = "update awt_vendor set  active = ? where id = ?";
 
-  con.query(sql, [luxe, vendor_id], (err, data) => {
+  con.query(sql, [status, vendor_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -1261,7 +1261,6 @@ app.post("/add_category", upload6.single("image"), (req, res) => {
     }
   });
 });
-
 
 app.post("/category_update", (req, res) => {
   let u_id = req.body.u_id;
@@ -2183,32 +2182,6 @@ app.post(
   }
 );
 
-
-
-// for adding Luxe in awt_add_product===================================================================
-app.post("/add_lux", (req, res) => {
-  const { product_id } = req.body;
-  const { product_luxe } = req.body;
-
-  if (!product_luxe) {
-    return res.luxe(400).json({ error: "Product luxe is required" });
-  }
-
-  const sql = "UPDATE awt_add_product SET luxe = ? WHERE id = ?";
-  const params = [product_luxe, product_id];
-
-  con.query(sql, params, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res
-        .luxe(500)
-        .json({ error: "Database error", message: err.message });
-    }
-    return res.json({ message: "luxe Updated Successfully!" });
-  });
-});
-
-
 app.post(
   "/add_product_img",
   upload8.fields([
@@ -2268,14 +2241,14 @@ app.get(`/product_data`, (req, res) => {
   });
 });
 
-app.post("/product_luxe", (req, res) => {
+app.post("/product_status", (req, res) => {
   let product_id = req.body.product_id;
-  let luxe = req.body.luxe;
+  let status = req.body.status;
   let column = req.body.column;
 
   const sql = `update awt_add_product set  ${column} = ? where id = ?`;
 
-  con.query(sql, [luxe, product_id], (err, data) => {
+  con.query(sql, [status, product_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -2354,7 +2327,7 @@ app.get("/trending_products", (req, res) => {
         const { slug } = product;
 
         const checkreservstock =
-          "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_luxe = 0";
+          "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0";
 
         return new Promise((resolve, reject) => {
           con.query(checkreservstock, [slug], (err, reservStockData) => {
@@ -2741,7 +2714,7 @@ app.post("/getproductDetails", (req, res) => {
   let productslug = req.body.productslug;
 
   const checkreservstock =
-    "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_luxe = 0;";
+    "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0;";
 
   con.query(checkreservstock, [productslug], (err, data) => {
     if (err) {
@@ -3061,7 +3034,7 @@ app.post("/getproductlisting", (req, res) => {
         const { slug } = product;
 
         const checkreservstock =
-          "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_luxe = 0";
+          "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0";
 
         return new Promise((resolve, reject) => {
           con.query(checkreservstock, [slug], (err, reservStockData) => {
@@ -3521,6 +3494,443 @@ app.get(`/state`, (req, res) => {
 //   );
 // });
 
+
+app.post('/api', async (req, res) => {
+  const { email, password } = req.body;
+
+  const data = JSON.stringify({
+    email: 'info+1709@micasasucasa.in',
+    password: '8LsE6sOiqw',
+  });
+
+  const config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: 'https://api.nimbuspost.com/v1/users/login',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  };
+
+  try {
+    const response = await axios(config);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error logging in:', error.message);
+    if (error.response) {
+      return res.status(error.response.status).json(error.response.data);
+    }
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+app.post('/place_order', async (req, res) => {
+  let {
+    firstname, lastname, country, address, landmark, city, state, postcode, orderNotes,
+    sfirstname, slastname, scountry, saddress, slandmark, scity, sstate, spostcode,
+    totalamt, paymode, order_id, token, user_id, mobile, vendor_id, smobile, shippingid, shippingamt
+  } = req.body;
+
+  let pending = "pending";
+  const date = new Date();
+
+  // Check if the address exists
+  const checkaddress = "SELECT * FROM `awt_address` WHERE `uid` = ? AND `deleted` = 0";
+  con.query(checkaddress, [user_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    }
+
+    if (data.length === 0) {
+      const insertAddress = `INSERT INTO awt_address
+          (\`uid\`, \`firstname\`, \`lastname\`, \`mobile\`, \`address\`, \`state\`, \`city\`, \`pincode\`, \`created_date\`, \`default\`)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+      con.query(insertAddress, [user_id, firstname, lastname, mobile, address, state, city, postcode, date, 1], (err, data) => {
+        if (err) {
+          return res.json(err);
+        }
+      });
+    }
+
+    // Update the order
+    const updateOrder = `UPDATE \`order\` SET shipamount = ? , shipment_id = ? ,v_id = ?, firstname = ?, lastname = ?, country = ?, address1 = ?, landmark = ?,
+          city1 = ?, state = ?, postcode = ?, order_comments = ?, sfirstname = ?, slastname = ?, scountry = ?,
+          shipaddress = ?, shiplandmark = ?, shipcity = ?, shipstate = ?, shippostcode = ?, totalamt = ?, paymode = ? ,mobileno = ? , smobileno = ?
+          WHERE id = ?`;
+    console.log(shippingamt)
+    console.log(shippingid)
+    con.query(updateOrder, [shippingamt, shippingid, vendor_id, firstname, lastname, country, address, landmark, city, state, postcode, orderNotes,
+      sfirstname, slastname, scountry, saddress, slandmark, scity, sstate, spostcode, totalamt, paymode, mobile, smobile, order_id], (err, data) => {
+        if (err) {
+          return res.json(err);
+        }
+
+        // Get the total number of orders
+        const getOrderCount = "SELECT * FROM `order` WHERE `orderno` != ''";
+        con.query(getOrderCount, (err, data) => {
+          if (err) {
+            return res.json(err);
+          }
+
+          const orderCount = data.length + 1;
+          const currentDate = new Date();
+          const istOffset = 5.5 * 60 * 60 * 1000; // IST offset (5.5 hours)
+          const istDate = new Date(currentDate.getTime() + (currentDate.getTimezoneOffset() * 60 * 1000) + istOffset);
+
+          const day = String(istDate.getDate()).padStart(2, '0');
+          const month = String(istDate.getMonth() + 1).padStart(2, '0');
+          const year = istDate.getFullYear().toString().substr(-2);
+
+          const orderno = `MISU-${year}${month}${day}-${orderCount}`;
+
+          const updateOrderNo = `UPDATE \`order\` SET \`orderno\` = ?, \`ostatus\` = ?, order_date = ? WHERE id = ?`;
+          con.query(updateOrderNo, [orderno, pending, currentDate, order_id], (err, data) => {
+            if (err) {
+              return res.json(err);
+            }
+
+            // Check cart items
+            const checkCart = "SELECT * FROM `awt_cart` WHERE orderid = ? AND deleted = 0";
+            con.query(checkCart, [order_id], (err, data) => {
+              if (err) {
+                return res.json(err);
+              }
+
+              const stockRemovalData = data.map(item => [
+                item.proid, item.pqty, new Date(), user_id
+              ]);
+
+              // Insert into product stock removal
+              const insertStockRemove = "INSERT INTO awt_productstockremove (`pro_id`, `stock`, `created_date`, `updated_by`) VALUES ?";
+              con.query(insertStockRemove, [stockRemovalData], (err, data) => {
+                if (err) {
+                  return res.json(err);
+                }
+
+                // Update stock levels in parallel
+                stockRemovalData.forEach(item => {
+                  const [pro_id, stock] = item;
+                  const updateStock = "UPDATE `awt_productstock` SET stock = stock - ? WHERE pro_id = ?";
+                  con.query(updateStock, [stock, pro_id], (err, data) => {
+                    if (err) {
+                      return res.json(err);
+                    }
+                  });
+                });
+
+                // Update reserved stock
+                const updateReservStock = "UPDATE awt_reservstock SET p_status = 1 WHERE orderid = ?";
+                con.query(updateReservStock, [order_id], (err, data) => {
+                  if (err) {
+                    return res.json(err);
+                  }
+
+                  // Get order number for final response
+                  const getOrderNo = "SELECT orderno FROM `order` WHERE id = ?";
+                  con.query(getOrderNo, [order_id], async (err, data) => {
+                    if (err) {
+                      return res.json(err);
+                    }
+
+                    try {
+                      // Call the shipping function
+                      await shipping(order_id, token, shippingid, shippingamt);
+                      res.status(200).json({ success: true, message: 'Order placed successfully!', orderno: data[0].orderno });
+                    } catch (error) {
+                      console.error('Error in place_order:', error.message);
+                      res.status(500).json({ success: false, message: error.message });
+                    }
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+  });
+});
+
+
+const shipping = async (order_id, token, shippingid, shippingamt) => {
+  const sql = 'SELECT v_id FROM `awt_cart` WHERE orderid = ? GROUP BY v_id;';
+
+  return new Promise((resolve, reject) => {
+    con.query(sql, [order_id], async (err, information) => {
+      if (err) {
+        console.error('Database error:', err);
+        reject({ success: false, error: 'Database query failed' });
+      }
+      if (information.length === 0) {
+        console.error('No products found for the given order_id');
+        reject({ success: false, error: 'No products found for the given order_id' });
+      }
+
+      const log = 'INSERT INTO shipping (orderid, shippingid, shippingamt, createddate) VALUES (?, ?, ?, NOW())';
+      con.query(log, [order_id, shippingid, shippingamt], async (err, data) => {
+        // Map to promises
+        if (err) {
+          console.error('Database error:', err);
+          reject({ success: false, error: 'shipping failed' });
+        } else {
+          const vendor_data = information.map(item => api_to_nimbus(order_id, item.v_id, token, shippingid));
+          try {
+            // Wait for all promises to resolve
+            await Promise.all(vendor_data);
+            resolve();
+          } catch (error) {
+            console.error('Error in api_to_nimbus:', error.message);
+            reject(error);
+          }
+        }
+      })
+    });
+  });
+};
+
+const api_to_nimbus = (order_id, v_id, token, Shippingid) => {
+  return new Promise((resolve, reject) => {
+    // Get order items details
+    const sql = 'SELECT c.* , p.title FROM `awt_cart` as c  left join awt_add_product as p on c.proid = p.id WHERE c.orderid = ? AND c.v_id = ?';
+    con.query(sql, [order_id, v_id], (err, data) => {
+      if (err) {
+        console.error('Database error:', err);
+        reject({ success: false, error: 'Database query failed' });
+      }
+      if (data.length === 0) {
+        console.error('No products found for the given order_id and v_id');
+        reject({ success: false, error: 'No products found for the given order_id and v_id' });
+      }
+
+      const items = data.map(item => ({
+        name: item.title, // Ensure this field exists in your cart table
+        qty: String(item.pqty),
+        price: item.totalprice // Ensure this field exists in your cart table
+      }));
+
+      // Get customer info
+      const sql1 = 'SELECT * FROM `order` WHERE id = ?';
+      con.query(sql1, [order_id], (err, orderData) => {
+        if (err) {
+          console.error('Database error:', err);
+          reject({ success: false, error: 'Database query failed' });
+        }
+        if (orderData.length === 0) {
+          reject({ success: false, error: 'No order found for the given order_id' });
+        }
+
+        // Get vendor info
+        const sql2 = 'SELECT * FROM awt_vendor WHERE id = ?';
+        con.query(sql2, [v_id], (err, vendor_info) => {
+          if (err) {
+            console.error('Database error:', err);
+            reject({ success: false, error: 'Database query failed' });
+          }
+          if (vendor_info.length === 0) {
+            reject({ success: false, error: 'No vendor found for the given v_id' });
+          }
+
+          // Construct NimbusPost order payload
+          const nimbusOrderData = {
+            order_number: orderData[0].id,  // Order number from your system
+            shipping_charges: orderData[0].shipamount
+            ,  // Shipping charges (if any)
+            discount: orderData[0].disamount || 0,  // Discount applied to the order (if any)
+            payment_type: 'prepaid',  // Payment type (COD or Prepaid)
+            order_amount: orderData[0].totalamt,  // Total order amount
+            courier_id: Shippingid,  // Example courier_id from your system
+
+            // Consignee (Customer) information
+            consignee: {
+              name: `${orderData[0].firstname} ${orderData[0].lastname}`,  // Customer name
+              address: orderData[0].address1,  // Customer address
+              address_2: orderData[0].shipaddress || '',  // Additional address line (optional)
+              city: orderData[0].city1,
+              state: orderData[0].state,
+              pincode: orderData[0].postcode,
+              phone: orderData[0].mobileno
+            },
+
+            // Pickup (Vendor) information
+            pickup: {
+              warehouse_name: 'Default Warehouse',  // Example warehouse name
+              name: vendor_info[0].vendor_name,  // Vendor contact name
+              address: vendor_info[0].address,
+              address_2: vendor_info[0].address || '',  // Additional address line (optional)
+              city: vendor_info[0].city,
+              state: vendor_info[0].state,
+              pincode: vendor_info[0].pincode,
+              phone: vendor_info[0].mobile
+            },
+
+            // Order Items (Array of products)
+            order_items: items
+          };
+          console.log(nimbusOrderData);
+          // Make NimbusPost API call
+          const config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://api.nimbuspost.com/v1/shipments',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            data: nimbusOrderData
+          };
+
+          axios(config)
+            .then(response => {
+              console.log('API Response:', response.data);
+              resolve(response.data);
+            })
+            .catch(error => {
+              console.error('Error with NimbusPost API:', error.message);
+              reject(error);
+            });
+        });
+      });
+    });
+  });
+};
+
+
+
+// Endpoint to get shipping rates for multiple products across different vendors
+app.post('/get_shipping_rate', async (req, res) => {
+  const order_id = req.body.order_id;
+  const spincode = req.body.spincode;
+  const token = req.body.token;
+
+  try {
+    const shippingRates = await getShippingRateForMultipleVendors(order_id, spincode, token);
+    res.status(200).json({ success: true, shippingRates });
+  } catch (error) {
+    console.error('Error in get_shipping_rate:', error.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch shipping rates' });
+  }
+});
+
+// Function to get shipping rate for multiple vendors in an order
+const getShippingRateForMultipleVendors = (order_id, spincode, token) => {
+  return new Promise((resolve, reject) => {
+    // Fetch products grouped by vendor
+    const sql = 'SELECT p.v_id, ac.pqty, p.weight, p.length , p.breadth, p.height from awt_cart as ac left join awt_add_product as p on ac.proid = p.id where ac.deleted =0 and orderid =  ?';
+    con.query(sql, [order_id], (err, products) => {
+      if (err) {
+        console.error('Database error:', err);
+        reject('Database query failed');
+      }
+      if (products.length === 0) {
+        reject('No products found for the given order_id');
+      }
+
+      // Group products by vendor (v_id)
+      const groupedProducts = groupByVendor(products);
+
+      // Fetch customer order info (destination)
+      const sql1 = 'SELECT city1, state, postcode, oamount FROM `order` WHERE id = ?';
+      con.query(sql1, [order_id], (err, orderData) => {
+        if (err) {
+          console.error('Database error:', err);
+          reject('Database query failed');
+        }
+        if (orderData.length === 0) {
+          reject('No order found for the given order_id');
+        }
+
+        const destination = spincode;
+        const orderValue = orderData[0].oamount;  // Total order value
+
+        // Array to store all promises for each vendor
+        const ratePromises = [];
+
+        // For each vendor, get shipping rates
+        for (const vendorId in groupedProducts) {
+          ratePromises.push(
+            getVendorShippingRate(vendorId, groupedProducts[vendorId], destination, orderValue, token)
+          );
+        }
+
+        // Resolve all promises to get shipping rates for all vendors
+        Promise.all(ratePromises)
+          .then(rates => resolve(rates))  // Return all rates when resolved
+          .catch(error => reject(error));  // Handle any error in fetching rates
+      });
+    });
+  });
+};
+
+// Function to group products by vendor
+const groupByVendor = (products) => {
+  return products.reduce((grouped, product) => {
+    if (!grouped[product.v_id]) {
+      grouped[product.v_id] = [];
+    }
+    grouped[product.v_id].push({
+      qty: product.pqty,
+      weight: product.weight,
+      length: product.length,
+      breadth: product.breadth,
+      height: product.height
+    });
+    return grouped;
+  }, {});
+};
+
+// Function to get shipping rate for a specific vendor
+const getVendorShippingRate = (vendorId, vendorProducts, destination, orderValue, token) => {
+  return new Promise((resolve, reject) => {
+    // Fetch vendor origin information
+    const sql = 'SELECT * FROM `awt_vendor` WHERE id = ?';
+    con.query(sql, [vendorId], (err, vendorInfo) => {
+      if (err) {
+        console.error('Database error:', err);
+        reject('Database query failed');
+      }
+      if (vendorInfo.length === 0) {
+        reject(`No vendor found with id ${vendorId}`);
+      }
+
+      const origin = vendorInfo[0].pincode;  // Vendor's origin pincode
+      const paymentType = 'prepaid';  // Example payment type
+
+      // Construct payload for NimbusPost Rates API
+      const rateRequestData = {
+        origin, // Vendor's origin pincode
+        destination, // Customer's destination pincode
+        payment_type: paymentType, // Payment type
+        details: vendorProducts, // Products for the vendor
+        order_value: orderValue  // Total order value (same for all vendors)
+      };
+
+      // Send request to NimbusPost API for shipping rates
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.nimbuspost.com/v1/courier/serviceability',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: rateRequestData
+      };
+
+      axios(config)
+        .then(response => {
+          console.log(`Shipping Rates for Vendor ${vendorId}:`, response.data);
+          resolve({ vendor_id: vendorId, rates: response.data });
+        })
+        .catch(error => {
+          console.error(`Error fetching rates for Vendor ${vendorId}:`, error.message);
+          reject(`Failed to fetch shipping rates for Vendor ${vendorId}`);
+        });
+    });
+  });
+};
+
 app.post("/getcolorimg", (req, res) => {
   let colorid = req.body.colorid;
 
@@ -3831,7 +4241,7 @@ app.post("/profile_order", (req, res) => {
   let user_id = req.body.user_id;
 
   const sql =
-    "select * from `order` where  `userid` = ? and `oluxe` !='incart' and orderno != '' ";
+    "select * from `order` where  `userid` = ? and `ostatus` !='incart' and orderno != '' ";
 
   con.query(sql, [user_id], (err, data) => {
     if (err) {
@@ -3860,7 +4270,7 @@ app.post("/order_view", (req, res) => {
   let order_id = req.body.order_id;
 
   const sql =
-    "select id, sfirstname,slastname,orderno,order_date,oluxe,paymode,shipaddress,paymode,pluxe,shipcity,shippostcode,totalamt from `order` where `id` = ? and deleted = 0";
+    "select id, sfirstname,slastname,orderno,order_date,ostatus,paymode,shipaddress,paymode,pstatus,shipcity,shippostcode,totalamt from `order` where `id` = ? and deleted = 0";
 
   con.query(sql, [order_id], (err, data) => {
     if (err) {
@@ -3871,13 +4281,13 @@ app.post("/order_view", (req, res) => {
   });
 });
 
-app.post("/order_luxe_update", (req, res) => {
+app.post("/order_status_update", (req, res) => {
   let order_id = req.body.order_id;
-  let order_luxe = req.body.order_luxe;
+  let order_status = req.body.order_status;
 
-  const sql = "update `order` set `oluxe` = ?  where  id = ?";
+  const sql = "update `order` set `ostatus` = ?  where  id = ?";
 
-  con.query(sql, [order_luxe, order_id], (err, data) => {
+  con.query(sql, [order_status, order_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -3898,7 +4308,7 @@ app.post("/addorderid", (req, res) => {
     } else {
       if (data) {
         const sql =
-          "select id from `order` where `userid` = ? and `oluxe` = 'incart' order by `id` desc limit 1";
+          "select id from `order` where `userid` = ? and `ostatus` = 'incart' order by `id` desc limit 1";
 
         con.query(sql, [user_id], (err, data) => {
           if (err) {
@@ -4138,10 +4548,10 @@ app.post("/vendorlogin", (req, res) => {
   });
 });
 
-app.post("/product_luxe", (req, res) => {
-  const { id, luxe } = req.body;
+app.post("/product_status", (req, res) => {
+  const { id, status } = req.body;
 
-  console.log(id, luxe);
+  console.log(id, status);
 
   const sql = "SELECT approve FROM awt_temp_add_product WHERE id = ?";
 
@@ -4154,36 +4564,36 @@ app.post("/product_luxe", (req, res) => {
   });
 });
 
-app.post("/add_category", upload6.single("image"), (req, res) => {
-  let user_id = req.body.user_id;
-  let title = req.body.title;
-  let image = req.file.filename; // Assuming the image filename is directly available in the request body
-  let slug = req.body.slug;
-  let description = req.body.description;
-  let created_date = new Date();
-  let u_id = req.body.u_id;
+// app.post("/add_category", upload6.single("image"), (req, res) => {
+//   let user_id = req.body.user_id;
+//   let title = req.body.title;
+//   let image = req.file.filename; // Assuming the image filename is directly available in the request body
+//   let slug = req.body.slug;
+//   let description = req.body.description;
+//   let created_date = new Date();
+//   let u_id = req.body.u_id;
 
-  let sql;
-  let param;
+//   let sql;
+//   let param;
 
-  if (u_id == "undefined") {
-    sql =
-      "INSERT INTO awt_category(`title`, `slug`, `description`, `image`, `created_by`, `created_date`) VALUES (?, ?, ?, ?, ?, ?)";
-    param = [title, slug, description, image, user_id, created_date];
-  } else {
-    sql =
-      "UPDATE awt_category SET title = ?, slug = ?, description = ?, image = ?, updated_by = ?, updated_date = ? WHERE id = ?";
-    param = [title, slug, description, image, user_id, created_date, u_id];
-  }
+//   if (u_id == "undefined") {
+//     sql =
+//       "INSERT INTO awt_category(`title`, `slug`, `description`, `image`, `created_by`, `created_date`) VALUES (?, ?, ?, ?, ?, ?)";
+//     param = [title, slug, description, image, user_id, created_date];
+//   } else {
+//     sql =
+//       "UPDATE awt_category SET title = ?, slug = ?, description = ?, image = ?, updated_by = ?, updated_date = ? WHERE id = ?";
+//     param = [title, slug, description, image, user_id, created_date, u_id];
+//   }
 
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
+//   con.query(sql, param, (err, data) => {
+//     if (err) {
+//       return res.json(err);
+//     } else {
+//       return res.json(data);
+//     }
+//   });
+// });
 
 app.post("/vendorUserDelete", (req, res) => {
   let vendoruser_id = req.body.vendoruser_id;
@@ -4359,7 +4769,7 @@ app.post("/getBrandProducts", (req, res, next) => {
 
   con.query(sql, [b_id], (error, data) => {
     if (error) {
-      res.luxe(500).json({
+      res.status(500).json({
         message: "cannot get brand data",
         error: error,
       });
@@ -4519,7 +4929,7 @@ app.post("/getProductsByPriceRange", (req, res, next) => {
 
   con.query(sql, [range], (error, data) => {
     if (error) {
-      res.luxe(500).json(error);
+      res.status(500).json(error);
       return;
     }
 
@@ -4604,15 +5014,15 @@ app.post(`/vendor_request_approve`, (req, res) => {
   let firstname = req.body.firstname;
   let vendor_id = req.body.vendor_id;
   let lastname = req.body.lastname;
-  let luxe = req.body.luxe;
+  let status = req.body.status;
   let email = req.body.email;
   let mobile = req.body.mobile;
 
   const fullname = firstname + " " + lastname;
 
-  const sql = "update `Vendor_registration` set luxe = ? where id = ?";
+  const sql = "update `Vendor_registration` set status = ? where id = ?";
 
-  con.query(sql, [luxe, vendor_id], (err, data) => {
+  con.query(sql, [status, vendor_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -4710,7 +5120,7 @@ app.post("/getreturnorderno", (req, res) => {
 
 app.get("/return_request", (req, res) => {
   const sql =
-    "select are.id, are.user_id, are.orderid , are.return_no , are.return_amount, are.return_date, are.luxe, ac.firstname, ac.lastname, ac.email from `awt_return_exchange` as are left join `awt_customers` as ac on are.user_id = ac.id ";
+    "select are.id, are.user_id, are.orderid , are.return_no , are.return_amount, are.return_date, are.status, ac.firstname, ac.lastname, ac.email from `awt_return_exchange` as are left join `awt_customers` as ac on are.user_id = ac.id ";
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -4725,7 +5135,7 @@ app.post("/return_order_view", (req, res) => {
   let order_id = req.body.order_id;
 
   const sql =
-    "select are.id, are.user_id, are.orderid , are.return_no , are.return_amount, are.return_date, are.luxe, o.firstname as username , o.orderno ,o.address1,o.city1 ,o.state , o.postcode , o.sfirstname , o.slastname ,o.shipaddress , o.shipcity, o.shippostcode , o.paymode , o.oluxe , o.order_date , o.totalamt  from `awt_return_exchange` as are left join `order` as o on o.id = are.orderid  where are.id = ?";
+    "select are.id, are.user_id, are.orderid , are.return_no , are.return_amount, are.return_date, are.status, o.firstname as username , o.orderno ,o.address1,o.city1 ,o.state , o.postcode , o.sfirstname , o.slastname ,o.shipaddress , o.shipcity, o.shippostcode , o.paymode , o.ostatus , o.order_date , o.totalamt  from `awt_return_exchange` as are left join `order` as o on o.id = are.orderid  where are.id = ?";
 
   con.query(sql, [order_id], (err, data) => {
     if (err) {
@@ -4751,13 +5161,13 @@ app.post("/getreturncartData", (req, res) => {
   });
 });
 
-app.post("/return_luxe_update", (req, res) => {
+app.post("/return_status_update", (req, res) => {
   let return_id = req.body.return_id;
-  let return_luxe = req.body.return_luxe;
+  let return_status = req.body.return_status;
 
-  const sql = "update `awt_return_exchange` set `luxe` = ?  where  id = ?";
+  const sql = "update `awt_return_exchange` set `status` = ?  where  id = ?";
 
-  con.query(sql, [return_luxe, return_id], (err, data) => {
+  con.query(sql, [return_status, return_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
@@ -5220,7 +5630,7 @@ app.post(`/getstock`, (req, res) => {
 });
 
 function checkRows() {
-  const query = `SELECT * FROM awt_reservstock WHERE created_date < CONVERT_TZ(NOW(), @@session.time_zone, '+05:30') - INTERVAL 15 MINUTE AND p_luxe = 0 AND deleted = 0`;
+  const query = `SELECT * FROM awt_reservstock WHERE created_date < CONVERT_TZ(NOW(), @@session.time_zone, '+05:30') - INTERVAL 15 MINUTE AND p_status = 0 AND deleted = 0`;
 
   con.query(query, (err, results) => {
     if (err) {
@@ -5256,10 +5666,10 @@ function checkRows() {
   });
 }
 
-cron.schedule("* * * * *", () => {
-  console.log("Running scheduled task");
-  checkRows();
-});
+// cron.schedule("* * * * *", () => {
+//   console.log("Running scheduled task");
+//   checkRows();
+// });
 
 // payment api *************************
 
@@ -5308,14 +5718,14 @@ app.post("/payment", async (req, res) => {
   try {
     const response = await axios.request(options);
 
-    res.luxe(200).send({
+    res.status(200).send({
       url: response.data.data.instrumentResponse.redirectInfo.url,
       transactionid: response.data.data.merchantTransactionId,
       success: response.data.success,
     });
   } catch (error) {
     console.error(`Payment Error: ${error.message}`);
-    res.luxe(500).send({ message: error.message, success: false });
+    res.status(500).send({ message: error.message, success: false });
   }
 });
 
@@ -5328,18 +5738,18 @@ app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
   const { merchantTransactionId } = req.params;
 
   if (merchantTransactionId) {
-    const luxeUrl =
-      `${PHONE_PE_HOST_URL}/pg/v1/luxe/${MERCHANT_ID}/` +
+    const statusUrl =
+      `${PHONE_PE_HOST_URL}/pg/v1/status/${MERCHANT_ID}/` +
       merchantTransactionId;
 
     // generate X-VERIFY
     const string =
-      `/pg/v1/luxe/${MERCHANT_ID}/` + merchantTransactionId + SALT_KEY;
+      `/pg/v1/status/${MERCHANT_ID}/` + merchantTransactionId + SALT_KEY;
     const sha256 = crypto.createHash("sha256").update(string).digest("hex");
     const xVerifyChecksum = sha256 + "###" + SALT_INDEX;
 
     try {
-      const response = await axios.get(luxeUrl, {
+      const response = await axios.get(statusUrl, {
         headers: {
           "Content-Type": "application/json",
           "X-VERIFY": xVerifyChecksum,
@@ -5349,12 +5759,12 @@ app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
       });
 
       if (response.data && response.data.code === "PAYMENT_SUCCESS") {
-        // Redirect to FE payment success luxe page
+        // Redirect to FE payment success status page
         res.redirect(
           `https://micasasucasa.in/#/payment-success?transactionid=${merchantTransactionId}`
         );
       } else {
-        // Redirect to FE payment failure / pending luxe page
+        // Redirect to FE payment failure / pending status page
         res.redirect(
           `https://micasasucasa.in/#/payment-failure?transactionid=${merchantTransactionId}`
         );
@@ -5362,11 +5772,11 @@ app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
     } catch (error) {
       console.error(`Payment validation failed: ${error.message}`);
       res
-        .luxe(500)
+        .status(500)
         .send({ message: "Payment verification failed", success: false });
     }
   } else {
-    res.luxe(400).send({ message: "Invalid Transaction ID", success: false });
+    res.status(400).send({ message: "Invalid Transaction ID", success: false });
   }
 });
 
@@ -5463,7 +5873,7 @@ app.post("/add_Breadcrumbs", upload9.single("image"), (req, res) => {
 //   let u_id = req.body.u_id;
 
 //   // if (!user_id) {
-//   //   return res.luxe(400).json({ error: 'User  ID is required' });
+//   //   return res.status(400).json({ error: 'User  ID is required' });
 //   // }
 
 //   console.log(image)
@@ -5551,7 +5961,7 @@ app.post("/add_SlotMaster", (req, res) => {
   const created_date = new Date();
 
   if (!location || !slot || !title || !user_id) {
-    return res.luxe(400).json({ error: "All fields are required" });
+    return res.status(400).json({ error: "All fields are required" });
   }
 
   const sql =
@@ -5561,9 +5971,9 @@ app.post("/add_SlotMaster", (req, res) => {
   con.query(sql, params, (err) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
-    return res.luxe(201).json({ message: "SlotMaster Added Successfully!" });
+    return res.status(201).json({ message: "SlotMaster Added Successfully!" });
   });
 });
 
@@ -5574,7 +5984,7 @@ app.get("/SlotMaster_data", (req, res) => {
   con.query(sql, (err, data) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
     return res.json(data);
   });
@@ -5586,7 +5996,7 @@ app.post("/update_SlotMaster", (req, res) => {
   const updated_date = new Date();
 
   if (!id || !location || !slot || !title || !user_id) {
-    return res.luxe(400).json({ error: "All fields are required" });
+    return res.status(400).json({ error: "All fields are required" });
   }
 
   const sql =
@@ -5596,7 +6006,7 @@ app.post("/update_SlotMaster", (req, res) => {
   con.query(sql, params, (err) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
     return res.json({ message: "SlotMaster Updated Successfully!" });
   });
@@ -5607,7 +6017,7 @@ app.post("/delete_SlotMaster", (req, res) => {
   const { id } = req.body;
 
   if (!id) {
-    return res.luxe(400).json({ error: "ID is required" });
+    return res.status(400).json({ error: "ID is required" });
   }
 
   const sql = "UPDATE SlotMaster SET deleted = 1 WHERE id = ?";
@@ -5616,7 +6026,7 @@ app.post("/delete_SlotMaster", (req, res) => {
   con.query(sql, params, (err) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
     return res.json({ message: "SlotMaster Deleted Successfully!" });
   });
@@ -5627,7 +6037,7 @@ app.post("/get_SlotMaster", (req, res) => {
   const { id } = req.body;
 
   if (!id) {
-    return res.luxe(400).json({ error: "ID is required" });
+    return res.status(400).json({ error: "ID is required" });
   }
 
   const sql = "SELECT * FROM SlotMaster WHERE id = ?";
@@ -5636,7 +6046,7 @@ app.post("/get_SlotMaster", (req, res) => {
   con.query(sql, params, (err, data) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
     return res.json(data);
   });
@@ -5650,7 +6060,7 @@ app.get("/locationMaster_data", (req, res) => {
   con.query(sql, (err, data) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
     return res.json(data);
   });
@@ -5663,7 +6073,7 @@ app.post("/updateSlot", (req, res) => {
   con.query(sql, [slot, id], (err, result) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
     return res.json({ message: "Slot updated successfully" });
   });
@@ -5685,7 +6095,7 @@ app.post('/add_advertisement', upload11.single('image'), (req, res) => {
 
   if (!slot || !type || !title) {
     return res
-      .luxe(400)
+      .status(400)
       .json({ error: "Slot, Type, and Title are required" });
   }
 
@@ -5695,10 +6105,10 @@ app.post('/add_advertisement', upload11.single('image'), (req, res) => {
   con.query(sql, params, (err) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json(err);
+      return res.status(500).json(err);
     }
     return res
-      .luxe(201)
+      .status(201)
       .json({ message: "Advertisement Added Successfully!" });
   });
 });
@@ -5709,7 +6119,7 @@ app.get("/advertisements", (req, res) => {
   con.query(sql, (err, data) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
     return res.json(data);
   });
@@ -5728,7 +6138,7 @@ app.post("/update_advertisement", upload11.single("image"), (req, res) => {
   }
 
   if (!id || !slot || !type || !title) {
-    return res.luxe(400).json({ error: "All fields are required" });
+    return res.status(400).json({ error: "All fields are required" });
   }
 
   const sql =
@@ -5749,7 +6159,7 @@ app.post("/update_advertisement", upload11.single("image"), (req, res) => {
     if (err) {
       console.error(err);
       return res
-        .luxe(500)
+        .status(500)
         .json({ error: "Database error", message: err.message });
     }
     return res.json({ message: "Advertisement Updated Successfully!" });
@@ -5760,14 +6170,14 @@ app.post("/update_advertisement", upload11.single("image"), (req, res) => {
 app.post("/delete_advertisement", (req, res) => {
   const { id } = req.body;
   if (!id) {
-    return res.luxe(400).json({ error: "ID is required" });
+    return res.status(400).json({ error: "ID is required" });
   }
 
   const sql = "UPDATE awt_advertisements SET deleted = 1 WHERE id = ?";
   con.query(sql, [id], (err) => {
     if (err) {
       console.error(err);
-      return res.luxe(500).json({ error: "Database error" });
+      return res.status(500).json({ error: "Database error" });
     }
     return res.json({ message: "Advertisement Deleted Successfully!" });
   });
@@ -5782,8 +6192,8 @@ app.post("/sendinquiry", upload10.single("image"), (req, res) => {
   const image = req.file ? req.file.filename : null;
 
   const sql = `
-      INSERT INTO awt_productinquiry 
-      (user_id, product_id, inquiry_description, name, email, mobile, created_date, image) 
+      INSERT INTO awt_productinquiry
+      (user_id, product_id, inquiry_description, name, email, mobile, created_date, image)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -5809,8 +6219,12 @@ app.post("/sendinquiry", upload10.single("image"), (req, res) => {
             },
           ],
           subject: "customization request Mail",
-          htmlbody: `<divstyle="margin: 0; font-family: 'Poppins', sans-serif; background: #ffffff; font-size: 14px;">
-      <div style="max-width: 680px; margin: 0 auto; padding: 45px 30px 60px; background: #c4e6f562; background-image: url(https://encycolorpedia.com/f8e9d5.png); background-repeat: no-repeat; background-size: 800px 452px; background-position: top center; font-size: 14px; color: #434343;">
+          htmlbody: `<div
+      style="margin: 0; font-family: 'Poppins', sans-serif; background: #ffffff; font-size: 14px;"
+    >
+      <div
+        style="max-width: 680px; margin: 0 auto; padding: 45px 30px 60px; background: #c4e6f562; background-image: url(https://cdn.tapetender70er.de/media/image/5c/5c/2d/385008-1_warp-beauty-08_518x389.jpg); background-repeat: no-repeat; background-size: 800px 452px; background-position: top center; font-size: 14px; color: #434343;"
+      >
         <header>
           <table style="width: 100%">
             <div>
@@ -5978,16 +6392,35 @@ app.post(`/getlocation`, (req, res) => {
 
 })
 
-app.get('/moving_category' , (req,res) =>{
-  
-  const sql = "select ac.*,ag.slug as group_slug from awt_category as ac left join awt_group as ag on ag.id = ac.group_id where ac.deleted = 0";
+app.get('/moving_category', (req, res) => {
 
-  con.query(sql , (err,data) =>{
-    if(err){
+  const sql = "select ac.*,ag.slug as group_slug from awt_category as ac left join awt_group as ag on ag.id = ac.group_id where ac.deleted = 0 and ac.moving_category = 1";
+
+  con.query(sql, (err, data) => {
+    if (err) {
       return res.json(err)
-    }else{
+    } else {
       return res.json(data)
     }
   })
 })
 
+
+app.post('/toggle_category', (req, res) => {
+  const { toggle_id, status } = req.body;
+
+  if (!toggle_id || typeof status !== 'number') {
+    return res.status(400).json({ message: "Invalid input data" });
+  }
+
+  const sql = `UPDATE awt_category SET moving_category = ? WHERE id = ?`;
+
+  con.query(sql, [status, toggle_id], (err, result) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "An error occurred while updating the category." });
+    } else {
+      return res.status(200).json({ message: "Category updated successfully", data: result });
+    }
+  });
+});
