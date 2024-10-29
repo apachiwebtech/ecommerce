@@ -155,6 +155,10 @@ const Category = () => {
                 setCatData(prev => prev.map(item => 
                     item.id === id ? { ...item, Moving_Category: newStatus } : item
                 ));
+
+                alert("Status Changed")
+
+                getcatData()
             })
             .catch(err => {
                 console.error("Error toggling category status:", err);
@@ -328,8 +332,8 @@ const Category = () => {
                 <FormControlLabel
                     control={
                         <Android12Switch
-                            checked={params.row.Moving_Category === 1}
-                            onChange={() => handleToggle(params.row.id, params.row.Moving_Category)}
+                            checked={params.row.moving_category === 1}
+                            onChange={() => handleToggle(params.row.id, params.row.moving_category)}
                         />
                     }
                     label=""
