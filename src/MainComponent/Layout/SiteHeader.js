@@ -26,9 +26,19 @@ const SiteHeader = (cartCount) => {
   const [toggle, setToggle] = useState(false);
   const [searchtoggle, setsearchtoggle] = useState(false);
   const custuser_id = Cookies.get("custuserid");
-
   const location = useLocation();
   const isHomePage = location.pathname === "/home";
+  const [isSubMenuVisible, setSubMenuVisible] = useState(false); 
+  const [subItems, setSubItems] = useState([]);
+  const toggleSubMenu = (groupId) => {
+    setSubMenuVisible(!isSubMenuVisible);
+    
+  };
+  async function getSubItems() {
+    // Assuming you want to set subItems based on some condition
+    const fetchedSubItems = await axios.get(`${BASE_URL}/subcategory_data`);
+    setSubItems(fetchedSubItems.data);
+}
   async function getTrendingData() {
     axios
       .get(`${BASE_URL}/group_data`)
@@ -75,6 +85,7 @@ const SiteHeader = (cartCount) => {
     getsubcatData();
     getcatData();
     getTrendingData();
+    getSubItems();
   }, []);
 
   const [open, setOpen] = useState(false);
@@ -114,8 +125,16 @@ const SiteHeader = (cartCount) => {
     <div>
       <header
         id="site-header"
-        className="site-header header-v1"
-        style={{ background: "#F8E9D5" }}
+        className="site-header header-v1 fixed-top"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 9,
+          background: '#F8E9D5', 
+          width: '100%', 
+      }}
       >
         <div className="header-mobile">
           <div className="section-padding">
@@ -300,7 +319,7 @@ const SiteHeader = (cartCount) => {
             </div>
 
             {open && <LoginForm setOpen={setOpen} open={open} />}
-            {/* after clickinh searct on mobile view start /==================================================== */}
+            {/* after clicking searct mobile view start /==================================================== */}
             <div className="ruper-topcart dropdown light">
               <div className="dropdown mini-cart top-cart">
                 <div className="remove-cart-shadow"></div>
@@ -476,15 +495,16 @@ const SiteHeader = (cartCount) => {
                             </Link>
                           </li>
                           <li className="level-0 menu-item menu-item-has-children">
-                            <Link to={`/shoproduct/${banner[0]?.slug}`}>
+                            <Link to={`/shoproduct/${banner[0]?.slug}`} onClick={toggleSubMenu}>
                               <span className="menu-item-text">
                                 {banner[0]?.title}
                               </span>
                             </Link>
+                            {isSubMenuVisible && subItems.length > 0 && (
                             <ul className="sub-menu">
                               {cat
                                 .filter(
-                                  (item) => item.group_id == banner[0]?.id
+                                  (item) => item.group_id == banner[0]?.id && item.active === 1
                                 )
                                 .map((item) => {
                                   return (
@@ -502,10 +522,11 @@ const SiteHeader = (cartCount) => {
                                           {item.title}
                                         </span>
                                       </Link>
+                                      {subItems.length > 0 && (
                                       <ul className="sub-menu">
                                         {subcat
                                           .filter(
-                                            (ele) => ele.cat_id == item.id
+                                            (ele) => ele.cat_id == item.id 
                                           )
                                           .map((ele) => {
                                             return (
@@ -527,21 +548,24 @@ const SiteHeader = (cartCount) => {
                                             );
                                           })}
                                       </ul>
+                                      )}
                                     </li>
                                   );
                                 })}
                             </ul>
+                            )}
                           </li>
                           <li className="level-0 menu-item menu-item-has-children">
-                            <Link to={`/shoproduct/${banner[1]?.slug}`}>
+                            <Link to={`/shoproduct/${banner[1]?.slug}`} onClick={toggleSubMenu}>
                               <span className="menu-item-text">
                                 {banner[1]?.title}
                               </span>
                             </Link>
+                            {isSubMenuVisible && subItems.length > 0 &&(
                             <ul className="sub-menu">
                               {cat
                                 .filter(
-                                  (item) => item.group_id == banner[1]?.id
+                                  (item) => item.group_id == banner[1]?.id && item.active === 1
                                 )
                                 .map((item) => {
                                   return (
@@ -553,6 +577,7 @@ const SiteHeader = (cartCount) => {
                                           {item.title}
                                         </span>
                                       </Link>
+                                      {subItems.length > 0 && (
                                       <ul className="sub-menu">
                                         {subcat
                                           .filter(
@@ -578,22 +603,24 @@ const SiteHeader = (cartCount) => {
                                             );
                                           })}
                                       </ul>
+                                      )}
                                     </li>
                                   );
                                 })}
                             </ul>
+                            )}
                           </li>
                           <li className="level-0 menu-item menu-item-has-children">
-                            <Link to={`/shoproduct/${banner[2]?.slug}`}>
+                            <Link to={`/shoproduct/${banner[2]?.slug}`} onClick={toggleSubMenu}>
                               <span className="menu-item-text">
                                 {banner[2]?.title}
                               </span>
                             </Link>
-
+                            {isSubMenuVisible && subItems.length > 0 &&(
                             <ul className="sub-menu">
                               {cat
                                 .filter(
-                                  (item) => item.group_id == banner[2]?.id
+                                  (item) => item.group_id == banner[2]?.id && item.active === 1
                                 )
                                 .map((item) => {
                                   return (
@@ -605,6 +632,7 @@ const SiteHeader = (cartCount) => {
                                           {item.title}
                                         </span>
                                       </Link>
+                                      {subItems.length > 0 && (
                                       <ul className="sub-menu">
                                         {subcat
                                           .filter(
@@ -630,10 +658,12 @@ const SiteHeader = (cartCount) => {
                                             );
                                           })}
                                       </ul>
+                                      )}
                                     </li>
                                   );
                                 })}
                             </ul>
+                            )}
                           </li>
                           <li className="level-0 menu-item ">
                             <Link to={`/shoproduct/${banner[3]?.slug}`}>

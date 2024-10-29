@@ -161,6 +161,21 @@ const Category = () => {
             });
     };
 
+    const handleToggleActive = (id, currentStatus) => {
+        const newStatus = currentStatus === 1 ? 0 : 1;
+        console.log("Toggling Active Status ID:", id, "New Status:", newStatus);
+        axios.post(`${BASE_URL}/toggle_active`, { toggle_id: id, status: newStatus })
+            .then(() => {
+                // Update local state to reflect the change
+                setCatData(prev => prev.map(item => 
+                    item.id === id ? { ...item, active: newStatus } : item
+                ));
+            })
+            .catch(err => {
+                console.error("Error toggling Active status:", err);
+            });
+    };
+
     const handleClick = (id) => {
         setCid(id)
         setConfirmationVisibleMap((prevMap) => ({
@@ -255,7 +270,7 @@ const Category = () => {
 
             axios.post(`${BASE_URL}/add_category`, formdata)
                 .then((res) => {
-                    alert(res.data)
+                    console.log(res.data)
                     getcatData()
                     setLoader(false)
                     // window.location.pathname = '/webapp/category'
@@ -315,6 +330,22 @@ const Category = () => {
                         <Android12Switch
                             checked={params.row.Moving_Category === 1}
                             onChange={() => handleToggle(params.row.id, params.row.Moving_Category)}
+                        />
+                    }
+                    label=""
+                />
+            ),
+        },
+        {
+            field: 'active',
+            headerName: 'Active',
+            flex: 1,
+            renderCell: (params) => (
+                <FormControlLabel
+                    control={
+                        <Android12Switch
+                            checked={params.row.active === 1}
+                            onChange={() => handleToggleActive(params.row.id, params.row.active)}
                         />
                     }
                     label=""
