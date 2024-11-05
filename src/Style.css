@@ -11471,6 +11471,7 @@ ul.slick-dots li.slick-active button {
 }
 #site-footer .footer-bottom .footer-right {
   text-align: right;
+  padding-right: 75px !important;
 }
 #site-footer .footer-bottom .footer-right .block-menu ul li {
   display: inline-block;
@@ -11522,7 +11523,7 @@ ul.slick-dots li.slick-active button {
 }
 #site-footer .social-link li a i {
   color: #000;
-  font-size: 16px;
+  font-size: 20px;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
@@ -11601,4 +11602,29 @@ ul.slick-dots li.slick-active button {
 
 .carousel .slide:focus {
   outline: none;
+}
+
+
+.scrole-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  /* transition: background-color 0.3s ease, backdrop-filter 0.3s ease; */
+  background: #F8E9D5;
+  /* backdrop-filter: blur(0.1px);  */
+  width: 100%; 
+}
+
+/* .scrole-header.scrolled {
+  background: #F8E9D5; 
+  backdrop-filter: none; 
+} */
+
+.mobile-footer{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }

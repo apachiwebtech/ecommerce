@@ -275,11 +275,11 @@ const VendorForm = () => {
             setLoader(true)
             let hashpassword
 
-            if (value.password == "") {
+            if (value.password) {
                 hashpassword = md5(value.password)
 
             } else {
-                hashpassword = vendor.password
+                hashpassword = vendor.password || "";
             }
 
 

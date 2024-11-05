@@ -11,7 +11,7 @@ import { getCartCount } from '../../Store/Cart/cart-action'
 import { useDispatch } from 'react-redux'
 
 function LoginForm({ open, setOpen }) {
-
+    const [activeTab, setActiveTab] = useState('login');
     const [value, setValue] = useState({
         email: "",
         password: "",
@@ -168,7 +168,8 @@ function LoginForm({ open, setOpen }) {
 
 
 
-    const flushdata = () => {
+    const flushdata = (tab) => {
+        setActiveTab(tab);
         setShowOtp(false);
         setOTPValue({
             otp1: "",
@@ -427,40 +428,26 @@ function LoginForm({ open, setOpen }) {
             {open && <div className="box-form-login" >
                 <div className="active-login" onClick={handleToggle} ></div>
                 <div className="box-content ">
-                    {!hide &&        <div className="form-login active">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="home-tab" onClick={flushdata} data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">LOGIN</button>
+                           <div className="form-login active">
+                           <ul className="nav nav-tabs" id="myTab" role="tablist">
+                            <li className="nav-item" role="presentation">
+                                <button className={`nav-link ${activeTab === 'login' ? 'active' : ''}`} onClick={() => flushdata('login')} type="button">LOGIN</button>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="profile-tab" onClick={flushdata} data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">SIGN UP</button>
+                            <li className="nav-item" role="presentation">
+                                <button className={`nav-link ${activeTab === 'register' ? 'active' : ''}`} onClick={() => flushdata('register')} type="button">SIGN UP</button>
                             </li>
-
                         </ul>
                         <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                
-                                <form onSubmit={handleSubmit} id="login_ajax" method="post" style={{padding :"20px 30px 30px"}} className="login">
-
+                        <div className="tab-content" id="myTabContent">
+                            <div className={`tab-pane fade ${activeTab === 'login' ? 'show active' : ''}`} id="home" role="tabpanel">
+                                <form onSubmit={handleSubmit} id="login_ajax" method="post" style={{ padding: "20px 30px 30px" }} className="login">
                                     <h2>Sign in</h2>
-                                    <p className="status"></p>
                                     <div className="content">
-                                        {errors.email && (<span className="text-danger">{errors.email}</span>
-                                        )}
+                                        {errors.email && (<span className="text-danger">{errors.email}</span>)}
                                         <div className="username">
                                             <input type="text" required="required" className="input-text" name="email" id="username" placeholder="Your Email" onChange={onhandleChange} />
                                         </div>
-
-                                        {/* <div className="rememberme-lost">
-                                            <div className="rememberme">
-                                                <input name="rememberme" type="checkbox" id="rememberme" value="forever" />
-                                                <label htmlFor="rememberme" className="inline">Remember me</label>
-                                            </div>
-                                            <div className="lost_password">
-                                                <Link href="forgot-password.html">Lost your password?</Link>
-                                            </div>
-                                        </div> */}
-                                        <div className="button-login" >
+                                        <div className="button-login">
                                             <input type="submit" className="button" name="Login" value="Login" />
                                         </div>
                                         <span className='text-danger'>{notexist}</span>
@@ -468,7 +455,7 @@ function LoginForm({ open, setOpen }) {
                                 </form>
                             </div>
 
-                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <div  className={`tab-pane fade ${activeTab === 'register' ? 'show active' : ''}`} id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                 <form onSubmit={onhandleregistersubmit} id="login_ajax" method="post" style={{padding :"20px 30px 30px"}} className="login">
 
                                     <h2>Register</h2>
@@ -516,7 +503,7 @@ function LoginForm({ open, setOpen }) {
                         </div>
 
 
-                    </div>}
+                    </div>
              
 
                     {hide ?
@@ -573,6 +560,7 @@ function LoginForm({ open, setOpen }) {
                         </div> : null}
 
 
+                </div>
                 </div>
             </div>}
         </div>

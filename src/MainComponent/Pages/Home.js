@@ -40,7 +40,7 @@ const DashBoard = () => {
   }, [])
 
   return (
-    <div id="site-main" class="site-main">
+    <div id="site-main" class="site-main" style={{marginTop:"84px"}}>
             {loader && <SiteLoader />}
       <Helmet>
         <title>{data.seo_title}</title>

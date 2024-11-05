@@ -5,8 +5,9 @@ import { BASE_URL } from './BaseUrl'
 import md5 from 'js-md5'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
-import logo from '../assets/images/logo/ecomlogo.png'
 import CryptoJS from 'crypto-js';
+import logo from "../assets/frontimg/bgrlogo.png";
+
 
 const WebLogin = () => {
   const [value, setValue] = useState({
@@ -129,10 +130,10 @@ const WebLogin = () => {
   return (
     <div className="container-scroller d-flex">
       <div className="container-fluid page-body-wrapper full-page-wrapper d-flex">
-        <div className="content-wrapper d-flex align-items-center auth px-0">
-          <div className="row w-100 mx-0">
-            <div className="col-lg-4 mx-auto">
-              <div className="auth-form-light text-left py-5 px-4 px-sm-5">
+        <div className="content-wrapper d-flex align-items-center auth px-0" >
+          <div className="row w-100 mx-0" >
+            <div className="col-lg-4 mx-auto" >
+              <div className="auth-form-light text-left py-5 px-4 px-sm-5" >
                 <div className="brand-logo">
                   <img src={logo} alt="logo" />
                 </div>

@@ -144,7 +144,7 @@ const Contact = () => {
                                         <div class="block block-contact-map">
                                             <div class="block-widget-wrap">
 
-                                                <iframe src="https://maps.google.com/maps?q=London%20Eye%2C%20London%2C%20United%20Kingdom&amp;t=m&amp;z=10&amp;output=embed&amp;iwloc=near" aria-label="London Eye, London, United Kingdom"></iframe>
+                                                {/* <iframe src="https://maps.google.com/maps?q=London%20Eye%2C%20London%2C%20United%20Kingdom&amp;t=m&amp;z=10&amp;output=embed&amp;iwloc=near" aria-label="London Eye, London, United Kingdom"></iframe> */}
 
                                             </div>
                                         </div>
@@ -172,7 +172,7 @@ const Contact = () => {
                                                                     <h2>Phone</h2>
                                                                 </div>
                                                                 <div class="item-content">
-                                                                    810.222.5439
+                                                                +91-8989000066
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -183,7 +183,7 @@ const Contact = () => {
                                                                 </div>
                                                                 <div class="item-content">
                                                                     <p>Monday to Friday</p>
-                                                                    <p>8:00am – 4:00pm Sydney, NSW time (UTC +10)</p>
+                                                                    <p>9:00am – 6:00pm India</p>
                                                                     <p>Saturday and Sunday closed</p>
                                                                 </div>
                                                             </div>

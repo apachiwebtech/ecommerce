@@ -116,10 +116,10 @@ const SiteFooter = () => {
 										<div className="footer-right">
 											<div className="block block-social">
 												<ul className="social-link">
-													<li><a href="#"><i className="fa fa-twitter"></i></a></li>
-													<li><a href="#"><i className="fa fa-instagram"></i></a></li>
-													<li><a href="#"><i className="fa fa-dribbble"></i></a></li>
-													<li><a href="#"><i className="fa fa-behance"></i></a></li>
+												    <li><a href="mailto:info@micasasucasa.in"><i className="fa fa-envelope" ></i></a></li>
+													<li><a href="http://instagram.com/_u/micasasucasa.in/"><i className="fa fa-instagram" ></i></a></li>
+													<li><a href="#"><i className="fa fa-dribbble" ></i></a></li>
+													<li><a href="#"><i className="fa fa-behance" ></i></a></li>
 												</ul>
 											</div>
 										</div>

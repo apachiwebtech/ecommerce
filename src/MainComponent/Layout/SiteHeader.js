@@ -16,6 +16,7 @@ import logo from "../../assets/frontimg/logo.png";
 import { getCartCount } from "../../Store/Cart/cart-action";
 import { getWishCount } from "../../Store/WishList/wishlist-actions";
 import LoginForm from "../Authentication/LoginForm";
+import '../../Style.css';
 
 const SiteHeader = (cartCount) => {
   const [banner, setBanner] = useState([]);
@@ -30,7 +31,22 @@ const SiteHeader = (cartCount) => {
   const isHomePage = location.pathname === "/home";
   const [isSubMenuVisible, setSubMenuVisible] = useState(false); 
 
+  // const [isScrolled, setIsScrolled] = useState(false);
 
+  // const handleScroll = () => {
+  //   if (window.scrollY > 100) {
+  //     setIsScrolled(true);
+  //   } else {
+  //     setIsScrolled(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   async function getTrendingData() {
     axios
@@ -88,7 +104,6 @@ const SiteHeader = (cartCount) => {
   const dispatch = useDispatch();
   const count = useSelector((state) => state.cartCount.cartCount);
   const wishcount = useSelector((state) => state.wishlist.wishCount);
-
   const handlechangesearch = (e) => {
     setSearch(e.target.value);
 
@@ -117,16 +132,7 @@ const SiteHeader = (cartCount) => {
     <div>
       <header
         id="site-header"
-        className="site-header header-v1 fixed-top"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 9,
-          background: '#F8E9D5', 
-          width: '100%', 
-      }}
+        className="site-header header-v1 fixed-top scrole-header"
       >
         <div className="header-mobile">
           <div className="section-padding">
@@ -203,7 +209,7 @@ const SiteHeader = (cartCount) => {
                 <div className="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-right">
                   <div className="ruper-topcart dropdown">
                     <div className="dropdown mini-cart top-cart">
-                      <div className="remove-cart-shadow"></div>
+                      {/* <div className="remove-cart-shadow"></div>
                       <Link
                         className="dropdown-toggle cart-icon"
                         to="/shopcart"
@@ -216,7 +222,7 @@ const SiteHeader = (cartCount) => {
                           <i className="icon-large-paper-bag"></i>
                           <span className="cart-count">{count}</span>
                         </div>
-                      </Link>
+                      </Link> */}
 
                       {/* <div className="dropdown-menu ">
 												<div className="cart-empty-wrap">
@@ -310,25 +316,11 @@ const SiteHeader = (cartCount) => {
               )}
             </div>
 
-            {open && <LoginForm setOpen={setOpen} open={open} />}
-            {/* after clicking searct mobile view start /==================================================== */}
-            <div className="ruper-topcart dropdown light">
-              <div className="dropdown mini-cart top-cart">
-                <div className="remove-cart-shadow"></div>
-                <Link
-                  className="dropdown-toggle cart-icon"
-                  to="/shopcart"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  <div className="icons-cart">
-                    <i className="icon-large-paper-bag"></i>
-                    <span className="cart-count">{count}</span>
-                  </div>
-                </Link>
-
+             {open && <LoginForm setOpen={setOpen} open={open} />}
+            
+            {/* <div className="ruper-topcart dropdown light">
+              <div className="dropdown mini-cart top-cart"> */}
+              
                 <div
                   class={
                     searchtoggle
@@ -360,9 +352,7 @@ const SiteHeader = (cartCount) => {
                             style={{ float: "right" }}
                           />
                         </button>
-                        {/* <button id="searchsubmit" class="btn" type="submit">
-																		<i class="icon-search"></i>
-																	</button> */}
+                     
 
                         <input
                           id=""
@@ -452,9 +442,9 @@ const SiteHeader = (cartCount) => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            {/* after clickinh searct on mobile view ecd /==================================================== */}
+              {/* </div>
+            </div> */}
+            {/* after clickinh search on mobile view ecd /==================================================== */}
           </div>
         </div>
 
