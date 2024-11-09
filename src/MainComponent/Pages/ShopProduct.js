@@ -310,8 +310,7 @@ const ShopProduct = () => {
 
                                                                         {featured.disc_price ?
                                                                             (<span className="price">
-                                                                                {featured.price !== 0 && featured.price !== featured.disc_price ? (
-                                                                                <del aria-hidden="true"><span>₹{featured.price}</span></del>  ) : null}
+                                                                                <del aria-hidden="true"><span>₹{featured.price}</span></del>
                                                                                 <ins><span>₹{featured.disc_price}</span></ins>
                                                                             </span>) :
                                                                             (<span className="price">₹{featured.price}</span>)
@@ -338,11 +337,11 @@ const ShopProduct = () => {
                                                         </div>
                                                     </div>
                                                     <div className='mob-filter' style={{ display: "none" }}>
-                                                        <Icon path={mdiFilterVariant} onClick={toggleSidebar} className='border p-1' size={2} />
+                                                        <Icon path={mdiFilterVariant} onClick={toggleSidebar} className='border p-1' size={1} />
+                                                    </div>
 
                                                     {value > 0 && <Chip className='mx-2' label={`0 to ${value}`} onDelete={handledelete} />}
                                                     {brandname != '' && <Chip label={`${brandname}`} onDelete={handlbrandedelete} />}
-                                                    </div>
                                                 </div>
 
 
