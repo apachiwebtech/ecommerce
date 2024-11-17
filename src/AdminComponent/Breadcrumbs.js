@@ -253,7 +253,7 @@ const Breadcrumbs = () => {
 
                                                                 </td> */}
                                                                 <td>
-                                                                    <img style={{width:"100%",borderRadius:"0px",height:"auto"}} src={`${IMG_URL}/Breadcrumbs/` + item.upload_image} alt="" />
+                                                                    <img style={{width:"100%",borderRadius:"0px",height:"auto"}} src={`${IMG_URL}/Breadcrumbs/${ item.upload_image}`} alt="Breadcrumbs Image" />
                                                                 </td>
                                                                 
                                                                 {confirmationVisibleMap[item.id] && (

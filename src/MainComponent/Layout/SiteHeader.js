@@ -209,7 +209,7 @@ const SiteHeader = (cartCount) => {
                 <div className="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3 header-right">
                   <div className="ruper-topcart dropdown">
                     <div className="dropdown mini-cart top-cart">
-                      {/* <div className="remove-cart-shadow"></div>
+                      <div className="remove-cart-shadow"></div>
                       <Link
                         className="dropdown-toggle cart-icon"
                         to="/shopcart"
@@ -222,7 +222,7 @@ const SiteHeader = (cartCount) => {
                           <i className="icon-large-paper-bag"></i>
                           <span className="cart-count">{count}</span>
                         </div>
-                      </Link> */}
+                      </Link>
 
                       {/* <div className="dropdown-menu ">
 												<div className="cart-empty-wrap">

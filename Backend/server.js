@@ -122,6 +122,15 @@ const storage11 = multer.diskStorage({
     );
   },
 });
+const storage12 = multer.diskStorage({
+  destination: "../../ecomuploads/AboutUS", //
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
@@ -134,7 +143,7 @@ const upload8 = multer({ storage: storage8 });
 const upload9 = multer({ storage: storage9 });
 const upload10 = multer({ storage: storage10 });
 const upload11 = multer({ storage: storage11 });
-
+const upload12 = multer({ storage: storage12 });
 app.use(express.json());
 
 app.use(bodyParser.json());
@@ -1276,6 +1285,26 @@ app.post("/category_update", (req, res) => {
   });
 });
 
+app.post("/SubCategory_breadcrumb_update", upload9.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded.' });
+  }
+
+  let image = req.file.filename;
+  let u_id = req.body.u_id;
+
+  let sql = "UPDATE awt_category SET breadcrumb = ? WHERE id = ?";
+  let param = [image, u_id];
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
 app.get("/category_data", (req, res) => {
   const sql = "select * from awt_category where deleted = 0 ";
 
@@ -1364,6 +1393,8 @@ app.post("/group_update", (req, res) => {
   });
 });
 
+
+
 app.get("/group_data", (req, res) => {
   const sql = "select * from awt_group where deleted = 0 limit 4";
 
@@ -1375,6 +1406,46 @@ app.get("/group_data", (req, res) => {
     }
   });
 });
+
+app.post("/group_breadcrumb_update", upload9.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded.' });
+  }
+
+  let image = req.file.filename;
+  let u_id = req.body.u_id;
+
+  let sql = "UPDATE awt_group SET breadcrumb = ? WHERE id = ?";
+  let param = [image, u_id];
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+app.post("/Category_breadcrumb_update", upload9.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded.' });
+  }
+
+  let image = req.file.filename;
+  let u_id = req.body.u_id;
+
+  let sql = "UPDATE awt_group SET breadcrumb = ? WHERE id = ?";
+  let param = [image, u_id];
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
 app.post("/group_delete", (req, res) => {
   let cat_id = req.body.cat_id;
 
@@ -1432,6 +1503,27 @@ app.post("/subcategory_update", (req, res) => {
     }
   });
 });
+
+app.post("/Category_breadcrumb_update", upload9.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded.' });
+  }
+
+  let image = req.file.filename;
+  let u_id = req.body.u_id;
+
+  let sql = "UPDATE awt_subcategory SET breadcrumb = ? WHERE id = ?";
+  let param = [image, u_id];
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
 
 app.get("/subcategory_data", (req, res) => {
   const sql = "select * from awt_subcategory where deleted = 0 ";
@@ -2793,7 +2885,6 @@ app.post("/getproductlisting", (req, res) => {
   let sql;
   let param;
   param = [];
-
   if (catslug == undefined && subcatslug == undefined) {
     sql =
       "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
@@ -2871,7 +2962,7 @@ app.post("/getproductlisting", (req, res) => {
     }
   } else if (subcatslug == undefined) {
     sql =
-      "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable  from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
+      "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable  from c as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
 
     if (brandid && catslug && price) {
       sql +=
@@ -2949,9 +3040,9 @@ app.post("/getproductlisting", (req, res) => {
   } else {
     sql =
       "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
-
+      console.log(sql, "test");
     if (brandid && subcatslug && price) {
-      sql +=
+      sql +=  
         "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
       if (sort == "low") {
@@ -3022,6 +3113,7 @@ app.post("/getproductlisting", (req, res) => {
       }
 
       param.push(subcatslug);
+ 
     }
   }
 
@@ -3055,8 +3147,14 @@ app.post("/getproductlisting", (req, res) => {
       // Wait for all promises to complete
       Promise.all(promises)
         .then((results) => {
-          // Once all queries are done, send the combined result
-          res.json(results);
+          const response = {
+            products: results,
+            sqlQuery: sql,
+            sqlParameters: param,
+          };
+          // Send the combined result
+          res.json(response);
+          console.log(response,"Deewa")
         })
         .catch((err) => {
           res.json(err); // Handle any errors
@@ -5390,6 +5488,54 @@ app.post("/update_about", (req, res) => {
   });
 });
 
+app.post('/update_AboutUs', upload12.fields([{ name: 'image1' }, { name: 'image2' }, { name: 'image3' }]), (req, res) => {
+  const image1 = req.files['image1'] ? req.files['image1'][0].filename : null;
+  const image2 = req.files['image2'] ? req.files['image2'][0].filename : null;
+  const image3 = req.files['image3'] ? req.files['image3'][0].filename : null;
+  const updated_date = new Date();
+
+
+  // Ensure all images are uploaded
+  if (!image1 || !image2 || !image3) {
+      return res.status(400).json("All images are required.");
+  }
+
+  const sql = "UPDATE awt_add_aboutus SET image1 = ?, image2 = ?, image3 = ?, updated_at = ? WHERE id = ?";
+  const params = [image1, image2, image3, updated_date, "1"];
+
+  con.query(sql, params, (err, result) => {
+      if (err) {
+          console.error("Database error:", err);
+          return res.status(500).json({ message: "Error updating images.", error: err.message });
+      } else {
+          return res.json("Images Updated Successfully!");
+      }
+  });
+});
+
+
+
+// Endpoint to retrieve About Us images
+app.get('/AboutUs_data', (req, res) => {
+  const sql = "SELECT * FROM awt_add_aboutus WHERE is_deleted = 0";
+
+  con.query(sql, (err, data) => {
+      if (err) {
+          console.error("Database error:", err);
+          return res.status(500).json("Error retrieving images.");
+      } else {
+          return res.json(data);
+      }
+  });
+});
+
+
+
+
+
+
+
+
 app.get(`/about_data`, (req, res) => {
   const sql = "select * from `awt_about` where id = 1  and deleted = 0";
 
@@ -5836,7 +5982,6 @@ app.post("/update_tag", (req, res) => {
 });
 
 // for Breadcrumbs/==========================================================================
-
 app.post("/add_Breadcrumbs", upload9.single("image"), (req, res) => {
   let title = req.body.title;
   let image = req.file.filename;
@@ -5942,8 +6087,46 @@ app.post("/Breadcrumbs_update_data", (req, res) => {
   });
 });
 
-app.get(`/get_Breadcrumbs`, (req, res) => {
-  const sql = "select * from `awt_breadcrumbs` where  deleted = 0";
+// app.get(`/get_Breadcrumbs`, (req, res) => {
+//   const sql = "select * from `awt_breadcrumbs` where  deleted = 0";
+
+//   con.query(sql, (err, data) => {
+//     if (err) {
+//       return res.json(err);
+//     } else {
+//       return res.json(data);
+//     }
+//   });
+// });
+
+
+
+
+// for group_breadcrumbs/==========================================================================
+app.post("/add_group_breadcrumbs", upload9.single("image"), (req, res) => {
+  let title = req.body.title;
+  let image = req.file.filename;
+  let created_date = new Date();
+  let user_id = req.body.user_id;
+
+  let sql;
+  let param;
+
+  sql =
+    "update awt_group_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
+  param = [title, image, user_id, created_date];
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json("Data Added Successfully!");
+    }
+  });
+});
+
+app.get("/group_breadcrumbs_data", (req, res) => {
+  const sql = "select * from awt_group_breadcrumbs where deleted = 0";
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -5954,8 +6137,203 @@ app.get(`/get_Breadcrumbs`, (req, res) => {
   });
 });
 
-// for Slot-Master/==========================================================================
+app.post("/group_breadcrumbs_delete", (req, res) => {
+  let Breadcrumbs_id = req.body.Breadcrumbs_id;
 
+  const sql = "update awt_group_breadcrumbs set deleted = 1 where id = ?";
+
+  con.query(sql, [Breadcrumbs_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/group_breadcrumbs_update_data", (req, res) => {
+  let Breadcrumbs_id = req.body.Breadcrumbs_id;
+
+  const sql = "select * from  awt_group_breadcrumbs  where id = ?";
+
+  con.query(sql, [Breadcrumbs_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+// app.get(`/get_Breadcrumbs`, (req, res) => {
+//   const sql = "select * from `awt_group_breadcrumbs` where  deleted = 0";
+
+//   con.query(sql, (err, data) => {
+//     if (err) {
+//       return res.json(err);
+//     } else {
+//       return res.json(data);
+//     }
+//   });
+// });
+
+
+
+// for category_breadcrumbs/==========================================================================
+app.post("/add_category_breadcrumbs", upload9.single("image"), (req, res) => {
+  let title = req.body.title;
+  let image = req.file.filename;
+  let created_date = new Date();
+  let user_id = req.body.user_id;
+
+  let sql;
+  let param;
+
+  sql =
+    "update awt_category_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
+  param = [title, image, user_id, created_date];
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json("Data Added Successfully!");
+    }
+  });
+});
+
+app.get("/category_breadcrumbs_data", (req, res) => {
+  const sql = "select * from awt_category_breadcrumbs where deleted = 0";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/category_breadcrumbs_delete", (req, res) => {
+  let Breadcrumbs_id = req.body.Breadcrumbs_id;
+
+  const sql = "update awt_category_breadcrumbs set deleted = 1 where id = ?";
+
+  con.query(sql, [Breadcrumbs_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/category_breadcrumbs_update_data", (req, res) => {
+  let Breadcrumbs_id = req.body.Breadcrumbs_id;
+
+  const sql = "select * from  awt_category_breadcrumbs  where id = ?";
+
+  con.query(sql, [Breadcrumbs_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+// app.get(`/get_category_breadcrumbs`, (req, res) => {
+//   const sql = "select * from `awt_category_breadcrumbs` where  deleted = 0";
+
+//   con.query(sql, (err, data) => {
+//     if (err) {
+//       return res.json(err);
+//     } else {
+//       return res.json(data);
+//     }
+//   });
+// });
+
+
+// for Sub-category_breadcrumbs/==========================================================================
+app.post("/add_subcategory_breadcrumbs", upload9.single("image"), (req, res) => {
+  let title = req.body.title;
+  let image = req.file.filename;
+  let created_date = new Date();
+  let user_id = req.body.user_id;
+
+  let sql;
+  let param;
+
+  sql =
+    "update awt_subcategory_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
+  param = [title, image, user_id, created_date];
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json("Data Added Successfully!");
+    }
+  });
+});
+
+app.get("/subcategory_breadcrumbs_data", (req, res) => {
+  const sql = "select * from awt_subcategory_breadcrumbs where deleted = 0";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/subcategory_breadcrumbs_delete", (req, res) => {
+  let Breadcrumbs_id = req.body.Breadcrumbs_id;
+
+  const sql = "update awt_subcategory_breadcrumbs set deleted = 1 where id = ?";
+
+  con.query(sql, [Breadcrumbs_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/subcategory_breadcrumbs_update_data", (req, res) => {
+  let Breadcrumbs_id = req.body.Breadcrumbs_id;
+
+  const sql = "select * from  awt_subcategory_breadcrumbs  where id = ?";
+
+  con.query(sql, [Breadcrumbs_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+// app.get(`/get_subcategory_breadcrumbs`, (req, res) => {
+//   const sql = "select * from `awt_subcategory_breadcrumbs` where  deleted = 0";
+
+//   con.query(sql, (err, data) => {
+//     if (err) {
+//       return res.json(err);
+//     } else {
+//       return res.json(data);
+//     }
+//   });
+// });
+
+
+
+
+// for Slot-Master/==========================================================================
 app.post("/add_SlotMaster", (req, res) => {
   const { location, slot, title, user_id } = req.body;
   const created_date = new Date();

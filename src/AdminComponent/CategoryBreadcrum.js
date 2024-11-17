@@ -1,41 +1,86 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { BASE_URL, IMG_URL } from './BaseUrl';
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import InnerHeader from './InnerHeader';
+import decryptedUserId from '../Utils/UserID';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { param } from 'jquery';
+import Loader from './Loader';
+import { Hidden } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import Cookies from 'js-cookie';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoleData } from '../Store/Role/role-action';
-import decryptedUserId from '../Utils/UserID';
-import { BASE_URL, IMG_URL } from './BaseUrl';
-import InnerHeader from './InnerHeader';
-import Loader from './Loader';
+import Switch from '@mui/material/Switch';
+import { styled } from "@mui/material/styles";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 
 
-const Group = () => {
+const Android12Switch = styled(Switch)(({ theme }) => ({
+    padding: 8,
+    "& .MuiSwitch-track": {
+      borderRadius: 22 / 2,
+      "&::before, &::after": {
+        content: '""',
+        position: "absolute",
+        top: "50%",
+        transform: "translateY(-50%)",
+        width: 16,
+        height: 16,
+      },
+      "&::before": {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+          theme.palette.getContrastText(theme.palette.primary.main)
+        )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
+        left: 12,
+      },
+      "&::after": {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+          theme.palette.getContrastText(theme.palette.primary.main)
+        )}" d="M19,13H5V11H19V13Z" /></svg>')`,
+        right: 12,
+      },
+    },
+    "& .MuiSwitch-thumb": {
+      boxShadow: "none",
+      width: 16,
+      height: 16,
+      margin: 2,
+    },
+  }));
+
+const CategoryBreadcrum = () => {
 
     const [cat, setCatData] = useState([])
+    const [group, setGroupData] = useState([])
     const [error, setError] = useState({})
+    const [selectedOption, setSelectedOption] = useState(null);
     const [image, setImage] = useState()
     const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [cid, setCid] = useState("")
-    const [slug, setSlug] = useState()
     const [loader, setLoader] = useState(false)
+    const [group_id, setId] = useState("")
+    const [products, setProducts] = useState([]);
     const [value, setValue] = useState({
         title: "" || uid.title,
         slug: "" || uid.slug,
-        description: "" || uid.description,
     })
 
     useEffect(() => {
-        setValue({
-            title: uid.title,
-            description: uid.description,
-            slug: uid.slug,
-        })
-    }, [uid])
+        if (uid) {
+            setValue({
+                title: uid.title || "",
+                description: uid.description || "",
+                slug: uid.slug || "",
+            });
+        }
+    }, [uid]);
 
     const validateForm = () => {
         let isValid = true
@@ -46,23 +91,25 @@ const Group = () => {
             newErrors.title = "title is required"
         }
 
-        if (!value.slug) {
-            isValid = false
-            newErrors.slug = "slug is required"
-        }
+        // if (!value.slug) {
+        //     isValid = false
+        //     newErrors.slug = "slug is required"
+        // }
         if (uid.image == undefined && !image) {
             isValid = false;
             newErrors.logo = "image is required";
         }
+        // if (!selectedOption) {
+        //     isValid = false;
+        //     newErrors.group = "group is required"
+        // }
 
         setError(newErrors)
         return isValid
     }
 
-
-
     async function getcatData() {
-        axios.get(`${BASE_URL}/group_data`)
+        axios.get(`${BASE_URL}/category_data`)
             .then((res) => {
                 console.log(res.data)
                 setCatData(res.data)
@@ -71,27 +118,11 @@ const Group = () => {
                 console.log(err)
             })
     }
+    
 
     useEffect(() => {
         getcatData()
     }, [])
-
-
-
-    const handleClick = (id) => {
-        setCid(id)
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: true,
-        }));
-    };
-    const handleCancel = (id) => {
-        // Hide the confirmation dialog without performing the delete action
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    };
 
 
     const handleUpload = async (e) => {
@@ -100,32 +131,13 @@ const Group = () => {
     }
 
 
-    const handleDelete = (id) => {
-        const data = {
-            cat_id: id
-        }
-
-        axios.post(`${BASE_URL}/group_delete`, data)
-            .then((res) => {
-                getcatData()
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        setConfirmationVisibleMap((prevMap) => ({
-            ...prevMap,
-            [id]: false,
-        }));
-    }
 
     const handleUpdate = (id) => {
         setValue({
             description: ""
         })
         setLoader(true)
-        axios.post(`${BASE_URL}/group_update`, { u_id: id })
+        axios.post(`${BASE_URL}/category_update`, { u_id: id })
             .then((res) => {
                 setUid(res.data[0])
                 setLoader(false)
@@ -135,22 +147,19 @@ const Group = () => {
             })
     }
 
+    console.log(uid)
 
 
-console.log(value.title, "rrr")
 
     const handleSubmit = (e) => {
         e.preventDefault()
 
         if (validateForm()) {
 
-    
-
             const formdata = new FormData();
 
             setLoader(true)
             formdata.append('title', value.title)
-            formdata.append('description', value.description)
             formdata.append('slug', value.slug)
             if(image){
 
@@ -159,25 +168,23 @@ console.log(value.title, "rrr")
                 formdata.append('image', uid.image)
 
             }
-            formdata.append('user_id', decryptedUserId())
+            formdata.append('group_id', group_id)
             formdata.append('u_id', uid.id)
 
-            axios.post(`${BASE_URL}/add_group`, formdata)
+            axios.post(`${BASE_URL}/Category_breadcrumb_update`, formdata)
                 .then((res) => {
-                    alert(res.data)
+                    console.log(res.data)
                     getcatData()
-
                     setLoader(false)
-                    // window.location.pathname = '/webapp/group'
 
                     setValue({
                         title: "" ,
-                        slug: "",
-                        description: "",
+                        slug: "" ,
                     })
 
-                    setImage('')
+                    setImage(null)
                     setUid([])
+                    setSelectedOption(null)
 
                 })
                 .catch((err) => {
@@ -190,14 +197,6 @@ console.log(value.title, "rrr")
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-
-        if (value.slug) {
-            axios.post(`${BASE_URL}/check_againslug`, { slug: value.slug })
-                .then((res) => {
-                    console.log(res)
-                })
-        }
-
     }
 
     const columns = [
@@ -216,7 +215,10 @@ console.log(value.title, "rrr")
                 return (
                     <div style={{ width: "40px", height: "40px", borderRadius: "50%", display: "flex", overflow: "hidden", alignItems: "center", justifyContent: "center" }}>
 
-                        <img src={`${IMG_URL}/group/${param.row.image}`} alt='image' />
+<img
+              src={`${IMG_URL}/Breadcrumbs/${param.row.breadcrumb}`}
+              alt="image"
+            />
                     </div>
                 )
             }
@@ -230,18 +232,32 @@ console.log(value.title, "rrr")
                 return (
                     <>
                         {roleaccess >= 2 && <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
-                        {roleaccess > 3 && <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />}
                     </>
                 )
             }
         },
     ];
-
     const rowsWithIds = cat.map((row, index) => ({ index: index + 1, ...row }));
+
+    
+    const handleslugclick = () => {
+
+
+        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') , table_name : "awt_category" })
+        .then((res) => {
+            setValue({
+                slug: res.data.newslug,
+                title : value.title
+            })
+        })
+
+
+    }
+
 
     const roledata = {
         role: Cookies.get(`role`),
-        pageid: 16
+        pageid: 6
     }
 
     const dispatch = useDispatch()
@@ -251,22 +267,6 @@ console.log(value.title, "rrr")
     useEffect(() => {
         dispatch(getRoleData(roledata))
     }, [])
-
-
-    const handleslugclick = () => {
-
-
-        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') , table_name : "awt_group" })
-            .then((res) => {
-                setValue({
-                    slug: res.data.newslug,
-                    title : value.title
-                })
-            })
-
-
-    }
-
 
     return (
 
@@ -279,21 +279,13 @@ console.log(value.title, "rrr")
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add Group</h4>
+                                    <h4 class="card-title">Add Category Breadcrum</h4>
 
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
-                                            <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
+                                            <label for="exampleInputUsername1">Title</label>
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title'/>
                                             {error.title && <span className='text-danger'>{error.title}</span>}
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
-
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onClick={handleslugclick} onChange={onhandleChange} />
-
-                                            {error.slug && <span className='text-danger'>{error.slug}</span>}
-
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Image<span className='text-danger'>*</span></label>
@@ -302,17 +294,12 @@ console.log(value.title, "rrr")
 
                                         </div>
                                         <div>
-                                            <img style={{ width: "200px" }} src={`${IMG_URL}/group/${uid.image}`} alt="" />
+                                            <img style={{ width: "200px" }} src={`${IMG_URL}/Breadcrumbs/${uid.breadcrumb}`} alt="image" />
                                         </div>
-                                        <div class="form-group ">
-                                            <label for="exampleTextarea1">Description</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
-
-                                        </div>
-                                        {roleaccess > 2 && <>  <button type="submit" class="btn btn-primary mr-2">Submit</button>
+                                        {roleaccess > 2 && <><button type="submit" class="btn btn-primary mr-2">Submit</button>
                                             <button type='button' onClick={() => {
                                                 window.location.reload()
-                                            }} class="btn btn-light">Cancel</button></>}
+                                            }} class="btn btn-light">Cancel</button> </>}
 
                                     </form>
                                 </div>
@@ -323,9 +310,9 @@ console.log(value.title, "rrr")
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">Group </h4>
+                                            <h4 class="card-title">Category Breadcrum </h4>
                                             <p class="card-description">
-                                                List Of Group
+                                                List Of Category Breadcrum
                                             </p>
                                         </div>
 
@@ -334,21 +321,22 @@ console.log(value.title, "rrr")
                                         <DataGrid
                                             rows={rowsWithIds}
                                             columns={columns}
+                                            disableColumnFilter
+                                            disableColumnSelector
+                                            disableDensitySelector
                                             getRowId={(row) => row.id}
                                             initialState={{
                                                 pagination: {
                                                     paginationModel: { pageSize: 10, page: 0 },
                                                 },
                                             }}
+                                            // slots={{ toolbar: GridToolbar }}
+                                            // slotProps={{
+                                            //     toolbar: {
+                                            //         showQuickFilter: true,
+                                            //     },
+                                            // }}
                                         />
-
-                                        {confirmationVisibleMap[cid] && (
-                                            <div className='confirm-delete'>
-                                                <p>Are you sure you want to delete?</p>
-                                                <button onClick={() => handleDelete(cid)} className='btn btn-sm btn-primary'>OK</button>
-                                                <button onClick={() => handleCancel(cid)} className='btn btn-sm btn-danger'>Cancel</button>
-                                            </div>
-                                        )}
                                     </div>
 
                                     {/* <div class="table-responsive pt-3">
@@ -402,14 +390,13 @@ console.log(value.title, "rrr")
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                 </div>
-            </div> : <h1>No Access</h1>}
+            </div> : null}
 
         </div>
 
     )
 }
 
-export default Group
+export default CategoryBreadcrum

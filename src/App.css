@@ -457,7 +457,10 @@ li{
 .swiper-button-prev{
   color: #000 !important;
 }
-
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    font-size: 30px !important; 
+}
 
 .cat-parent{
 

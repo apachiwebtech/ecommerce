@@ -82,7 +82,7 @@ const MovingCategory = () => {
                                                 <SwiperSlide>
                                                     <div className='text-center'>
                                                     <Link to={`/shoproduct/${item.group_slug}/${item?.slug}`}>
-                                                        <div className='cat-parent' style={{background:"#EEE3E7"}}>
+                                                        <div className='cat-parent' style={{background:"#FFFFFF"}}>
                                                             <img className='cat-img' src={`${IMG_URL}/category/${item?.image}`} alt="Banner" />
                                                         </div>
                                                         </Link>

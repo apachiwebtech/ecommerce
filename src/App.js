@@ -111,6 +111,9 @@ import CustomizeRequest from './AdminComponent/CustomizeRequest';
 import CustomizationPage from './MainComponent/Pages/CustomizationPage';
 import MailTemp from './Utils/MailTemp';
 import CommingSoon from './MainComponent/CommingSoon';
+import GroupBreadcrum from './AdminComponent/GroupBreadcrum';
+import CategoryBreadcrum from './AdminComponent/CategoryBreadcrum';
+import SubCategoryBreadcrum from './AdminComponent/SubCategoryBreadcrum';
 
 
 
@@ -395,7 +398,19 @@ const Router = createHashRouter([
       {
         path: '/webapp/Breadcrumbs',
         element: <Breadcrumbs />
-      },,
+      },
+      {
+        path: '/webapp/GroupBreadcrum',
+        element: <GroupBreadcrum />
+      },
+      {
+        path: '/webapp/CategoryBreadcrum',
+        element: <CategoryBreadcrum />
+      },
+      {
+        path: '/webapp/SubCategoryBreadcrum',
+        element: <SubCategoryBreadcrum />
+      },
       {
         path: '/webapp/advertise',
         element: <Advertise />

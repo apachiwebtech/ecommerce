@@ -1,7 +1,7 @@
 import InfoIcon from "@mui/icons-material/Info";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { BASE_URL, IMG_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 
@@ -52,7 +52,7 @@ const Productapprovalview = () => {
       .post(`${BASE_URL}/product_img_data`, data)
       .then((res) => {
         console.log(res.data);
-        setProductimg(res.data);
+        setProductimg(res.data[0].images);
       })
       .catch((err) => {
         console.log(err);
@@ -78,6 +78,8 @@ const Productapprovalview = () => {
       });
     }
   };
+
+  console.log(productimg,"%%")
 
   return (
     <div class="container-fluid page-body-wrapper col-lg-10">
@@ -212,41 +214,13 @@ const Productapprovalview = () => {
                           return (
                             <tr className="product-img-table">
                               <td>{index + 1}</td>
-
                               <td>
-                                {item.image1 !== "" ? (
-                                  <img
-                                    src={`${IMG_URL}/productimg/` + item.image1}
+                              <img
+                                    src={`${IMG_URL}/productimg/` + item}
                                     alt=""
                                   />
-                                ) : (
-                                  <></>
-                                )}
-                                {item.image2 !== "" ? (
-                                  <img
-                                    src={`${IMG_URL}/productimg/` + item.image2}
-                                    alt=""
-                                  />
-                                ) : (
-                                  <></>
-                                )}
-                                {item.image3 !== "" ? (
-                                  <img
-                                    src={`${IMG_URL}/productimg/` + item.image3}
-                                    alt=""
-                                  />
-                                ) : (
-                                  <></>
-                                )}
-                                {item.image4 !== "" ? (
-                                  <img
-                                    src={`${IMG_URL}/productimg/` + item.image4}
-                                    alt=""
-                                  />
-                                ) : (
-                                  <></>
-                                )}
                               </td>
+
 
                               <td>{item.title}</td>
                               <td>

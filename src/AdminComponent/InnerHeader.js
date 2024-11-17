@@ -56,6 +56,12 @@ const InnerHeader = () => {
                 return 'Colour';
             case '/webapp/Breadcrumbs':
                 return 'Breadcrumbs';
+            case '/webapp/GroupBreadcrum':
+                return 'GroupBreadcrum';
+            case '/webapp/CategoryBreadcrum':
+                return 'CategoryBreadcrum';
+            case '/webapp/SubCategoryBreadcrum':
+                return 'SubCategoryBreadcrum';
             case '/webapp/Advertise':
                 return 'Advertise';
             case '/webapp/SlotMaster':

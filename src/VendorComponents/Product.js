@@ -164,6 +164,27 @@ const Product = () => {
 
   }
 
+  const basic_info = () => {
+    const section = document.getElementById('basic_info');
+    section.scrollIntoView({ behavior: 'smooth' });
+  };
+  // const media = () => {
+  //   const section = document.getElementById('#');
+  //   section.scrollIntoView({ behavior: 'smooth' });
+  // };
+  const varients = () => {
+    const section = document.getElementById('varients');
+    section.scrollIntoView({ behavior: 'smooth' });
+  };
+  const specifications = () => {
+    const section = document.getElementById('specification');
+    section.scrollIntoView({ behavior: 'smooth' });
+  };
+  const tax = () => {
+    const section = document.getElementById('tax');
+    section.scrollIntoView({ behavior: 'smooth' });
+  };
+
 
   async function getGroupData() {
     axios.get(`${BASE_URL}/group_data`)
@@ -458,7 +479,7 @@ const Product = () => {
                     <div class="card-body list">
                       <ul class="prod_list">
                         <li class="prod_li">
-                          <a href="#basic_info" class="prod_flex">
+                          <a onClick={basic_info} class="prod_flex">
                             <div style={{ marginRight: "8px" }}>
                               <DescriptionOutlinedIcon />
                             </div>
@@ -473,7 +494,7 @@ const Product = () => {
                         <hr></hr>
 
                         <li class="prod_li">
-                          <a href="#media" class="prod_flex">
+                          <a class="prod_flex">
                             <div style={{ marginRight: "8px" }}>
                               <PermMediaIcon />
                             </div>
@@ -488,7 +509,7 @@ const Product = () => {
                         </li>
                         <hr></hr>
                         <li class="prod_li">
-                          <a href="#varients" class="prod_flex">
+                          <a onClick={varients} class="prod_flex">
                             <div style={{ marginRight: "8px" }}>
                               <MenuIcon />
                             </div>
@@ -502,7 +523,7 @@ const Product = () => {
                         </li>
                         <hr></hr>
                         <li class="prod_li">
-                          <a href="#specification" class="prod_flex">
+                          <a onClick={specifications} class="prod_flex">
                             <div style={{ marginRight: "8px" }}>
                               <DescriptionOutlinedIcon />
                             </div>
@@ -516,7 +537,7 @@ const Product = () => {
                         </li>
                         <hr></hr>
                         <li class="prod_li">
-                          <a href="#tax" class="prod_flex">
+                          <a  class="prod_flex">
                             <div style={{ marginRight: "8px" }}>
                               <LocalShippingIcon />
                             </div>

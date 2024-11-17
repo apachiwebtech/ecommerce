@@ -1,205 +1,139 @@
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getRoleData } from '../Store/Role/role-action';
-import decryptedUserId from '../Utils/UserID';
-import { BASE_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
-import Loader from './Loader';
+import { BASE_URL, IMG_URL } from './BaseUrl';
+import decryptedUserId from '../Utils/UserID';
 
 const AboutUS = () => {
-
-
-    const [errors, setErrors] = useState({})
-    const [loader, setLoader] = useState(false)
-    const [uid, setUid] = useState([])
-    const [specification, setSpecification] = useState('')
-    const [value, setValue] = useState({
-        abouttitle: "",
-        aboutdescription: ""
-
-    })
+    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+    const [errors, setErrors] = useState({});
+    const [images, setImages] = useState({ image1: null, image2: null, image3: null });
+    const [aboutUsList, setAboutUsList] = useState([]);
 
     useEffect(() => {
-        setValue({
-            abouttitle: uid.top_title,
-        })
-    }, [uid])
+        fetchAboutUsData();
+    }, []);
+
+    async function fetchAboutUsData() {
+        try {
+            const res = await axios.get(`${BASE_URL}/AboutUs_data`);
+            setAboutUsList(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const validateForm = () => {
+        const newErrors = {};
         let isValid = true;
-        const newErrors = { ...errors };
 
-        if (!value.abouttitle) {
+        if (!images.image1 || !images.image2 || !images.image3) {
             isValid = false;
-            newErrors.abouttitle = "Title is required";
+            newErrors.images = "All images are required";
         }
-        if (!specification) {
-            isValid = false;
-            newErrors.desc = "Description is required";
-        }
-
-
-
-
 
         setErrors(newErrors);
-        setTimeout(() => {
-            setErrors("")
-        }, 5000);
+        setTimeout(() => setErrors({}), 5000);
         return isValid;
+    };
 
-
-    }
-
-
-
-    async function fetchdata() {
-  
-        axios.get(`${BASE_URL}/getabout`,)
-            .then((res) => {
-                setUid(res.data[0])
-                setLoader(false)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-
-
-
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         if (validateForm()) {
-            setLoader(true)
+            const formData = new FormData();
+            formData.append("user_id", decryptedUserId());
 
-            const data = {
-                abouttitle: value.abouttitle,
-                aboutdescription: specification,
-                user_id: decryptedUserId(),
+            Object.keys(images).forEach((key) => {
+                if (images[key]) {
+                    formData.append(key, images[key]);
+                }
+            });
+
+            try {
+                const res = await axios.post(`${BASE_URL}/update_AboutUs`, formData);
+                alert(res.data);
+                setImages({ image1: null, image2: null, image3: null });
+                fetchAboutUsData();
+            } catch (error) {
+                console.log(error);
             }
-
-            axios.post(`${BASE_URL}/update_about`, data)
-                .then((res) => {
-                    alert(res.data)
-                    setLoader(false)
-
-                    // window.location.pathname = '/webapp/aboutus'
-
-                    fetchdata()
-
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
         }
-    }
+    };
 
-
-
-
-    const onhandleChange = (e) => {
-        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-    }
-
-
-
-
-
-    const roledata = {
-        role: Cookies.get(`role`),
-        pageid: 3
-    }
-
-    const dispatch = useDispatch()
-    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
-
-
-
-    useEffect(() => {
-        dispatch(getRoleData(roledata))
-        fetchdata()
-    }, [])
+    const handleFileChange = (e) => {
+        const { name, files } = e.target;
+        setImages((prevImages) => ({
+            ...prevImages,
+            [name]: files[0]
+        }));
+    };
 
     return (
-
-        <div class="container-fluid page-body-wrapper col-lg-10">
+        <div className="container-fluid page-body-wrapper col-lg-10">
             <InnerHeader />
-            {loader && <Loader />}
-
-            {roleaccess > 1 ? <div class="main-panel">
-                <div class="content-wrapper">
-                    <div class="row">
-                        <div class="col-lg-12 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Add About Us</h4>
-
-                                    <form class="forms-sample" onSubmit={handleSubmit}>
-
-                                        <div className='row'>
-
-                                            <div class="form-group col-lg-12">
-                                                <label for="exampleInputUsername1">About Title</label>
-                                                <input type="text" class="form-control" id="exampleInputUsername1" placeholder="about Title" value={value.abouttitle} name='abouttitle' onChange={onhandleChange} />
-                                                {errors.abouttitle && <div className="text-danger">{errors.abouttitle}</div>}
+            <div className="main-panel">
+                <div className="content-wrapper">
+                    <div className="row">
+                        <div className="col-lg-5 grid-margin stretch-card">
+                            <div className="card">
+                                <div className="card-body">
+                                    <h4 className="card-title">Add AboutUS Images</h4>
+                                    <form className="forms-sample py-3" onSubmit={handleSubmit}>
+                                        {["image1", "image2", "image3"].map((imgName, index) => (
+                                            <div key={index} className="form-group">
+                                                <label htmlFor={imgName}>Image {index + 1}</label>
+                                                <input type="file" className="form-control" name={imgName} onChange={handleFileChange} />
                                             </div>
-                                            <div class="form-group col-lg-12">
-                                            <label for="exampleInputUsername1">Description</label>
-                                                <CKEditor
-                                                    editor={ClassicEditor}
-                                                    style={{height : "1000px"}}
-                                                    data={uid.top_desc}
-                                                    onReady={(editor) => {
-                                                        editor.editing.view.change((writer) => {
-                                                            writer.setStyle("min-height", "400px", editor.editing.view.document.getRoot());
-                                                        });
-                                                    }}
-                                                    onChange={(event, editor) => {
-                                                        const data = editor.getData();
-                                                        setSpecification(data)
-                                                    }}
-                                                    onBlur={(event, editor) => {
-                                                        // console.log('Blur.', editor);
-                                                    }}
-                                                    onFocus={(event, editor) => {
-                                                        // console.log('Focus.', editor);
-                                                    }}
-                                                />
-                                                        {errors.desc && <div className="text-danger">{errors.desc}</div>}
-                                            </div>
-
-
-
-
-                                        </div>
-
-
-
-
-                                        {roleaccess > 2 && <> <button type="submit" class="btn btn-primary mr-2">Submit</button>
-                                            <button type='button' onClick={() => {
-                                                window.location.reload()
-                                            }} class="btn btn-light">Cancel</button></>}
-
-
+                                        ))}
+                                        {errors.images && <div className="text-danger">{errors.images}</div>}
+                                        <button type="submit" className="btn btn-primary mr-2">Submit</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
-
+                        <div className="col-lg-7 grid-margin stretch-card">
+                            <div className="card">
+                                <div className="card-body">
+                                    <h4 className="card-title">List of About Us Images</h4>
+                                    <div className="table-responsive pt-3">
+                                        <table className="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Image1</th>
+                                                    <th>Image2</th>
+                                                    <th>Image3</th>
+                                                    </tr>
+                                            </thead>
+                                            <tbody>
+                                                {aboutUsList.map((item, index) => (
+                                                    <tr key={index}>
+                                                        <td>{index + 1}</td>
+                                                        <td>
+                                                            <img src={`${IMG_URL}/AboutUS/${item.image1}`} alt="Image 1" style={{ width: "100%", height: "auto" }} />
+                                                        </td>
+                                                        <td>
+                                                            <img src={`${IMG_URL}/AboutUS/${item.image2}`} alt="Image 2" style={{ width: "100%", height: "auto" }} />
+                                                        </td>
+                                                        <td>
+                                                            <img src={`${IMG_URL}/AboutUS/${item.image3}`} alt="Image 3" style={{ width: "100%", height: "auto" }} />
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div> : <h1>No Access</h1>}
-
+            </div>
         </div>
+    );
+};
 
-    )
-}
-
-export default AboutUS ;
+export default AboutUS;
+                                               

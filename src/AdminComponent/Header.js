@@ -352,6 +352,28 @@ const Header = () => {
                 <span className="menu-title">Breadcrumbs</span>
               </Link>
             </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/GroupBreadcrum'>
+                <Icon path={mdiNavigationVariantOutline} size={1} className='mx-3' />
+                <span className="menu-title">Group Breadcrum</span>
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/CategoryBreadcrum'>
+                <Icon path={mdiNavigationVariantOutline} size={1} className='mx-3' />
+                <span className="menu-title">Category Breadcrum</span>
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/SubCategoryBreadcrum'>
+                <Icon path={mdiNavigationVariantOutline} size={1} className='mx-3' />
+                <span className="menu-title">Subcate Breadcrum</span>
+              </Link>
+            </li>
+
           </ul>
         </Collapse>
 
