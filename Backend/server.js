@@ -131,6 +131,15 @@ const storage12 = multer.diskStorage({
     );
   },
 });
+const storage13 = multer.diskStorage({
+  destination: "../../ecomuploads/Collection", //
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
@@ -144,6 +153,7 @@ const upload9 = multer({ storage: storage9 });
 const upload10 = multer({ storage: storage10 });
 const upload11 = multer({ storage: storage11 });
 const upload12 = multer({ storage: storage12 });
+const upload13 = multer({ storage: storage13 });
 app.use(express.json());
 
 app.use(bodyParser.json());
@@ -1908,7 +1918,7 @@ app.post("/add_banner", upload2.single("image"), (req, res) => {
   let title = req.body.title;
   let banner;
 
-  if (req.body.filename == undefined) {
+  if (!req.file) {
     banner = req.body.image;
   } else {
     banner = req.file.filename;
@@ -2885,6 +2895,7 @@ app.post("/getproductlisting", (req, res) => {
   let sql;
   let param;
   param = [];
+
   if (catslug == undefined && subcatslug == undefined) {
     sql =
       "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
@@ -2962,7 +2973,7 @@ app.post("/getproductlisting", (req, res) => {
     }
   } else if (subcatslug == undefined) {
     sql =
-      "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable  from c as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
+      "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable  from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
 
     if (brandid && catslug && price) {
       sql +=
@@ -3040,9 +3051,9 @@ app.post("/getproductlisting", (req, res) => {
   } else {
     sql =
       "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
-      console.log(sql, "test");
+
     if (brandid && subcatslug && price) {
-      sql +=  
+      sql +=
         "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
 
       if (sort == "low") {
@@ -3113,7 +3124,6 @@ app.post("/getproductlisting", (req, res) => {
       }
 
       param.push(subcatslug);
- 
     }
   }
 
@@ -3147,14 +3157,8 @@ app.post("/getproductlisting", (req, res) => {
       // Wait for all promises to complete
       Promise.all(promises)
         .then((results) => {
-          const response = {
-            products: results,
-            sqlQuery: sql,
-            sqlParameters: param,
-          };
-          // Send the combined result
-          res.json(response);
-          console.log(response,"Deewa")
+          // Once all queries are done, send the combined result
+          res.json(results);
         })
         .catch((err) => {
           res.json(err); // Handle any errors
@@ -3162,6 +3166,7 @@ app.post("/getproductlisting", (req, res) => {
     }
   });
 });
+
 
 app.post(`/getbrand`, (req, res) => {
   let groupslug = req.body.groupslug;
@@ -6799,6 +6804,88 @@ app.post('/toggle_category', (req, res) => {
       return res.status(500).json({ message: "An error occurred while updating the category." });
     } else {
       return res.status(200).json({ message: "Category updated successfully", data: result });
+    }
+  });
+});
+
+
+app.post("/add_collection", upload13.single("image"), (req, res) => {
+  let user_id = req.body.user_id;
+  let title = req.body.title;
+  let created_date = new Date();
+  let u_id = req.body.u_id;
+  let image;
+  if (req.body.filename == undefined) {
+    image = req.body.image;
+  } else {
+    image = req.file.filename;
+  }
+
+  let sql;
+  let param;
+  let ifa ;
+
+
+  if (u_id == "undefined") {
+    ifa ='inset hua';
+    sql =
+    "INSERT INTO awt_collection(`title`,`image`,`created_by`,`created_date`) values(?,?,?,?)";
+    param = [title, image, user_id, created_date];
+  } else {
+    ifa ='update hua';
+    sql =
+      "update awt_collection set title = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?";
+    param = [title, image, user_id, created_date, u_id];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json("Error");
+    } else {
+      return res.json({ "message": "Data Added Successfully", "ifa": ifa });
+    }
+  });
+});
+
+
+app.post("/collection_update", (req, res) => {
+  let u_id = req.body.u_id;
+
+  const sql = "select * from awt_collection where id = ?";
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+
+
+app.get("/collection_data", (req, res) => {
+  const sql = "select * from awt_collection where deleted = 0 limit 4";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.post("/collection_delete", (req, res) => {
+  let cat_id = req.body.cat_id;
+
+  const sql = "update awt_collection set deleted = 1 where id = ?";
+
+  con.query(sql, [cat_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
     }
   });
 });

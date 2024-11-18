@@ -492,7 +492,7 @@ const Product = () => {
                           </a>
                         </li>
                         <hr></hr>
-
+{/* 
                         <li class="prod_li">
                           <a class="prod_flex">
                             <div style={{ marginRight: "8px" }}>
@@ -506,7 +506,7 @@ const Product = () => {
                               </span>
                             </div>
                           </a>
-                        </li>
+                        </li> */}
                         <hr></hr>
                         <li class="prod_li">
                           <a onClick={varients} class="prod_flex">
@@ -536,7 +536,7 @@ const Product = () => {
                           </a>
                         </li>
                         <hr></hr>
-                        <li class="prod_li">
+                        {/* <li class="prod_li">
                           <a  class="prod_flex">
                             <div style={{ marginRight: "8px" }}>
                               <LocalShippingIcon />
@@ -549,7 +549,7 @@ const Product = () => {
                               </span>
                             </div>
                           </a>
-                        </li>
+                        </li> */}
                         <hr></hr>
                       </ul>
                     </div>
