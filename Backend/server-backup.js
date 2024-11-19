@@ -1,5 +1,3 @@
-
-
 const express = require("express");
 const app = express();
 const mysql = require("mysql");
@@ -14,7 +12,6 @@ const cron = require("node-cron");
 const crypto = require("crypto");
 const axios = require("axios");
 var { SendMailClient } = require("zeptomail");
-
 
 dotenv.config();
 
@@ -125,20 +122,6 @@ const storage11 = multer.diskStorage({
     );
   },
 });
-const storage12 = multer.diskStorage({
-  destination: "../../ecomuploads/AboutUS", //
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
-
-
-
-
-
 
 const upload = multer({ storage: storage });
 const upload2 = multer({ storage: storage2 });
@@ -151,7 +134,7 @@ const upload8 = multer({ storage: storage8 });
 const upload9 = multer({ storage: storage9 });
 const upload10 = multer({ storage: storage10 });
 const upload11 = multer({ storage: storage11 });
-const upload12 = multer({ storage: storage12 });
+
 app.use(express.json());
 
 app.use(bodyParser.json());
@@ -446,7 +429,7 @@ app.post("/customerlogin", (req, res) => {
             </p>
             <p
               style="
-         
+
                 margin-top: 60px;
                 font-size: 40px;
                 font-weight: 600;
@@ -499,7 +482,7 @@ app.post("/customerlogin", (req, res) => {
         >
           Micasasucasa
         </p>
-      
+
         <div style="margin: 0; margin-top: 16px;">
           <a href="" target="_blank" style="display: inline-block;">
             <img
@@ -630,8 +613,6 @@ app.post("/register", (req, res) => {
   let lastname = req.body.lastname;
   let mobile = req.body.mobile;
   let otp = req.body.otp;
-  
-    let client = new SendMailClient({ url, token });
 
   const sql = "SELECT * from awt_customers where email = ? AND deleted = 0";
 
@@ -655,221 +636,8 @@ app.post("/register", (req, res) => {
                 "SELECT * from awt_customers_dummy WHERE id = ? and deleted = 0";
               con.query(sql, [insertedId], (err, data) => {
                 if (err) {
-                  return res.json(err);
+                  console.log(err);
                 } else {
-                  const name = data[0].firstname;
-
-                  client.sendMail({
-                    from: {
-                      address: "Info@micasasucasa.in",
-                      name: "noreply",
-                    },
-                    to: [
-                      {
-                        email_address: {
-                          address: `${email}`,
-                          name: `${name}`,
-                        },
-                      },
-                    ],
-                    subject: "Otp for verification",
-                    htmlbody: `<div
-    style="
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #ffffff;
-      font-size: 14px;
-    "
-  >
-    <div
-      style="
-        max-width: 680px;
-        margin: 0 auto;
-        padding: 45px 30px 60px;
-        background: #c4e6f562;
-        background-image: url(https://cdn.tapetender70er.de/media/image/5c/5c/2d/385008-1_warp-beauty-08_518x389.jpg);
-        background-repeat: no-repeat;
-        background-size: 800px 452px;
-        background-position: top center;
-        font-size: 14px;
-        color: #434343;
-      "
-    >
-      <header>
-        <table style="width: 100%;">
-          <tdiv>
-            <tr style="height: 0;">
-              <td>
-                <img
-                  alt=""
-                  src="https://micasasucasa.in/static/media/logo.9a0467178409d5b8cbd3.png"
-                  height="70px"
-                />
-              </td>
-              <td style="text-align: right;">
-                <span
-                  style="font-size: 16px; line-height: 30px; color: #000000;"
-                  > ${new Date().toLocaleDateString("en-US", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}</span
-                >
-              </td>
-            </tr>
-          </tdiv>
-        </table>
-      </header>
-
-      <main>
-        <div
-          style="
-            margin: 0;
-            margin-top: 70px;
-            padding: 92px 30px 115px;
-            background: #ffffff;
-            border-radius: 30px;
-            text-align: center;
-          "
-        >
-          <div style="width: 100%; max-width: 489px; margin: 0 auto;">
-            <h1
-              style="
-                margin: 0;
-                font-size: 24px;
-                font-weight: 500;
-                color: #1f1f1f;
-              "
-            >
-              Your OTP
-            </h1>
-            <p
-              style="
-                margin: 0;
-                margin-top: 17px;
-                font-size: 16px;
-                font-weight: 500;
-              "
-            >
-              Hey ${name},
-            </p>
-            <p
-              style="
-                margin: 0;
-                margin-top: 17px;
-                font-weight: 500;
-                letter-spacing: 0.56px;
-              "
-            >
-              Thank you for choosing Micasasucasa. Use the following OTP
-              to complete the procedure to change your email address. OTP is
-              valid for
-              <span style="font-weight: 600; color: #1f1f1f;">5 minutes</span>.
-              Do not share this code with others.
-            </p>
-            <p
-              style="
-         
-                margin-top: 60px;
-                font-size: 40px;
-                font-weight: 600;
-                letter-spacing: 10px;
-                color: #ba3d4f;
-                text-align:center;
-              "
-            >
-             ${otp}
-            </p>
-          </div>
-        </div>
-
-        <p
-          style="
-            max-width: 400px;
-            margin: 0 auto;
-            margin-top: 90px;
-            text-align: center;
-            font-weight: 500;
-            color: #8c8c8c;
-          "
-        >
-          Need help? Ask at
-          <a
-            href="mailto:Info@micasasucasa.in"
-            style="color: #499fb6; text-decoration: none;"
-            >Info@micasasucasa.in</a
-          >
-        </p>
-      </main>
-
-      <footer
-        style="
-          width: 100%;
-          max-width: 490px;
-          margin: 20px auto 0;
-          text-align: center;
-          border-top: 1px solid #e6ebf1;
-        "
-      >
-        <p
-          style="
-            margin: 0;
-            margin-top: 40px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #434343;
-          "
-        >
-          Micasasucasa
-        </p>
-      
-        <div style="margin: 0; margin-top: 16px;">
-          <a href="" target="_blank" style="display: inline-block;">
-            <img
-              width="36px"
-              alt="Facebook"
-              src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661502815169_682499/email-template-icon-facebook"
-            />
-          </a>
-          <a
-            href=""
-            target="_blank"
-            style="display: inline-block; margin-left: 8px;"
-          >
-            <img
-              width="36px"
-              alt="Instagram"
-              src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661504218208_684135/email-template-icon-instagram"
-          /></a>
-          <a
-            href=""
-            target="_blank"
-            style="display: inline-block; margin-left: 8px;"
-          >
-            <img
-              width="36px"
-              alt="Twitter"
-              src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661503043040_372004/email-template-icon-twitter"
-            />
-          </a>
-          <a
-            href=""
-            target="_blank"
-            style="display: inline-block; margin-left: 8px;"
-          >
-            <img
-              width="36px"
-              alt="Youtube"
-              src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661503195931_210869/email-template-icon-youtube"
-          /></a>
-        </div>
-        <p style="margin: 0; margin-top: 16px; color: #434343;">
-          Copyright © 2024 Micasasucasa. All rights reserved.
-        </p>
-      </footer>
-    </div>
-  </div>`,
-                  });
                   return res.json(data);
                 }
               });
@@ -1197,7 +965,7 @@ app.post(
                     </div>
                   </table>
                 </header>
-        
+
                 <main>
                   <div
                     style="margin: 0; margin-top: 70px; padding: 92px 30px 115px; background: #ffffff; border-radius: 30px; text-align: center;"
@@ -1228,7 +996,7 @@ app.post(
                       </a>
                     </div>
                   </div>
-        
+
                   <p
                     style="max-width: 400px; margin: 0 auto; margin-top: 90px; text-align: center; font-weight: 500; color: #8c8c8c;"
                   >
@@ -1236,14 +1004,14 @@ app.post(
                     <a href="mailto:Info@micasasucasa.in" style="color: #499fb6; text-decoration: none">Info@micasasucasa.in</a>
                   </p>
                 </main>
-        
+
                 <footer
                   style="width: 100%; max-width: 490px; margin: 20px auto 0; text-align: center; border-top: 1px solid #e6ebf1;"
                 >
                   <p style="margin: 0; margin-top: 40px; font-size: 16px; font-weight: 600; color: #434343;">
                     Micasasucasa
                   </p>
-        
+
                   <div style="margin: 0; margin-top: 16px">
                     <a href="" target="_blank" style="display: inline-block">
                       <img
@@ -1477,7 +1245,7 @@ app.post("/add_category", upload6.single("image"), (req, res) => {
 
   let sql, param;
 
-  if (u_id == "undefined") { // Check if u_id is undefined or null
+  if (!u_id) { // Check if u_id is undefined or null
     sql = "INSERT INTO awt_category(`title`, `group_id`, `slug`, `description`, `image`, `created_by`, `created_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
     param = [title, group_id, slug, description, image, user_id, created_date];
   } else {
@@ -1508,38 +1276,7 @@ app.post("/category_update", (req, res) => {
   });
 });
 
-app.post("/SubCategory_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_category SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
 app.get("/category_data", (req, res) => {
-  const sql = "select * from awt_category where deleted = 0 and active = 1";
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-app.get("/category_data_admin", (req, res) => {
   const sql = "select * from awt_category where deleted = 0 ";
 
   con.query(sql, (err, data) => {
@@ -1627,8 +1364,6 @@ app.post("/group_update", (req, res) => {
   });
 });
 
-
-
 app.get("/group_data", (req, res) => {
   const sql = "select * from awt_group where deleted = 0 limit 4";
 
@@ -1640,46 +1375,6 @@ app.get("/group_data", (req, res) => {
     }
   });
 });
-
-app.post("/group_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_group SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-app.post("/Category_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_group SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
 app.post("/group_delete", (req, res) => {
   let cat_id = req.body.cat_id;
 
@@ -1737,27 +1432,6 @@ app.post("/subcategory_update", (req, res) => {
     }
   });
 });
-
-app.post("/Category_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_subcategory SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
 
 app.get("/subcategory_data", (req, res) => {
   const sql = "select * from awt_subcategory where deleted = 0 ";
@@ -3108,288 +2782,288 @@ app.post("/getproductDetails", (req, res) => {
 // })
 
 app.post("/getproductlisting", (req, res) => {
-    let groupslug = req.body.groupslug;
-    let catslug = req.body.catslug;
-    let subcatslug = req.body.subcatslug;
-    // let brand_id = req.body.brand_id;
-    let brandid = req.body.brandid;
-    let sort = req.body.sort;
-    let price = req.body.price;
-  
-    let sql;
-    let param;
-    param = [];
-  
-    if (catslug == undefined && subcatslug == undefined) {
-      sql =
-        "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
-  
-      if (brandid && groupslug && price) {
-        sql +=
-          "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-  
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(brandid, groupslug, price);
+  let groupslug = req.body.groupslug;
+  let catslug = req.body.catslug;
+  let subcatslug = req.body.subcatslug;
+  // let brand_id = req.body.brand_id;
+  let brandid = req.body.brandid;
+  let sort = req.body.sort;
+  let price = req.body.price;
+
+  let sql;
+  let param;
+  param = [];
+
+  if (catslug == undefined && subcatslug == undefined) {
+    sql =
+      "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_group as ag on ag.id = aap.groupid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
+
+    if (brandid && groupslug && price) {
+      sql +=
+        "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
       }
-      if (brandid && groupslug && !price) {
-        sql +=
-          "aap.b_id = ? and  ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-  
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(brandid, groupslug);
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
       }
-  
-      if (price && groupslug && !brandid) {
-        sql +=
-          "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-  
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(price, groupslug);
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
       }
-  
-      if (!price && !brandid) {
-        sql +=
-          " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(groupslug);
-      }
-    } else if (subcatslug == undefined) {
-      sql =
-        "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable  from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
-  
-      if (brandid && catslug && price) {
-        sql +=
-          "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-  
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(brandid, catslug, price);
-      }
-      if (brandid && catslug && !price) {
-        sql +=
-          "aap.b_id = ? and  ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-  
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(brandid, catslug);
-      }
-  
-      if (price && catslug && !brandid) {
-        sql +=
-          "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-  
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(price, catslug);
-      }
-  
-      if (!price && !brandid) {
-        sql +=
-          " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(catslug);
-      }
-    } else {
-      sql =
-        "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
-  
-      if (brandid && subcatslug && price) {
-        sql +=
-          "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-  
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(brandid, subcatslug, price);
-      }
-      if (brandid && subcatslug && !price) {
-        sql +=
-          "aap.b_id = ? and  ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-  
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(brandid, subcatslug);
-      }
-  
-      if (price && subcatslug && !brandid) {
-        sql +=
-          "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-  
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(price, subcatslug);
-      }
-  
-      if (!price && !brandid) {
-        sql +=
-          " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
-  
-        if (sort == "low") {
-          sql += "order by aap.disc_price ASC";
-        }
-        if (sort == "high") {
-          sql += "order by aap.disc_price DESC";
-        }
-  
-        if (sort == "latest") {
-          sql += "order by aap.id DESC";
-        }
-  
-        param.push(subcatslug);
-      }
+
+      param.push(brandid, groupslug, price);
     }
-  
-    con.query(sql, param, (err, products) => {
-      if (err) {
-        return res.json(err);
-      } else {
-        // Create an array of promises to handle the second query for each product
-        const promises = products.map((product) => {
-          const { slug } = product;
-  
-          const checkreservstock =
-            "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0";
-  
-          return new Promise((resolve, reject) => {
-            con.query(checkreservstock, [slug], (err, reservStockData) => {
-              if (err) {
-                reject(err);
-              } else {
-                const totalRStock = reservStockData.reduce(
-                  (total, row) => total + Number(row.r_stock),
-                  0
-                );
-                product.r_stock = totalRStock;
-                resolve(product); // Resolve with the product data and r_stock
-              }
-            });
+    if (brandid && groupslug && !price) {
+      sql +=
+        "aap.b_id = ? and  ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, groupslug);
+    }
+
+    if (price && groupslug && !brandid) {
+      sql +=
+        "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(price, groupslug);
+    }
+
+    if (!price && !brandid) {
+      sql +=
+        " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(groupslug);
+    }
+  } else if (subcatslug == undefined) {
+    sql =
+      "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable  from awt_add_product as aap left join awt_category as ag on ag.id = aap.catid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
+
+    if (brandid && catslug && price) {
+      sql +=
+        "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, catslug, price);
+    }
+    if (brandid && catslug && !price) {
+      sql +=
+        "aap.b_id = ? and  ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, catslug);
+    }
+
+    if (price && catslug && !brandid) {
+      sql +=
+        "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(price, catslug);
+    }
+
+    if (!price && !brandid) {
+      sql +=
+        " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(catslug);
+    }
+  } else {
+    sql =
+      "select ap.image1,ap.image2,aap.id as proid, aap.v_id,aap.b_id,aap.catid,aap.title as product_title,aap.groupid,aap.scatid,aap.slug,aap.price,aap.disc_price,aap.featured,ag.title,aap.gst,aap.slug , ab.title ,ab.logo ,aps.stock , aap.customizable from awt_add_product as aap left join awt_subcategory as ag on ag.id = aap.scatid left join awt_productimg as ap on ap.product_id = aap.id left join awt_brand as ab on aap.b_id = ab.id LEFT JOIN awt_productstock as aps on aap.id = aps.pro_id where ";
+
+    if (brandid && subcatslug && price) {
+      sql +=
+        "aap.b_id = ? and  ag.slug = ? and aap.disc_price < ?  and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, subcatslug, price);
+    }
+    if (brandid && subcatslug && !price) {
+      sql +=
+        "aap.b_id = ? and  ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(brandid, subcatslug);
+    }
+
+    if (price && subcatslug && !brandid) {
+      sql +=
+        "aap.disc_price < ? and ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(price, subcatslug);
+    }
+
+    if (!price && !brandid) {
+      sql +=
+        " ag.slug = ? and aap.active= 1 and aap.approve = 1 and aap.deleted = 0 and ap.deleted = 0 group by ap.product_id ";
+
+      if (sort == "low") {
+        sql += "order by aap.disc_price ASC";
+      }
+      if (sort == "high") {
+        sql += "order by aap.disc_price DESC";
+      }
+
+      if (sort == "latest") {
+        sql += "order by aap.id DESC";
+      }
+
+      param.push(subcatslug);
+    }
+  }
+
+  con.query(sql, param, (err, products) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      // Create an array of promises to handle the second query for each product
+      const promises = products.map((product) => {
+        const { slug } = product;
+
+        const checkreservstock =
+          "select * from awt_add_product as aap left join awt_reservstock as ars on aap.id = ars.proid where aap.slug = ? and aap.deleted = 0 and ars.deleted = 0 and ars.p_status = 0";
+
+        return new Promise((resolve, reject) => {
+          con.query(checkreservstock, [slug], (err, reservStockData) => {
+            if (err) {
+              reject(err);
+            } else {
+              const totalRStock = reservStockData.reduce(
+                (total, row) => total + Number(row.r_stock),
+                0
+              );
+              product.r_stock = totalRStock;
+              resolve(product); // Resolve with the product data and r_stock
+            }
           });
         });
-  
-        // Wait for all promises to complete
-        Promise.all(promises)
-          .then((results) => {
-            // Once all queries are done, send the combined result
-            res.json(results);
-          })
-          .catch((err) => {
-            res.json(err); // Handle any errors
-          });
-      }
-    });
+      });
+
+      // Wait for all promises to complete
+      Promise.all(promises)
+        .then((results) => {
+          // Once all queries are done, send the combined result
+          res.json(results);
+        })
+        .catch((err) => {
+          res.json(err); // Handle any errors
+        });
+    }
   });
+});
 
 app.post(`/getbrand`, (req, res) => {
   let groupslug = req.body.groupslug;
@@ -3819,6 +3493,443 @@ app.get(`/state`, (req, res) => {
 //     }
 //   );
 // });
+
+
+app.post('/api', async (req, res) => {
+  const { email, password } = req.body;
+
+  const data = JSON.stringify({
+    email: 'info+1709@micasasucasa.in',
+    password: '8LsE6sOiqw',
+  });
+
+  const config = {
+    method: 'post',
+    maxBodyLength: Infinity,
+    url: 'https://api.nimbuspost.com/v1/users/login',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  };
+
+  try {
+    const response = await axios(config);
+    res.json(response.data);
+  } catch (error) {
+    console.error('Error logging in:', error.message);
+    if (error.response) {
+      return res.status(error.response.status).json(error.response.data);
+    }
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+app.post('/place_order', async (req, res) => {
+  let {
+    firstname, lastname, country, address, landmark, city, state, postcode, orderNotes,
+    sfirstname, slastname, scountry, saddress, slandmark, scity, sstate, spostcode,
+    totalamt, paymode, order_id, token, user_id, mobile, vendor_id, smobile, shippingid, shippingamt
+  } = req.body;
+
+  let pending = "pending";
+  const date = new Date();
+
+  // Check if the address exists
+  const checkaddress = "SELECT * FROM `awt_address` WHERE `uid` = ? AND `deleted` = 0";
+  con.query(checkaddress, [user_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    }
+
+    if (data.length === 0) {
+      const insertAddress = `INSERT INTO awt_address
+          (\`uid\`, \`firstname\`, \`lastname\`, \`mobile\`, \`address\`, \`state\`, \`city\`, \`pincode\`, \`created_date\`, \`default\`)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+      con.query(insertAddress, [user_id, firstname, lastname, mobile, address, state, city, postcode, date, 1], (err, data) => {
+        if (err) {
+          return res.json(err);
+        }
+      });
+    }
+
+    // Update the order
+    const updateOrder = `UPDATE \`order\` SET shipamount = ? , shipment_id = ? ,v_id = ?, firstname = ?, lastname = ?, country = ?, address1 = ?, landmark = ?,
+          city1 = ?, state = ?, postcode = ?, order_comments = ?, sfirstname = ?, slastname = ?, scountry = ?,
+          shipaddress = ?, shiplandmark = ?, shipcity = ?, shipstate = ?, shippostcode = ?, totalamt = ?, paymode = ? ,mobileno = ? , smobileno = ?
+          WHERE id = ?`;
+    console.log(shippingamt)
+    console.log(shippingid)
+    con.query(updateOrder, [shippingamt, shippingid, vendor_id, firstname, lastname, country, address, landmark, city, state, postcode, orderNotes,
+      sfirstname, slastname, scountry, saddress, slandmark, scity, sstate, spostcode, totalamt, paymode, mobile, smobile, order_id], (err, data) => {
+        if (err) {
+          return res.json(err);
+        }
+
+        // Get the total number of orders
+        const getOrderCount = "SELECT * FROM `order` WHERE `orderno` != ''";
+        con.query(getOrderCount, (err, data) => {
+          if (err) {
+            return res.json(err);
+          }
+
+          const orderCount = data.length + 1;
+          const currentDate = new Date();
+          const istOffset = 5.5 * 60 * 60 * 1000; // IST offset (5.5 hours)
+          const istDate = new Date(currentDate.getTime() + (currentDate.getTimezoneOffset() * 60 * 1000) + istOffset);
+
+          const day = String(istDate.getDate()).padStart(2, '0');
+          const month = String(istDate.getMonth() + 1).padStart(2, '0');
+          const year = istDate.getFullYear().toString().substr(-2);
+
+          const orderno = `MISU-${year}${month}${day}-${orderCount}`;
+
+          const updateOrderNo = `UPDATE \`order\` SET \`orderno\` = ?, \`ostatus\` = ?, order_date = ? WHERE id = ?`;
+          con.query(updateOrderNo, [orderno, pending, currentDate, order_id], (err, data) => {
+            if (err) {
+              return res.json(err);
+            }
+
+            // Check cart items
+            const checkCart = "SELECT * FROM `awt_cart` WHERE orderid = ? AND deleted = 0";
+            con.query(checkCart, [order_id], (err, data) => {
+              if (err) {
+                return res.json(err);
+              }
+
+              const stockRemovalData = data.map(item => [
+                item.proid, item.pqty, new Date(), user_id
+              ]);
+
+              // Insert into product stock removal
+              const insertStockRemove = "INSERT INTO awt_productstockremove (`pro_id`, `stock`, `created_date`, `updated_by`) VALUES ?";
+              con.query(insertStockRemove, [stockRemovalData], (err, data) => {
+                if (err) {
+                  return res.json(err);
+                }
+
+                // Update stock levels in parallel
+                stockRemovalData.forEach(item => {
+                  const [pro_id, stock] = item;
+                  const updateStock = "UPDATE `awt_productstock` SET stock = stock - ? WHERE pro_id = ?";
+                  con.query(updateStock, [stock, pro_id], (err, data) => {
+                    if (err) {
+                      return res.json(err);
+                    }
+                  });
+                });
+
+                // Update reserved stock
+                const updateReservStock = "UPDATE awt_reservstock SET p_status = 1 WHERE orderid = ?";
+                con.query(updateReservStock, [order_id], (err, data) => {
+                  if (err) {
+                    return res.json(err);
+                  }
+
+                  // Get order number for final response
+                  const getOrderNo = "SELECT orderno FROM `order` WHERE id = ?";
+                  con.query(getOrderNo, [order_id], async (err, data) => {
+                    if (err) {
+                      return res.json(err);
+                    }
+
+                    try {
+                      // Call the shipping function
+                      await shipping(order_id, token, shippingid, shippingamt);
+                      res.status(200).json({ success: true, message: 'Order placed successfully!', orderno: data[0].orderno });
+                    } catch (error) {
+                      console.error('Error in place_order:', error.message);
+                      res.status(500).json({ success: false, message: error.message });
+                    }
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+  });
+});
+
+
+const shipping = async (order_id, token, shippingid, shippingamt) => {
+  const sql = 'SELECT v_id FROM `awt_cart` WHERE orderid = ? GROUP BY v_id;';
+
+  return new Promise((resolve, reject) => {
+    con.query(sql, [order_id], async (err, information) => {
+      if (err) {
+        console.error('Database error:', err);
+        reject({ success: false, error: 'Database query failed' });
+      }
+      if (information.length === 0) {
+        console.error('No products found for the given order_id');
+        reject({ success: false, error: 'No products found for the given order_id' });
+      }
+
+      const log = 'INSERT INTO shipping (orderid, shippingid, shippingamt, createddate) VALUES (?, ?, ?, NOW())';
+      con.query(log, [order_id, shippingid, shippingamt], async (err, data) => {
+        // Map to promises
+        if (err) {
+          console.error('Database error:', err);
+          reject({ success: false, error: 'shipping failed' });
+        } else {
+          const vendor_data = information.map(item => api_to_nimbus(order_id, item.v_id, token, shippingid));
+          try {
+            // Wait for all promises to resolve
+            await Promise.all(vendor_data);
+            resolve();
+          } catch (error) {
+            console.error('Error in api_to_nimbus:', error.message);
+            reject(error);
+          }
+        }
+      })
+    });
+  });
+};
+
+const api_to_nimbus = (order_id, v_id, token, Shippingid) => {
+  return new Promise((resolve, reject) => {
+    // Get order items details
+    const sql = 'SELECT c.* , p.title FROM `awt_cart` as c  left join awt_add_product as p on c.proid = p.id WHERE c.orderid = ? AND c.v_id = ?';
+    con.query(sql, [order_id, v_id], (err, data) => {
+      if (err) {
+        console.error('Database error:', err);
+        reject({ success: false, error: 'Database query failed' });
+      }
+      if (data.length === 0) {
+        console.error('No products found for the given order_id and v_id');
+        reject({ success: false, error: 'No products found for the given order_id and v_id' });
+      }
+
+      const items = data.map(item => ({
+        name: item.title, // Ensure this field exists in your cart table
+        qty: String(item.pqty),
+        price: item.totalprice // Ensure this field exists in your cart table
+      }));
+
+      // Get customer info
+      const sql1 = 'SELECT * FROM `order` WHERE id = ?';
+      con.query(sql1, [order_id], (err, orderData) => {
+        if (err) {
+          console.error('Database error:', err);
+          reject({ success: false, error: 'Database query failed' });
+        }
+        if (orderData.length === 0) {
+          reject({ success: false, error: 'No order found for the given order_id' });
+        }
+
+        // Get vendor info
+        const sql2 = 'SELECT * FROM awt_vendor WHERE id = ?';
+        con.query(sql2, [v_id], (err, vendor_info) => {
+          if (err) {
+            console.error('Database error:', err);
+            reject({ success: false, error: 'Database query failed' });
+          }
+          if (vendor_info.length === 0) {
+            reject({ success: false, error: 'No vendor found for the given v_id' });
+          }
+
+          // Construct NimbusPost order payload
+          const nimbusOrderData = {
+            order_number: orderData[0].id,  // Order number from your system
+            shipping_charges: orderData[0].shipamount
+            ,  // Shipping charges (if any)
+            discount: orderData[0].disamount || 0,  // Discount applied to the order (if any)
+            payment_type: 'prepaid',  // Payment type (COD or Prepaid)
+            order_amount: orderData[0].totalamt,  // Total order amount
+            courier_id: Shippingid,  // Example courier_id from your system
+
+            // Consignee (Customer) information
+            consignee: {
+              name: `${orderData[0].firstname} ${orderData[0].lastname}`,  // Customer name
+              address: orderData[0].address1,  // Customer address
+              address_2: orderData[0].shipaddress || '',  // Additional address line (optional)
+              city: orderData[0].city1,
+              state: orderData[0].state,
+              pincode: orderData[0].postcode,
+              phone: orderData[0].mobileno
+            },
+
+            // Pickup (Vendor) information
+            pickup: {
+              warehouse_name: 'Default Warehouse',  // Example warehouse name
+              name: vendor_info[0].vendor_name,  // Vendor contact name
+              address: vendor_info[0].address,
+              address_2: vendor_info[0].address || '',  // Additional address line (optional)
+              city: vendor_info[0].city,
+              state: vendor_info[0].state,
+              pincode: vendor_info[0].pincode,
+              phone: vendor_info[0].mobile
+            },
+
+            // Order Items (Array of products)
+            order_items: items
+          };
+          console.log(nimbusOrderData);
+          // Make NimbusPost API call
+          const config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: 'https://api.nimbuspost.com/v1/shipments',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            data: nimbusOrderData
+          };
+
+          axios(config)
+            .then(response => {
+              console.log('API Response:', response.data);
+              resolve(response.data);
+            })
+            .catch(error => {
+              console.error('Error with NimbusPost API:', error.message);
+              reject(error);
+            });
+        });
+      });
+    });
+  });
+};
+
+
+
+// Endpoint to get shipping rates for multiple products across different vendors
+app.post('/get_shipping_rate', async (req, res) => {
+  const order_id = req.body.order_id;
+  const spincode = req.body.spincode;
+  const token = req.body.token;
+
+  try {
+    const shippingRates = await getShippingRateForMultipleVendors(order_id, spincode, token);
+    res.status(200).json({ success: true, shippingRates });
+  } catch (error) {
+    console.error('Error in get_shipping_rate:', error.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch shipping rates' });
+  }
+});
+
+// Function to get shipping rate for multiple vendors in an order
+const getShippingRateForMultipleVendors = (order_id, spincode, token) => {
+  return new Promise((resolve, reject) => {
+    // Fetch products grouped by vendor
+    const sql = 'SELECT p.v_id, ac.pqty, p.weight, p.length , p.breadth, p.height from awt_cart as ac left join awt_add_product as p on ac.proid = p.id where ac.deleted =0 and orderid =  ?';
+    con.query(sql, [order_id], (err, products) => {
+      if (err) {
+        console.error('Database error:', err);
+        reject('Database query failed');
+      }
+      if (products.length === 0) {
+        reject('No products found for the given order_id');
+      }
+
+      // Group products by vendor (v_id)
+      const groupedProducts = groupByVendor(products);
+
+      // Fetch customer order info (destination)
+      const sql1 = 'SELECT city1, state, postcode, oamount FROM `order` WHERE id = ?';
+      con.query(sql1, [order_id], (err, orderData) => {
+        if (err) {
+          console.error('Database error:', err);
+          reject('Database query failed');
+        }
+        if (orderData.length === 0) {
+          reject('No order found for the given order_id');
+        }
+
+        const destination = spincode;
+        const orderValue = orderData[0].oamount;  // Total order value
+
+        // Array to store all promises for each vendor
+        const ratePromises = [];
+
+        // For each vendor, get shipping rates
+        for (const vendorId in groupedProducts) {
+          ratePromises.push(
+            getVendorShippingRate(vendorId, groupedProducts[vendorId], destination, orderValue, token)
+          );
+        }
+
+        // Resolve all promises to get shipping rates for all vendors
+        Promise.all(ratePromises)
+          .then(rates => resolve(rates))  // Return all rates when resolved
+          .catch(error => reject(error));  // Handle any error in fetching rates
+      });
+    });
+  });
+};
+
+// Function to group products by vendor
+const groupByVendor = (products) => {
+  return products.reduce((grouped, product) => {
+    if (!grouped[product.v_id]) {
+      grouped[product.v_id] = [];
+    }
+    grouped[product.v_id].push({
+      qty: product.pqty,
+      weight: product.weight,
+      length: product.length,
+      breadth: product.breadth,
+      height: product.height
+    });
+    return grouped;
+  }, {});
+};
+
+// Function to get shipping rate for a specific vendor
+const getVendorShippingRate = (vendorId, vendorProducts, destination, orderValue, token) => {
+  return new Promise((resolve, reject) => {
+    // Fetch vendor origin information
+    const sql = 'SELECT * FROM `awt_vendor` WHERE id = ?';
+    con.query(sql, [vendorId], (err, vendorInfo) => {
+      if (err) {
+        console.error('Database error:', err);
+        reject('Database query failed');
+      }
+      if (vendorInfo.length === 0) {
+        reject(`No vendor found with id ${vendorId}`);
+      }
+
+      const origin = vendorInfo[0].pincode;  // Vendor's origin pincode
+      const paymentType = 'prepaid';  // Example payment type
+
+      // Construct payload for NimbusPost Rates API
+      const rateRequestData = {
+        origin, // Vendor's origin pincode
+        destination, // Customer's destination pincode
+        payment_type: paymentType, // Payment type
+        details: vendorProducts, // Products for the vendor
+        order_value: orderValue  // Total order value (same for all vendors)
+      };
+
+      // Send request to NimbusPost API for shipping rates
+      const config = {
+        method: 'post',
+        maxBodyLength: Infinity,
+        url: 'https://api.nimbuspost.com/v1/courier/serviceability',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        data: rateRequestData
+      };
+
+      axios(config)
+        .then(response => {
+          console.log(`Shipping Rates for Vendor ${vendorId}:`, response.data);
+          resolve({ vendor_id: vendorId, rates: response.data });
+        })
+        .catch(error => {
+          console.error(`Error fetching rates for Vendor ${vendorId}:`, error.message);
+          reject(`Failed to fetch shipping rates for Vendor ${vendorId}`);
+        });
+    });
+  });
+};
 
 app.post("/getcolorimg", (req, res) => {
   let colorid = req.body.colorid;
@@ -5279,54 +5390,6 @@ app.post("/update_about", (req, res) => {
   });
 });
 
-app.post('/update_AboutUs', upload12.fields([{ name: 'image1' }, { name: 'image2' }, { name: 'image3' }]), (req, res) => {
-  const image1 = req.files['image1'] ? req.files['image1'][0].filename : null;
-  const image2 = req.files['image2'] ? req.files['image2'][0].filename : null;
-  const image3 = req.files['image3'] ? req.files['image3'][0].filename : null;
-  const updated_date = new Date();
-
-
-  // Ensure all images are uploaded
-  if (!image1 || !image2 || !image3) {
-      return res.status(400).json("All images are required.");
-  }
-
-  const sql = "UPDATE awt_add_aboutus SET image1 = ?, image2 = ?, image3 = ?, updated_at = ? WHERE id = ?";
-  const params = [image1, image2, image3, updated_date, "1"];
-
-  con.query(sql, params, (err, result) => {
-      if (err) {
-          console.error("Database error:", err);
-          return res.status(500).json({ message: "Error updating images.", error: err.message });
-      } else {
-          return res.json("Images Updated Successfully!");
-      }
-  });
-});
-
-
-
-// Endpoint to retrieve About Us images
-app.get('/AboutUs_data', (req, res) => {
-  const sql = "SELECT * FROM awt_add_aboutus WHERE is_deleted = 0";
-
-  con.query(sql, (err, data) => {
-      if (err) {
-          console.error("Database error:", err);
-          return res.status(500).json("Error retrieving images.");
-      } else {
-          return res.json(data);
-      }
-  });
-});
-
-
-
-
-
-
-
-
 app.get(`/about_data`, (req, res) => {
   const sql = "select * from `awt_about` where id = 1  and deleted = 0";
 
@@ -5603,10 +5666,10 @@ function checkRows() {
   });
 }
 
-cron.schedule("* * * * *", () => {
-  console.log("Running scheduled task");
-  checkRows();
-});
+// cron.schedule("* * * * *", () => {
+//   console.log("Running scheduled task");
+//   checkRows();
+// });
 
 // payment api *************************
 
@@ -5773,6 +5836,7 @@ app.post("/update_tag", (req, res) => {
 });
 
 // for Breadcrumbs/==========================================================================
+
 app.post("/add_Breadcrumbs", upload9.single("image"), (req, res) => {
   let title = req.body.title;
   let image = req.file.filename;
@@ -5878,46 +5942,8 @@ app.post("/Breadcrumbs_update_data", (req, res) => {
   });
 });
 
-// app.get(`/get_Breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-
-
-// for group_breadcrumbs/==========================================================================
-app.post("/add_group_breadcrumbs", upload9.single("image"), (req, res) => {
-  let title = req.body.title;
-  let image = req.file.filename;
-  let created_date = new Date();
-  let user_id = req.body.user_id;
-
-  let sql;
-  let param;
-
-  sql =
-    "update awt_group_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json("Data Added Successfully!");
-    }
-  });
-});
-
-app.get("/group_breadcrumbs_data", (req, res) => {
-  const sql = "select * from awt_group_breadcrumbs where deleted = 0";
+app.get(`/get_Breadcrumbs`, (req, res) => {
+  const sql = "select * from `awt_breadcrumbs` where  deleted = 0";
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -5927,204 +5953,9 @@ app.get("/group_breadcrumbs_data", (req, res) => {
     }
   });
 });
-
-app.post("/group_breadcrumbs_delete", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "update awt_group_breadcrumbs set deleted = 1 where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/group_breadcrumbs_update_data", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "select * from  awt_group_breadcrumbs  where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-// app.get(`/get_Breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_group_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-
-// for category_breadcrumbs/==========================================================================
-app.post("/add_category_breadcrumbs", upload9.single("image"), (req, res) => {
-  let title = req.body.title;
-  let image = req.file.filename;
-  let created_date = new Date();
-  let user_id = req.body.user_id;
-
-  let sql;
-  let param;
-
-  sql =
-    "update awt_category_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json("Data Added Successfully!");
-    }
-  });
-});
-
-app.get("/category_breadcrumbs_data", (req, res) => {
-  const sql = "select * from awt_category_breadcrumbs where deleted = 0";
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/category_breadcrumbs_delete", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "update awt_category_breadcrumbs set deleted = 1 where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/category_breadcrumbs_update_data", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "select * from  awt_category_breadcrumbs  where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-// app.get(`/get_category_breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_category_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-// for Sub-category_breadcrumbs/==========================================================================
-app.post("/add_subcategory_breadcrumbs", upload9.single("image"), (req, res) => {
-  let title = req.body.title;
-  let image = req.file.filename;
-  let created_date = new Date();
-  let user_id = req.body.user_id;
-
-  let sql;
-  let param;
-
-  sql =
-    "update awt_subcategory_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json("Data Added Successfully!");
-    }
-  });
-});
-
-app.get("/subcategory_breadcrumbs_data", (req, res) => {
-  const sql = "select * from awt_subcategory_breadcrumbs where deleted = 0";
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/subcategory_breadcrumbs_delete", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "update awt_subcategory_breadcrumbs set deleted = 1 where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/subcategory_breadcrumbs_update_data", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "select * from  awt_subcategory_breadcrumbs  where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-// app.get(`/get_subcategory_breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_subcategory_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-
 
 // for Slot-Master/==========================================================================
+
 app.post("/add_SlotMaster", (req, res) => {
   const { location, slot, title, user_id } = req.body;
   const created_date = new Date();
@@ -6361,8 +6192,8 @@ app.post("/sendinquiry", upload10.single("image"), (req, res) => {
   const image = req.file ? req.file.filename : null;
 
   const sql = `
-      INSERT INTO awt_productinquiry 
-      (user_id, product_id, inquiry_description, name, email, mobile, created_date, image) 
+      INSERT INTO awt_productinquiry
+      (user_id, product_id, inquiry_description, name, email, mobile, created_date, image)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
@@ -6561,14 +6392,14 @@ app.post(`/getlocation`, (req, res) => {
 
 })
 
-app.get('/moving_category' , (req,res) =>{
-  
+app.get('/moving_category', (req, res) => {
+
   const sql = "select ac.*,ag.slug as group_slug from awt_category as ac left join awt_group as ag on ag.id = ac.group_id where ac.deleted = 0 and ac.moving_category = 1";
 
-  con.query(sql , (err,data) =>{
-    if(err){
+  con.query(sql, (err, data) => {
+    if (err) {
       return res.json(err)
-    }else{
+    } else {
       return res.json(data)
     }
   })
@@ -6579,797 +6410,17 @@ app.post('/toggle_category', (req, res) => {
   const { toggle_id, status } = req.body;
 
   if (!toggle_id || typeof status !== 'number') {
-      return res.status(400).json({ message: "Invalid input data" });
+    return res.status(400).json({ message: "Invalid input data" });
   }
 
   const sql = `UPDATE awt_category SET moving_category = ? WHERE id = ?`;
 
   con.query(sql, [status, toggle_id], (err, result) => {
-      if (err) {
-          console.error("Database error:", err);
-          return res.status(500).json({ message: "An error occurred while updating the category." });
-      } else {
-          return res.status(200).json({ message: "Category updated successfully", data: result });
-      }
-  });
-});
-
-app.post('/api', async (req, res) => {
-  const { email, password } = req.body;
-
-  const data = JSON.stringify({
-    email: 'info+1709@micasasucasa.in',
-    password: '8LsE6sOiqw',
-  });
-
-  const config = {
-    method: 'post',
-    maxBodyLength: Infinity,
-    url: 'https://api.nimbuspost.com/v1/users/login',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: data,
-  };
-
-  try {
-    const response = await axios(config);
-    res.json(response.data);
-  } catch (error) {
-    console.error('Error logging in:', error.message);
-    if (error.response) {
-      return res.status(error.response.status).json(error.response.data);
-    }
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-
-app.post('/place_order', async (req, res) => {
-  let {
-    firstname, lastname, country, address, landmark, city, state, postcode, orderNotes,
-    sfirstname, slastname, scountry, saddress, slandmark, scity, sstate, spostcode,
-    totalamt, paymode, order_id, token, user_id, mobile, vendor_id ,smobile
-  } = req.body;
-
-  let pending = "pending";
-  const date = new Date();
-
-  // Check if the address exists
-  const checkaddress = "SELECT * FROM `awt_address` WHERE `uid` = ? AND `deleted` = 0";
-  con.query(checkaddress, [user_id], (err, data) => {
     if (err) {
-      return res.json(err);
-    }
-
-    if (data.length === 0) {
-      const insertAddress = `INSERT INTO awt_address
-          (\`uid\`, \`firstname\`, \`lastname\`, \`mobile\`, \`address\`, \`state\`, \`city\`, \`pincode\`, \`created_date\`, \`default\`)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-      con.query(insertAddress, [user_id, firstname, lastname, mobile, address, state, city, postcode, date, 1], (err, data) => {
-        if (err) {
-          return res.json(err);
-        }
-      });
-    }
-
-    // Update the order
-    const updateOrder = `UPDATE \`order\` SET v_id = ?, firstname = ?, lastname = ?, country = ?, address1 = ?, landmark = ?,
-          city1 = ?, state = ?, postcode = ?, order_comments = ?, sfirstname = ?, slastname = ?, scountry = ?,
-          shipaddress = ?, shiplandmark = ?, shipcity = ?, shipstate = ?, shippostcode = ?, totalamt = ?, paymode = ? ,mobileno = ? , smobileno = ?
-          WHERE id = ?`;
-
-    con.query(updateOrder, [vendor_id, firstname, lastname, country, address, landmark, city, state, postcode, orderNotes,
-      sfirstname, slastname, scountry, saddress, slandmark, scity, sstate, spostcode, totalamt, paymode ,mobile,smobile, order_id], (err, data) => {
-        if (err) {
-          return res.json(err);
-        }
-
-        // Get the total number of orders
-        const getOrderCount = "SELECT * FROM `order` WHERE `orderno` != ''";
-        con.query(getOrderCount, (err, data) => {
-          if (err) {
-            return res.json(err);
-          }
-
-          const orderCount = data.length + 1;
-          const currentDate = new Date();
-          const istOffset = 5.5 * 60 * 60 * 1000; // IST offset (5.5 hours)
-          const istDate = new Date(currentDate.getTime() + (currentDate.getTimezoneOffset() * 60 * 1000) + istOffset);
-
-          const day = String(istDate.getDate()).padStart(2, '0');
-          const month = String(istDate.getMonth() + 1).padStart(2, '0');
-          const year = istDate.getFullYear().toString().substr(-2);
-
-          const orderno = `MISU-${year}${month}${day}-${orderCount}`;
-
-          const updateOrderNo = `UPDATE \`order\` SET \`orderno\` = ?, \`ostatus\` = ?, order_date = ? WHERE id = ?`;
-          con.query(updateOrderNo, [orderno, pending, currentDate, order_id], (err, data) => {
-            if (err) {
-              return res.json(err);
-            }
-
-            // Check cart items
-            const checkCart = "SELECT * FROM `awt_cart` WHERE orderid = ? AND deleted = 0";
-            con.query(checkCart, [order_id], (err, data) => {
-              if (err) {
-                return res.json(err);
-              }
-
-              const stockRemovalData = data.map(item => [
-                item.proid, item.pqty, new Date(), user_id
-              ]);
-
-              // Insert into product stock removal
-              const insertStockRemove = "INSERT INTO awt_productstockremove (`pro_id`, `stock`, `created_date`, `updated_by`) VALUES ?";
-              con.query(insertStockRemove, [stockRemovalData], (err, data) => {
-                if (err) {
-                  return res.json(err);
-                }
-
-                // Update stock levels in parallel
-                stockRemovalData.forEach(item => {
-                  const [pro_id, stock] = item;
-                  const updateStock = "UPDATE `awt_productstock` SET stock = stock - ? WHERE pro_id = ?";
-                  con.query(updateStock, [stock, pro_id], (err, data) => {
-                    if (err) {
-                      return res.json(err);
-                    }
-                  });
-                });
-
-                // Update reserved stock
-                const updateReservStock = "UPDATE awt_reservstock SET p_status = 1 WHERE orderid = ?";
-                con.query(updateReservStock, [order_id], (err, data) => {
-                  if (err) {
-                    return res.json(err);
-                  }
-
-                  // Get order number for final response
-                  const getOrderNo = "SELECT orderno FROM `order` WHERE id = ?";
-                  con.query(getOrderNo, [order_id], async (err, data) => {
-                    if (err) {
-                      return res.json(err);
-                    }
-
-                    try {
-                      // Call the shipping function
-                      await shipping(order_id, token);
-                      res.status(200).json({ success: true, message: 'Order placed successfully!', orderno: data[0].orderno });
-                    } catch (error) {
-                      console.error('Error in place_order:', error.message);
-                      res.status(500).json({ success: false, message: error.message });
-                    }
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-  });
-});
-
-
-const shipping = async (order_id, token) => {
-  const sql = 'SELECT v_id FROM `awt_cart` WHERE orderid = ? GROUP BY v_id;';
-
-  return new Promise((resolve, reject) => {
-    con.query(sql, [order_id], async (err, data) => {
-      if (err) {
-        console.error('Database error:', err);
-        reject({ success: false, error: 'Database query failed' });
-      }
-      if (data.length === 0) {
-        console.error('No products found for the given order_id');
-        reject({ success: false, error: 'No products found for the given order_id' });
-      }
-
-      // Map to promises
-      const vendor_data = data.map(item => api_to_nimbus(order_id, item.v_id, token));
-
-      try {
-        // Wait for all promises to resolve
-        await Promise.all(vendor_data);
-        resolve();
-      } catch (error) {
-        console.error('Error in api_to_nimbus:', error.message);
-        reject(error);
-      }
-    });
-  });
-};
-
-const api_to_nimbus = (order_id, v_id, token) => {
-  return new Promise((resolve, reject) => {
-    // Get order items details
-    const sql = 'SELECT id, pqty, totalprice FROM `awt_cart` WHERE orderid = ? AND v_id = ?';
-    con.query(sql, [order_id, v_id], (err, data) => {
-      if (err) {
-        console.error('Database error:', err);
-        reject({ success: false, error: 'Database query failed' });
-      }
-      if (data.length === 0) {
-        console.error('No products found for the given order_id and v_id');
-        reject({ success: false, error: 'No products found for the given order_id and v_id' });
-      }
-
-      const items = data.map(item => ({
-        product_id: item.id, // Ensure this field exists in your cart table
-        quantity: item.pqty,
-        price: item.totalprice // Ensure this field exists in your cart table
-      }));
-
-      // Get customer info
-      const sql1 = 'SELECT * FROM `order` WHERE id = ?';
-      con.query(sql1, [order_id], (err, orderData) => {
-        if (err) {
-          console.error('Database error:', err);
-          reject({ success: false, error: 'Database query failed' });
-        }
-        if (orderData.length === 0) {
-          reject({ success: false, error: 'No order found for the given order_id' });
-        }
-
-        // Get vendor info
-        const sql2 = 'SELECT * FROM awt_vendor WHERE id = ?';
-        con.query(sql2, [v_id], (err, vendor_info) => {
-          if (err) {
-            console.error('Database error:', err);
-            reject({ success: false, error: 'Database query failed' });
-          }
-          if (vendor_info.length === 0) {
-            reject({ success: false, error: 'No vendor found for the given v_id' });
-          }
-
-          // Construct NimbusPost order payload
-          const nimbusOrderData = {
-            order_number: orderData[0].id,  // Order number from your system
-            shipping_charges: orderData[0].shipamount,  // Shipping charges (if any)
-            discount: orderData[0].disamount || 0,  // Discount applied to the order (if any)
-            payment_type: 'prepaid',  // Payment type (COD or Prepaid)
-            order_amount: orderData[0].oamount,  // Total order amount
-            package_weight: 300,  // Example weight (you should get this dynamically)
-            package_length: 10,  // Example package dimensions
-            package_breadth: 10,
-            package_height: 10,
-
-            // Consignee (Customer) information
-            consignee: {
-              name: `${orderData[0].firstname} ${orderData[0].lastname}`,  // Customer name
-              address: orderData[0].address1,  // Customer address
-              address_2: orderData[0].shipaddress || '',  // Additional address line (optional)
-              city: orderData[0].city1,
-              state: orderData[0].state,
-              pincode: orderData[0].postcode,
-              phone: orderData[0].mobileno
-            },
-
-            // Pickup (Vendor) information
-            pickup: {
-              warehouse_name: 'Default Warehouse',  // Example warehouse name
-              name: vendor_info[0].vendor_name,  // Vendor contact name
-              address: vendor_info[0].address,
-              address_2: vendor_info[0].address || '',  // Additional address line (optional)
-              city: vendor_info[0].city,
-              state: vendor_info[0].state,
-              pincode: vendor_info[0].pincode,
-              phone: vendor_info[0].mobile
-            },
-
-            // Order Items (Array of products)
-            order_items: items
-          };
-          console.log(nimbusOrderData);
-          // Make NimbusPost API call
-          const config = {
-            method: 'post',
-            maxBodyLength: Infinity,
-            url: 'https://api.nimbuspost.com/v1/shipments',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            data: nimbusOrderData
-          };
-
-          axios(config)
-            .then(response => {
-              console.log('API Response:', response.data);
-              resolve(response.data);
-            })
-            .catch(error => {
-              console.error('Error with NimbusPost API:', error.message);
-              reject(error);
-            });
-        });
-      });
-    });
-  });
-};
-
-
-
-// Endpoint to get shipping rates for multiple products across different vendors
-app.post('/get_shipping_rate', async (req, res) => {
-  const order_id = req.body.order_id;
-  const spincode = req.body.spincode;
-  const token = req.body.token;
-
-  try {
-    const shippingRates = await getShippingRateForMultipleVendors(order_id, spincode ,token);
-    res.status(200).json({ success: true, shippingRates });
-  } catch (error) {
-    console.error('Error in get_shipping_rate:', error.message);
-    res.status(500).json({ success: false, message: 'Failed to fetch shipping rates' });
-  }
-});
-
-// Function to get shipping rate for multiple vendors in an order
-const getShippingRateForMultipleVendors = (order_id,spincode, token) => {
-  return new Promise((resolve, reject) => {
-    // Fetch products grouped by vendor
-    const sql = 'SELECT p.v_id, ac.pqty, p.weight, p.length , p.breadth, p.height from awt_cart as ac left join awt_add_product as p on ac.proid = p.id where orderid = ?';
-    con.query(sql, [order_id], (err, products) => {
-      if (err) {
-        console.error('Database error:', err);
-        reject('Database query failed');
-      }
-      if (products.length === 0) {
-        reject('No products found for the given order_id');
-      }
-
-      // Group products by vendor (v_id)
-      const groupedProducts = groupByVendor(products);
-
-      // Fetch customer order info (destination)
-      const sql1 = 'SELECT city1, state, postcode, oamount FROM `order` WHERE id = ?';
-      con.query(sql1, [order_id], (err, orderData) => {
-        if (err) {
-          console.error('Database error:', err);
-          reject('Database query failed');
-        }
-        if (orderData.length === 0) {
-          reject('No order found for the given order_id');
-        }
-
-        const destination = spincode;
-        const orderValue = orderData[0].oamount;  // Total order value
-
-        // Array to store all promises for each vendor
-        const ratePromises = [];
-
-        // For each vendor, get shipping rates
-        for (const vendorId in groupedProducts) {
-          ratePromises.push(
-            getVendorShippingRate(vendorId, groupedProducts[vendorId], destination, orderValue, token)
-          );
-        }
-
-        // Resolve all promises to get shipping rates for all vendors
-        Promise.all(ratePromises)
-          .then(rates => resolve(rates))  // Return all rates when resolved
-          .catch(error => reject(error));  // Handle any error in fetching rates
-      });
-    });
-  });
-};
-
-// Function to group products by vendor
-const groupByVendor = (products) => {
-  return products.reduce((grouped, product) => {
-    if (!grouped[product.v_id]) {
-      grouped[product.v_id] = [];
-    }
-    grouped[product.v_id].push({
-      qty: product.pqty,
-      weight: product.weight,
-      length: product.length,
-      breadth: product.breadth,
-      height: product.height
-    });
-    return grouped;
-  }, {});
-};
-
-// Function to get shipping rate for a specific vendor
-const getVendorShippingRate = (vendorId, vendorProducts, destination, orderValue, token) => {
-  return new Promise((resolve, reject) => {
-    // Fetch vendor origin information
-    const sql = 'SELECT * FROM `awt_vendor` WHERE id = ?';
-    con.query(sql, [vendorId], (err, vendorInfo) => {
-      if (err) {
-        console.error('Database error:', err);
-        reject('Database query failed');
-      }
-      if (vendorInfo.length === 0) {
-        reject(`No vendor found with id ${vendorId}`);
-      }
-
-      const origin = vendorInfo[0].pincode;  // Vendor's origin pincode
-      const paymentType = 'prepaid';  // Example payment type
-
-      // Construct payload for NimbusPost Rates API
-      const rateRequestData = {
-        origin, // Vendor's origin pincode
-        destination, // Customer's destination pincode
-        payment_type: paymentType, // Payment type
-        details: vendorProducts, // Products for the vendor
-        order_value: orderValue  // Total order value (same for all vendors)
-      };
-
-      // Send request to NimbusPost API for shipping rates
-      const config = {
-        method: 'post',
-        maxBodyLength: Infinity,
-        url: 'https://api.nimbuspost.com/v1/courier/serviceability',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        data: rateRequestData
-      };
-
-      axios(config)
-        .then(response => {
-          console.log(`Shipping Rates for Vendor ${vendorId}:`, response.data);
-          resolve({ vendor_id: vendorId, rates: response.data });
-        })
-        .catch(error => {
-          console.error(`Error fetching rates for Vendor ${vendorId}:`, error.message);
-          reject(`Failed to fetch shipping rates for Vendor ${vendorId}`);
-        });
-    });
-  });
-};
-
-
-app.post('/toggle_active', (req, res) => {
-  const { toggle_id, status } = req.body;
-
-  if (!toggle_id || typeof status !== 'number') {
-      return res.status(400).json({ message: "Invalid input data" });
-  }
-
-  const sql = `UPDATE awt_category SET active = ? WHERE id = ?`;
-
-  con.query(sql, [status, toggle_id], (err, result) => {
-      if (err) {
-          console.error("Database error:", err);
-          return res.status(500).json({ message: "An error occurred while updating the category." });
-      } else {
-          return res.status(200).json({ message: "Active status updated successfully", data: result });
-      }
-  });
-});
-
-
-app.post('/update_AboutUs', upload12.fields([{ name: 'image1' }, { name: 'image2' }, { name: 'image3' }]), (req, res) => {
-  const image1 = req.files['image1'] ? req.files['image1'][0].filename : null;
-  const image2 = req.files['image2'] ? req.files['image2'][0].filename : null;
-  const image3 = req.files['image3'] ? req.files['image3'][0].filename : null;
-  const updated_date = new Date();
-
-
-  // Ensure all images are uploaded
-  if (!image1 || !image2 || !image3) {
-      return res.status(400).json("All images are required.");
-  }
-
-  const sql = "UPDATE awt_add_aboutus SET image1 = ?, image2 = ?, image3 = ?, updated_at = ? WHERE id = ?";
-  const params = [image1, image2, image3, updated_date, "1"];
-
-  con.query(sql, params, (err, result) => {
-      if (err) {
-          console.error("Database error:", err);
-          return res.status(500).json({ message: "Error updating images.", error: err.message });
-      } else {
-          return res.json("Images Updated Successfully!");
-      }
-  });
-});
-
-// Endpoint to retrieve About Us images
-app.get('/AboutUs_data', (req, res) => {
-  const sql = "SELECT * FROM awt_add_aboutus WHERE is_deleted = 0";
-
-  con.query(sql, (err, data) => {
-      if (err) {
-          console.error("Database error:", err);
-          return res.status(500).json("Error retrieving images.");
-      } else {
-          return res.json(data);
-      }
-  });
-});
-
-
-// for group_breadcrumbs/==========================================================================
-app.post("/add_group_breadcrumbs", upload9.single("image"), (req, res) => {
-  let title = req.body.title;
-  let image = req.file.filename;
-  let created_date = new Date();
-  let user_id = req.body.user_id;
-
-  let sql;
-  let param;
-
-  sql =
-    "update awt_group_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "An error occurred while updating the category." });
     } else {
-      return res.json("Data Added Successfully!");
-    }
-  });
-});
-
-app.get("/group_breadcrumbs_data", (req, res) => {
-  const sql = "select * from awt_group_breadcrumbs where deleted = 0";
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/group_breadcrumbs_delete", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "update awt_group_breadcrumbs set deleted = 1 where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/group_breadcrumbs_update_data", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "select * from  awt_group_breadcrumbs  where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-// app.get(`/get_Breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_group_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-
-// for category_breadcrumbs/==========================================================================
-app.post("/add_category_breadcrumbs", upload9.single("image"), (req, res) => {
-  let title = req.body.title;
-  let image = req.file.filename;
-  let created_date = new Date();
-  let user_id = req.body.user_id;
-
-  let sql;
-  let param;
-
-  sql =
-    "update awt_category_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json("Data Added Successfully!");
-    }
-  });
-});
-
-app.get("/category_breadcrumbs_data", (req, res) => {
-  const sql = "select * from awt_category_breadcrumbs where deleted = 0";
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/category_breadcrumbs_delete", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "update awt_category_breadcrumbs set deleted = 1 where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/category_breadcrumbs_update_data", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "select * from  awt_category_breadcrumbs  where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-// app.get(`/get_category_breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_category_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-// for Sub-category_breadcrumbs/==========================================================================
-app.post("/add_subcategory_breadcrumbs", upload9.single("image"), (req, res) => {
-  let title = req.body.title;
-  let image = req.file.filename;
-  let created_date = new Date();
-  let user_id = req.body.user_id;
-
-  let sql;
-  let param;
-
-  sql =
-    "update awt_subcategory_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json("Data Added Successfully!");
-    }
-  });
-});
-
-app.get("/subcategory_breadcrumbs_data", (req, res) => {
-  const sql = "select * from awt_subcategory_breadcrumbs where deleted = 0";
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/subcategory_breadcrumbs_delete", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "update awt_subcategory_breadcrumbs set deleted = 1 where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/subcategory_breadcrumbs_update_data", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "select * from  awt_subcategory_breadcrumbs  where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-// app.get(`/get_subcategory_breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_subcategory_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-app.post("/group_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_group SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/Category_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_category SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/SubCategory_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_subcategory SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
+      return res.status(200).json({ message: "Category updated successfully", data: result });
     }
   });
 });

@@ -514,7 +514,6 @@ const Product = () => {
       formdata.append('d_price', value.discountedprice)
       formdata.append('description', value.description)
       formdata.append('gst', value.gst)
-
       formdata.append('hsn_code', value.hsn_code)
       formdata.append('lbh_unit', value.lbh_unit)
       formdata.append('length', value.length)

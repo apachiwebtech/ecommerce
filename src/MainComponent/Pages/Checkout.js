@@ -269,8 +269,8 @@ const Checkout = () => {
                   if (res.data) {
                     alert("order placed")
                     Cookies.remove(`orderid`)
-                    navigate('/thankyou')
-                    Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
+                    Cookies.set('orderno', res.data.orderno, { expires: 1 });
+                    navigate('/payment-success')
                   }
 
 
@@ -292,8 +292,8 @@ const Checkout = () => {
             if (res.data) {
               alert("order placed")
               Cookies.remove(`orderid`)
-              navigate('/thankyou')
-              Cookies.set('orderno', res.data[0].orderno, { expires: 1 });
+              Cookies.set('orderno', res.data.orderno, { expires: 1 });
+              navigate('/payment-success')
             }
 
 

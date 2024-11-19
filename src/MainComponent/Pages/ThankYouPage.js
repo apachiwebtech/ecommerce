@@ -12,13 +12,12 @@ import { BASE_URL } from '../../AdminComponent/BaseUrl';
 const ThankYou = () => {
     const [data, setData] = useState([])
     const Name = localStorage.getItem('Name')
-    const OrderNo = Cookies.get('orderno')
+    const OrderNo = Cookies.get('orderno') ? Cookies.get('orderno') : null
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const transactionId = queryParams.get('transactionid');
-   
-    console.log(transactionId)
+
 
     async function getmetadetail() {
         const data = {

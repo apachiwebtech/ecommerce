@@ -102,7 +102,19 @@ const ShopProduct = () => {
       .then((res) => {
         // console.log(res)
         setGroup(res.data);
+
+        const groupdata = res.data
         setGroupBread(res.data[0].breadcrumb);
+
+        if(!catslug && !subcatslug){
+            const group = groupdata.find((group) => group.slug == groupslug);
+            if (group) {
+              setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${group.breadcrumb}`);
+              
+            }
+        }
+
+     
       })
       .catch((err) => {
         console.log(err);
@@ -163,24 +175,28 @@ const ShopProduct = () => {
     getcatData();
     getsubcatData();
     SiteHeader(subcatslug || catslug || groupslug);
-    if (subcatslug) {
-      const subcat = subcatData.find((sub) => sub.slug === subcatslug);
+
+  if (subcatslug) {
+      const subcat = subcatData.find((sub) => sub.slug == subcatslug);
       if (subcat) {
         setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${subcat.breadcrumb}`);
+        if(subcat.breadcrumb == null){
+            setBreadcrumbImage("https://cdn.magicdecor.in/com/2024/10/11185630/Pleasant-Modern-Landscape-Wallpaper-M.jpg")
+        }
       }
     } else if (catslug) {
-      const cat = catData.find((cat) => cat.slug === catslug);
+      const cat = catData.find((cat) => cat.slug == catslug);
       if (cat) {
         setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${cat.breadcrumb}`);
+        if(cat.breadcrumb == null){
+            setBreadcrumbImage("https://cdn.magicdecor.in/com/2024/10/11185630/Pleasant-Modern-Landscape-Wallpaper-M.jpg")
+        }
       }
-    } else if (groupslug) {
-      const group = groupData.find((group) => group.slug === groupslug);
-      if (group) {
-        setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${group.breadcrumb}`);
-      }
-    } else {
-      setBreadcrumbImage("");
+    } else  {
+        setBreadcrumbImage("");
     }
+    
+   
   }, [groupslug, catslug, subcatslug, brand_id, sort, value, brandid]);
 
   const handleChange = (event, newValue) => {

@@ -16,6 +16,10 @@ import img1 from "../assets/images/product_default_image.jpg";
 import { BASE_URL, IMG_URL } from '../AdminComponent/BaseUrl';
 import InnerHeader from "./InnerHeader";
 import decryptedvendorid from '../Utils/Vendorid';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -74,6 +78,16 @@ const Product = () => {
     discountedprice: "" || uid.disc_price,
     description: "" || uid.description,
     slug: "" || uid.slug,
+    gst: "" || uid.gst,
+    customize: "" || uid.customizable,
+    length: "" || uid.length,
+    breadth: "" || uid.breadth,
+    height: "" || uid.height,
+    no_of_box: "" || uid.no_of_box,
+    weight: "" || uid.weight,
+    hsn_code: "" || uid.hsn_code,
+    lbh_unit: "" || uid.lbh_unit,
+    weight_unit: "" || uid.weight_unit,
   });
 
   useEffect(() => {
@@ -83,7 +97,17 @@ const Product = () => {
       price: uid.price,
       discountedprice: uid.disc_price,
       description: uid.description,
-      slug: uid.slug
+      slug: uid.slug,
+      gst: uid.gst,
+      customize: uid.customizable,
+      length: uid.length,
+      breadth: uid.breadth,
+      height: uid.height,
+      no_of_box: uid.no_of_box,
+      weight: uid.weight,
+      hsn_code: uid.hsn_code,
+      lbh_unit: uid.lbh_unit,
+      weight_unit: uid.weight_unit,
     })
   }, [uid])
 
@@ -124,10 +148,44 @@ const Product = () => {
       isValid = false
       newErrors.price = "price is required"
     }
-    // if (!sizeimage) {
-    //   isValid = false
-    //   newErrors.sizeimage = "sizechart is required"
-    // }
+    if (!value.gst) {
+      isValid = false
+      newErrors.gst = "gst is required"
+    }
+
+    if (!value.length) {
+      isValid = false
+      newErrors.length = "Length is required"
+    }
+    if (!value.height) {
+      isValid = false
+      newErrors.height = "Height is required"
+    }
+    if (!value.lbh_unit) {
+      isValid = false
+      newErrors.lbh_unit = "This is required"
+    }
+    if (!value.weight_unit) {
+      isValid = false
+      newErrors.weight_unit = "This is required"
+    }
+    if (!value.weight) {
+      isValid = false
+      newErrors.weight = "Weight is required"
+    }
+    if (!value.no_of_box) {
+      isValid = false
+      newErrors.no_of_box = "This is required"
+    }
+    if (!value.customize) {
+      isValid = false
+      newErrors.customize = "This is required"
+    }
+    if (!value.breadth) {
+      isValid = false
+      newErrors.breadth = "Breadth is required"
+    }
+  
 
     setError(newErrors)
     return isValid
@@ -445,10 +503,21 @@ const Product = () => {
 
       }
       formdata.append('title', value.title)
+      formdata.append('customizable', value.customize)
       formdata.append('slug', value.slug)
       formdata.append('price', value.price)
       formdata.append('d_price', value.discountedprice)
       formdata.append('description', value.description)
+      formdata.append('gst', value.gst)
+      formdata.append('hsn_code', value.hsn_code)
+      formdata.append('lbh_unit', value.lbh_unit)
+      formdata.append('length', value.length)
+      formdata.append('height', value.height)
+      formdata.append('breadth', value.breadth)
+      formdata.append('weight_unit', value.weight_unit)
+      formdata.append('weight', value.weight)
+      formdata.append('no_of_box', value.no_of_box)
+
       formdata.append('sizeimage', sizeimage)
       formdata.append('specification', specification)
       formdata.append('user_id', decryptedvendorid())
@@ -778,6 +847,35 @@ const Product = () => {
 
                         <div class="col-md-6 " style={{ paddingTop: "30px" }}>
                           <div class="form-group ">
+                            <label for="prod_id">
+                              Customizable<span class="text-danger">*</span>
+                              {error.customize && <span className="text-danger">{error.customize}</span>}
+                            </label>
+                            <div>
+
+                            </div>
+                            <FormControl fullWidth InputLabelProps={{
+                              shrink: true,  // This makes the label move up when there's a value
+                            }}>
+                              <InputLabel id="demo-simple-select-label">Select</InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={value.customize}
+                                // label="Age"
+                                name='customize'
+                                onChange={onhandleChange}
+                              >
+                                <MenuItem value={`1`}>Yes</MenuItem>
+                                <MenuItem value={`2`}>No</MenuItem>
+
+                              </Select>
+                            </FormControl>
+                          </div>
+                        </div>
+
+                        <div class="col-md-6 " style={{ paddingTop: "30px" }}>
+                          <div class="form-group ">
                             <label for="name">
                               Price
                               <span class="text-danger">*</span>
@@ -808,6 +906,31 @@ const Product = () => {
                             </div>
                           </div>
                         </div>
+
+                        
+                        <div class="col-md-6">
+                            <div class="form-group ">
+                              <label for="slug">Add gst % <span class="text-danger">*</span> </label>
+                              {error.gst && <span className="text-danger">{error.gst}</span>}
+                              <div>
+                                <TextField label="Enter percentage.." InputLabelProps={{
+                                  shrink: true,  // This makes the label move up when there's a value
+                                }} value={value.gst} variant="outlined" sx={{ width: "100%" }} type='number' name="gst" onChange={onhandleChange} />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6">
+                            <div class="form-group ">
+                              <label for="slug">Hsn_code <span class="text-danger">*</span>{error.hsn_code && <span className="text-danger">{error.hsn_code}</span>} </label>
+                              
+                              <div>
+                                <TextField label="Enter code.." InputLabelProps={{
+                                  shrink: true,  // This makes the label move up when there's a value
+                                }} value={value.hsn_code} variant="outlined" sx={{ width: "100%" }} type='text' name="hsn_code" onChange={onhandleChange} />
+                              </div>
+                            </div>
+                          </div>
 
 
 
@@ -937,7 +1060,7 @@ const Product = () => {
 
                 </div>
 
-                {/* <div class="card mt-3" id="tax">
+                <div class="card mt-3" id="tax">
                   <div class="card-head" style={{ padding: "20px 22px 0px" }}>
                     <h5
                       style={{
@@ -946,153 +1069,132 @@ const Product = () => {
                         margin: "0",
                       }}
                     >
-                      Tax and shipping
+                      Shipping
                     </h5>
                     <p class="para">
-                      Set up the tax and shipping information of the product.
+                      Set up the shipping information of the product.
                     </p>
                   </div>
                   <div class="card-body" style={{ padding: "20px 10px" }}>
 
                     <div class="col-md-12">
-                      <div class="row">
-                        <div class="col-md-12">
+                      <div class="row" style={{ background: "#f1f1f1" }}>
+                        <div class="col-md-6">
                           <div class="form-group ">
                             <label for="category">
-                              Tax Category<span class="text-danger">*</span>
+                              Lbh Unit<span class="text-danger">*</span>{error.lbh_unit && <span className="text-danger">{error.lbh_unit}</span>}
                             </label>
                             <select
                               type="text"
                               class="form-control"
                               id="tx_category"
+                              value={value.lbh_unit}
                               placeholder=""
-                              name="tx_category"
+                              name="lbh_unit"
+                              onChange={onhandleChange}
                             >
-                              <option value="0">Select Category</option>
-                              <option value="1">cat 1</option>
-                              <option value="2">cat 2</option>
+                              <option value="">Select Unit</option>
+                              <option value="inch">Inch</option>
+                              <option value="cm">Cm</option>
                             </select>
                           </div>
                         </div>
-                      </div>
 
-                      <div class="row">
                         <div class="col-md-6">
                           <div class="form-group ">
-                            <label for="method">
-                              Fulfillment method
-                              <span class="text-danger">*</span>
+                            <label for="category">
+                              Length<span class="text-danger">*</span>{error.length && <span className="text-danger">{error.length}</span>}
+                            </label>
+                            <input type='number'  onChange={onhandleChange} class="form-control" value={value.length} name='length' placeholder='Enter length' />
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="category">
+                              Breadth<span class="text-danger">*</span>{error.breadth && <span className="text-danger">{error.breadth}</span>}
+                            </label>
+                            <input type='number'  onChange={onhandleChange} class="form-control" value={value.breadth} name='breadth' placeholder='Enter breadth' />
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="category">
+                              Height<span class="text-danger">*</span>{error.height && <span className="text-danger">{error.height}</span>}
+                            </label>
+                            <input type='number'  onChange={onhandleChange} class="form-control" value={value.height} name='height' placeholder='Enter height' />
+                          </div>
+                        </div>
+
+
+                      </div>
+                      <hr />
+
+                      <div class="row">
+
+                        <div class="col-md-6">
+                          <div class="form-group ">
+                            <label for="category">
+                              Weight Unit<span class="text-danger">*</span>{error.weight_unit && <span className="text-danger">{error.weight_unit}</span>}
                             </label>
                             <select
                               type="text"
                               class="form-control"
-                              id="method"
-                              placeholder=""
-                              name="method"
-                            >
-                              <option value="0">Select Method</option>
-                              <option value="1">method 1</option>
-                              <option value="2">method 2</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="ship">
-                              Shipping package<span class="text-danger">*</span>
-                            </label>
-                            <select
-                              type="text"
-                              class="form-control"
-                              id="ship"
-                              placeholder=""
-                              name="ship"
-                            >
-                              <option value="0">Select Package</option>
-                              <option value="1">Package 1</option>
-                              <option value="2">Package 2</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
 
-                      <div class="row">
+                              value={value.weight_unit}
+                              onChange={onhandleChange}
+                              name="weight_unit"
+                            >
+                              <option value="">Select Unit</option>
+                              <option value="kg">Kg</option>
+                              <option value="gm">gm</option>
+                            </select>
+                          </div>
+                        </div>
+
                         <div class="col-md-6">
                           <div class="form-group ">
                             <label for="weight">
-                              Weight<span class="text-danger">*</span>
+                              Weight<span class="text-danger">*</span>{error.weight && <span className="text-danger">{error.weight}</span>}
                             </label>
                             <input
-                              type="text"
+                              type="number"
                               class="form-control"
                               id="weight"
                               placeholder=""
+                              value={value.weight}
+                              onChange={onhandleChange}
                               name="weight"
                             />
                           </div>
                         </div>
-
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                           <div class="form-group ">
-                            <label for="wt_unit">
-                              Weight Unit<span class="text-danger">*</span>
+                            <label for="weight">
+                              No of box<span class="text-danger">*</span>{error.no_of_box && <span className="text-danger">{error.no_of_box}</span>}
                             </label>
-                            <select
-                              type="text"
+                            <input
+                              type="number"
                               class="form-control"
-                              id="wt_unit"
+                              id="weight"
                               placeholder=""
-                              name="wt_unit"
-                            >
-                              <option value="0">Select Unit</option>
-                              <option value="1">Gram</option>
-                              <option value="2">KiloGram</option>
-                              <option value="3">Pound</option>
-                            </select>
+                              value={value.no_of_box}
+                              onChange={onhandleChange}
+                              name="no_of_box"
+                            />
                           </div>
                         </div>
 
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="country">
-                              Country Of Origine
-                              <span class="text-danger">*</span>
-                            </label>
-                            <select
-                              type="text"
-                              class="form-control"
-                              id="country"
-                              placeholder=""
-                              name="country"
-                            >
-                              <option value="0">Select Country</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="col-md-6">
-                          <div class="form-group ">
-                            <label for="ship_prpfile">
-                              Shipping Profile<span class="text-danger">*</span>
-                            </label>
-                            <select
-                              type="text"
-                              class="form-control"
-                              id="ship_prpfile"
-                              placeholder=""
-                              name="ship_prpfile"
-                            >
-                              <option value="0">Select </option>
-                              <option value="1">Order Level Shipping</option>
-                              <option value="2">Item Level Shipping</option>
-                            </select>
-                          </div>
-                        </div>
+
+
                       </div>
+
+                   
                     </div>
 
                   </div>
-                </div> */}
-
+                </div>
               </div>
               <div class="col-lg-3 grid-margin stretch-card">
                 <div class="">
