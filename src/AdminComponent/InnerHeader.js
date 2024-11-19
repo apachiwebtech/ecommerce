@@ -26,6 +26,8 @@ const InnerHeader = () => {
                 return 'SubCategory';
             case '/webapp/brand':
                 return 'Brand';
+            case '/webapp/Collection':
+                return 'Collection';
             case '/webapp/productapproval':
                 return 'Product Request';
             case '/webapp/orders':

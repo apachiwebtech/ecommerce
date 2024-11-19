@@ -56,6 +56,7 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 const Product = () => {
   const [cat, setCatData] = useState([])
   const [error, setError] = useState({})
+  const [collection, setCollection] = useState([])
   const [group, setGroupData] = useState([])
   const [selectedOption, setSelectedCat] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -193,6 +194,23 @@ const Product = () => {
     setError(newErrors)
     return isValid
   }
+
+
+  async function getcollectionData() {
+    axios.get(`${BASE_URL}/collection_data`)
+        .then((res) => {
+            console.log(res.data)
+            setCollection(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+}
+
+useEffect(() => {
+  getcollectionData()
+}, [])
+
 
   async function getUpdateData() {
 
@@ -581,7 +599,7 @@ const Product = () => {
                         </li>
                         <hr></hr>
 
-                        <li class="prod_li">
+                        {/* <li class="prod_li">
                           <a  class="prod_flex">
                             <div style={{ marginRight: "8px" }}>
                               <PermMediaIcon />
@@ -594,7 +612,7 @@ const Product = () => {
                               </span>
                             </div>
                           </a>
-                        </li>
+                        </li> */}
                         <hr></hr>
                         <li class="prod_li">
                           <a onClick={varients} class="prod_flex">
@@ -630,9 +648,9 @@ const Product = () => {
                               <LocalShippingIcon />
                             </div>
                             <div>
-                              <h5>Tax and shipping</h5>
+                              <h5>Shipping</h5>
                               <span class="weight para">
-                                Set up the tax and shipping information of the
+                                Set up the shipping information of the
                                 product.
                               </span>
                             </div>
@@ -892,6 +910,30 @@ const Product = () => {
                           </div>
                         </div>
 
+                        <div class="col-md-6 " style={{ paddingTop: "30px" }}>
+                          <div class="form-group ">
+                            <label for="prod_id">
+                              Collection<span class="text-danger">*</span>
+                              {error.subcategory && <span className="text-danger">{error.subcategory}</span>}
+                            </label>
+                            <div>
+
+                            </div>
+                            <Autocomplete
+                              disablePortal
+                              id="combo-box-demo"
+                              options={subcat}
+                              value={collection}
+                              getOptionLabel={(option) => option.title}
+                              getOptionSelected={(option, value) => option.id === value.id}
+                              sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
+                              renderInput={(params) => <TextField {...params} label="Select Subcategory" />}
+                              onChange={(event, value) => HandlesubcatChange(value)}
+                              name="subcategory"
+
+                            />
+                          </div>
+                        </div>
 
                      <div class="col-md-6 " style={{ paddingTop: "30px" }}>
                           <div class="form-group ">

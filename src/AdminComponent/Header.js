@@ -119,6 +119,13 @@ const Header = () => {
               </Link>
             </li>
 
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/Collection'>
+                <Icon path={mdiMap} size={1} className='mx-3' />
+                <span className="menu-title">Collection</span>
+              </Link>
+            </li>
+
             {/* <li className="nav-item">
               <Link className="nav-link" to='/webapp/productapproval'>
                 <Icon path={mdiCheckDecagram} size={1} className='mx-3' />

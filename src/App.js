@@ -114,6 +114,7 @@ import CommingSoon from './MainComponent/CommingSoon';
 import GroupBreadcrum from './AdminComponent/GroupBreadcrum';
 import CategoryBreadcrum from './AdminComponent/CategoryBreadcrum';
 import SubCategoryBreadcrum from './AdminComponent/SubCategoryBreadcrum';
+import Collection from './AdminComponent/Collection';
 
 
 
@@ -313,6 +314,10 @@ const Router = createHashRouter([
       {
         path: '/webapp/category/',
         element: <Category />
+      },
+      {
+        path: '/webapp/Collection/',
+        element: <Collection />
       },
       {
         path: '/webapp/group/',

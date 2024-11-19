@@ -134,6 +134,15 @@ const storage12 = multer.diskStorage({
     );
   },
 });
+const storage13 = multer.diskStorage({
+  destination: "../../ecomuploads/Collection", //
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
 
 
@@ -152,6 +161,7 @@ const upload9 = multer({ storage: storage9 });
 const upload10 = multer({ storage: storage10 });
 const upload11 = multer({ storage: storage11 });
 const upload12 = multer({ storage: storage12 });
+const upload13 = multer({ storage: storage13 });
 app.use(express.json());
 
 app.use(bodyParser.json());
@@ -2142,7 +2152,7 @@ app.post("/add_banner", upload2.single("image"), (req, res) => {
   let title = req.body.title;
   let banner;
 
-  if (req.body.filename == undefined) {
+  if (!req.file) {
     banner = req.body.image;
   } else {
     banner = req.file.filename;
@@ -3390,6 +3400,7 @@ app.post("/getproductlisting", (req, res) => {
       }
     });
   });
+
 
 app.post(`/getbrand`, (req, res) => {
   let groupslug = req.body.groupslug;
@@ -7182,6 +7193,44 @@ app.post("/add_category_breadcrumbs", upload9.single("image"), (req, res) => {
     } else {
       return res.json("Data Added Successfully!");
     }
+    });
+  });
+
+app.post("/add_collection", upload13.single("image"), (req, res) => {
+  let user_id = req.body.user_id;
+  let title = req.body.title;
+  let created_date = new Date();
+  let u_id = req.body.u_id;
+  let image;
+  if (req.body.filename == undefined) {
+    image = req.body.image;
+  } else {
+    image = req.file.filename;
+  }
+
+  let sql;
+  let param;
+  let ifa ;
+
+
+  if (u_id == "undefined") {
+    ifa ='inset hua';
+    sql =
+    "INSERT INTO awt_collection(`title`,`image`,`created_by`,`created_date`) values(?,?,?,?)";
+    param = [title, image, user_id, created_date];
+  } else {
+    ifa ='update hua';
+    sql =
+      "update awt_collection set title = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?";
+    param = [title, image, user_id, created_date, u_id];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+      return res.json("Error");
+    } else {
+      return res.json({ "message": "Data Added Successfully", "ifa": ifa });
+    }
   });
 });
 
@@ -7366,6 +7415,21 @@ app.post("/SubCategory_breadcrumb_update", upload9.single("image"), (req, res) =
   let param = [image, u_id];
 
   con.query(sql, param, (err, data) => {
+    if(err){
+      return res.json(err)
+    }else{
+      return res.json(data)
+    }
+  });
+});
+
+
+app.post("/collection_delete", (req, res) => {
+  let cat_id = req.body.cat_id;
+
+  const sql = "update awt_collection set deleted = 1 where id = ?";
+
+  con.query(sql, [cat_id], (err, data) => {
     if (err) {
       return res.json(err);
     } else {
