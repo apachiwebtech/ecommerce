@@ -248,7 +248,7 @@ const ShopProduct = () => {
             >
               <div className="section-container">
                 <div className="content-title-heading">
-                  <h1 className="text-title-heading">{header}</h1>
+                  {/* <h1 className="text-title-heading">{header}</h1> */}
                 </div>
                 <div className="breadcrumbs">
                   <Link to={`/`}>Home</Link>

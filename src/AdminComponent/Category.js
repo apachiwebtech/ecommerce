@@ -126,6 +126,7 @@ const Category = () => {
                 console.log(err)
             })
     }
+    
     async function getgroupData() {
         axios.get(`${BASE_URL}/group_data`)
             .then((res) => {

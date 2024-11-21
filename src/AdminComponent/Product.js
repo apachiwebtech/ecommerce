@@ -20,6 +20,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Loader from './Loader';
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -56,7 +57,9 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 const Product = () => {
   const [cat, setCatData] = useState([])
   const [error, setError] = useState({})
-  const [collection, setCollection] = useState([])
+  const [collection, setCollection] = useState([]) 
+  const [collectionid, setCollectionID] = useState([]) 
+  const [selectedOptionCollection, setSelectedOptionCollection] = useState(null);
   const [group, setGroupData] = useState([])
   const [selectedOption, setSelectedCat] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
@@ -72,6 +75,8 @@ const Product = () => {
   const [subcatid, selectedsubcatId] = useState("")
   const [brand_id, selectedBrandId] = useState("")
   const [vendor_id, selectedVendorId] = useState("")
+  const [loader, setLoader] = useState(false)
+  
   const [value, setValue] = useState({
     sizeimage: "" || `${IMG_URL}/sizechart/` + uid.size_image,
     title: "" || uid.title,
@@ -213,12 +218,12 @@ useEffect(() => {
 
 
   async function getUpdateData() {
-
+    setLoader(true)
     axios.post(`${BASE_URL}/product_update`, { u_id: update_id })
       .then((res) => {
-
+        setLoader(false)
         setUid(res.data[0])
-
+       
         setValue({
           customize : uid.customizable
         })
@@ -337,6 +342,7 @@ useEffect(() => {
     getVendordata()
     getCatData()
     getsubcatData()
+    getcollectionData();
   }, [update_id])
 
 
@@ -394,7 +400,7 @@ useEffect(() => {
       setSelectedSub(selectedValue);
     }
   };
-
+  
   useEffect(() => {
 
     if (uid.scatid) {
@@ -405,6 +411,24 @@ useEffect(() => {
 
   }, [uid, subcat]);
 
+  const HandleCollectionChange = (selectedValue) => {
+    if (selectedValue) {
+      const subcollectionid = selectedValue.id
+      setCollectionID(subcollectionid)
+      setSelectedOptionCollection(selectedValue);
+    }
+  };
+
+  useEffect(() => {
+    console.log('UID:', uid);
+    console.log('Collection:', collection);
+    if (uid.coll_id) {
+      const selected = collection.find(option => option.id === uid.coll_id);
+      console.log('Selected Collection:', selected);
+      setSelectedOptionCollection(selected);
+      setCollectionID(uid.coll_id);
+    }
+  }, [uid, collection]);
 
   const HandleGroupChange = (selectedValue) => {
 
@@ -505,6 +529,7 @@ useEffect(() => {
   const handlesubmit = (e) => {
     e.preventDefault()
     if (validateForm()) {
+      setLoader(true)
       const formdata = new FormData()
       formdata.append('uid', uid.id)
 
@@ -514,6 +539,7 @@ useEffect(() => {
         formdata.append('subcatid', subcatid)
         formdata.append('catid', catid)
         formdata.append('groupid', groupid)
+        formdata.append('collectionid', collectionid)
 
       } else {
 
@@ -522,6 +548,7 @@ useEffect(() => {
         formdata.append('catid', catid)
         formdata.append('groupid', groupid)
         formdata.append('subcatid', subcatid)
+        formdata.append('collectionid', collectionid)
 
       }
 
@@ -549,6 +576,7 @@ useEffect(() => {
       axios.post(`${BASE_URL}/add_product`, formdata)
         .then((res) => {
           // console.log(res.data)
+          setLoader(false)
           alert(res.data)
         })
     }
@@ -573,6 +601,7 @@ useEffect(() => {
 
   return (
     <div class="container-fluid page-body-wrapper col-lg-10">
+       {Loader && <Loader/>}
       <InnerHeader />
       <div class="main-panel">
         <div class="content-wrapper">
@@ -914,22 +943,21 @@ useEffect(() => {
                           <div class="form-group ">
                             <label for="prod_id">
                               Collection<span class="text-danger">*</span>
-                              {error.subcategory && <span className="text-danger">{error.subcategory}</span>}
+                              {error.collection && <span className="text-danger">{error.collectionid}</span>}
                             </label>
                             <div>
-
                             </div>
                             <Autocomplete
                               disablePortal
                               id="combo-box-demo"
-                              options={subcat}
-                              value={collection}
+                              options={collection}
+                              value={selectedOptionCollection}
                               getOptionLabel={(option) => option.title}
                               getOptionSelected={(option, value) => option.id === value.id}
                               sx={{ width: "100%", border: "none", borderColor: "lightgrey", borderRadius: "5px", height: "20px" }}
-                              renderInput={(params) => <TextField {...params} label="Select Subcategory" />}
-                              onChange={(event, value) => HandlesubcatChange(value)}
-                              name="subcategory"
+                              renderInput={(params) => <TextField {...params} label="Select Collection" />}
+                              onChange={(event, value) => HandleCollectionChange(value)}
+                              name="collection"
 
                             />
                           </div>

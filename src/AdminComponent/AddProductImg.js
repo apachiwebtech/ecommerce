@@ -165,17 +165,15 @@ const AddProductImg = () => {
 
     const handleupload1 = async (e) => {
         const file = e.target.files[0];
-        setImage1(file)
-        // setHide(true)
-
-        const data = await ImageBase64(e.target.files[0]);
-        setValue((prev) => {
-            return {
+        if (file) {
+            setImage1(file);
+            const data = await ImageBase64(file);
+            setValue((prev) => ({
                 ...prev,
                 image1: data,
-            };
-        });
-    }
+            }));
+        }
+    };
 
     const handleupload2 = async (e) => {
         const file = e.target.files[0];
@@ -392,7 +390,7 @@ const AddProductImg = () => {
 
                                                         <button className='btn btn-primary mt-2 float-right' type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Colour +</button>
 
-                                                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <div class="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                             <div class="modal-dialog">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">

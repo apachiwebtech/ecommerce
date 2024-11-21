@@ -1,6 +1,6 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
@@ -10,28 +10,73 @@ import decryptedUserId from '../Utils/UserID';
 import { BASE_URL, IMG_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
+import Switch from '@mui/material/Switch';
+import { styled } from "@mui/material/styles";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { Autocomplete, TextField } from "@mui/material";
 
 
+const Android12Switch = styled(Switch)(({ theme }) => ({
+    padding: 8,
+    "& .MuiSwitch-track": {
+      borderRadius: 22 / 2,
+      "&::before, &::after": {
+        content: '""',
+        position: "absolute",
+        top: "50%",
+        transform: "translateY(-50%)",
+        width: 16,
+        height: 16,
+      },
+      "&::before": {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+          theme.palette.getContrastText(theme.palette.primary.main)
+        )}" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/></svg>')`,
+        left: 12,
+      },
+      "&::after": {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"><path fill="${encodeURIComponent(
+          theme.palette.getContrastText(theme.palette.primary.main)
+        )}" d="M19,13H5V11H19V13Z" /></svg>')`,
+        right: 12,
+      },
+    },
+    "& .MuiSwitch-thumb": {
+      boxShadow: "none",
+      width: 16,
+      height: 16,
+      margin: 2,
+    },
+  }));
 
 const Collection = () => {
 
     const [cat, setCatData] = useState([])
+    const [group, setGroupData] = useState([])
     const [error, setError] = useState({})
+    const [selectedOption, setSelectedOption] = useState(null);
     const [image, setImage] = useState()
     const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [cid, setCid] = useState("")
     const [loader, setLoader] = useState(false)
+    const [group_id, setId] = useState("")
+    const [products, setProducts] = useState([]);
     const [value, setValue] = useState({
         title: "" || uid.title,
+        slug: "" || uid.slug,
+        description: "" || uid.description,
     })
 
     useEffect(() => {
-        setValue({
-            title: uid.title,
-            
-        })
-    }, [uid])
+        if (uid) {
+            setValue({
+                title: uid.title || "",
+                description: uid.description || "",
+                slug: uid.slug || "",
+            });
+        }
+    }, [uid]);
 
     const validateForm = () => {
         let isValid = true
@@ -41,10 +86,17 @@ const Collection = () => {
             isValid = false;
             newErrors.title = "title is required"
         }
-
+        if (!value.slug) {
+            isValid = false
+            newErrors.slug = "slug is required"
+        }
         if (uid.image == undefined && !image) {
             isValid = false;
             newErrors.logo = "image is required";
+        }
+        if (!selectedOption) {
+            isValid = false;
+            newErrors.group = "group is required"
         }
 
         setError(newErrors)
@@ -64,11 +116,43 @@ const Collection = () => {
             })
     }
 
+ 
+
+    async function getgroupData() {
+        axios.get(`${BASE_URL}/group_data`)
+            .then((res) => {
+                console.log(res.data)
+                setGroupData(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
     useEffect(() => {
+        getgroupData()
         getcatData()
     }, [])
 
 
+    const handleToggle = (id, currentStatus) => {
+        const newStatus = currentStatus === 1 ? 0 : 1;
+        console.log("Toggling ID:", id, "New Status:", newStatus);
+        axios.post(`${BASE_URL}/toggle_collection`, { toggle_id: id, status: newStatus })
+            .then(() => {
+                // Update local state to reflect the change
+                setCatData(prev => prev.map(item => 
+                    item.id === id ? { ...item, Moving_Collection: newStatus } : item
+                ));
+
+                alert("Status Changed")
+
+                getcatData()
+            })
+            .catch(err => {
+                console.error("Error toggling category status:", err);
+            });
+    };
 
     const handleClick = (id) => {
         setCid(id)
@@ -140,12 +224,15 @@ const handleSubmit = (e) => {
 
         setLoader(true);
         formdata.append('title', value.title);
+        formdata.append('description', value.description)
+        formdata.append('slug', value.slug)
         if (image) {
             formdata.append('image', image);
         } else {
             formdata.append('image', uid.image);
         }
         console.log([...formdata]);
+        formdata.append('group_id', group_id)
         formdata.append('u_id', uid.id);
         formdata.append('user_id', decryptedUserId())
 
@@ -156,9 +243,12 @@ const handleSubmit = (e) => {
                 setLoader(false);
                 setValue({
                     title: "",
+                    slug: "" ,
+                    description: "" ,
                 });
                 setImage('');
                 setUid([]);
+                setSelectedOption(null)
             })
             .catch((err) => {
                 console.log(err);
@@ -201,6 +291,22 @@ const handleSubmit = (e) => {
             }
         },
         {
+            field: 'Moving_Collection',
+            headerName: 'Moving Collection',
+            flex: 1,
+            renderCell: (params) => (
+                <FormControlLabel
+                    control={
+                        <Android12Switch
+                            checked={params.row.moving_collection === 1}
+                            onChange={() => handleToggle(params.row.id, params.row.moving_category)}
+                        />
+                    }
+                    label=""
+                />
+            ),
+        },
+        {
             field: 'actions',
             type: 'actions',
             headerName: 'Action',
@@ -217,6 +323,48 @@ const handleSubmit = (e) => {
     ];
 
     const rowsWithIds = cat.map((row, index) => ({ index: index + 1, ...row }));
+
+
+    const HandleChange = (selectedValue) => {
+        if (selectedValue) {
+            console.log(selectedValue, "::::")
+            const selectedId = selectedValue.id;
+            setSelectedOption(selectedValue);
+            // Now you have the selected id, you can use it in your application logic
+            setId(selectedId)
+
+            console.log(selectedId,"ID")
+        }
+    };
+
+    useEffect(() => {
+        // If you have received the ID from the API, find the option that matches the ID
+        if (uid.group_id) {
+
+            const selected = group.find(option => option.id === uid.group_id);
+          
+            setSelectedOption(selected);
+            console.log(selected,"^^^^")
+
+            setId(selected.id)
+        }
+    }, [uid, group]);
+
+    
+    const handleslugclick = () => {
+
+
+        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') , table_name : "awt_category" })
+        .then((res) => {
+            setValue({
+                slug: res.data.newslug,
+                title : value.title
+            })
+        })
+
+
+    }
+
 
     const roledata = {
         role: Cookies.get(`role`),
@@ -247,10 +395,34 @@ const handleSubmit = (e) => {
                                     <h4 class="card-title">Add Collection</h4>
 
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
+                                    <div class="form-group">
+                                            <label for="exampleInputUsername1">Group<span className='text-danger'>*</span></label>
+                                            <Autocomplete
+                                                disablePortal
+                                                id="combo-box-demo"
+                                                size='small'
+                                                options={group}
+                                                value={selectedOption}
+                                                getOptionLabel={(option) => option.title}
+                                                getOptionSelected={(option, value) => option.id === value.id}
+                                                sx={{ width: "100%", border: "none", borderRadius: "5px" }}
+                                                renderInput={(params) => <TextField {...params} />}
+                                                onChange={(event, value) => HandleChange(value)}
+                                                name="category"
+
+                                            />
+                                            {error.group && <span className='text-danger'>{error.group}</span>}
+                                        </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
                                             <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
                                             {error.title && <span className='text-danger'>{error.title}</span>}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
+                                            <input type="text" onClick={handleslugclick} class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onChange={onhandleChange} />
+                                            {error.slug && <span className='text-danger'>{error.slug}</span>}
+
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Image<span className='text-danger'>*</span></label>
@@ -260,6 +432,11 @@ const handleSubmit = (e) => {
                                         </div>
                                         <div>
                                             <img style={{ width: "200px" }} src={`${IMG_URL}/Collection/${uid.image}`} alt="" />
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="exampleTextarea1">Description</label>
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
+
                                         </div>
                                         {roleaccess > 2 && <>  <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                             <button type='button' onClick={() => {
@@ -292,6 +469,12 @@ const handleSubmit = (e) => {
                                                     paginationModel: { pageSize: 10, page: 0 },
                                                 },
                                             }}
+                                            // slots={{ toolbar: GridToolbar }}
+                                            // slotProps={{
+                                            //     toolbar: {
+                                            //         showQuickFilter: true,
+                                            //     },
+                                            // }}
                                         />
 
                                         {confirmationVisibleMap[cid] && (

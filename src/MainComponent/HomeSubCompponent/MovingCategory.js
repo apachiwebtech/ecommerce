@@ -27,7 +27,7 @@ const MovingCategory = () => {
 
 
     const [cat, setCat] = useState([])
-
+    const [collection, setCollectionData] = useState([])
 
     async function getTrendingData() {
         axios.get(`${BASE_URL}/moving_category`)
@@ -46,6 +46,20 @@ const MovingCategory = () => {
         getTrendingData()
     }, [])
 
+    async function getcollectionData() {
+        axios.get(`${BASE_URL}/collection_data`)
+            .then((res) => {
+                console.log(res.data)
+                setCollectionData(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        getcollectionData()
+    }, [])
 
     return (
         <section class="section section-padding " >
@@ -54,7 +68,7 @@ const MovingCategory = () => {
                 <ToastContainer theme="dark" position="bottom-right" />
                 <div class="block block-products slider">
                     <div class="block-widget-wrap">
-                        <div class="block-title"><h2>Categories</h2></div>
+                        <div class="block-title"><h2>Collection</h2></div>
                         <div class="block-content moving-cat" style={{padding:"0px 120px"}}>
                             <div class="content-product-list slick-wrap">
                                 <div class="slick-sliders products-list grid" data-slidestoscroll="true" data-dots="false" data-nav="1" data-columns4="1" data-columns3="2" data-columns2="3" data-columns1="3" data-columns1440="4" data-columns="4">
@@ -77,7 +91,23 @@ const MovingCategory = () => {
                                             },
                                         }}>
 
-                                        {cat.map((item) => {
+                                        {collection.map((item) => {
+                                            return (
+                                                <SwiperSlide>
+                                                    <div className='text-center'>
+                                                    <Link to={`/shoproduct/${item.group_slug}/${item?.slug}`}>
+                                                        <div className='cat-parent' style={{background:"#FFFFFF"}}>
+                                                            <img className='cat-img' src={`${IMG_URL}/Collection/${item?.image}`} alt="Banner" />
+                                                        </div>
+                                                        </Link>
+                                                        <div>
+                                                        <h4 className='mt-2 '>{item.title}</h4>
+                                                        </div>
+                                                    </div>
+                                                </SwiperSlide>
+                                            )
+                                        })}
+                                        {/* {cat.map((item) => {
                                             return (
                                                 <SwiperSlide>
                                                     <div className='text-center'>
@@ -92,7 +122,7 @@ const MovingCategory = () => {
                                                     </div>
                                                 </SwiperSlide>
                                             )
-                                        })}
+                                        })} */}
 
 
 

@@ -605,21 +605,21 @@ const Product = () => {
                           </a>
                         </li>
                         <hr></hr>
-                        {/* <li class="prod_li">
-                          <a  class="prod_flex">
+                        <li class="prod_li">
+                          <a  onClick={tax} class="prod_flex">
                             <div style={{ marginRight: "8px" }}>
                               <LocalShippingIcon />
                             </div>
                             <div>
-                              <h5>Tax and shipping</h5>
+                              <h5>shipping</h5>
                               <span class="weight para">
-                                Set up the tax and shipping information of the
+                                Set up the shipping information of the
                                 product.
                               </span>
                             </div>
                           </a>
-                        </li> */}
-                        <hr></hr>
+                        </li>
+                        {/* <hr></hr> */}
                       </ul>
                     </div>
                   </div>

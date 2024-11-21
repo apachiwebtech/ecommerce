@@ -1549,6 +1549,7 @@ app.get("/category_data", (req, res) => {
     }
   });
 });
+
 app.get("/category_data_admin", (req, res) => {
   const sql = "select * from awt_category where deleted = 0 ";
 
@@ -1560,6 +1561,7 @@ app.get("/category_data_admin", (req, res) => {
     }
   });
 });
+
 app.get("/blogcategory_data", (req, res) => {
   const sql = "select * from awt_blogcategory where deleted = 0 ";
 
@@ -2397,7 +2399,7 @@ app.post(
     let date = new Date();
     let approve = 0;
     let uid = req.body.uid;
-
+ let coll_id = req.body.collectionid;
     let hsn_code = req.body.hsn_code;
     let lbh_unit = req.body.lbh_unit;
     let length = req.body.length;
@@ -2432,13 +2434,14 @@ app.post(
 
         if (uid == "undefined") {
           sql =
-            "insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`gst`,`customizable`,`length`,`breadth`,`height`,`no_of_box`,`weight`,`hsn_code`,`lbh_unit`,`weight_unit`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`coll_id`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`gst`,`customizable`,`length`,`breadth`,`height`,`no_of_box`,`weight`,`hsn_code`,`lbh_unit`,`weight_unit`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
           param = [
             title,
             v_id,
             b_id,
             groupid,
+            coll_id,
             catid,
             subcatid,
             slug,
@@ -2461,13 +2464,14 @@ app.post(
             weight_unit,
           ];
         } else {
-          sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?,catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? ,approve = 0 ,gst = ?,customizable= ?,length = ? ,breadth = ? ,height = ? ,no_of_box = ? ,weight = ? ,hsn_code = ? ,lbh_unit = ? ,weight_unit = ?  where id = ? `;
+          sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?, coll_id = ?, catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? ,approve = 0 ,gst = ?,customizable= ?,length = ? ,breadth = ? ,height = ? ,no_of_box = ? ,weight = ? ,hsn_code = ? ,lbh_unit = ? ,weight_unit = ?  where id = ? `;
 
           param = [
             title,
             v_id,
             b_id,
             groupid,
+            coll_id,
             catid,
             subcatid,
             slug,

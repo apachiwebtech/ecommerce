@@ -110,8 +110,7 @@ const ProductApproval = () => {
                               <td>{item.price}</td>
 
                               <td>
-                                {" "}
-                                0
+                              {"Pending"}
                               </td>
                               <td>
                                 <Link to={`/webapp/productapprovalview/${item.id}`}>
