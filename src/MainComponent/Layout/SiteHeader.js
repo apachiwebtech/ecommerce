@@ -16,7 +16,7 @@ import logo from "../../assets/frontimg/logo.png";
 import { getCartCount } from "../../Store/Cart/cart-action";
 import { getWishCount } from "../../Store/WishList/wishlist-actions";
 import LoginForm from "../Authentication/LoginForm";
-import '../../Style.css';
+import "../../Style.css";
 
 const SiteHeader = (cartCount) => {
   const [banner, setBanner] = useState([]);
@@ -29,7 +29,7 @@ const SiteHeader = (cartCount) => {
   const custuser_id = Cookies.get("custuserid");
   const location = useLocation();
   const isHomePage = location.pathname === "/home";
-  const [isSubMenuVisible, setSubMenuVisible] = useState(false); 
+  const [isSubMenuVisible, setSubMenuVisible] = useState(false);
 
   // const [isScrolled, setIsScrolled] = useState(false);
 
@@ -274,15 +274,16 @@ const SiteHeader = (cartCount) => {
 
           <div className="header-mobile-fixed">
             <div className="shop-page">
-                <Link href="shop-grid-left.html">
-                  <i className="wpb-icon-shop"></i>
-                </Link>
+              <Link href="shop-grid-left.html">
+                <i className="wpb-icon-shop"></i>
+              </Link>
             </div>
 
             <div className="my-account">
               <div className="login-header">
                 {!Cookies.get(`custuserid`) ? (
-                  <div onClick={() => {
+                  <div
+                    onClick={() => {
                       handleToggle();
                     }}
                   >
@@ -304,9 +305,11 @@ const SiteHeader = (cartCount) => {
 
             <div className="wishlist-box">
               {!Cookies.get(`custuserid`) ? (
-                <div  onClick={() => {
-                  handleToggle();
-                }}>
+                <div
+                  onClick={() => {
+                    handleToggle();
+                  }}
+                >
                   <i className="wpb-icon-heart"></i>
                 </div>
               ) : (
@@ -316,133 +319,148 @@ const SiteHeader = (cartCount) => {
               )}
             </div>
 
-             {open && <LoginForm setOpen={setOpen} open={open} />}
-            
+            {open && <LoginForm setOpen={setOpen} open={open} />}
+
             {/* <div className="ruper-topcart dropdown light">
               <div className="dropdown mini-cart top-cart"> */}
-              
+
+            <div
+              class={
+                searchtoggle ? `search-overlay overlay-open` : `search-overlay `
+              }
+            >
+              <div class="close-search"></div>
+
+              <div
+                class={
+                  searchtoggle
+                    ? `wrapper-search wrapper-open`
+                    : `wrapper-search `
+                }
+              >
                 <div
-                  class={
-                    searchtoggle
-                      ? `search-overlay overlay-open`
-                      : `search-overlay `
-                  }
+                  class="search-from ajax-search"
+                  style={{ position: "relative" }}
                 >
-                  <div class="close-search"></div>
+                  <div class="search-box">
+                    <button className="close-searchbar" onClick={handlesearch}>
+                      <Icon
+                        path={mdiClose}
+                        size={1}
+                        style={{ float: "right" }}
+                      />
+                    </button>
 
-                  <div
-                    class={
-                      searchtoggle
-                        ? `wrapper-search wrapper-open`
-                        : `wrapper-search `
-                    }
-                  >
-                    <div
-                      class="search-from ajax-search"
-                      style={{ position: "relative" }}
-                    >
-                      <div class="search-box">
-                        <button
-                          className="close-searchbar"
-                          onClick={handlesearch}
-                        >
-                          <Icon
-                            path={mdiClose}
-                            size={1}
-                            style={{ float: "right" }}
-                          />
-                        </button>
-                     
+                    <input
+                      id=""
+                      onChange={handlechangesearch}
+                      type="text"
+                      placeholder="Search..."
+                    />
 
-                        <input
-                          id=""
-                          onChange={handlechangesearch}
-                          type="text"
-                          placeholder="Search..."
-                        />
-
-                        <div className="block block-products">
-                          <div className="block-title">
-                            <h2>item Product</h2>
-                          </div>
-                          <div className="block-content">
-                            <ul className="products-list">
-                              {products.map((item) => {
-                                return (
-                                  <Link to={`/product/${item.slug}`}>
-                                    <li className="product-item my-2">
-                                      <a
-                                        href="shop-details.html"
-                                        className="product-image"
-                                      >
-                                        <img
-                                          onClick={searchclose}
-                                          src={
-                                            `${IMG_URL}/productimg/` +
-                                            item.image1
-                                          }
-                                          alt="product6"
-                                        />
-                                      </a>
-                                      <div
-                                        onClick={searchclose}
-                                        className="product-content"
-                                      >
-                                        <h2 className="product-title">
-                                          <Link to={`/product/${item.slug}`}>
-                                            {item.title}
-                                          </Link>
-                                        </h2>
-                                        <div className="rating small">
-                                          <div className="star star-5"></div>
-                                        </div>
-
-                                        {item.disc_price ? (
-                                          <span className="price">
-                                            {item.price !== 0 &&
-                                            item.price !== item.disc_price ? (
-                                              <del aria-hidden="true">
-                                                <span>₹{item.price}</span>
-                                              </del>
-                                            ) : null}
-                                            <ins>
-                                              <span>₹{item.disc_price}</span>
-                                            </ins>
-                                          </span>
-                                        ) : (
-                                          <span className="price">
-                                            ₹{item.price}
-                                          </span>
-                                        )}
-                                      </div>
-                                    </li>
-                                  </Link>
-                                );
-                              })}
-                            </ul>
-                          </div>
-                        </div>
-                        <div class="content-menu_search">
-                          <label>Suggested</label>
-                          <ul id="menu_search" class="menu">
-                            <li>
-                              <Link to={`/shoproduct/${banner[0]?.slug}`}>
-                                Furniture
-                              </Link>
-                            </li>
-                            <li>
-                              <a href="#">Accessories</a>
-                            </li>
-                            <li>
-                              <a href="#">Kitchen & Dining</a>
-                            </li>
-                          </ul>
-                        </div>
+                    <div className="block block-products">
+                      <div className="block-title">
+                        <h2>item Product</h2>
                       </div>
+                      <div className="block-content">
+                        <ul className="products-list">
+                          {products.map((item) => {
+                            return (
+                              <Link to={`/product/${item.slug}`}>
+                                <li className="product-item my-2">
+                                  <a
+                                    href="shop-details.html"
+                                    className="product-image"
+                                  >
+                                    <img
+                                      onClick={searchclose}
+                                      src={
+                                        `${IMG_URL}/productimg/` + item.image1
+                                      }
+                                      alt="product6"
+                                    />
+                                  </a>
+                                  <div
+                                    onClick={searchclose}
+                                    className="product-content"
+                                  >
+                                    <h2 className="product-title">
+                                      <Link to={`/product/${item.slug}`}>
+                                        {item.title}
+                                      </Link>
+                                    </h2>
+                                    <div className="rating small">
+                                      <div className="star star-5"></div>
+                                    </div>
+
+                                    {item.disc_price ? (
+                                      <span className="price">
+                                        {item.price !== 0 &&
+                                        item.price !== item.disc_price ? (
+                                          <del aria-hidden="true">
+                                            <span>₹{item.price}</span>
+                                          </del>
+                                        ) : null}
+                                        <ins>
+                                          <span>₹{item.disc_price}</span>
+                                        </ins>
+                                      </span>
+                                    ) : (
+                                      <span className="price">
+                                        ₹{item.price}
+                                      </span>
+                                    )}
+                                  </div>
+                                </li>
+                              </Link>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="content-menu_search">
+                      <label>Suggested</label>
+                      <ul id="menu_search" class="menu">
+                        <li>
+                          <Link
+                            to={`/shoproduct/${banner[0]?.slug}`}
+                            onClick={() => {
+                              closeSideheader();
+                              searchclose();
+                            }}
+                          >
+                            Furniture
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to={`/shoproduct/${banner[1]?.slug}`}
+                            onClick={() => {
+                              closeSideheader();
+                              searchclose();
+                            }}
+                          >
+                            Accessories
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to={`/shoproduct/${banner[2]?.slug}`}
+                            onClick={() => {
+                              closeSideheader();
+                              searchclose();
+                            }}
+                          >
+                            Kitchen & Dining
+                          </Link>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
-              {/* </div>
+              </div>
+            </div>
+            {/* </div>
             </div> */}
             {/* after clickinh search on mobile view ecd /==================================================== */}
           </div>
@@ -482,11 +500,11 @@ const SiteHeader = (cartCount) => {
                                 {banner[0]?.title}
                               </span>
                             </Link>
-                      
+
                             <ul className="sub-menu">
                               {cat
                                 .filter(
-                                  (item) => item.group_id == banner[0]?.id 
+                                  (item) => item.group_id == banner[0]?.id
                                 )
                                 .map((item) => {
                                   return (
@@ -504,11 +522,11 @@ const SiteHeader = (cartCount) => {
                                           {item.title}
                                         </span>
                                       </Link>
-                                   
+
                                       <ul className="sub-menu">
                                         {subcat
                                           .filter(
-                                            (ele) => ele.cat_id == item.id 
+                                            (ele) => ele.cat_id == item.id
                                           )
                                           .map((ele) => {
                                             return (
@@ -530,24 +548,22 @@ const SiteHeader = (cartCount) => {
                                             );
                                           })}
                                       </ul>
-                                 
                                     </li>
                                   );
                                 })}
                             </ul>
-                           
                           </li>
                           <li className="level-0 menu-item menu-item-has-children">
-                            <Link to={`/shoproduct/${banner[1]?.slug}`} >
+                            <Link to={`/shoproduct/${banner[1]?.slug}`}>
                               <span className="menu-item-text">
                                 {banner[1]?.title}
                               </span>
                             </Link>
-                    
+
                             <ul className="sub-menu">
                               {cat
                                 .filter(
-                                  (item) => item.group_id == banner[1]?.id 
+                                  (item) => item.group_id == banner[1]?.id
                                 )
                                 .map((item) => {
                                   return (
@@ -559,7 +575,7 @@ const SiteHeader = (cartCount) => {
                                           {item.title}
                                         </span>
                                       </Link>
-                              
+
                                       <ul className="sub-menu">
                                         {subcat
                                           .filter(
@@ -585,24 +601,24 @@ const SiteHeader = (cartCount) => {
                                             );
                                           })}
                                       </ul>
-                                  
                                     </li>
                                   );
                                 })}
                             </ul>
-                           
                           </li>
                           <li className="level-0 menu-item menu-item-has-children">
-                            <Link to={`/shoproduct/${banner[2]?.slug}`} >
+                            <Link to={`/shoproduct/${banner[2]?.slug}`}>
                               <span className="menu-item-text">
                                 {banner[2]?.title}
                               </span>
                             </Link>
-                        
+
                             <ul className="sub-menu">
                               {cat
                                 .filter(
-                                  (item) => item.group_id == banner[2]?.id && item.active === 1
+                                  (item) =>
+                                    item.group_id == banner[2]?.id &&
+                                    item.active === 1
                                 )
                                 .map((item) => {
                                   return (
@@ -614,7 +630,7 @@ const SiteHeader = (cartCount) => {
                                           {item.title}
                                         </span>
                                       </Link>
-                                    
+
                                       <ul className="sub-menu">
                                         {subcat
                                           .filter(
@@ -640,12 +656,10 @@ const SiteHeader = (cartCount) => {
                                             );
                                           })}
                                       </ul>
-                                   
                                     </li>
                                   );
                                 })}
                             </ul>
-                     
                           </li>
                           <li className="level-0 menu-item ">
                             <Link to={`/shoproduct/${banner[3]?.slug}`}>
@@ -890,15 +904,35 @@ const SiteHeader = (cartCount) => {
                                       <li>
                                         <Link
                                           to={`/shoproduct/${banner[0]?.slug}`}
+                                          onClick={() => {
+                                            closeSideheader();
+                                            searchclose();
+                                          }}
                                         >
                                           Furniture
                                         </Link>
                                       </li>
                                       <li>
-                                        <a href="#">Accessories</a>
+                                        <Link
+                                          to={`/shoproduct/${banner[1]?.slug}`}
+                                          onClick={() => {
+                                            closeSideheader();
+                                            searchclose();
+                                          }}
+                                        >
+                                          Accessories
+                                        </Link>
                                       </li>
                                       <li>
-                                        <a href="#">Kitchen & Dining</a>
+                                        <Link
+                                          to={`/shoproduct/${banner[2]?.slug}`}
+                                          onClick={() => {
+                                            closeSideheader();
+                                            searchclose();
+                                          }}
+                                        >
+                                          Kitchen & Dining
+                                        </Link>
                                       </li>
                                     </ul>
                                   </div>
@@ -949,17 +983,26 @@ const SiteHeader = (cartCount) => {
         <hr className="m-0" />
         <div className="mobile-cat p-3">
           <h5>
-            <Link to={`/shoproduct/${banner[0]?.slug}`} onClick={closeSideheader}>
+            <Link
+              to={`/shoproduct/${banner[0]?.slug}`}
+              onClick={closeSideheader}
+            >
               <span className="menu-item-text">{banner[0]?.title}</span>
             </Link>
           </h5>
           <h5>
-            <Link to={`/shoproduct/${banner[1]?.slug}`}  onClick={closeSideheader}>
+            <Link
+              to={`/shoproduct/${banner[1]?.slug}`}
+              onClick={closeSideheader}
+            >
               <span className="menu-item-text">{banner[1]?.title}</span>
             </Link>
           </h5>
           <h5>
-            <Link to={`/shoproduct/${banner[2]?.slug}`}  onClick={closeSideheader}>
+            <Link
+              to={`/shoproduct/${banner[2]?.slug}`}
+              onClick={closeSideheader}
+            >
               <span className="menu-item-text">{banner[2]?.title}</span>
             </Link>
           </h5>

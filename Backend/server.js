@@ -6524,6 +6524,8 @@ app.get(`/getcustomrequest`, (req, res) => {
     }
   });
 });
+
+
 app.get(`/getbreadcrum`, (req, res) => {
   const sql = "select * from awt_breadcrumbs where deleted = 0";
 

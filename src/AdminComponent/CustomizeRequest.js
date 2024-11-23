@@ -2,7 +2,7 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { BASE_URL } from "./BaseUrl";
+import { BASE_URL, IMG_URL } from "./BaseUrl";
 import InnerHeader from "./InnerHeader";
 
 const CustomizeRequest = () => {
@@ -102,11 +102,18 @@ const CustomizeRequest = () => {
                           ).padStart(2, "0")}-${String(
                             dateObj.getUTCDate()
                           ).padStart(2, "0")}`;
-                          
+
                           const isViewed = viewedItems.has(item.id);
 
                           return (
-                            <tr key={item.id} style={{ backgroundColor: isViewed ? "transparent" : "#f8d7da"}}>
+                            <tr
+                              key={item.id}
+                              style={{
+                                backgroundColor: isViewed
+                                  ? "transparent"
+                                  : "#f8d7da",
+                              }}
+                            >
                               <td>{index + 1}</td>
                               <td>{item.title}</td>
                               <td>{item.name}</td>
@@ -147,7 +154,8 @@ const CustomizeRequest = () => {
                                         aria-label="Close"
                                       ></button>
                                     </div>
-                                    <div className="modal-body">
+
+                                    <div className="modal-body d-flex justify-content-between"  >
                                       <div className="col-lg-4">
                                         <div className="card-body">
                                           <ul
@@ -202,7 +210,25 @@ const CustomizeRequest = () => {
                                           </ul>
                                         </div>
                                       </div>
+                                      <div
+                                        className="col-lg-4"
+                                        style={{
+                                          display: "flex",
+                                          alignItems: "right",
+                                          justifyContent: "right",
+                                        }}
+                                      >
+                                        <img
+                                          src={`${IMG_URL}/CustomizationPage/${item.image}`}
+                                          alt="Product"
+                                          style={{
+                                            maxWidth: "100%",
+                                            height: "auto",
+                                          }}
+                                        />
+                                      </div>
                                     </div>
+
                                     <div className="modal-footer">
                                       <button
                                         type="button"

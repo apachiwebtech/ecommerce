@@ -710,7 +710,8 @@ function App() {
 
   }, []);
 
-
+  const location = useLocation();
+  const excludedPaths = ['/about'];
 
   return (
     <>
@@ -718,7 +719,7 @@ function App() {
       {/* <div id="page" class="hfeed page-wrapper"> */}
       <SiteHeader cartCount={cartCount} />
       <Outlet fetchcount={fetchCartCount} />
-      <SiteFooter />
+      {!excludedPaths.includes(location.pathname) && <SiteFooter />}
       {/* </div> */}
     </>
 
