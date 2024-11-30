@@ -426,13 +426,13 @@ const DetailPage = () => {
 																	</table>
 																</div>
 
-																<div class="buttons col-12 col-md-6 d-flex justify-content-center align-items-center mb-3">
-																	<div class="btn-wishlist d-block" data-title="Wishlist">
-																		{/* <button class="product-btn">Add to wishlist</button> */}
-																		{!Cookies.get(`custuserid`) ? <button class="product-btn" onClick={() => {
+																<div className="buttons col-12 col-md-8 d-flex justify-content-center align-items-center mb-3">
+																	<div className="btn-wishlist d-block" data-title="Wishlist">
+																		{/* <button className="product-btn">Add to wishlist</button> */}
+																		{!Cookies.get(`custuserid`) ? <button className="product-btn" onClick={() => {
 
 																			handleToggle()
-																		}}>Add to wishlist</button> : <button class="product-btn" onClick={() => {
+																		}}>Add to wishlist</button> : <button className="product-btn" onClick={() => {
 																			addWishList(item.id)
 																			wishify()
 
@@ -441,13 +441,10 @@ const DetailPage = () => {
 																	</div>
 
 																	{item.stock == null || item.stock == 0 || item.stock == r_stock || item.stock < 0 ? <div>
-																		<div class="button  text-danger" >Out Of Stock</div>
+																		<div className="button  text-danger" >Out Of Stock</div>
 
-																	</div> : item.customizable == 1 ? <div>
-																		<button className='inquiry-button bg-success text-light' onClick={handleClickOpen}>Send Inquiry</button>
-
-																	</div> : <div class="add-to-cart-wrap">
-																		<div class="quantity">
+																	</div>  : <div className="add-to-cart-wrap ">
+																		<div className="quantity mb-2">
 																			<button type="button" onClick={() => {
 
 																				if (value < item.stock - r_stock) {
@@ -457,20 +454,20 @@ const DetailPage = () => {
 																					alert(`Available stock is ${item.stock - r_stock}`)
 																				}
 
-																			}} class="plus">+</button>
+																			}} className="plus">+</button>
 
-																			<input type="number" class="qty" step="1" min="0" max="" name="quantity" value={value} title="Qty" size="4" placeholder="" inputmode="numeric" autocomplete="off" />
+																			<input type="number" className="qty" step="1" min="0" max="" name="quantity" value={value} title="Qty" size="4" placeholder="" inputmode="numeric" autocomplete="off" />
 
 																			<button type="button" onClick={() => {
 																				if (value > 1) {
 																					setValue(value - 1)
 																				}
 																			}
-																			} class="minus" >-</button>
+																			} className="minus" >-</button>
 																		</div>
 														
-																		<div class="btn-add-to-cart ">
-																			<div class="button" onClick={() => {
+																		<div className="btn-add-to-cart mb-2">
+																			<div className="button" onClick={() => {
 
 																				if (item.stock == null) {
 																					alert("out of stock")
@@ -483,6 +480,7 @@ const DetailPage = () => {
 																			}}  >Add to cart</div>
 																		
 																		</div>
+																		{item.customizable == 1 && <button className='inquiry-button bg-success text-light' onClick={handleClickOpen}>Send Inquiry</button>}
 																	</div>}
 
 																	<Dialog

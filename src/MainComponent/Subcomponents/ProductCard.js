@@ -9,6 +9,8 @@ import { addToWishList } from "../../Store/WishList/wishlist-actions";
 import addToCart from "../../Utils/AddtoCart";
 import custdecryptedUserId from "../../Utils/CustUserid";
 import LoginForm from "../Authentication/LoginForm";
+// import '../.././Style.css';
+
 const ProductCard = (props) => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
@@ -61,7 +63,15 @@ const ProductCard = (props) => {
             //   </div>
             // </div>
 
-            <div className="product-label" style={{ position: "relative" }}>
+            <div
+              className="product-label"
+              style={{
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
               <div
                 className="triangle"
                 style={{
@@ -82,7 +92,8 @@ const ProductCard = (props) => {
                     left: "0",
                     width: "90px",
                     height: "90px",
-                    background: "linear-gradient(rgb(216, 182, 75), rgb(255, 193, 7))",
+                    background:
+                      "linear-gradient(rgb(216, 182, 75), rgb(255, 193, 7))",
                     clipPath: "polygon(0 0, 100% 0, 0 100%)",
                   }}
                 ></div>
@@ -94,6 +105,7 @@ const ProductCard = (props) => {
                   left: "12px",
                   zIndex: "20",
                   color: "#fff",
+                  fontSize: "1.2rem", // Adjust font size for better visibility on mobile
                 }}
               >
                 Luxe
@@ -104,6 +116,7 @@ const ProductCard = (props) => {
                   backgroundColor: "#000000",
                   zIndex: "1",
                   padding: "5px",
+                  fontSize: "0.9rem", // Adjust font size for better visibility on mobile
                 }}
               >
                 customizable
@@ -185,9 +198,9 @@ const ProductCard = (props) => {
             {props.disc_price ? (
               <span className="price">
                 {props.price !== 0 && props.price !== props.disc_price ? (
-                <del aria-hidden="true">
-                  <span>₹{props.price}</span>
-                </del>
+                  <del aria-hidden="true">
+                    <span>₹{props.price}</span>
+                  </del>
                 ) : null}
                 <ins>
                   <span>₹{props.disc_price}</span>

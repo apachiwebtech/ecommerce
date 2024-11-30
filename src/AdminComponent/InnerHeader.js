@@ -64,6 +64,8 @@ const InnerHeader = () => {
                 return 'CategoryBreadcrum';
             case '/webapp/SubCategoryBreadcrum':
                 return 'SubCategoryBreadcrum';
+            case '/webapp/customization':
+                return 'customization';
             case '/webapp/Advertise':
                 return 'Advertise';
             case '/webapp/SlotMaster':
@@ -72,6 +74,8 @@ const InnerHeader = () => {
                 return 'LocationMaster';
             case '/webapp/product':
                 return 'Add Product';
+            case '/webapp/ContectRequest':
+                return 'ContectRequest';
             case location.pathname.match(/^\/addservice\/\d+$/) ? location.pathname : '':
                 return 'Add Service'
             case location.pathname.match(/^\/webapp\/addimages\/\d+$/) ? location.pathname : '':

@@ -103,18 +103,15 @@ const ShopProduct = () => {
         // console.log(res)
         setGroup(res.data);
 
-        const groupdata = res.data
+        const groupdata = res.data;
         setGroupBread(res.data[0].breadcrumb);
 
-        if(!catslug && !subcatslug){
-            const group = groupdata.find((group) => group.slug == groupslug);
-            if (group) {
-              setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${group.breadcrumb}`);
-              
-            }
+        if (!catslug && !subcatslug) {
+          const group = groupdata.find((group) => group.slug == groupslug);
+          if (group) {
+            setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${group.breadcrumb}`);
+          }
         }
-
-     
       })
       .catch((err) => {
         console.log(err);
@@ -176,27 +173,29 @@ const ShopProduct = () => {
     getsubcatData();
     SiteHeader(subcatslug || catslug || groupslug);
 
-  if (subcatslug) {
+    if (subcatslug) {
       const subcat = subcatData.find((sub) => sub.slug == subcatslug);
       if (subcat) {
         setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${subcat.breadcrumb}`);
-        if(subcat.breadcrumb == null){
-            setBreadcrumbImage("https://cdn.magicdecor.in/com/2024/10/11185630/Pleasant-Modern-Landscape-Wallpaper-M.jpg")
+        if (subcat.breadcrumb == null) {
+          setBreadcrumbImage(
+            "https://cdn.magicdecor.in/com/2024/10/11185630/Pleasant-Modern-Landscape-Wallpaper-M.jpg"
+          );
         }
       }
     } else if (catslug) {
       const cat = catData.find((cat) => cat.slug == catslug);
       if (cat) {
         setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${cat.breadcrumb}`);
-        if(cat.breadcrumb == null){
-            setBreadcrumbImage("https://cdn.magicdecor.in/com/2024/10/11185630/Pleasant-Modern-Landscape-Wallpaper-M.jpg")
+        if (cat.breadcrumb == null) {
+          setBreadcrumbImage(
+            "https://cdn.magicdecor.in/com/2024/10/11185630/Pleasant-Modern-Landscape-Wallpaper-M.jpg"
+          );
         }
       }
-    } else  {
-        setBreadcrumbImage("");
+    } else {
+      setBreadcrumbImage("");
     }
-    
-   
   }, [groupslug, catslug, subcatslug, brand_id, sort, value, brandid]);
 
   const handleChange = (event, newValue) => {
@@ -473,15 +472,16 @@ const ShopProduct = () => {
                     <div className="col-xl-9 col-lg-9 col-md-12 col-12">
                       <div className="products-topbar clearfix ">
                         <div className="d-flex justify-content-between">
-                          <div className="">
-                            <div className="">
-                              <div
-                                className="products-count"
-                                onClick={toggleSidebar}
-                              >
-                                Filter
-                              </div>
-                            </div>
+                          <div
+                            className="flex-container"
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            {/* <div
+                              className="filter-toggle"
+                              onClick={toggleSidebar}
+                            >
+                              Filter
+                            </div> */}
                             <div
                               className="mob-filter"
                               style={{ display: "none" }}
@@ -490,7 +490,7 @@ const ShopProduct = () => {
                                 path={mdiFilterVariant}
                                 onClick={toggleSidebar}
                                 className="border p-1"
-                                size={1}
+                                size={2}
                               />
                             </div>
 
@@ -499,25 +499,30 @@ const ShopProduct = () => {
                                 className="mx-2"
                                 label={`0 to ${value}`}
                                 onDelete={handledelete}
+                                style={{ fontSize: "0.75rem" }}
                               />
                             )}
-                            {brandname != "" && (
+                            {brandname !== "" && (
                               <Chip
                                 label={`${brandname}`}
                                 onDelete={handlbrandedelete}
+                                style={{ fontSize: "0.75rem" }}
                               />
                             )}
                           </div>
 
                           <div>
-                            <div className="">
+                            <div className="" style={{ fontSize: "0.75rem" }}>
                               <div className="products-count">
                                 Showing all {products.length} results
                               </div>
                             </div>
                             <div className="products-topbar-right">
-                              <div className="products-sort dropdown">
-                                <FormControl sx={{ m: 0.5, minWidth: 150 }}>
+                              <div
+                                className="products-sort dropdown"
+                                style={{ flexShrink: 0 }}
+                              >
+                                <FormControl sx={{ m: 0.5, minWidth: 80 }}>
                                   <Select
                                     onChange={handlesortchange}
                                     // displayEmpty
@@ -527,10 +532,14 @@ const ShopProduct = () => {
                                         {
                                           borderColor: "rgba(0, 0, 0, 1)",
                                         },
+                                      "& .MuiSelect-select": {
+                                        padding: "10px 16px",
+                                        fontSize: "0.75rem",
+                                      },
                                       "&:hover .MuiOutlinedInput-notchedOutline":
                                         {
                                           borderColor: "rgba(0, 0, 0, 1)",
-                                        }, // Add more specific selector
+                                        },
                                     }}
                                   >
                                     <MenuItem value="default">

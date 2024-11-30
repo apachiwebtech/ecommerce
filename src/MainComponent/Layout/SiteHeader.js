@@ -425,7 +425,7 @@ const SiteHeader = (cartCount) => {
                           <Link
                             to={`/shoproduct/${banner[0]?.slug}`}
                             onClick={() => {
-                              closeSideheader();
+                              // closeSideheader();
                               searchclose();
                             }}
                           >
@@ -436,7 +436,7 @@ const SiteHeader = (cartCount) => {
                           <Link
                             to={`/shoproduct/${banner[1]?.slug}`}
                             onClick={() => {
-                              closeSideheader();
+                              // closeSideheader();
                               searchclose();
                             }}
                           >
@@ -447,7 +447,7 @@ const SiteHeader = (cartCount) => {
                           <Link
                             to={`/shoproduct/${banner[2]?.slug}`}
                             onClick={() => {
-                              closeSideheader();
+                              // closeSideheader();
                               searchclose();
                             }}
                           >
@@ -905,7 +905,7 @@ const SiteHeader = (cartCount) => {
                                         <Link
                                           to={`/shoproduct/${banner[0]?.slug}`}
                                           onClick={() => {
-                                            closeSideheader();
+                                            // closeSideheader();
                                             searchclose();
                                           }}
                                         >
@@ -916,7 +916,7 @@ const SiteHeader = (cartCount) => {
                                         <Link
                                           to={`/shoproduct/${banner[1]?.slug}`}
                                           onClick={() => {
-                                            closeSideheader();
+                                            // closeSideheader();
                                             searchclose();
                                           }}
                                         >
@@ -927,7 +927,7 @@ const SiteHeader = (cartCount) => {
                                         <Link
                                           to={`/shoproduct/${banner[2]?.slug}`}
                                           onClick={() => {
-                                            closeSideheader();
+                                            // closeSideheader();
                                             searchclose();
                                           }}
                                         >

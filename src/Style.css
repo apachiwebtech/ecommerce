@@ -11628,3 +11628,25 @@ ul.slick-dots li.slick-active button {
   left: 0;
   right: 0;
 }
+
+
+@media (min-width: 345px) and (max-width: 420px) {
+  .label-text {
+    font-size: 5vw !important; /* Increase font size for small screens */
+  }
+
+  .hot {
+    font-size: 4vw !important; /* Increase font size for small screens */
+  }
+
+  .triangle {
+    border-right: 15vw solid transparent !important; /* Adjust triangle size */
+    border-top: 15vw solid transparent !important;
+  }
+
+  .triangle div {
+    width: 15vw !important; /* Adjust triangle size */
+    height: 15vw !important; /* Adjust triangle size */
+    top: -15vw !important; /* Adjust position */
+  }
+}

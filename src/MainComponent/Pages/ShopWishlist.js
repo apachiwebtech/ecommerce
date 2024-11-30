@@ -125,7 +125,7 @@ const ShopWishlist = () => {
                                                                                  addToCart(wishItem.prod_id, wishItem.title, wishItem.catid, wishItem.disc_price, dispatch , 1 ,wishItem.v_id);
                                                                                  removeWishListItem(wishItem.id)
                                                                                  addify();
-                                                                        }} href="#" class="product-btn button">Add to cart</Link>
+                                                                        }} class="product-btn button">Add to cart</Link>
                                                                     </div>
                                                                 </div>
                                                             </td>

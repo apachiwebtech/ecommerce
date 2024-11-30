@@ -125,6 +125,8 @@ const storage11 = multer.diskStorage({
     );
   },
 });
+
+
 const storage12 = multer.diskStorage({
   destination: "../../ecomuploads/AboutUS", //
   filename: (req, file, cb) => {
@@ -134,6 +136,7 @@ const storage12 = multer.diskStorage({
     );
   },
 });
+
 const storage13 = multer.diskStorage({
   destination: "../../ecomuploads/Collection", //
   filename: (req, file, cb) => {
@@ -143,10 +146,6 @@ const storage13 = multer.diskStorage({
     );
   },
 });
-
-
-
-
 
 
 const upload = multer({ storage: storage });
@@ -162,6 +161,7 @@ const upload10 = multer({ storage: storage10 });
 const upload11 = multer({ storage: storage11 });
 const upload12 = multer({ storage: storage12 });
 const upload13 = multer({ storage: storage13 });
+
 app.use(express.json());
 
 app.use(bodyParser.json());
@@ -201,7 +201,6 @@ con.getConnection((err, connection) => {
     connection.release(); // Release the connection back to the pool
   }
 });
-
 app.get("/", (req, res) => {
   return res.json("from the backend side new");
 });
@@ -1518,26 +1517,6 @@ app.post("/category_update", (req, res) => {
   });
 });
 
-app.post("/SubCategory_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_category SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
 app.get("/category_data", (req, res) => {
   const sql = "select * from awt_category where deleted = 0 and active = 1";
 
@@ -1549,7 +1528,6 @@ app.get("/category_data", (req, res) => {
     }
   });
 });
-
 app.get("/category_data_admin", (req, res) => {
   const sql = "select * from awt_category where deleted = 0 ";
 
@@ -1561,7 +1539,6 @@ app.get("/category_data_admin", (req, res) => {
     }
   });
 });
-
 app.get("/blogcategory_data", (req, res) => {
   const sql = "select * from awt_blogcategory where deleted = 0 ";
 
@@ -1639,8 +1616,6 @@ app.post("/group_update", (req, res) => {
   });
 });
 
-
-
 app.get("/group_data", (req, res) => {
   const sql = "select * from awt_group where deleted = 0 limit 4";
 
@@ -1652,46 +1627,6 @@ app.get("/group_data", (req, res) => {
     }
   });
 });
-
-app.post("/group_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_group SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-app.post("/Category_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_group SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
 app.post("/group_delete", (req, res) => {
   let cat_id = req.body.cat_id;
 
@@ -1749,27 +1684,6 @@ app.post("/subcategory_update", (req, res) => {
     }
   });
 });
-
-app.post("/Category_breadcrumb_update", upload9.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded.' });
-  }
-
-  let image = req.file.filename;
-  let u_id = req.body.u_id;
-
-  let sql = "UPDATE awt_subcategory SET breadcrumb = ? WHERE id = ?";
-  let param = [image, u_id];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
 
 app.get("/subcategory_data", (req, res) => {
   const sql = "select * from awt_subcategory where deleted = 0 ";
@@ -2149,44 +2063,53 @@ app.post("/update_social", (req, res) => {
     }
   });
 });
-
 app.post("/add_banner", upload2.single("image"), (req, res) => {
-  let title = req.body.title;
-  let banner;
+    console.log("Request Body:", req.body);
+    console.log("Uploaded File:", req.file);
 
-  if (!req.file) {
-    banner = req.body.image;
-  } else {
-    banner = req.file.filename;
-  }
+    // Extract values from request body
+    let title = req.body.title;
+    let banner;
+    let ifa;
 
-  let link = req.body.link;
-  let target = req.body.target;
-  let view = req.body.viewid;
-  let uid = req.body.uid;
-  let description = req.body.description;
-
-  let sql;
-  let param;
-
-  if (uid == "undefined") {
-    sql =
-      "insert into awt_banner(`title`,`upload_image`,`link`,`target`,`view`,`description`) values(?,?,?,?,?,?)";
-
-    param = [title, banner, link, target, view, description];
-  } else {
-    sql =
-      "update awt_banner set title = ? , upload_image = ? , link = ? ,target = ?, view = ? ,description = ?  where  id = ?";
-    param = [title, banner, link, target, view, description, uid];
-  }
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
+    // Determine if a new image was uploaded
+    if (req.file) {
+        banner = req.file.filename; // Use the uploaded file's filename
+        ifa = 'new_image';
     } else {
-      return res.json(data);
+        banner = req.body.image; // Use the existing image if no new file was uploaded
+        ifa = 'existing_image';
     }
-  });
+
+    let link = req.body.link;
+    let target = req.body.target;
+    let view = req.body.viewid;
+    let uid = req.body.uid;
+    let description = req.body.description;
+
+    // SQL query and parameters
+    let sql;
+    let param;
+
+    // If no file is uploaded, we are inserting a new record
+    if (!req.file) {
+        sql = "INSERT INTO awt_banner(`title`, `upload_image`, `link`, `target`, `view`, `description`) VALUES (?, ?, ?, ?, ?, ?)";
+        param = [title, banner, link, target, view, description];
+    } else {
+        sql = "UPDATE awt_banner SET title = ?, upload_image = ?, link = ?, target = ?, view = ?, description = ? WHERE id = ?";
+        param = [title, banner, link, target, view, description, uid];
+    }
+
+    // Execute the query
+    con.query(sql, param, (err, data) => {
+        if (err) {
+            console.error("Database error:", err); // Log the error for debugging
+            return res.status(500).json({ error: "Database error", details: err });
+        } else {
+            console.log("Query Result:", data); // Log the result for debugging
+            return res.json({ data, ifa });
+        }
+    });
 });
 
 app.get(`/banner_data`, (req, res) => {
@@ -2384,6 +2307,7 @@ app.post(
     let v_id = req.body.v_id;
     let user_id = req.body.user_id;
     let groupid = req.body.groupid;
+     let coll_id = req.body.collectionid;
     let slug = req.body.slug;
     let catid = req.body.catid;
     let title = req.body.title;
@@ -2399,7 +2323,7 @@ app.post(
     let date = new Date();
     let approve = 0;
     let uid = req.body.uid;
- let coll_id = req.body.collectionid;
+
     let hsn_code = req.body.hsn_code;
     let lbh_unit = req.body.lbh_unit;
     let length = req.body.length;
@@ -2408,7 +2332,13 @@ app.post(
     let weight_unit = req.body.weight_unit;
     let weight = req.body.weight;
     let no_of_box = req.body.no_of_box;
-
+    let shipping_time = req.body.shipping_time;
+    let tracking_no = req.body.tracking_no;
+    let courier_name = req.body.courier_name;
+    
+   let shippingOption = req.body.shipping_option;
+    let shippingValue = shippingOption === "company" ? 0 : 1;
+    
     let sql;
     let param;
 
@@ -2434,7 +2364,7 @@ app.post(
 
         if (uid == "undefined") {
           sql =
-            "insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`coll_id`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`gst`,`customizable`,`length`,`breadth`,`height`,`no_of_box`,`weight`,`hsn_code`,`lbh_unit`,`weight_unit`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "insert into awt_add_product(`title`,`v_id`,`b_id`,`groupid`,`coll_id`,`catid`,`scatid`,`slug`,`description`,`specification`,`price`,`disc_price`,`size_image`,`created_date`,`created_by`,`gst`,`customizable`,`length`,`breadth`,`height`,`no_of_box`,`shipping_time`,`tracking_no`,`courier_name`,`shipping_option`,`weight`,`hsn_code`,`lbh_unit`,`weight_unit`) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
           param = [
             title,
@@ -2458,13 +2388,17 @@ app.post(
             breadth,
             height,
             no_of_box,
+            shipping_time,
+            tracking_no,
+            courier_name,
+            shippingValue ,
             weight,
             hsn_code,
             lbh_unit,
             weight_unit,
           ];
         } else {
-          sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?, coll_id = ?, catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? ,approve = 0 ,gst = ?,customizable= ?,length = ? ,breadth = ? ,height = ? ,no_of_box = ? ,weight = ? ,hsn_code = ? ,lbh_unit = ? ,weight_unit = ?  where id = ? `;
+          sql = `update awt_add_product set title = ? , v_id = ? , b_id = ? , groupid = ?, coll_id = ? ,catid =? , scatid =? , slug =? , description =?,specification = ?, price = ? ,disc_price = ?, size_image = ?,created_date = ?,created_by = ? ,approve = 0 ,gst = ?,customizable= ?,length = ? ,breadth = ? ,height = ? ,no_of_box = ?, shipping_time = ?, tracking_no = ?, courier_name = ? , shipping_option = ? ,weight = ? ,hsn_code = ? ,lbh_unit = ? ,weight_unit = ?  where id = ? `;
 
           param = [
             title,
@@ -2488,6 +2422,10 @@ app.post(
             breadth,
             height,
             no_of_box,
+            shipping_time,
+            tracking_no,
+            courier_name,
+            shippingValue,
             weight,
             hsn_code,
             lbh_unit,
@@ -3404,7 +3342,6 @@ app.post("/getproductlisting", (req, res) => {
       }
     });
   });
-
 
 app.post(`/getbrand`, (req, res) => {
   let groupslug = req.body.groupslug;
@@ -4855,6 +4792,7 @@ app.get(`/deleteduser`, (req, res) => {
 });
 
 app.post("/getintouch", (req, res) => {
+    let client = new SendMailClient({ url, token });
   let firstname = req.body.firstname;
   let lastname = req.body.lastname;
   let email = req.body.email;
@@ -4872,10 +4810,140 @@ app.post("/getintouch", (req, res) => {
       if (err) {
         return res.json(err);
       } else {
+          
+           client.sendMail({
+          from: {
+            address: "Info@micasasucasa.in",
+            name: "noreply",
+          },
+          to: [
+            {
+              email_address: {
+                address: `${email}`,
+                name: "satyam",
+              },
+            },
+          ],
+          subject: "contect request Mail",
+          htmlbody: `<div
+      style="margin: 0; font-family: 'Poppins', sans-serif; background: #ffffff; font-size: 14px;"
+    >
+      <div
+        style="max-width: 680px; margin: 0 auto; padding: 45px 30px 60px; background: #c4e6f562; background-image: url(https://cdn.tapetender70er.de/media/image/5c/5c/2d/385008-1_warp-beauty-08_518x389.jpg); background-repeat: no-repeat; background-size: 800px 452px; background-position: top center; font-size: 14px; color: #434343;"
+      >
+        <header>
+          <table style="width: 100%">
+            <div>
+              <tr style="height: 0">
+                <td>
+                  <img
+                    alt="Micasasucasa Logo"
+                    src="https://micasasucasa.in/static/media/logo.9a0467178409d5b8cbd3.png"
+                    height="70px"
+                  />
+                </td>
+                <td style="text-align: right">
+                 <span
+                  style="font-size: 16px; line-height: 30px; color: #000000;"
+                  > ${new Date().toLocaleDateString("en-US", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })}</span
+                >
+                </td>
+              </tr>
+            </div>
+          </table>
+        </header>
+
+        <main>
+          <div
+            style="margin: 0; margin-top: 70px; padding: 92px 30px 115px; background: #ffffff; border-radius: 30px; text-align: center;"
+          >
+            <div style="width: 100%; max-width: 489px; margin: 0 auto">
+             
+              <p style="margin: 0; margin-top: 17px; font-size: 16px; font-weight: 500;">
+                Hi ${firstname},
+              </p>
+              <p style="margin: 0; margin-top: 17px; font-weight: 500; letter-spacing: 0.56px;">
+                Your customization request has been received. We’ll notify you once it has been reviewed and approved.
+              </p>
+              <p style="margin-top: 40px; font-size: 18px; font-weight: 500; color: #1f1f1f;">
+                Thank you for choosing Micasasucasa!
+              </p>
+            </div>
+          </div>
+
+          <p
+            style="max-width: 400px; margin: 0 auto; margin-top: 90px; text-align: center; font-weight: 500; color: #8c8c8c;"
+          >
+            Need help? Ask at
+            <a href="mailto:Info@micasasucasa.in" style="color: #499fb6; text-decoration: none">Info@micasasucasa.in</a>
+          </p>
+        </main>
+
+        <footer
+          style="width: 100%; max-width: 490px; margin: 20px auto 0; text-align: center; border-top: 1px solid #e6ebf1;"
+        >
+          <p style="margin: 0; margin-top: 40px; font-size: 16px; font-weight: 600; color: #434343;">
+            Micasasucasa
+          </p>
+
+          <div style="margin: 0; margin-top: 16px">
+            <a href="" target="_blank" style="display: inline-block">
+              <img
+                width="36px"
+                alt="Facebook"
+                src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661502815169_682499/email-template-icon-facebook"
+              />
+            </a>
+            <a href="" target="_blank" style="display: inline-block; margin-left: 8px">
+              <img
+                width="36px"
+                alt="Instagram"
+                src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661504218208_684135/email-template-icon-instagram"
+              />
+            </a>
+            <a href="" target="_blank" style="display: inline-block; margin-left: 8px">
+              <img
+                width="36px"
+                alt="Twitter"
+                src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661503043040_372004/email-template-icon-twitter"
+              />
+            </a>
+            <a href="" target="_blank" style="display: inline-block; margin-left: 8px">
+              <img
+                width="36px"
+                alt="Youtube"
+                src="https://archisketch-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1661503195931_210869/email-template-icon-youtube"
+              />
+            </a>
+          </div>
+          <p style="margin: 0; margin-top: 16px; color: #434343;">
+            Copyright © 2024 Micasasucasa. All rights reserved.
+          </p>
+        </footer>
+      </div>
+    </div>`,
+        });
         return res.json(data);
       }
     }
   );
+});
+
+app.get(`/getcontectrequest`, (req, res) => {
+  const sql =
+    "select * from contact_us where deleted = 0";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
 });
 
 app.post("/vendor_regitration_request", (req, res) => {
@@ -5293,54 +5361,6 @@ app.post("/update_about", (req, res) => {
     }
   });
 });
-
-app.post('/update_AboutUs', upload12.fields([{ name: 'image1' }, { name: 'image2' }, { name: 'image3' }]), (req, res) => {
-  const image1 = req.files['image1'] ? req.files['image1'][0].filename : null;
-  const image2 = req.files['image2'] ? req.files['image2'][0].filename : null;
-  const image3 = req.files['image3'] ? req.files['image3'][0].filename : null;
-  const updated_date = new Date();
-
-
-  // Ensure all images are uploaded
-  if (!image1 || !image2 || !image3) {
-      return res.status(400).json("All images are required.");
-  }
-
-  const sql = "UPDATE awt_add_aboutus SET image1 = ?, image2 = ?, image3 = ?, updated_at = ? WHERE id = ?";
-  const params = [image1, image2, image3, updated_date, "1"];
-
-  con.query(sql, params, (err, result) => {
-      if (err) {
-          console.error("Database error:", err);
-          return res.status(500).json({ message: "Error updating images.", error: err.message });
-      } else {
-          return res.json("Images Updated Successfully!");
-      }
-  });
-});
-
-
-
-// Endpoint to retrieve About Us images
-app.get('/AboutUs_data', (req, res) => {
-  const sql = "SELECT * FROM awt_add_aboutus WHERE is_deleted = 0";
-
-  con.query(sql, (err, data) => {
-      if (err) {
-          console.error("Database error:", err);
-          return res.status(500).json("Error retrieving images.");
-      } else {
-          return res.json(data);
-      }
-  });
-});
-
-
-
-
-
-
-
 
 app.get(`/about_data`, (req, res) => {
   const sql = "select * from `awt_about` where id = 1  and deleted = 0";
@@ -5788,6 +5808,7 @@ app.post("/update_tag", (req, res) => {
 });
 
 // for Breadcrumbs/==========================================================================
+
 app.post("/add_Breadcrumbs", upload9.single("image"), (req, res) => {
   let title = req.body.title;
   let image = req.file.filename;
@@ -5893,46 +5914,8 @@ app.post("/Breadcrumbs_update_data", (req, res) => {
   });
 });
 
-// app.get(`/get_Breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-
-
-// for group_breadcrumbs/==========================================================================
-app.post("/add_group_breadcrumbs", upload9.single("image"), (req, res) => {
-  let title = req.body.title;
-  let image = req.file.filename;
-  let created_date = new Date();
-  let user_id = req.body.user_id;
-
-  let sql;
-  let param;
-
-  sql =
-    "update awt_group_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json("Data Added Successfully!");
-    }
-  });
-});
-
-app.get("/group_breadcrumbs_data", (req, res) => {
-  const sql = "select * from awt_group_breadcrumbs where deleted = 0";
+app.get(`/get_Breadcrumbs`, (req, res) => {
+  const sql = "select * from `awt_breadcrumbs` where  deleted = 0";
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -5942,204 +5925,9 @@ app.get("/group_breadcrumbs_data", (req, res) => {
     }
   });
 });
-
-app.post("/group_breadcrumbs_delete", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "update awt_group_breadcrumbs set deleted = 1 where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/group_breadcrumbs_update_data", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "select * from  awt_group_breadcrumbs  where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-// app.get(`/get_Breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_group_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-
-// for category_breadcrumbs/==========================================================================
-app.post("/add_category_breadcrumbs", upload9.single("image"), (req, res) => {
-  let title = req.body.title;
-  let image = req.file.filename;
-  let created_date = new Date();
-  let user_id = req.body.user_id;
-
-  let sql;
-  let param;
-
-  sql =
-    "update awt_category_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json("Data Added Successfully!");
-    }
-  });
-});
-
-app.get("/category_breadcrumbs_data", (req, res) => {
-  const sql = "select * from awt_category_breadcrumbs where deleted = 0";
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/category_breadcrumbs_delete", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "update awt_category_breadcrumbs set deleted = 1 where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/category_breadcrumbs_update_data", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "select * from  awt_category_breadcrumbs  where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-// app.get(`/get_category_breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_category_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-// for Sub-category_breadcrumbs/==========================================================================
-app.post("/add_subcategory_breadcrumbs", upload9.single("image"), (req, res) => {
-  let title = req.body.title;
-  let image = req.file.filename;
-  let created_date = new Date();
-  let user_id = req.body.user_id;
-
-  let sql;
-  let param;
-
-  sql =
-    "update awt_subcategory_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json("Data Added Successfully!");
-    }
-  });
-});
-
-app.get("/subcategory_breadcrumbs_data", (req, res) => {
-  const sql = "select * from awt_subcategory_breadcrumbs where deleted = 0";
-
-  con.query(sql, (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/subcategory_breadcrumbs_delete", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "update awt_subcategory_breadcrumbs set deleted = 1 where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-app.post("/subcategory_breadcrumbs_update_data", (req, res) => {
-  let Breadcrumbs_id = req.body.Breadcrumbs_id;
-
-  const sql = "select * from  awt_subcategory_breadcrumbs  where id = ?";
-
-  con.query(sql, [Breadcrumbs_id], (err, data) => {
-    if (err) {
-      return res.json(err);
-    } else {
-      return res.json(data);
-    }
-  });
-});
-
-// app.get(`/get_subcategory_breadcrumbs`, (req, res) => {
-//   const sql = "select * from `awt_subcategory_breadcrumbs` where  deleted = 0";
-
-//   con.query(sql, (err, data) => {
-//     if (err) {
-//       return res.json(err);
-//     } else {
-//       return res.json(data);
-//     }
-//   });
-// });
-
-
-
 
 // for Slot-Master/==========================================================================
+
 app.post("/add_SlotMaster", (req, res) => {
   const { location, slot, title, user_id } = req.body;
   const created_date = new Date();
@@ -6524,8 +6312,6 @@ app.get(`/getcustomrequest`, (req, res) => {
     }
   });
 });
-
-
 app.get(`/getbreadcrum`, (req, res) => {
   const sql = "select * from awt_breadcrumbs where deleted = 0";
 
@@ -7199,44 +6985,6 @@ app.post("/add_category_breadcrumbs", upload9.single("image"), (req, res) => {
     } else {
       return res.json("Data Added Successfully!");
     }
-    });
-  });
-
-app.post("/add_collection", upload13.single("image"), (req, res) => {
-  let user_id = req.body.user_id;
-  let title = req.body.title;
-  let created_date = new Date();
-  let u_id = req.body.u_id;
-  let image;
-  if (req.body.filename == undefined) {
-    image = req.body.image;
-  } else {
-    image = req.file.filename;
-  }
-
-  let sql;
-  let param;
-  let ifa ;
-
-
-  if (u_id == "undefined") {
-    ifa ='inset hua';
-    sql =
-    "INSERT INTO awt_collection(`title`,`image`,`created_by`,`created_date`) values(?,?,?,?)";
-    param = [title, image, user_id, created_date];
-  } else {
-    ifa ='update hua';
-    sql =
-      "update awt_collection set title = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?";
-    param = [title, image, user_id, created_date, u_id];
-  }
-
-  con.query(sql, param, (err, data) => {
-    if (err) {
-      return res.json("Error");
-    } else {
-      return res.json({ "message": "Data Added Successfully", "ifa": ifa });
-    }
   });
 });
 
@@ -7421,14 +7169,73 @@ app.post("/SubCategory_breadcrumb_update", upload9.single("image"), (req, res) =
   let param = [image, u_id];
 
   con.query(sql, param, (err, data) => {
-    if(err){
-      return res.json(err)
-    }else{
-      return res.json(data)
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
     }
   });
 });
 
+
+app.post("/add_collection", upload13.single("image"), (req, res) => {
+ const { user_id, title, group_id, slug, description, image: bodyImage, u_id } = req.body;
+  const created_date = new Date();
+  console.log(req.body);
+console.log(req.file);
+  let image = req.file ? req.file.filename : bodyImage;
+
+
+  let ifa ;
+
+let sql;
+let param;
+  if (u_id == "undefined") { // Check if u_id is undefined or null
+    sql = "INSERT INTO awt_collection(`title`, `group_id`, `slug`, `description`, `image`, `created_by`, `created_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    param = [title, group_id, slug, description, image, user_id, created_date];
+  } else {
+    sql = "UPDATE awt_collection SET title = ?, group_id = ?, slug = ?, description = ?, image = ?, updated_by = ?, updated_date = ? WHERE id = ?";
+    param = [title, group_id, slug, description, image, user_id, created_date, u_id];
+  }
+
+  con.query(sql, param, (err, data) => {
+    if (err) {
+        console.log("Database error:", err); // Log the error
+        return res.json(err);
+    } else {
+        return res.json({ "message": "Data Added Successfully", "ifa": ifa });
+    }
+});
+});
+
+
+app.post("/collection_update", (req, res) => {
+  let u_id = req.body.u_id;
+
+  const sql = "select * from awt_collection where id = ?";
+
+  con.query(sql, [u_id], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+
+
+app.get("/collection_data", (req, res) => {
+  const sql = "select * from awt_collection where deleted = 0";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
 
 app.post("/collection_delete", (req, res) => {
   let cat_id = req.body.cat_id;
@@ -7441,5 +7248,24 @@ app.post("/collection_delete", (req, res) => {
     } else {
       return res.json(data);
     }
+  });
+});
+
+app.post('/toggle_collection', (req, res) => {
+  const { toggle_id, status } = req.body;
+
+  if (!toggle_id || typeof status !== 'number') {
+      return res.status(400).json({ message: "Invalid input data" });
+  }
+
+  const sql = `UPDATE awt_collection SET moving_collection = ? WHERE id = ?`;
+
+  con.query(sql, [status, toggle_id], (err, result) => {
+      if (err) {
+          console.error("Database error:", err);
+          return res.status(500).json({ message: "An error occurred while updating the category." });
+      } else {
+          return res.status(200).json({ message: "Category updated successfully", data: result });
+      }
   });
 });

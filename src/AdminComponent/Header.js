@@ -178,6 +178,12 @@ const Header = () => {
                 <span className="menu-title">Cutiomization</span>
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to='/webapp/ContectRequest'>
+                <Icon path={mdiAccountOutline} size={1} className='mx-3' />
+                <span className="menu-title">Contect</span>
+              </Link>
+            </li>
 
           </ul>
         </Collapse>

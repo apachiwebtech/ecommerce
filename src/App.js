@@ -115,6 +115,7 @@ import GroupBreadcrum from './AdminComponent/GroupBreadcrum';
 import CategoryBreadcrum from './AdminComponent/CategoryBreadcrum';
 import SubCategoryBreadcrum from './AdminComponent/SubCategoryBreadcrum';
 import Collection from './AdminComponent/Collection';
+import ContectRequest from './AdminComponent/ContectRequest';
 
 
 
@@ -407,6 +408,10 @@ const Router = createHashRouter([
       {
         path: '/webapp/GroupBreadcrum',
         element: <GroupBreadcrum />
+      },
+      {
+        path: '/webapp/ContectRequest',
+        element: <ContectRequest />
       },
       {
         path: '/webapp/CategoryBreadcrum',

@@ -532,7 +532,21 @@ const Product = () => {
 
   }
 
-
+  const handleslugclick = () => {
+    axios
+      .post(`${BASE_URL}/check_slug`, {
+        slug:
+          value.title &&
+          value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, "-"),
+        table_name: "awt_add_product",
+      })
+      .then((res) => {
+        setValue({
+          slug: res.data.newslug,
+          title: value.title,
+        });
+      });
+  };
 
   return (
     <div class="container-fluid page-body-wrapper col-lg-10">
@@ -712,11 +726,10 @@ const Product = () => {
                               {error.slug && <span className="text-danger">{error.slug}</span>}
                             </label>
 
-
                             <div>
                               <TextField id="outlined-basic" InputLabelProps={{
                                 shrink: true,  // This makes the label move up when there's a value
-                              }} label="Enter product title.." value={value.slug} sx={{ width: "100%" }} variant="outlined" name="slug"
+                              }} label="Enter product title.." onClick={handleslugclick} value={value.slug} sx={{ width: "100%" }} variant="outlined" name="slug"
                                 onChange={onhandleChange} />
 
                             </div>
