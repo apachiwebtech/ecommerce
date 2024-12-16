@@ -50,17 +50,26 @@ const Profile = () => {
         const data = {
             user_id: custdecryptedUserId(),
         };
-        axios.post(`${BASE_URL}/getprofiledata`, data)
-            .then((res) => {
-                setUid(res.data[0]);
-                setValue({
-                    email: res.data[0].email,
-                    firstname: res.data[0].firstname,
-                    lastname: res.data[0].lastname,
-                    gender: res.data[0].gender,
-                    mobile: res.data[0].mobile,
-                });
+
+     axios.post(`${BASE_URL}/getprofiledata`, data)
+    .then((res) => {
+        console.log(res.data);
+        if (res.data && res.data.length > 0) {
+            setUid(res.data[0]);
+            setValue({
+                email: res.data[0].email,
+                firstname: res.data[0].firstname,
+                lastname: res.data[0].lastname,
+                gender: res.data[0].gender,
+                mobile: res.data[0].mobile,
             });
+        } else {
+            console.error("No user data found");
+        }
+    })
+    .catch((error) => {
+        console.error("Error fetching profile data:", error);
+    });
     }
 
     useEffect(() => {
@@ -99,7 +108,7 @@ const Profile = () => {
     const genderValue = String(value.gender);
 
     return (
-        <div className='row p-5'>
+        <div className='row p-5' style={{marginTop:"5rem"}}>
             {spinner && <Spinner />}
             <ToastContainer
                 position="bottom-right"

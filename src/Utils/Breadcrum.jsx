@@ -2,15 +2,19 @@ import { useState } from "react"
 import { BASE_URL } from "../AdminComponent/BaseUrl"
 import axios from "axios";
 
-const useBreadcrumb = () => {
+const useBreadcrumb = (id) => {
 
     const [breaddata , setData] = useState([])
 
 
     const getbreadcrum = () =>{
-        axios.get(`${BASE_URL}/getbreadcrum`)
+        const data = {
+            pageid :id
+        }
+        
+        axios.post(`${BASE_URL}/getbreadcrum`,data)
         .then((res) => {
-           setData(res.data[0])
+           setData(res.data[0].upload_image)
         })
     }
 

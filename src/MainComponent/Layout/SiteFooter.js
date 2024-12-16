@@ -62,7 +62,7 @@ const SiteFooter = () => {
 														<Link to='/refund' >Return & Refund</Link>
 													</li>
 													<li>
-														<Link to='/sitefaq' >Faq</Link>
+														<Link to='/sitefaq' >FAQ</Link>
 													</li>
 													<li>
 														<Link to='/imagegallery' >Image Gallery</Link>

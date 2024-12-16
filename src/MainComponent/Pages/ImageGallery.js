@@ -22,7 +22,7 @@ const ImageGallery = () => {
     const [data, setData] = useState([])
     const [metadata, setMeta] = useState([])
 
-    const breaddata = useBreadcrumb()
+    const breaddata = useBreadcrumb(7)
 
     async function getimages() {
 
@@ -66,12 +66,10 @@ const ImageGallery = () => {
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
-                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`}}>
+                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata}')`}}>
                             <div class="section-container">
                                 <div class="content-title-heading">
-                                    <h1 class="text-title-heading">
-                                        Gallery
-                                    </h1>
+                                  
                                 </div>
                                 <div class="breadcrumbs">
                                     <a href="index.html">Home</a><span class="delimiter"></span>Gallery
@@ -103,7 +101,7 @@ const ImageGallery = () => {
                                                     ))}
                                                 </ImageList> */}
 
-                                                <ImageList
+                                                {/* <ImageList
                                                     sx={{ width: "100%", height: "auto" }}
                                                     variant="quilted"
                                                     cols={3}
@@ -118,14 +116,10 @@ const ImageGallery = () => {
                                                             />
                                                         </ImageListItem>
                                                     ))}
-                                                </ImageList>
+                                                </ImageList> */}
 
 
                                                 {data && data.map((item, index) => (
-
-
-                                                
-
                                                     <a
                                                     data-fancybox="gallery"
                                                     href={`${IMG_URL}/gallery/${item?.upload_image}`}

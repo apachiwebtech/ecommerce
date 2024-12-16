@@ -773,10 +773,12 @@ del {
 }
 .price del span {
   text-decoration: line-through;
+  color: red;
 }
+
 .price ins {
   text-decoration: none;
-  color: red;
+  color: black;
 }
 body.home .section .block-title {
   text-align: center;
@@ -4526,7 +4528,7 @@ ul.slick-dots li.slick-active button {
 }
 .block-products .nav-tabs.layout-2 .nav-item .nav-link {
   font-size: 18px;
-  text-transform: uppercase;
+  text-transform: uppercase !;
   font-weight: 500;
   letter-spacing: 1.5px;
   padding-bottom: 10px;
@@ -9306,14 +9308,14 @@ ul.slick-dots li.slick-active button {
   text-transform: uppercase;
   width: 60px;
 }
-.shop-details .variations .label:after {
+/* .shop-details .variations .label:after {
   position: relative;
   content: ":";
   top: 0;
   right: 0;
   display: inline-block;
   padding-left: 5px;
-}
+} */
 .shop-details .variations tr {
   display: flex;
   align-items: center;
@@ -9974,6 +9976,23 @@ ul.slick-dots li.slick-active button {
   transform: translateX(-50%);
   bottom: 0;
 }
+
+@media (max-width: 630px) {
+  .accordion-header{
+    font-size: 20px !important;
+  }
+  }
+@media (max-width: 500px) {
+  .accordion-header{
+    font-size: 20px !important;
+  }
+  }
+  @media screen and (min-device-width: 360px) and (max-device-width: 481px) { 
+  .accordion-header{
+    font-size: 15px !important;
+  }
+  }
+
 
 /**
    * 7.4. Shop - Cart
@@ -11650,3 +11669,4 @@ ul.slick-dots li.slick-active button {
     top: -15vw !important; /* Adjust position */
   }
 }
+

@@ -7,7 +7,7 @@ import useBreadcrumb from "../../Utils/Breadcrum";
 const Refund = () => {
   const [data, setData] = useState([]);
   const [metadata, setMeta] = useState([]);
-  const breaddata = useBreadcrumb();
+  const breaddata = useBreadcrumb(10);
 
   async function getmetadetail_refund() {
     axios.get(`${BASE_URL}/getfaq`, data).then((res) => {
@@ -46,12 +46,12 @@ const Refund = () => {
               id="title"
               className="page-title"
               style={{
-                backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`,
+                backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata}')`,
               }}
             >
               <div class="section-container">
                 <div class="content-title-heading">
-                  <h1 class="text-title-heading">Return & Refund</h1>
+                
                 </div>
                 <div class="breadcrumbs">
                   <a href="index.html">Home</a>

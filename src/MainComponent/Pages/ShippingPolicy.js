@@ -8,7 +8,7 @@ const ShippingPolicy = () => {
   const [data, setData] = useState([]);
   const [metadata, setMeta] = useState([]);
 
-  const breaddata = useBreadcrumb();
+  const breaddata = useBreadcrumb(11);
 
   async function getmetadetail_policy() {
     axios.get(`${BASE_URL}/getfaq`, data).then((res) => {
@@ -47,12 +47,12 @@ const ShippingPolicy = () => {
               id="title"
               className="page-title"
               style={{
-                backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`,
+                backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata}')`,
               }}
             >
               <div class="section-container">
                 <div class="content-title-heading">
-                  <h1 class="text-title-heading">Shipping Policy</h1>
+                  {/* <h1 class="text-title-heading">Shipping Policy</h1> */}
                 </div>
                 <div class="breadcrumbs">
                   <a href="index.html">Home</a>

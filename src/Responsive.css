@@ -1928,7 +1928,7 @@
   border: 1px solid lightblue;
   position: fixed;
   top: 0px;
-  width: 70%;
+  width: 100%;
   z-index: 1000;
   transform: translateX(-100%);
   transition: 0.5s;
@@ -1965,7 +1965,7 @@
     border: 1px solid lightblue;
     position: fixed;
     top: 0px;
-    width: 70%;
+    width: 100%;
     z-index: 1000;
     transform: translateX(-100%);
     transition: 0.5s;
@@ -1976,6 +1976,68 @@
     font-size: 20px;
     margin: 10px 0px;
   }
- 
- 
+}
+
+
+
+
+.right-sidebar {
+  position: fixed;
+  top: 0;
+  right: -1500px; 
+  padding: 0 !important;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  padding-right: 0 !important;
+  transition: right 0.5s ease; /* Transition for the right property */
+  z-index: 1000;
+}
+.right-sidebar.open {
+  right: 0; 
+}
+
+
+
+.right-sidebar {
+  display: none;
+}
+
+@media (max-width: 990px) { 
+  .right-sidebar {
+    display: block;
+  }
+}
+
+/* For WebKit browsers (Chrome, Safari) */
+.subcategories.scrole::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  background: #e0e0e0; /* Background of the scrollbar track */
+}
+
+.subcategories.scrole::-webkit-scrollbar-track {
+  background: #e0e0e0; /* Background of the scrollbar track */
+  border-radius: 4px; /* Rounded corners for the track */
+}
+
+.subcategories.scrole::-webkit-scrollbar-thumb {
+  background: #b0b0b0; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Rounded corners for the thumb */
+}
+
+.subcategories.scrole::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0; /* Darker color for the thumb on hover */
+}
+
+/* For Firefox */
+.subcategories.scrole {
+  scrollbar-width: thin; /* Makes the scrollbar thin */
+  scrollbar-color: #b0b0b0 #e0e0e0; /* Thumb color and track color */
+}
+
+/* For Edge and Internet Explorer */
+.subcategories.scrole {
+  -ms-overflow-style: -ms-autohiding-scrollbar; /* Hides scrollbar when not in use */
 }

@@ -17,11 +17,21 @@ const ShopCart = ({ fetchcount }) => {
   const [cart, setCart] = useState([])
   const [quantities, setQuantities] = useState({});
   const [open, setOpen] = useState(false);
-  const breaddata = useBreadcrumb()
+  const breaddata = useBreadcrumb(12)
   const orderid = Cookies.get(`orderid`)
   const handleToggle = (e) => {
     setOpen(!open);
+    
   }
+
+
+  const handleLoginSuccess = () => {
+    setOpen(false);
+    // console.log("Login was successful!");
+    // alert("Login was successful!");
+    Navigate(`/checkout/${orderid}`);
+  };
+
 
   const handleIncrease = (itemId, proid,qty) => {
     setQuantities(prevQuantities => ({
@@ -156,12 +166,10 @@ useEffect(() => {
                 </Helmet>
           <div id="main-content" class="main-content">
             <div id="primary" class="content-area">
-            <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`}}>
+            <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata}')`}}>
                 <div class="section-container">
                   <div class="content-title-heading">
-                    <h1 class="text-title-heading">
-                      Shopping Cart
-                    </h1>
+                  
                   </div>
                   <div class="breadcrumbs">
                     <Link href="index.html">Home</Link><span class="delimiter"></span><Link href="shop-grid-left.html">Shop</Link><span class="delimiter"></span>Shopping Cart
@@ -256,7 +264,7 @@ useEffect(() => {
                                             </div>
                                             <div className="flex-grow-1 ms-3">
                                               <h5 className="product-name">
-                                                <Link className="text-dark">{item.pname}</Link>
+                                                <Link className="text-dark text-uppercase">{item.pname}</Link>
                                               </h5>
                                               <p className="product-price">Price: <span className="fw-bold">₹{item.price}</span></p>
                                               <div className="product-quantity">
@@ -269,7 +277,7 @@ useEffect(() => {
                                               <p className="product-subtotal mt-2">Subtotal: <span className="product-subtotal fw-bold">₹{total}</span></p>
                                             </div>
                                             <div className="product-remove">
-                                            <Link onClick={() => {if (window.confirm("Are you sure you want to remove this item from the cart?")) {handledelete(item.id);} }} className="remove text-danger">Remove</Link>
+                                            <Link onClick={() => {if (window.confirm("Are you sure you want to remove this item from the cart?")) {handledelete(item.id);} }} className="remove text-danger"><i class="bi bi-trash3"></i>Remove</Link>
                                             </div>
                                           </div>
                                         </div>
@@ -286,7 +294,7 @@ useEffect(() => {
 
                         <div class="col-xl-4 col-lg-12 col-md-12 col-12">
                           {cart.length !== 0 &&      <div class="cart-totals">
-                            <h2>Cart totals</h2>
+                            <h2 className='text-uppercase'>Cart total</h2>
                             <div>
                               <div class="cart-subtotal">
                                 <div class="title">Subtotal</div>
@@ -295,16 +303,16 @@ useEffect(() => {
                               <div class="shipping-totals">
                                 <div class="title">Shipping</div>
                                 <div>
-                                  <ul class="shipping-methods custom-radio">
+                                  {/* <ul class="shipping-methods custom-radio">
                                     <li>
                                       <input type="radio" name="shipping_method" data-index="0" value="free_shipping" class="shipping_method" checked="checked" /><label>Free shipping</label>
                                     </li>
                                     <li>
                                       <input type="radio" name="shipping_method" data-index="0" value="flat_rate" class="shipping_method" /><label>Flat rate</label>
                                     </li>
-                                  </ul>
+                                  </ul> */}
                                   <p class="shipping-desc">
-                                    Shipping options will be updated during checkout.
+                                   Shipping will be calculated at checkout.
                                   </p>
                                 </div>
                               </div>
@@ -347,7 +355,7 @@ useEffect(() => {
           </div>
         </div>
 
-        {open && <LoginForm setOpen={setOpen} open={open} />}
+        {open && <LoginForm setOpen={setOpen} open={open}  onLoginSuccess={handleLoginSuccess} />}
       </div>
 
 

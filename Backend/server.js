@@ -201,6 +201,7 @@ con.getConnection((err, connection) => {
     connection.release(); // Release the connection back to the pool
   }
 });
+
 app.get("/", (req, res) => {
   return res.json("from the backend side new");
 });
@@ -315,8 +316,60 @@ app.use(
 
 
 
+app.post("/guestlogin", (req, res) => {
+  let email = req.body.email;
+  let firstname = req.body.firstname;
+  let lastname = req.body.lastname;
+  let otp = req.body.otp;
 
+  const sql = "SELECT * from awt_customers where email = ? AND deleted = 0";
 
+  con.query(sql, [email], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      if (data.length === 0) {
+        const sql3 =
+          "INSERT INTO awt_customers_dummy(`email`,`firstname`,`lastname`,`otp`) VALUES (?,?,?,?)";
+        con.query(sql3, [email, firstname, lastname, otp], (err, data) => {
+          if (err) {
+            return res.json(err);
+          } else {
+            const insertedId = data.insertId;
+
+            const sql =
+              "SELECT * from awt_customers_dummy WHERE id = ? and deleted = 0";
+            con.query(sql, [insertedId], (err, data) => {
+              if (err) {
+                return res.json(err);
+              } else {
+                res.json(data);
+              }
+            });
+          }
+        });
+      } else {
+        // If the email already exists, update the existing record
+        const sql2 = "UPDATE awt_customers_dummy SET firstname = ?, lastname = ?, otp = ? WHERE email = ?";
+        con.query(sql2, [firstname, lastname, otp, email], (err, data) => {
+          if (err) {
+            return res.json(err);
+          } else {
+            const sql =
+              "SELECT * from awt_customers_dummy WHERE email = ? and deleted = 0";
+            con.query(sql, [email], (err, data) => {
+              if (err) {
+                return res.json(err);
+              } else {
+                res.json(data);
+              }
+            });
+          }
+        });
+      }
+    }
+  });
+});
 app.post("/customerlogin", (req, res) => {
   let email = req.body.email;
   let otp = req.body.otp;
@@ -633,6 +686,8 @@ app.post("/otp", (req, res) => {
   }
 });
 
+
+
 app.post("/register", (req, res) => {
   let email = req.body.email;
   let firstname = req.body.firstname;
@@ -891,6 +946,8 @@ app.post("/register", (req, res) => {
     }
   });
 });
+
+
 
 app.post("/login", (req, res) => {
   let email = req.body.email;
@@ -1528,6 +1585,40 @@ app.get("/category_data", (req, res) => {
     }
   });
 });
+
+app.get("/furniture_data", (req, res) => {
+  const sql = "SELECT * FROM awt_category WHERE deleted = 0 AND active = 1 AND group_id = 1";
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+app.get("/decor_data", (req, res) => {
+  const sql = "SELECT * FROM awt_category WHERE deleted = 0 AND active = 1 AND group_id = 2";
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+app.get("/tableware_data", (req, res) => {
+  const sql = "SELECT * FROM awt_category WHERE deleted = 0 AND active = 1 AND group_id = 3";
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+
+
 app.get("/category_data_admin", (req, res) => {
   const sql = "select * from awt_category where deleted = 0 ";
 
@@ -1854,12 +1945,18 @@ app.post("/add_brand", upload4.single("logo"), (req, res) => {
   let created_date = new Date();
   let uid = req.body.uid;
 
-  let image;
-  if (req.body.filename == undefined) {
-    image = req.body.image;
-  } else {
-    image = req.file.filename;
-  }
+//   let image;
+//   if (req.body.filename == undefined) {
+//     image = req.body.image;
+//   } else {
+//     image = req.file.filename;
+//   }
+let image;
+if (!req.file) { // Check if req.file is undefined
+    image = req.body.image; // This should be the previous logo if updating
+} else {
+    image = req.file.filename; // Use the uploaded file's filename
+}
 
   let sql;
   let param;
@@ -4823,6 +4920,12 @@ app.post("/getintouch", (req, res) => {
                 name: "satyam",
               },
             },
+             {
+              email_address: {
+                address: "Info@micasasucasa.in",
+                name: "Admin",
+              },
+            },
           ],
           subject: "contect request Mail",
           htmlbody: `<div
@@ -5814,32 +5917,41 @@ app.post("/add_Breadcrumbs", upload9.single("image"), (req, res) => {
   let image = req.file.filename;
   let created_date = new Date();
   let user_id = req.body.user_id;
+  let u_id = req.body.u_id;
+
+//   console.log("Request Body:", req.body);
+//   console.log("u_id:", u_id);
 
   let sql;
   let param;
 
-  sql =
-    "update awt_breadcrumbs set title = ? , upload_image = ? , updated_by = ? ,updated_date = ? where id = 1";
-  param = [title, image, user_id, created_date];
+  if (u_id !== undefined && u_id !== null && u_id !== '') {
+    sql = "UPDATE awt_breadcrumbs SET title = ?, upload_image = ?, updated_by = ?, updated_date = ? WHERE id = ?";
+    param = [title, image, user_id, created_date, u_id];
+  } else {
+    return res.status(400).json({ error: "u_id is required for updating." });
+  }
 
   con.query(sql, param, (err, data) => {
     if (err) {
       return res.json(err);
     } else {
-      return res.json("Data Added Successfully!");
+      return res.json("Data Updated Successfully!");
     }
   });
 });
+
 // app.post('/add_Breadcrumbs', upload9.single('image'), (req, res) => {
 
-//   let image;
+//  let image;
 
 //   let title = req.body.title;
-//   if (req.body.filename == undefined) {
-//     image = req.body.image
-//   } else {
-//     image = req.file.filename;
-//   }
+  
+// //   if (req.body.filename == undefined) {
+//     //  image = req.body.image;
+// //   } else {
+//      image = req.file.filename;
+// //   }
 //   let created_date = new Date()
 //   let user_id = req.body.user_id
 //   let u_id = req.body.u_id;
@@ -5848,7 +5960,7 @@ app.post("/add_Breadcrumbs", upload9.single("image"), (req, res) => {
 //   //   return res.status(400).json({ error: 'User  ID is required' });
 //   // }
 
-//   console.log(image)
+
 
 //   let sql;
 //   let param;
@@ -5868,7 +5980,7 @@ app.post("/add_Breadcrumbs", upload9.single("image"), (req, res) => {
 //     }
 //     else {
 
-//       return res.json("Data Added Successfully!")
+//       return res.json(image)
 //     }
 
 //   })
@@ -6312,8 +6424,10 @@ app.get(`/getcustomrequest`, (req, res) => {
     }
   });
 });
-app.get(`/getbreadcrum`, (req, res) => {
-  const sql = "select * from awt_breadcrumbs where deleted = 0";
+
+app.post(`/getbreadcrum`, (req, res) => {
+    const { pageid } = req.body;
+  const sql = `select * from awt_breadcrumbs where deleted = 0 and id = ${pageid}`;
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -6323,6 +6437,8 @@ app.get(`/getbreadcrum`, (req, res) => {
     }
   });
 });
+
+
 
 app.post(`/updateread`, (req, res) => {
   let { tablename, product_id } = req.body;
@@ -6434,6 +6550,9 @@ app.post('/place_order', async (req, res) => {
     sfirstname, slastname, scountry, saddress, slandmark, scity, sstate, spostcode,
     totalamt, paymode, order_id, token, user_id, mobile, vendor_id ,smobile
   } = req.body;
+
+
+
 
   let pending = "pending";
   const date = new Date();
@@ -6587,7 +6706,7 @@ const shipping = async (order_id, token) => {
 const api_to_nimbus = (order_id, v_id, token) => {
   return new Promise((resolve, reject) => {
     // Get order items details
-    const sql = 'SELECT id, pqty, totalprice FROM `awt_cart` WHERE orderid = ? AND v_id = ?';
+    const sql = 'SELECT id, pqty, totalprice ,pname FROM `awt_cart` WHERE orderid = ? AND v_id = ?';
     con.query(sql, [order_id, v_id], (err, data) => {
       if (err) {
         console.error('Database error:', err);
@@ -6599,8 +6718,9 @@ const api_to_nimbus = (order_id, v_id, token) => {
       }
 
       const items = data.map(item => ({
+        name :item.pname,
         product_id: item.id, // Ensure this field exists in your cart table
-        quantity: item.pqty,
+        qty: item.pqty,
         price: item.totalprice // Ensure this field exists in your cart table
       }));
 
@@ -6632,7 +6752,7 @@ const api_to_nimbus = (order_id, v_id, token) => {
             shipping_charges: orderData[0].shipamount,  // Shipping charges (if any)
             discount: orderData[0].disamount || 0,  // Discount applied to the order (if any)
             payment_type: 'prepaid',  // Payment type (COD or Prepaid)
-            order_amount: orderData[0].oamount,  // Total order amount
+            order_amount: orderData[0].totalamt,  // Total order amount
             package_weight: 300,  // Example weight (you should get this dynamically)
             package_length: 10,  // Example package dimensions
             package_breadth: 10,

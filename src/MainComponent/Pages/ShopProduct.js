@@ -4,7 +4,7 @@ import product6_2 from "../../assets/frontimg/product/6-2.jpg";
 import { Chip, Slider } from "@mui/material";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
-import { BASE_URL, IMG_URL } from "../../AdminComponent/BaseUrl";
+import { BASE_URL, DEF_IMG_BRA, IMG_URL } from "../../AdminComponent/BaseUrl";
 import ProductCard from "../Subcomponents/ProductCard";
 import { mdiClose, mdiFilterVariant } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -12,7 +12,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../Store/Products/product-actions";
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { Helmet } from "react-helmet";
-import useBreadcrumb from "../../Utils/Breadcrum";
+// import useBreadcrumb from "../../Utils/Breadcrum";
+import { mdiStar } from "@mdi/js";
+import Noproduct from "../../assets/images/no-product-found.png";
+import bread from "../../assets/images/bread.png";
+import Loader from "../../AdminComponent/Loader";
 
 const ShopProduct = () => {
   const [data, setData] = useState([]);
@@ -31,8 +35,10 @@ const ShopProduct = () => {
   const [Catebread, setCateBread] = useState("");
   const [Subcatebread, setSubcateBread] = useState("");
   const [breadcrumbImage, setBreadcrumbImage] = useState("");
-  const breaddata = useBreadcrumb();
+  const [loader, setLoader] = useState(false);
 
+  // const breaddata = useBreadcrumb();
+  // const defaultBreadcrumbImage = "https://micasasucasa.in/ecomuploads/Breadcrumbs/image-1733552051451.png";
   function valuetext(value) {
     return `₹${value}`;
   }
@@ -108,8 +114,14 @@ const ShopProduct = () => {
 
         if (!catslug && !subcatslug) {
           const group = groupdata.find((group) => group.slug == groupslug);
-          if (group) {
+          if (group.breadcrumb != '') {
             setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${group.breadcrumb}`);
+            // console.log(group, "this is if");
+          } else {
+            // console.log(group, "this is else");
+             setBreadcrumbImage(
+              DEF_IMG_BRA
+            );
           }
         }
       })
@@ -175,21 +187,23 @@ const ShopProduct = () => {
 
     if (subcatslug) {
       const subcat = subcatData.find((sub) => sub.slug == subcatslug);
+      // console.log(subcat, "this is subcat");
       if (subcat) {
         setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${subcat.breadcrumb}`);
-        if (subcat.breadcrumb == null) {
+        if (subcat.breadcrumb != '') {
           setBreadcrumbImage(
-            "https://cdn.magicdecor.in/com/2024/10/11185630/Pleasant-Modern-Landscape-Wallpaper-M.jpg"
+            DEF_IMG_BRA
           );
         }
       }
     } else if (catslug) {
       const cat = catData.find((cat) => cat.slug == catslug);
+      // console.log(cat, "this is cat");
       if (cat) {
         setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${cat.breadcrumb}`);
-        if (cat.breadcrumb == null) {
+        if (cat.breadcrumb != '' ) {
           setBreadcrumbImage(
-            "https://cdn.magicdecor.in/com/2024/10/11185630/Pleasant-Modern-Landscape-Wallpaper-M.jpg"
+            DEF_IMG_BRA
           );
         }
       }
@@ -217,17 +231,23 @@ const ShopProduct = () => {
 
   const handledelete = () => {
     setValue("");
+    getproductdetails();
   };
   const handlbrandedelete = () => {
     setBrandName("");
   };
 
+  // useEffect(() => {
+  //   getmetadetail();
+  // }, []);
   useEffect(() => {
+    getproductdetails();
     getmetadetail();
-  }, []);
+  }, [groupslug, catslug, subcatslug, brand_id, sort, value, brandid]);
 
   return (
     <div>
+      {loader && <Loader />}
       <div id="site-main" className="site-main">
         <Helmet>
           <title>{data.seo_title}</title>
@@ -243,13 +263,20 @@ const ShopProduct = () => {
             <div
               id="title"
               className="page-title"
-              style={{ backgroundImage: `url('${breadcrumbImage}')` }}
+              style={{
+                // backgroundImage: `url('${breadcrumbImage == "" ? DEF_IMG_BRA : breadcrumbImage  }')`,
+                backgroundImage: `url('${breadcrumbImage}')`,
+                // backgroundImage: `url('${breadcrumbImage == "" ? {bread} : breadcrumbImage  }')`,
+              }}
             >
-              <div className="section-container">
+              <div className="section-container d-flex justify-content-center">
                 <div className="content-title-heading">
                   {/* <h1 className="text-title-heading">{header}</h1> */}
                 </div>
-                <div className="breadcrumbs">
+                <div
+                  className="breadcrumbs bg-light"
+                  style={{ width: "fit-content", padding: "5px 10px" }}
+                >
                   <Link to={`/`}>Home</Link>
                   <span className="delimiter"></span>
                   <Link style={{ textTransform: "capitalize" }}>{header}</Link>
@@ -267,7 +294,7 @@ const ShopProduct = () => {
                       }  left-sidebar md-b-50`}
                     >
                       {/* <!-- Block Product Categories --> */}
-                      <div className="block block-product-cats">
+                      <div className="block block-product-cats mb-3">
                         <div
                           className="py-4  mob-left-sidebar-close "
                           onClick={toggleSidebar}
@@ -276,11 +303,23 @@ const ShopProduct = () => {
                           <Icon path={mdiClose} size={1} />
                         </div>
                         <div className="block-title">
-                          <h2>Categories</h2>
+                          <h2
+                            className="bg-light text-dark text-uppercase"
+                            style={{
+                              fontSize: "17px",
+                              fontWeight: "bold",
+                              padding: "5px",
+                            }}
+                          >
+                            Categories
+                          </h2>
                         </div>
                         <div className="block-content">
-                          <div className="product-cats-list">
-                            <ul>
+                          <div
+                            className="product-cats-list scrollable"
+                            style={{ maxHeight: "200px", overflowY: "auto" }}
+                          >
+                            <ul style={{ marginLeft: "10px" }}>
                               {/* {groupData.map((item) => {
                                 return (
                                   <li className="current">
@@ -293,38 +332,93 @@ const ShopProduct = () => {
                                   </li>
                                 );
                               })} */}
-                              {groupData.slice(0, 4).map((item) => (
-                                <li key={item.slug} className={`current`}>
+
+                              {/* {groupData.slice(0, 4).map((item) => (
+                                <li
+                                  key={item.slug}
+                                  className={`current`}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
                                   <Link
                                     onClick={toggleSidebar}
                                     to={`/shoproduct/${item.slug}`}
+                                    style={{
+                                      textDecoration: "none",
+                                      color: "inherit",
+                                    }} // Optional styling for the link
                                   >
+                                    <i
+                                      class="bi bi-circle-fill"
+                                      style={{
+                                        fontSize: "10px",
+                                        marginRight: "8px",
+                                      }}
+                                    ></i>
+                                    {item.title}
+                                  </Link>
+                                </li>
+                              ))} */}
+
+                              {catData.map((item) => (
+                                <li
+                                  key={item.slug}
+                                  className={`current`}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <Link
+                                    onClick={toggleSidebar}
+                                    to={`/shoproduct/${item.slug}`}
+                                    style={{
+                                      textDecoration: "none",
+                                      color: "inherit",
+                                    }}
+                                  >
+                                    <i
+                                      class="bi bi-circle-fill"
+                                      style={{
+                                        fontSize: "10px",
+                                        marginRight: "8px",
+                                      }}
+                                    ></i>
                                     {item.title}
                                   </Link>
                                 </li>
                               ))}
 
-                              {catData.slice(0, 4).map((item) => (
-                                <li key={item.slug} className={`current`}>
+                              {/* {subcatData.slice(0, 4).map((item) => (
+                                <li
+                                  key={item.slug}
+                                  className={`current`}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
                                   <Link
                                     onClick={toggleSidebar}
                                     to={`/shoproduct/${item.slug}`}
+                                    style={{
+                                      textDecoration: "none",
+                                      color: "inherit",
+                                    }}
                                   >
+                                    <i
+                                      class="bi bi-circle-fill"
+                                      style={{
+                                        fontSize: "10px",
+                                        marginRight: "8px",
+                                      }}
+                                    ></i>
                                     {item.title}
                                   </Link>
                                 </li>
-                              ))}
-
-                              {subcatData.slice(0, 4).map((item) => (
-                                <li key={item.slug} className={`current`}>
-                                  <Link
-                                    onClick={toggleSidebar}
-                                    to={`/shoproduct/${item.slug}`}
-                                  >
-                                    {item.title}
-                                  </Link>
-                                </li>
-                              ))}
+                              ))} */}
                             </ul>
                           </div>
                         </div>
@@ -333,7 +427,16 @@ const ShopProduct = () => {
                       {/* <!-- Block Product Filter --> */}
                       <div className="block block-product-filter">
                         <div className="block-title">
-                          <h2>Price</h2>
+                          <h2
+                            className="bg-light text-dark text-uppercase"
+                            style={{
+                              fontSize: "17px",
+                              fontWeight: "bold",
+                              padding: "5px ",
+                            }}
+                          >
+                            Price
+                          </h2>
                         </div>
                         <div className="block-content">
                           <Slider
@@ -376,96 +479,135 @@ const ShopProduct = () => {
                                                 </ul>
                                             </div>
                                         </div> */}
+
                       <div className="block block-product-filter clearfix my-3">
-                        <div className="block-title">
-                          <h2>Brands</h2>
-                        </div>
-                        <div className="block-content">
-                          <ul className="filter-items image">
-                            {brand.map((brand) => {
-                              return (
-                                <li>
-                                  <span
-                                    onClick={() => {
-                                      setBrandid(brand.id);
-                                      setBrandName(brand.title);
-                                    }}
-                                  >
-                                    <img
-                                      src={`${IMG_URL}/brand/` + brand.logo}
-                                      alt="Brand"
-                                    />
-                                  </span>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </div>
+                        {brand.length > 0 && (
+                          <>
+                            <div className="block-title">
+                              <h2
+                                className="bg-light text-dark text-uppercase"
+                                style={{
+                                  fontSize: "17px",
+                                  fontWeight: "bold",
+                                  padding: "5px",
+                                }}
+                              >
+                                Brands
+                              </h2>
+                            </div>
+                            <div
+                              className="block-content"
+                              style={{ marginLeft: "10px" }}
+                            >
+                              <ul className="filter-items image">
+                                {brand.map((brand) => {
+                                  return (
+                                    <li key={brand.id}>
+                                      {" "}
+                                      {/* Added key for better performance */}
+                                      <span
+                                        onClick={() => {
+                                          setBrandid(brand.id);
+                                          setBrandName(brand.title);
+                                        }}
+                                      >
+                                        <img
+                                          src={
+                                            brand.logo
+                                              ? `${IMG_URL}/brand/${brand.logo}`
+                                              : `${IMG_URL}/brand/${brand.logo}`
+                                          }
+                                          alt={brand.title || "Brand"}
+                                        />
+                                      </span>
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </div>
+                          </>
+                        )}
                       </div>
 
                       {/* <!-- Block Products --> */}
                       <div className="block block-products">
-                        <div className="block-title">
-                          <h2>Feature Product</h2>
-                        </div>
-                        <div className="block-content">
-                          <ul className="products-list">
-                            {products
-                              .filter((featured) => featured.featured === 1)
-                              .map((featured) => {
-                                return (
-                                  <Link
-                                    to={`/product/${featured.slug}`}
-                                    onClick={toggleSidebar}
-                                  >
-                                    <li className="product-item my-2">
-                                      <a
-                                        href="shop-details.html"
-                                        className="product-image"
+                        {products.length > 0 && (
+                          <>
+                            <div className="block-title">
+                              <h2
+                                className="bg-light text-dark text-uppercase"
+                                style={{
+                                  fontSize: "17px",
+                                  fontWeight: "bold",
+                                  padding: "5px",
+                                }}
+                              >
+                                Feature Product
+                              </h2>
+                            </div>
+                            <div
+                              className="block-content"
+                              style={{ marginLeft: "10px" }}
+                            >
+                              <ul className="products-list">
+                                {products
+                                  .filter((featured) => featured.featured === 1)
+                                  .map((featured) => {
+                                    return (
+                                      <Link
+                                        to={`/product/${featured.slug}`}
+                                        onClick={toggleSidebar}
                                       >
-                                        <img
-                                          src={
-                                            `${IMG_URL}/productimg/` +
-                                            featured.image1
-                                          }
-                                          alt="product6"
-                                        />
-                                      </a>
-                                      <div className="product-content">
-                                        <h2 className="product-title">
-                                          <Link
-                                            to={`/product/${featured.slug}`}
+                                        <li className="product-item my-2">
+                                          <a
+                                            href="shop-details.html"
+                                            className="product-image"
                                           >
-                                            {featured.product_title}
-                                          </Link>
-                                        </h2>
-                                        <div className="rating small">
+                                            <img
+                                              src={
+                                                `${IMG_URL}/productimg/` +
+                                                featured.image1
+                                              }
+                                              alt="product6"
+                                            />
+                                          </a>
+                                          <div className="product-content">
+                                            <h2 className="product-title text-uppercase">
+                                              <Link
+                                                to={`/product/${featured.slug}`}
+                                              >
+                                                {featured.product_title}
+                                              </Link>
+                                            </h2>
+                                            {/* <div className="rating small">
                                           <div className="star star-5"></div>
-                                        </div>
+                                        </div> */}
 
-                                        {featured.disc_price ? (
-                                          <span className="price">
-                                            <del aria-hidden="true">
-                                              <span>₹{featured.price}</span>
-                                            </del>
-                                            <ins>
-                                              <span>
-                                                ₹{featured.disc_price}
+                                            {featured.disc_price ? (
+                                              <span className="price">
+                                                <del aria-hidden="true">
+                                                  <span>₹{featured.price}</span>
+                                                </del>
+                                                <ins>
+                                                  <span>
+                                                    ₹{featured.disc_price}
+                                                  </span>
+                                                </ins>
                                               </span>
-                                            </ins>
-                                          </span>
-                                        ) : (
-                                          <span className="price">
-                                            ₹{featured.price}
-                                          </span>
-                                        )}
-                                      </div>
-                                    </li>
-                                  </Link>
-                                );
-                              })}
-                          </ul>
-                        </div>
+                                            ) : (
+                                              <span className="price">
+                                                ₹{featured.price}
+                                              </span>
+                                            )}
+                                          </div>
+                                        </li>
+                                      </Link>
+                                    );
+                                  })}
+                              </ul>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
 
@@ -497,7 +639,7 @@ const ShopProduct = () => {
                             {value > 0 && (
                               <Chip
                                 className="mx-2"
-                                label={`0 to ${value}`}
+                                label={`₹0 to ${value}`}
                                 onDelete={handledelete}
                                 style={{ fontSize: "0.75rem" }}
                               />
@@ -572,26 +714,60 @@ const ShopProduct = () => {
                         >
                           <div className="products-list grid">
                             <div className="row">
-                              {products?.map((product) => {
-                                return (
-                                  <ProductCard
-                                    proid={product.proid}
-                                    title={product.product_title}
-                                    disc_price={product.disc_price}
-                                    price={product.disc_price}
-                                    image1={product.image1}
-                                    image2={product.image2}
-                                    trending={product.trending}
-                                    catid={product.catid}
-                                    slug={product.slug}
-                                    v_id={product.v_id}
-                                    gst={product.gst}
-                                    customizable={product.customizable}
-                                    stock={product.stock}
-                                    r_tock={product.r_stock}
+                              {products.length === 0 ? (
+                                <div
+                                  className="no-products-message"
+                                  style={{
+                                    textAlign: "center",
+                                    width: "100%",
+                                    marginTop: "20px",
+                                    fontSize: "25px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  <img
+                                    src={Noproduct}
+                                    alt="No Products Found"
+                                    style={{
+                                      width: "100%",
+                                      maxWidth: "400px",
+                                      height: "auto",
+                                      display: "block",
+                                      margin: "0 auto",
+                                    }}
                                   />
-                                );
-                              })}
+
+                                  {/* <p
+                                    style={{
+                                      fontSize: "25px",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    No products Found
+                                  </p> */}
+                                </div>
+                              ) : (
+                                products.map((product) => {
+                                  return (
+                                    <ProductCard
+                                      proid={product.proid}
+                                      title={product.product_title}
+                                      disc_price={product.disc_price}
+                                      price={product.disc_price}
+                                      image1={product.image1}
+                                      image2={product.image2}
+                                      trending={product.trending}
+                                      catid={product.catid}
+                                      slug={product.slug}
+                                      v_id={product.v_id}
+                                      gst={product.gst}
+                                      customizable={product.customizable}
+                                      stock={product.stock}
+                                      r_tock={product.r_stock}
+                                    />
+                                  );
+                                })
+                              )}
                             </div>
                           </div>
                         </div>

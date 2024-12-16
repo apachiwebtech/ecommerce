@@ -7,7 +7,7 @@ import useBreadcrumb from '../../Utils/Breadcrum';
 const SiteFaq = () => {
     const [data, setData] = useState([])
     const [metadata, setMeta] = useState([])
-    const breaddata = useBreadcrumb()
+    const breaddata = useBreadcrumb(5)
     
     async function getmetadetail() {
 
@@ -42,12 +42,9 @@ const SiteFaq = () => {
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
-                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`}}>
+                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata}')`}}>
                             <div class="section-container">
                                 <div class="content-title-heading">
-                                    <h1 class="text-title-heading">
-                                        Faq
-                                    </h1>
                                 </div>
                                 <div class="breadcrumbs">
                                     <a href="index.html">Home</a><span class="delimiter"></span>Faq

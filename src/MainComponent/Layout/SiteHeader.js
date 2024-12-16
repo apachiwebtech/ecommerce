@@ -22,31 +22,37 @@ const SiteHeader = (cartCount) => {
   const [banner, setBanner] = useState([]);
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const [cat, setCatData] = useState([]);
-  const [subcat, setsubCatData] = useState([]);
+  const [groupData, setGroup] = useState([]);
+  const [catData, setCatData] = useState([]);
+  const [TableWareData, setTableWareData] = useState([]);
+  const [decorData, setdecorData] = useState([]);
+  const [FurnitureData, setFurnitureData] = useState([]);
+  const [subcatData, setsubCatData] = useState([]);
   const [toggle, setToggle] = useState(false);
   const [searchtoggle, setsearchtoggle] = useState(false);
   const custuser_id = Cookies.get("custuserid");
   const location = useLocation();
   const isHomePage = location.pathname === "/home";
-  const [isSubMenuVisible, setSubMenuVisible] = useState(false);
+  const [isFurnitureOpen, setFurnitureOpen] = useState(false);
+  const [isDecorOpen, setDecorOpen] = useState(false);
+  const [isTableOpen, setTableOpen] = useState(false);
+  const [activeSidebar, setActiveSidebar] = useState(null);
 
-  // const [isScrolled, setIsScrolled] = useState(false);
+  const toggleFurniture = () => {
+    setActiveSidebar(activeSidebar === "furniture" ? null : "furniture");
+  };
 
-  // const handleScroll = () => {
-  //   if (window.scrollY > 100) {
-  //     setIsScrolled(true);
-  //   } else {
-  //     setIsScrolled(false);
-  //   }
-  // };
+  const toggleDecor = () => {
+    setActiveSidebar(activeSidebar === "decor" ? null : "decor");
+  };
 
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
+  const toggleTableware = () => {
+    setActiveSidebar(activeSidebar === "tableware" ? null : "tableware");
+  };
+
+  const closeSidebar = () => {
+    setActiveSidebar(null); // Close any open sidebar
+  };
 
   async function getTrendingData() {
     axios
@@ -67,12 +73,58 @@ const SiteHeader = (cartCount) => {
     setToggle(!toggle);
   };
 
+  async function getGroupData() {
+    axios
+      .get(`${BASE_URL}/group_data`)
+      .then((res) => {
+        // console.log(res)
+        setGroup(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   async function getcatData() {
     axios
       .get(`${BASE_URL}/category_data`)
       .then((res) => {
         // console.log(res.data)
         setCatData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  async function getfurnitureData() {
+    axios
+      .get(`${BASE_URL}/furniture_data`)
+      .then((res) => {
+        // console.log(res.data)
+        setFurnitureData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  async function getdecorData() {
+    axios
+      .get(`${BASE_URL}/decor_data`)
+      .then((res) => {
+        // console.log(res.data)
+        setdecorData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  async function getTableWareData() {
+    axios
+      .get(`${BASE_URL}/tableware_data`)
+      .then((res) => {
+        // console.log(res.data)
+        setTableWareData(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -93,6 +145,10 @@ const SiteHeader = (cartCount) => {
   useEffect(() => {
     getsubcatData();
     getcatData();
+    getfurnitureData();
+    getdecorData();
+    getTableWareData();
+    getGroupData();
     getTrendingData();
   }, []);
 
@@ -360,62 +416,69 @@ const SiteHeader = (cartCount) => {
 
                     <div className="block block-products">
                       <div className="block-title">
-                        <h2>item Product</h2>
+                        <h2>Searched Product</h2>
                       </div>
-                      <div className="block-content">
-                        <ul className="products-list">
-                          {products.map((item) => {
-                            return (
-                              <Link to={`/product/${item.slug}`}>
-                                <li className="product-item my-2">
-                                  <a
-                                    href="shop-details.html"
-                                    className="product-image"
-                                  >
-                                    <img
-                                      onClick={searchclose}
-                                      src={
-                                        `${IMG_URL}/productimg/` + item.image1
-                                      }
-                                      alt="product6"
-                                    />
-                                  </a>
-                                  <div
-                                    onClick={searchclose}
-                                    className="product-content"
-                                  >
-                                    <h2 className="product-title">
-                                      <Link to={`/product/${item.slug}`}>
-                                        {item.title}
-                                      </Link>
-                                    </h2>
-                                    <div className="rating small">
-                                      <div className="star star-5"></div>
-                                    </div>
 
-                                    {item.disc_price ? (
-                                      <span className="price">
-                                        {item.price !== 0 &&
-                                        item.price !== item.disc_price ? (
-                                          <del aria-hidden="true">
-                                            <span>₹{item.price}</span>
-                                          </del>
-                                        ) : null}
-                                        <ins>
-                                          <span>₹{item.disc_price}</span>
-                                        </ins>
-                                      </span>
-                                    ) : (
-                                      <span className="price">
-                                        ₹{item.price}
-                                      </span>
-                                    )}
-                                  </div>
-                                </li>
-                              </Link>
-                            );
-                          })}
-                        </ul>
+                      <div className="block-content">
+                        {products.length > 0 ? (
+                          <ul className="products-list">
+                            {products.map((item) => {
+                              return (
+                                <Link to={`/product/${item.slug}`}>
+                                  <li className="product-item my-2">
+                                    <a
+                                      href="shop-details.html"
+                                      className="product-image"
+                                    >
+                                      <img
+                                        onClick={searchclose}
+                                        src={
+                                          `${IMG_URL}/productimg/` + item.image1
+                                        }
+                                        alt="product6"
+                                      />
+                                    </a>
+                                    <div
+                                      onClick={searchclose}
+                                      className="product-content"
+                                    >
+                                      <h2 className="product-title">
+                                        <Link to={`/product/${item.slug}`}>
+                                          {item.title}
+                                        </Link>
+                                      </h2>
+                                      <div className="rating small">
+                                        <div className="star star-5"></div>
+                                      </div>
+
+                                      {item.disc_price ? (
+                                        <span className="price">
+                                          {item.price !== 0 &&
+                                          item.price !== item.disc_price ? (
+                                            <del aria-hidden="true">
+                                              <span>₹{item.price}</span>
+                                            </del>
+                                          ) : null}
+                                          <ins>
+                                            <span>₹{item.disc_price}</span>
+                                          </ins>
+                                        </span>
+                                      ) : (
+                                        <span className="price">
+                                          ₹{item.price}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </li>
+                                </Link>
+                              );
+                            })}
+                          </ul>
+                        ) : (
+                          <div className="alert alert-danger" role="alert">
+                            A product is not found
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div class="content-menu_search">
@@ -462,7 +525,7 @@ const SiteHeader = (cartCount) => {
             </div>
             {/* </div>
             </div> */}
-            {/* after clickinh search on mobile view ecd /==================================================== */}
+            {/* after clickinh search on mobile view end /==================================================== */}
           </div>
         </div>
 
@@ -502,7 +565,7 @@ const SiteHeader = (cartCount) => {
                             </Link>
 
                             <ul className="sub-menu">
-                              {cat
+                              {catData
                                 .filter(
                                   (item) => item.group_id == banner[0]?.id
                                 )
@@ -524,7 +587,7 @@ const SiteHeader = (cartCount) => {
                                       </Link>
 
                                       <ul className="sub-menu">
-                                        {subcat
+                                        {subcatData
                                           .filter(
                                             (ele) => ele.cat_id == item.id
                                           )
@@ -561,7 +624,7 @@ const SiteHeader = (cartCount) => {
                             </Link>
 
                             <ul className="sub-menu">
-                              {cat
+                              {catData
                                 .filter(
                                   (item) => item.group_id == banner[1]?.id
                                 )
@@ -577,7 +640,7 @@ const SiteHeader = (cartCount) => {
                                       </Link>
 
                                       <ul className="sub-menu">
-                                        {subcat
+                                        {subcatData
                                           .filter(
                                             (ele) => ele.cat_id == item.id
                                           )
@@ -614,7 +677,7 @@ const SiteHeader = (cartCount) => {
                             </Link>
 
                             <ul className="sub-menu">
-                              {cat
+                              {catData
                                 .filter(
                                   (item) =>
                                     item.group_id == banner[2]?.id &&
@@ -632,7 +695,7 @@ const SiteHeader = (cartCount) => {
                                       </Link>
 
                                       <ul className="sub-menu">
-                                        {subcat
+                                        {subcatData
                                           .filter(
                                             (ele) => ele.cat_id == item.id
                                           )
@@ -668,9 +731,9 @@ const SiteHeader = (cartCount) => {
                               </span>
                             </Link>
 
-                            {cat.length > 0 && (
+                            {catData.length > 0 && (
                               <ul className="sub-menu">
-                                {cat
+                                {catData
                                   .filter(
                                     (item) => item.group_id == banner[3]?.id
                                   )
@@ -685,7 +748,7 @@ const SiteHeader = (cartCount) => {
                                           </span>
                                         </Link>
                                         <ul className="sub-menu">
-                                          {subcat
+                                          {subcatData
                                             .filter(
                                               (ele) => ele.cat_id == item.id
                                             )
@@ -832,70 +895,81 @@ const SiteHeader = (cartCount) => {
 
                                   <div className="block block-products">
                                     <div className="block-title">
-                                      <h2>item Product</h2>
+                                      <h2>Searched Product</h2>
                                     </div>
                                     <div className="block-content">
-                                      <ul className="products-list">
-                                        {products.map((item) => {
-                                          return (
-                                            <Link to={`/product/${item.slug}`}>
-                                              <li className="product-item my-2">
-                                                <a
-                                                  href="shop-details.html"
-                                                  className="product-image"
-                                                >
-                                                  <img
+                                      {products.length > 0 ? (
+                                        <ul className="products-list">
+                                          {products.map((item) => {
+                                            return (
+                                              <Link
+                                                to={`/product/${item.slug}`}
+                                              >
+                                                <li className="product-item my-2">
+                                                  <a
+                                                    href="shop-details.html"
+                                                    className="product-image"
+                                                  >
+                                                    <img
+                                                      onClick={searchclose}
+                                                      src={
+                                                        `${IMG_URL}/productimg/` +
+                                                        item.image1
+                                                      }
+                                                      alt="product6"
+                                                    />
+                                                  </a>
+                                                  <div
                                                     onClick={searchclose}
-                                                    src={
-                                                      `${IMG_URL}/productimg/` +
-                                                      item.image1
-                                                    }
-                                                    alt="product6"
-                                                  />
-                                                </a>
-                                                <div
-                                                  onClick={searchclose}
-                                                  className="product-content"
-                                                >
-                                                  <h2 className="product-title">
-                                                    <Link
-                                                      to={`/product/${item.slug}`}
-                                                    >
-                                                      {item.title}
-                                                    </Link>
-                                                  </h2>
-                                                  <div className="rating small">
-                                                    <div className="star star-5"></div>
-                                                  </div>
+                                                    className="product-content"
+                                                  >
+                                                    <h2 className="product-title">
+                                                      <Link
+                                                        to={`/product/${item.slug}`}
+                                                      >
+                                                        {item.title}
+                                                      </Link>
+                                                    </h2>
+                                                    <div className="rating small">
+                                                      <div className="star star-5"></div>
+                                                    </div>
 
-                                                  {item.disc_price ? (
-                                                    <span className="price">
-                                                      {item.price !== 0 &&
-                                                      item.price !==
-                                                        item.disc_price ? (
-                                                        <del aria-hidden="true">
+                                                    {item.disc_price ? (
+                                                      <span className="price">
+                                                        {item.price !== 0 &&
+                                                        item.price !==
+                                                          item.disc_price ? (
+                                                          <del aria-hidden="true">
+                                                            <span>
+                                                              ₹{item.price}
+                                                            </span>
+                                                          </del>
+                                                        ) : null}
+                                                        <ins>
                                                           <span>
-                                                            ₹{item.price}
+                                                            ₹{item.disc_price}
                                                           </span>
-                                                        </del>
-                                                      ) : null}
-                                                      <ins>
-                                                        <span>
-                                                          ₹{item.disc_price}
-                                                        </span>
-                                                      </ins>
-                                                    </span>
-                                                  ) : (
-                                                    <span className="price">
-                                                      ₹{item.price}
-                                                    </span>
-                                                  )}
-                                                </div>
-                                              </li>
-                                            </Link>
-                                          );
-                                        })}
-                                      </ul>
+                                                        </ins>
+                                                      </span>
+                                                    ) : (
+                                                      <span className="price">
+                                                        ₹{item.price}
+                                                      </span>
+                                                    )}
+                                                  </div>
+                                                </li>
+                                              </Link>
+                                            );
+                                          })}
+                                        </ul>
+                                      ) : (
+                                        <div
+                                          className="alert alert-danger"
+                                          role="alert"
+                                        >
+                                          A product is not found
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
                                   <div class="content-menu_search">
@@ -982,32 +1056,37 @@ const SiteHeader = (cartCount) => {
 
         <hr className="m-0" />
         <div className="mobile-cat p-3">
-          <h5>
-            <Link
-              to={`/shoproduct/${banner[0]?.slug}`}
-              onClick={closeSideheader}
+          <div>
+            <h5
+              className="d-flex justify-content-between "
+              onClick={toggleFurniture}
             >
               <span className="menu-item-text">{banner[0]?.title}</span>
-            </Link>
-          </h5>
-          <h5>
-            <Link
-              to={`/shoproduct/${banner[1]?.slug}`}
-              onClick={closeSideheader}
+              <i class="bi bi-chevron-right"></i>
+            </h5>
+            <hr />
+          </div>
+          <div>
+            <h5
+              className="d-flex justify-content-between"
+              onClick={toggleDecor}
             >
               <span className="menu-item-text">{banner[1]?.title}</span>
-            </Link>
-          </h5>
-          <h5>
-            <Link
-              to={`/shoproduct/${banner[2]?.slug}`}
-              onClick={closeSideheader}
+              <i class="bi bi-chevron-right"></i>
+            </h5>
+          </div>
+          <hr />
+          <div>
+            <h5
+              className="d-flex justify-content-between"
+              onClick={toggleTableware}
             >
               <span className="menu-item-text">{banner[2]?.title}</span>
-            </Link>
-          </h5>
+              <i class="bi bi-chevron-right"></i>
+            </h5>
+          </div>
+          <hr />
         </div>
-
         <div
           className="mobile-footer d-flex "
           style={{
@@ -1023,6 +1102,286 @@ const SiteHeader = (cartCount) => {
           <Icon path={mdiPinterest} size={1.3} />
         </div>
       </div>
+
+      {/* Right Sidebar toggleFurniture*/}
+      {activeSidebar === "furniture" && (
+        <div className="right-sidebar open">
+          <div
+            className="p-2"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              background: "#F8E9D5",
+            }}
+          >
+            <div className="">
+              <img
+                width="130"
+                height="79"
+                src={logo}
+                alt="Ruper – Furniture HTML Theme"
+              />
+            </div>
+            <div
+              className="py-4 mob-left-sidebar-close"
+              onClick={() => {
+                closeSidebar();
+                toggleSidebar();
+              }}
+              style={{ textAlign: "right" }}
+            >
+              <Icon path={mdiClose} size={1} />
+            </div>
+          </div>
+
+          <div
+            className="subcategories scrole mt-4"
+            style={{ maxHeight: "550px", overflowY: "auto" }}
+          >
+            <div className="container">
+              <div className="row justify-content-center">
+                <div className="col-12 text-center">
+                  <ul className="list-unstyled">
+                    <div
+                      class="d-flex align-items-center"
+                      onClick={closeSidebar}
+                    >
+                      <i
+                        class="bi bi-chevron-left"
+                        style={{ fontSize: "18px" }}
+                      ></i>
+                      <h5 class="mx-auto text-center">Furniture</h5>
+                    </div>
+                    <hr />
+                    {FurnitureData.map((item, index) => (
+                      <div key={index}>
+                        <li>
+                          <h5>
+                            <Link
+                              to={`/shoproduct/${item.slug}`}
+                              onClick={() => {
+                                closeSidebar();
+                                toggleSidebar();
+                              }}
+                            >
+                              <span className="subcategory-item">
+                                {item.title}
+                              </span>
+                            </Link>
+                          </h5>
+                        </li>
+                        {index < FurnitureData.length - 1 && <hr />}
+                      </div>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="mobile-footer d-flex "
+            style={{
+              justifyContent: "space-evenly",
+              position: "absolute",
+              width: "100%",
+              bottom: "15px",
+            }}
+          >
+            <Icon path={mdiFacebook} size={1.2} />
+            <Icon path={mdiInstagram} size={1.3} />
+            <Icon path={mdiLinkedin} size={1.3} />
+            <Icon path={mdiPinterest} size={1.3} />
+          </div>
+        </div>
+      )}
+
+      {/* Decor Sidebar */}
+      {activeSidebar === "decor" && (
+        <div className="right-sidebar open ">
+          <div
+            className="p-2"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              background: "#F8E9D5",
+            }}
+          >
+            <div className="">
+              <img
+                width="130"
+                height="79"
+                src={logo}
+                alt="Ruper – Furniture HTML Theme"
+              />
+            </div>
+            <div
+              className="py-4 mob-left-sidebar-close"
+              onClick={() => {
+                closeSidebar();
+                toggleSidebar();
+              }}
+              style={{ textAlign: "right" }}
+            >
+              <Icon path={mdiClose} size={1} />
+            </div>
+          </div>
+
+          <div
+            className="subcategories mt-4 subcategories scrole "
+            style={{ maxHeight: "550px", overflowY: "auto" }}
+          >
+            <div className="container">
+              <div className="row justify-content-center">
+                <div className="col-12 text-center">
+                  <ul className="list-unstyled">
+                    <div
+                      class="d-flex align-items-center"
+                      onClick={closeSidebar}
+                    >
+                      <i
+                        class="bi bi-chevron-left"
+                        style={{ fontSize: "18px" }}
+                      ></i>
+                      <h5 class="mx-auto text-center">Decor</h5>
+                    </div>
+                    <hr />
+                    {decorData.map((item, index) => (
+                      <div key={index}>
+                        <li>
+                          <h5>
+                            <Link
+                              to={`/shoproduct/${item.slug}`}
+                              onClick={() => {
+                                closeSidebar();
+                                toggleSidebar();
+                              }}
+                            >
+                              <span className="subcategory-item">
+                                {item.title}
+                              </span>
+                            </Link>
+                          </h5>
+                        </li>
+                        {index < decorData.length - 1 && <hr />}
+                      </div>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="mobile-footer d-flex "
+            style={{
+              justifyContent: "space-evenly",
+              position: "absolute",
+              width: "100%",
+              bottom: "15px",
+            }}
+          >
+            <Icon path={mdiFacebook} size={1.2} />
+            <Icon path={mdiInstagram} size={1.3} />
+            <Icon path={mdiLinkedin} size={1.3} />
+            <Icon path={mdiPinterest} size={1.3} />
+          </div>
+        </div>
+      )}
+
+      {/* Tableware Sidebar */}
+      {activeSidebar === "tableware" && (
+        <div className="right-sidebar open">
+          <div
+            className="p-2"
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              background: "#F8E9D5",
+            }}
+          >
+            <div className="">
+              <img
+                width="130"
+                height="79"
+                src={logo}
+                alt="Ruper – Furniture HTML Theme"
+              />
+            </div>
+            <div
+              className="py-4 mob-left-sidebar-close"
+              onClick={() => {
+                closeSidebar();
+                toggleSidebar();
+              }}
+              style={{ textAlign: "right" }}
+            >
+              <Icon path={mdiClose} size={1} />
+            </div>
+          </div>
+
+          <div
+            className="subcategories mt-4 subcategories scrole"
+            style={{ maxHeight: "550px", overflowY: "auto" }}
+          >
+            <div className="container">
+              <div className="row justify-content-center">
+                <div className="col-12 text-center">
+                  <ul className="list-unstyled">
+                    <div
+                      class="d-flex align-items-center"
+                      onClick={closeSidebar}
+                    >
+                      <i
+                        class="bi bi-chevron-left"
+                        style={{ fontSize: "18px" }}
+                      ></i>
+                      <h5 class="mx-auto text-center">TableWare</h5>
+                    </div>
+                    <hr />
+                    {TableWareData.map((item, index) => (
+                      <div key={index}>
+                        <li>
+                          <h5>
+                            <Link
+                              to={`/shoproduct/${item.slug}`}
+                              onClick={() => {
+                                closeSidebar();
+                                toggleSidebar();
+                              }}
+                            >
+                              <span className="subcategory-item">
+                                {item.title}
+                              </span>
+                            </Link>
+                          </h5>
+                        </li>
+                        {index < TableWareData.length - 1 && <hr />}
+                      </div>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="mobile-footer d-flex "
+            style={{
+              justifyContent: "space-evenly",
+              position: "absolute",
+              width: "100%",
+              bottom: "15px",
+            }}
+          >
+            <Icon path={mdiFacebook} size={1.2} />
+            <Icon path={mdiInstagram} size={1.3} />
+            <Icon path={mdiLinkedin} size={1.3} />
+            <Icon path={mdiPinterest} size={1.3} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

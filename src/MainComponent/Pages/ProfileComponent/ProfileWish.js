@@ -40,7 +40,7 @@ const ProfileWish = () => {
     }, [])
     
     return (
-        <div className='row p-5'>
+        <div className='row p-5' style={{marginTop:"5rem"}}>
             <div className='col-lg-4 col-md-4 col-12'>
                 <button
                     className='btn d-md-none' 

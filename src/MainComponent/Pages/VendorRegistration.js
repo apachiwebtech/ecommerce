@@ -113,9 +113,7 @@ const VendorRegister = () => {
                         <div id="title" class="page-title">
                             <div class="section-container">
                                 <div class="content-title-heading">
-                                    <h1 class="text-title-heading">
-                                        Vendor Registration
-                                    </h1>
+                                
                                 </div>
                                 <div class="breadcrumbs">
                                     <a href="index.html">Home</a><span class="delimiter"></span>Vendor Registration

@@ -79,7 +79,7 @@ const Product = () => {
   const [loader, setLoader] = useState(false);
   const [isDiscountedPriceVisible, setDiscountedPriceVisible] = useState(false);
   const [hasPrice, setHasPrice] = useState("");
-  const [selectedShipping, setSelectedShipping] = useState("");
+  const [selectedShipping, setSelectedShipping] = useState("company");
 
   const [value, setValue] = useState({
     sizeimage: "" || `${IMG_URL}/sizechart/` + uid.size_image,

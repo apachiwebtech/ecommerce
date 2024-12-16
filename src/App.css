@@ -535,3 +535,22 @@ iframe{
 }
 
 
+
+
+
+.address-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: box-shadow 0.3s;
+}
+
+.address-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.address-title {
+  font-weight: bold;
+}
+
+

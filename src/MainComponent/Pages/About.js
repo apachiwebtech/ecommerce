@@ -12,7 +12,7 @@ import logo2 from  '../../assets/images/mica.png'
 const About = () => {
   const [data, setData] = useState([]);
   const [metadata, setMeta] = useState([]);
-  const breaddata = useBreadcrumb();
+  const breaddata = useBreadcrumb(3);
 
   async function getaboutadetail() {
     axios.get(`${BASE_URL}/AboutUs_data`, data).then((res) => {
@@ -52,12 +52,11 @@ const About = () => {
               id="title"
               className="page-title m-0"
               style={{
-                backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`,
+                backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata}')`,
               }}
             >
               <div class="section-container">
                 <div class="content-title-heading">
-                  <h1 class="text-title-heading">About</h1>
                 </div>
                 <div class="breadcrumbs">
                   <a href="index.html">Home</a>

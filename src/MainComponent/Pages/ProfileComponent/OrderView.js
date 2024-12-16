@@ -51,7 +51,7 @@ const OrderView = () => {
   const totalsgst = cart.reduce((total, row) => total + Number(row.sgst), 0);
 
   return (
-    <div className="row p-5">
+    <div className="row p-5" style={{marginTop:"5rem"}}>
   <div className="col-lg-4 col-md-4 col-12">
     <ProfileSidebar />
   </div>

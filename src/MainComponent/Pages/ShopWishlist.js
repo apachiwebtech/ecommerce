@@ -18,7 +18,7 @@ const ShopWishlist = () => {
     const [data, setData] = useState([])
     const dispatch = useDispatch();
     const wishList = useSelector((state) => state.wishlist.wishList);
-    const breaddata = useBreadcrumb()
+    const breaddata = useBreadcrumb(14)
     const notify = () => toast("Removing Product");
     const addify = () => toast("Product added to the cart");
     const removeWishListItem = (data) => {
@@ -66,12 +66,10 @@ const ShopWishlist = () => {
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
-                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`}}>
+                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata}')`}}>
                             <div class="section-container">
                                 <div class="content-title-heading">
-                                    <h1 class="text-title-heading">
-                                        Wishlist
-                                    </h1>
+                                    
                                 </div>
                                 <div class="breadcrumbs">
                                     <Link href="index.html">Home</Link><span class="delimiter"></span><Link href="shop-grid-left.html">Shop</Link><span class="delimiter"></span>Shopping Cart

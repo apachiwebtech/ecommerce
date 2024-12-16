@@ -8,7 +8,7 @@ const Terms = () => {
   const [data, setData] = useState([]);
   const [metadata, setMeta] = useState([]);
 
-  const breaddata = useBreadcrumb();
+  const breaddata = useBreadcrumb(15);
 
   async function getmetadetail_terms() {
     axios.get(`${BASE_URL}/getfaq`, data).then((res) => {
@@ -47,12 +47,12 @@ const Terms = () => {
               id="title"
               className="page-title"
               style={{
-                backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata.upload_image}')`,
+                backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata}')`,
               }}
             >
               <div class="section-container">
                 <div class="content-title-heading">
-                  <h1 class="text-title-heading">Terms & Condition</h1>
+                  
                 </div>
                 <div class="breadcrumbs">
                   <a href="index.html">Home</a>

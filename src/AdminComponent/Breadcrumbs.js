@@ -127,14 +127,14 @@ const Breadcrumbs = () => {
             formdata.append("title", value.title)
 
             formdata.append('image', image)
-            // if(image){
+            if(image){
 
-            // }else{
-            //     formdata.append('image', uid.upload_image)
+            }else{
+                formdata.append('image', uid.upload_image)
 
-            // }
+            }
 
-            // formdata.append('u_id', uid.id)
+            formdata.append('u_id', uid.id)
             formdata.append('user_id', decryptedUserId())
 
             axios.post(`${BASE_URL}/add_Breadcrumbs`, formdata)
@@ -184,7 +184,7 @@ const Breadcrumbs = () => {
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
                                             <label for="brand">Title</label>
-                                            <input type="text" class="form-control" id="image" placeholder="Enter title" value={value.title} name='title' onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="image" placeholder="Enter title" value={value.title} name='title' onChange={onhandleChange} disabled />
                                             {errors.title && <div className="text-danger">{errors.title}</div>}
                                         </div>
                                         <div class="form-group">
@@ -219,15 +219,18 @@ const Breadcrumbs = () => {
                                             <thead>
 
                                                 <tr>
-                                                    <th>
+                                                    <th width="10%">
                                                         #
                                                     </th>
-                                                    <th>
+                                                    <th width="30%">
                                                         Title
                                                     </th>
 
-                                                    <th width="30%">
+                                                    <th width="50%">
                                                         Image
+                                                    </th>
+                                                    <th width="10%">
+                                                        Edit
                                                     </th>
                                                 </tr>
 
@@ -245,16 +248,15 @@ const Breadcrumbs = () => {
                                                                 <td>
                                                                     {item.title}
                                                                 </td>
-
-
-                                                                {/* <td>
-                                                                    <Link><EditIcon  onClick={() =>handleupdateId(item.id)}/></Link>
-                                                                    <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
-
-                                                                </td> */}
                                                                 <td>
                                                                     <img style={{width:"100%",borderRadius:"0px",height:"auto"}} src={`${IMG_URL}/Breadcrumbs/${ item.upload_image}`} alt="Breadcrumbs Image" />
                                                                 </td>
+                                                                <td className="text-center">
+                                                                    <Link><EditIcon  onClick={() =>handleupdateId(item.id)}/></Link>
+                                                                    {/* <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} /> */}
+
+                                                                </td>
+                                                               
                                                                 
                                                                 {confirmationVisibleMap[item.id] && (
                                                                     <div className='confirm-delete'>
