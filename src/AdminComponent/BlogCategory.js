@@ -81,14 +81,34 @@ const BlogCategory = () => {
 
 
 
+    const handleslugclick = () => {
+        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') , table_name : "awt_group" })
+            .then((res) => {
+                setValue({
+                    slug: res.data.newslug,
+                    title : value.title
+                })
+            })
+
+
+    }
  
 
     const handleUpdate = (id) => {
         setLoader(true)
         axios.post(`${BASE_URL}/blogcat_update`, { u_id: id })
             .then((res) => {
-                setUid(res.data[0])
-                setLoader(false)
+                setUid(res.data[0]);
+
+                setsubCatData((prevSubcat) => 
+                    prevSubcat.map((item) => 
+                        item.id === id ? { ...item, ...res.data[0] } : item
+                    )
+                );
+
+                getblogcat();
+                setLoader(false);
+               
             })
             .catch((err) => {
                 console.log(err)
@@ -149,9 +169,14 @@ const BlogCategory = () => {
             axios.post(`${BASE_URL}/add_blogcat`, data)
                 .then((res) => {
                     alert(res.data)
-                
-                    setLoader(false)
-                    // window.location.pathname = '/webapp/subcategory'
+                    getblogcat()
+                    setValue({
+                        category: "",
+                        title: "",
+                        slug: "",
+                        description: "",
+                    });
+                    setLoader(false);
                 })
                 .catch((err) => {
                     console.log(err)
@@ -226,7 +251,7 @@ const BlogCategory = () => {
                         <div class="col-lg-5 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Add BlogCategory</h4>
+                                    <h4 class="card-title">Add Blog Category</h4>
 
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                    
@@ -238,7 +263,7 @@ const BlogCategory = () => {
 
                                         <div class="form-group">
                                             <label for="exampleInputUsername1"> Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.slug} name='slug' onChange={onhandleChange} placeholder="Enter.." />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.slug} name='slug' onClick={handleslugclick} onChange={onhandleChange} placeholder="Enter.." />
                                             {error.slug && <span className='text-danger'>{error.slug}</span>}
 
                                         </div>
@@ -262,9 +287,9 @@ const BlogCategory = () => {
                                 <div class="card-body">
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <h4 class="card-title">BlogCategory </h4>
+                                            <h4 class="card-title">Blog Category </h4>
                                             <p class="card-description">
-                                                List Of BlogCategory
+                                                List Of Blog Category
                                             </p>
                                         </div>
 

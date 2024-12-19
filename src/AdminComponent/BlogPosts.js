@@ -47,10 +47,10 @@ const BlogPosts = () => {
             isValid = false;
             newErrors.title = "title is required"
         }
-        if (!specification) {
-            isValid = false;
-            newErrors.description = "description is required"
-        }
+        // if (!specification) {
+        //     isValid = false;
+        //     newErrors.description = "description is required"
+        // }
 
 
 
@@ -150,6 +150,21 @@ const BlogPosts = () => {
         }));
     }
 
+    
+    const handleslugclick = () => {
+
+
+        axios.post(`${BASE_URL}/check_slug`, { slug: value.title && value.title.toLowerCase().replace(/[^a-zA-Z0-9]+/g, '-') , table_name : "awt_group" })
+            .then((res) => {
+                setValue({
+                    slug: res.data.newslug,
+                    title : value.title
+                })
+            })
+
+
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault()
 
@@ -169,7 +184,16 @@ const BlogPosts = () => {
                     alert(res.data)
                     getsubcatData()
                     setLoader(false)
-                    // window.location.pathname = '/webapp/subcategory'
+
+                    setValue({
+                        category: "",
+                        title: "",
+                        slug: "",
+                        description: "",
+                    });
+                    setSpecification('');
+                    setSelectedOption(null);
+
                 })
                 .catch((err) => {
                     console.log(err)
@@ -292,7 +316,7 @@ const BlogPosts = () => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Blog Slug<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.slug} name='slug' onChange={onhandleChange} placeholder="Enter.." />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.slug} name='slug' onClick={handleslugclick} onChange={onhandleChange} placeholder="Enter.." />
                                             {error.slug && <span className='text-danger'>{error.slug}</span>}
 
                                         </div>
@@ -300,7 +324,7 @@ const BlogPosts = () => {
 
                                         <div class="form-group ">
                                             <div style={{ width: "100%" }} >
-                                                <label for="exampleInputUsername1">Description<span className='text-danger'>*</span></label>
+                                                <label for="exampleInputUsername1">Description</label>
                                                 <CKEditor
                                                     editor={ClassicEditor}
                                                     data={uid.description}
@@ -320,7 +344,7 @@ const BlogPosts = () => {
                                                     }}
                                                 />
                                             </div>
-                                            <span className='text-danger'>{error.description}</span>
+                                            {/* <span className='text-danger'>{error.description}</span> */}
                                         </div>
                                         {roleaccess > 2 && <>   <button type="submit" class="btn btn-primary mr-2">Submit</button>
                                             <button type='button' onClick={() => {

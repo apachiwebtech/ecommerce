@@ -315,12 +315,13 @@ app.use(
 
 
 
-
 app.post("/guestlogin", (req, res) => {
   let email = req.body.email;
   let firstname = req.body.firstname;
   let lastname = req.body.lastname;
-  let otp = req.body.otp;
+  let otp = req.body.otp; 
+
+  let client = new SendMailClient({ url, token });
 
   const sql = "SELECT * from awt_customers where email = ? AND deleted = 0";
 
@@ -329,47 +330,80 @@ app.post("/guestlogin", (req, res) => {
       return res.json(err);
     } else {
       if (data.length === 0) {
+
         const sql3 =
           "INSERT INTO awt_customers_dummy(`email`,`firstname`,`lastname`,`otp`) VALUES (?,?,?,?)";
-        con.query(sql3, [email, firstname, lastname, otp], (err, data) => {
-          if (err) {
-            return res.json(err);
-          } else {
-            const insertedId = data.insertId;
+        con.query(
+          sql3,
+          [email, firstname, lastname, otp],
+          (err, data) => {
+            if (err) {
+              return res.json(err);
+            } else {
+              const insertedId = data.insertId;
 
-            const sql =
-              "SELECT * from awt_customers_dummy WHERE id = ? and deleted = 0";
-            con.query(sql, [insertedId], (err, data) => {
-              if (err) {
-                return res.json(err);
-              } else {
-                res.json(data);
-              }
-            });
+              const sql =
+                "SELECT * from awt_customers_dummy WHERE id = ? and deleted = 0";
+              con.query(sql, [insertedId], (err, data) => {
+                if (err) {
+                  return res.json(err);
+                } else {
+                  const name = data[0].firstname;
+
+               
+                  client.sendMail({
+                    from: {
+                      address: "Info@micasasucasa.in",
+                      name: "noreply",
+                    },
+                    to: [
+                      {
+                        email_address: {
+                          address: `${email}`,
+                          name: `${name}`,
+                        },
+                      },
+                    ],
+                    subject: "Otp for guest verification",
+                    text: `Your OTP is: ${otp}`, 
+                  });
+
+                  return res.json([{ email: email, otp: otp }]); 
+                }
+              });
+            }
           }
-        });
+        );
       } else {
-        // If the email already exists, update the existing record
-        const sql2 = "UPDATE awt_customers_dummy SET firstname = ?, lastname = ?, otp = ? WHERE email = ?";
-        con.query(sql2, [firstname, lastname, otp, email], (err, data) => {
-          if (err) {
-            return res.json(err);
-          } else {
-            const sql =
-              "SELECT * from awt_customers_dummy WHERE email = ? and deleted = 0";
-            con.query(sql, [email], (err, data) => {
-              if (err) {
-                return res.json(err);
-              } else {
-                res.json(data);
-              }
-            });
-          }
+        // If the email is already registered, send OTP to the existing email
+        const name = data[0].firstname; // Get the name of the existing user
+
+        // Send OTP to the already registered email
+        client.sendMail({
+          from: {
+            address: "Info@micasasucasa.in",
+            name: "noreply",
+          },
+          to: [
+            {
+              email_address: {
+                address: `${email}`,
+                name: `${name}`,
+              },
+            },
+          ],
+          subject: "Otp for guest verification",
+          text: `Your OTP is: ${otp}`, 
         });
+
+        return res.json([{ email: email, otp: otp }]); 
       }
     }
   });
 });
+
+
+
 app.post("/customerlogin", (req, res) => {
   let email = req.body.email;
   let otp = req.body.otp;

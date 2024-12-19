@@ -331,7 +331,7 @@ const SubCategory = () => {
                           value={value.title}
                           placeholder="Title"
                           name="title"
-                          onChange={onhandleChange}
+                          onChange={onhandleChange} 
                         />
                         {error.title && (
                           <span className="text-danger">{error.title}</span>

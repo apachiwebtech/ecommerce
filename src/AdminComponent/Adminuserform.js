@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getRoleData } from '../Store/Role/role-action';
 
 const Adminuserform = () => {
-
+  const navigate = useNavigate();
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [errors, setErrors] = useState({})
     const [loader, setLoader] = useState(false)
@@ -214,10 +214,16 @@ const Adminuserform = () => {
                         mobile: "",
                         password: "",
                         cnf_password: "",
-                        role: ""
-                    })
-
-                    setUid([])
+                        role: "",
+                        address: "",
+                        city: "",
+                        state: "",
+                        pincode: ""
+                    });
+               
+                    setUid({});
+                    // setUid([])
+                    navigate("/webapp/adminuser");
 
                 })
                 .catch((err) => {
@@ -309,7 +315,7 @@ const Adminuserform = () => {
                                             </div>
                                             <div class="form-group col-lg-4">
                                                 <label for="exampleInputConfirmPassword1">Confirm Password</label>
-                                                <input type="text" class="form-control" id="exampleInputConfirmPassword1" name='cnf_password' placeholder="Password" onChange={onhandleChange} />
+                                                <input type="password" class="form-control" id="exampleInputConfirmPassword1" name='cnf_password' placeholder="Password" onChange={onhandleChange} />
                                                 {errors.cnf_password && <div className="text-danger">{errors.cnf_password}</div>}
                                             </div>
 

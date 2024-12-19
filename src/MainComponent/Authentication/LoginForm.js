@@ -257,51 +257,43 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
   };
 
   const onHandleGuestSubmit = async (e) => {
-    const generatedOTP = generateOTP(4);
+   const generatedOTP = generateOTP(4);
+
     e.preventDefault();
-  
+
     const data = {
       email: value.remail,
+      mobile: value.mobile,
       firstname: value.firstname,
       lastname: value.lastname,
       otp: generatedOTP,
     };
-  
-    if (value.remail !== "" && value.firstname !== "" && value.lastname !== "") {
+
+    if (validateForm()) {
       setLoader(true);
-  
+
       axios
         .post(`${BASE_URL}/guestlogin`, data)
         .then((res) => {
           setLoader(false);
-  
+
           if (res.data[0].email) {
             setShowOtp(true);
             setHide(true);
             settostotp(res.data[0].otp);
-            const id = res.data[0].email;
-            const value = res.data[0].value;
+            const id = res.data[0].email; // Define id here
+            const value = res.data[0].value; // Define id here
             const firstname = res.data[0].firstname;
             const lastname = res.data[0].lastname;
-  
+            const Mobile = res.data[0].mobile;
             localStorage.setItem("ecom_email", id);
             localStorage.setItem("ecom_value", value);
+            localStorage.setItem("ecom_mobile", Mobile);
             localStorage.setItem("Name", firstname);
             localStorage.setItem("lastname", lastname);
-  
-            const ciphertext = CryptoJS.AES.encrypt(
-              res.data[0].id.toString(),
-              encryptionKey
-            ).toString();
-            Cookies.set("custuserid", ciphertext, { expires: 1 });
-  
-            localStorage.setItem("ecom_value", value);
-            localStorage.setItem("ecom_id", id);
-  
-            onLoginSuccess();
           } else {
             setExist(res.data);
-  
+
             setTimeout(() => {
               setExist("");
             }, 4000);
@@ -312,6 +304,7 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
         });
     }
   };
+  
 
   async function updateuserid() {
     if (Cookies.get("orderid")) {
@@ -417,8 +410,8 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
           ).toString();
           Cookies.set("custuserid", ciphertext, { expires: 1 });
 
-          localStorage.setItem("ecom_value", value);
-          localStorage.setItem("ecom_id", id);
+          // localStorage.setItem("ecom_value", value);
+          // localStorage.setItem("ecom_id", id);
 
           // window.location.reload()
           onLoginSuccess();
@@ -656,13 +649,13 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
                     className={`tab-pane fade ${
                       activeTab === "guest" ? "show active" : ""
                     }`}
-                    id="guest"
+                    // id="guest"
                     role="tabpanel"
                     aria-labelledby="guest-tab"
                   >
                     <form
                       onSubmit={onHandleGuestSubmit}
-                      id="login_ajax"
+                      // id="login_ajax"
                       method="post"
                       style={{ padding: "20px 30px 30px" }}
                       className="login"
@@ -675,7 +668,7 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
                             type="text"
                             className="input-text"
                             name="firstname"
-                            id="username"
+                            // id="username"
                             placeholder="Firstname"
                             onChange={onhandleChange}
                           />
@@ -690,7 +683,7 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
                             type="text"
                             className="input-text"
                             name="lastname"
-                            id="username"
+                            // id="username"
                             placeholder="Lastname"
                             onChange={onhandleChange}
                           />
@@ -705,7 +698,7 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
                             type="email"
                             className="input-text"
                             name="remail"
-                            id="username"
+                            // id="username"
                             placeholder="Your Email"
                             onChange={onhandleChange}
                           />

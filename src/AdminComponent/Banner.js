@@ -1,10 +1,10 @@
+import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
 import { BASE_URL, IMG_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from "./Loader";
@@ -14,7 +14,7 @@ const Banner = () => {
 
 
     const [errors, setErrors] = useState({})
-    const [image, setImage] = useState()
+    const [image, setImage] = useState('')
     const [uid, setupdateDate] = useState([])
     const [banner, setBanner] = useState([])
     const [loader , setLoader] = useState(false)
@@ -123,14 +123,22 @@ const Banner = () => {
     }, [])
 
 
-
-
-
-
-
-
-
-
+    const handleClick = (id) => {
+        if (window.confirm("Are you sure you want to delete this banner?")) {
+            setLoader(true);
+            axios.delete(`${BASE_URL}/banner_delete/${id}`)
+                .then((res) => {
+                    alert("Banner deleted successfully");
+                    bannerdata(); // Refresh the banner list
+                    setLoader(false);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("Error deleting banner");
+                    setLoader(false);
+                });
+        }
+    };
 
 
 
@@ -144,8 +152,8 @@ const Banner = () => {
 
             const formdata = new FormData()
             formdata.append('title', value.title)
+            
             if(image){
-
                 formdata.append('image', image)
             }else{
                 formdata.append('image', uid.upload_image)
@@ -162,14 +170,25 @@ const Banner = () => {
             axios.post(`${BASE_URL}/add_banner`, formdata)
                 .then((res) => {
                     bannerdata()
-                    if (res.data) {
-                        //    navigate('/vendormaster')
-                    }
                     setLoader(false)
-                    alert("Data Submitted Successfully")
+                    alert("Data Submitted Successfully");
+
+                    setValue({
+                        title: "",
+                        banner: "",
+                        target: "",
+                        link: "",
+                        view: "",
+                        description: "",
+                    });
+                    setupdateDate([])
+                    setImage('');
+
+                 
                 })
                 .catch((err) => {
                     console.log(err)
+                    
                 })
 
         }
@@ -214,7 +233,7 @@ const Banner = () => {
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="ban_img">Banner Image<span className='text-danger'>*</span></label>
-                                            <input type="file" className="form-control" id="ban_img" placeholder="" name='banner' onChange={handleUpload} />
+                                            <input type="file" className="form-control" id="ban_img" placeholder="" name='banner' value={value.banner} onChange={handleUpload}  />
                                             {errors.banner && <div className="text-danger">{errors.banner}</div>}
                                         </div>
                                         <div>
@@ -319,8 +338,8 @@ const Banner = () => {
                                                             </td>
 
                                                             <td>
-                                                                <Link><EditIcon onClick={() => handleUpdate(item.id)} /></Link>
-                                                                {/* <Link style={{ color: "red" }}><DeleteIcon /></Link> */}
+                                                                <EditIcon onClick={() => handleUpdate(item.id)} />
+                                                                <DeleteIcon style={{ color: "red" }}  onClick={() => handleClick(item.id)} />
                                                                 {/* <button className='btn btn-sm btn-danger' onClick={() => handleClick(item.id)}>Delete</button> */}
                                                             </td>
 

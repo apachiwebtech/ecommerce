@@ -261,6 +261,7 @@ const SubCategoryBreadcrum = () => {
                           value={value.title}
                           placeholder="Title"
                           name="title"
+                          disabled
                           
                         />
                         {error.title && (

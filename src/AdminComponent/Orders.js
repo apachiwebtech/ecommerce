@@ -40,7 +40,7 @@ const Orders = () => {
     async function getOrderdata() {
         axios.get(`${BASE_URL}/order_detail`)
             .then((res) => {
-                console.log(res.data)
+                // console.log(res.data)
                 setOrderData(res.data)
                 setFilteredData(res.data)
             })
@@ -58,10 +58,19 @@ const Orders = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const filteredResult = order.filter(item => {
-            // Apply order filter   
             const orderMatch = value.Order === '' || item.orderno.includes(value.Order);
+
+            
+            // const nameMatch = value.Name === '' || item.firstname.toLowerCase().includes(value.Name.toLowerCase());
+            // const numberMatch = value.Number === '' || item.mobileno.includes(value.Number);
+
             const nameMatch = value.Name === '' || item.firstname.toLowerCase().includes(value.Name.toLowerCase());
-            const numberMatch = value.Number === '' || item.mobileno.includes(value.Number);
+            const numberMatch = value.Number === '' || (item.mobileno && item.mobileno.includes(value.Number));
+            
+            // console.log('Filtering by Name:', value.Name, 'Item Name:', item.firstname, nameMatch);
+            // console.log('Filtering by Mobile No:', value.Number, 'Item Mobile No:', item.mobileno, numberMatch);
+
+
             let dateMatch = true;
             const orderDate = item.created_date.split('T')[0];
             const from = value.from;
@@ -195,6 +204,9 @@ const Orders = () => {
                                                         Customer Name
                                                     </th>
                                                     <th>
+                                                        Mobile No.
+                                                    </th>
+                                                    <th>
                                                         Amount
                                                     </th>
                                                     <th>
@@ -231,6 +243,9 @@ const Orders = () => {
                                                             </td>
                                                             <td>
                                                                 {item.firstname} {item.lastname}
+                                                            </td>
+                                                            <td>
+                                                                {item.mobileno} 
                                                             </td>
                                                             <td>
                                                                 ₹{item.totalamt}

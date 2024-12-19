@@ -146,9 +146,14 @@ const Checkout = () => {
       isValid = false;
       newErrors.spostcode = "postcode is required";
     }
-    if (!value.smobile) {
+    // if (!value.smobile) {
+    //   isValid = false;
+    //   newErrors.smobile = "mobile is required";
+    // }
+    const smobileNumberRegex = /^\d{10}$/;
+    if (!smobileNumberRegex.test(value.smobile)) {
       isValid = false;
-      newErrors.smobile = "mobile is required";
+      newErrors.smobile = "Invalid mobile no";
     }
     setErrors(newErrors);
     return isValid;
@@ -873,14 +878,15 @@ const Checkout = () => {
                                         <input
                                           type="number"
                                           className="input-text"
-                                          name="mobile"
+                                          name="smobile"
                                           value={value.mobile}
                                           onChange={onhandlechange}
+                                          pattern="[0-9]{10}"
                                         />
                                       </span>
-                                      {errors.mobile && (
+                                      {errors.smobile && (
                                         <span className="text-danger">
-                                          {errors.mobile}
+                                          {errors.smobile}
                                         </span>
                                       )}
                                     </p>
@@ -1228,6 +1234,7 @@ const Checkout = () => {
                                         name="smobile"
                                         value={value.smobile}
                                         onChange={onhandlechange}
+                                          pattern="[0-9]{10}"
                                       />
                                     </span>
                                     {errors.smobile && (

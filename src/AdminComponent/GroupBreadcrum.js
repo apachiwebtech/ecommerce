@@ -257,6 +257,7 @@ const GroupBreadcrum = () => {
                           value={value.title}
                           placeholder="Title"
                           name="title"
+                          disabled
                           // onChange={onhandleChange}
                         />
                         {error.title && (
@@ -275,6 +276,7 @@ const GroupBreadcrum = () => {
                           onChange={handleUpload}
                           name="image"
                           placeholder="Enter.."
+                          
                         />
                         {error.logo && (
                           <span className="text-danger">{error.logo}</span>

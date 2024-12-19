@@ -126,6 +126,16 @@ const Category = () => {
                 console.log(err)
             })
     }
+    async function getcatwebData() {
+        axios.get(`${BASE_URL}/category_data_weblog`)
+            .then((res) => {
+                console.log(res.data)
+                setCatData(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
     
     async function getgroupData() {
         axios.get(`${BASE_URL}/group_data`)
@@ -141,6 +151,7 @@ const Category = () => {
     useEffect(() => {
         getgroupData()
         getcatData()
+        getcatwebData()
     }, [])
 
 

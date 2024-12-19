@@ -55,7 +55,7 @@ const Collection = () => {
     const [group, setGroupData] = useState([])
     const [error, setError] = useState({})
     const [selectedOption, setSelectedOption] = useState(null);
-    const [image, setImage] = useState()
+    const [image, setImage] = useState('')
     const [uid, setUid] = useState([])
     const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
     const [cid, setCid] = useState("")
@@ -344,7 +344,7 @@ const handleSubmit = (e) => {
             const selected = group.find(option => option.id === uid.group_id);
           
             setSelectedOption(selected);
-            console.log(selected,"^^^^")
+            // console.log(selected,"^^^^")
 
             setId(selected.id)
         }
@@ -426,7 +426,7 @@ const handleSubmit = (e) => {
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Image<span className='text-danger'>*</span></label>
-                                            <input type="file" class="form-control" id="exampleInputUsername1" onChange={handleUpload} name="image" placeholder="Enter.." />
+                                            <input type="file" class="form-control" id="exampleInputUsername1" onChange={handleUpload} name="image" value={value.logo} placeholder="Enter.." />
                                             {error.logo && <span className='text-danger'>{error.logo}</span>}
 
                                         </div>

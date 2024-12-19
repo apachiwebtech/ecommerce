@@ -23,6 +23,7 @@ const Group = () => {
     const [cid, setCid] = useState("")
     const [slug, setSlug] = useState()
     const [loader, setLoader] = useState(false)
+    const [isEditing, setIsEditing] = useState(false);
     const [value, setValue] = useState({
         title: "" || uid.title,
         slug: "" || uid.slug,
@@ -129,6 +130,7 @@ const Group = () => {
             .then((res) => {
                 setUid(res.data[0])
                 setLoader(false)
+                setIsEditing(true);
             })
             .catch((err) => {
                 console.log(err)
@@ -230,7 +232,7 @@ console.log(value.title, "rrr")
                 return (
                     <>
                         {roleaccess >= 2 && <EditIcon sx={{ cursor: "pointer" }} onClick={() => handleUpdate(params.row.id)} />}
-                        {roleaccess > 3 && <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />}
+                        {/* {roleaccess > 3 && <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(params.row.id)} />} */}
                     </>
                 )
             }
@@ -284,20 +286,20 @@ console.log(value.title, "rrr")
                                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Title<span className='text-danger'>*</span></label>
-                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" value={value.title} placeholder="Title" name='title' onChange={onhandleChange} disabled={!isEditing}/>
                                             {error.title && <span className='text-danger'>{error.title}</span>}
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Category Slug<span className='text-danger'>*</span></label>
 
-                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onClick={handleslugclick} onChange={onhandleChange} />
+                                            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Enter.." name='slug' value={value.slug} onClick={handleslugclick} onChange={onhandleChange} disabled={!isEditing}/>
 
                                             {error.slug && <span className='text-danger'>{error.slug}</span>}
 
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputUsername1">Image<span className='text-danger'>*</span></label>
-                                            <input type="file" class="form-control" id="exampleInputUsername1" onChange={handleUpload} name="image" placeholder="Enter.." />
+                                            <input type="file" class="form-control" id="exampleInputUsername1" onChange={handleUpload} name="image" placeholder="Enter.." disabled={!isEditing}/>
                                             {error.logo && <span className='text-danger'>{error.logo}</span>}
 
                                         </div>
@@ -306,7 +308,7 @@ console.log(value.title, "rrr")
                                         </div>
                                         <div class="form-group ">
                                             <label for="exampleTextarea1">Description</label>
-                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange}></textarea>
+                                            <textarea class="form-control" id="exampleTextarea1" rows="4" value={value.description} name='description' onChange={onhandleChange} disabled={!isEditing}></textarea>
 
                                         </div>
                                         {roleaccess > 2 && <>  <button type="submit" class="btn btn-primary mr-2">Submit</button>

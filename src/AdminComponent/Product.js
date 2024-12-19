@@ -21,6 +21,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Loader from "./Loader";
+import { Link, useNavigate } from "react-router-dom";
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -56,30 +57,32 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 }));
 const Product = () => {
   const [cat, setCatData] = useState([]);
+  const [subcat, setsubcategory] = useState([]);
+  const [catid, selectedcatId] = useState("");
+  const [subcatid, selectedsubcatId] = useState("");
+  const [selectedOptionCat, setSelectedCat] = useState(null);
+  const [selectedOptionSub, setSelectedSub] = useState(null);
+
+
   const [error, setError] = useState({});
   const [collection, setCollection] = useState([]);
   const [collectionid, setCollectionID] = useState([]);
-  const [selectedOptionCollection, setSelectedOptionCollection] =
-    useState(null);
+  const [selectedOptionCollection, setSelectedOptionCollection] = useState(null);
   const [group, setGroupData] = useState([]);
-  const [selectedOption, setSelectedCat] = useState(null);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedOptionvendor, setSelectedVendor] = useState(null);
   const [selectedOptionBrand, setSelectedBrand] = useState(null);
-  const [selectedOptionSub, setSelectedSub] = useState(null);
+
   const [vendor, setVendorData] = useState([]);
-  const [subcat, setsubcategory] = useState([]);
   const [uid, setUid] = useState([]);
   const [brand, setBrand] = useState([]);
-  const [catid, selectedId] = useState("");
   const [groupid, selectedgroupId] = useState("");
-  const [subcatid, selectedsubcatId] = useState("");
   const [brand_id, selectedBrandId] = useState("");
   const [vendor_id, selectedVendorId] = useState("");
   const [loader, setLoader] = useState(false);
-  const [isDiscountedPriceVisible, setDiscountedPriceVisible] = useState(false);
   const [hasPrice, setHasPrice] = useState("");
   const [selectedShipping, setSelectedShipping] = useState("company");
+  const navigate = useNavigate();
 
   const [value, setValue] = useState({
     sizeimage: "" || `${IMG_URL}/sizechart/` + uid.size_image,
@@ -224,7 +227,7 @@ const Product = () => {
     axios
       .get(`${BASE_URL}/collection_data`)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setCollection(res.data);
       })
       .catch((err) => {
@@ -232,9 +235,20 @@ const Product = () => {
       });
   }
 
+
+
+
   useEffect(() => {
     getcollectionData();
   }, []);
+
+  const setCustomizeValue = (data) => {
+    setValue((prevValue) => ({
+        ...prevValue,
+        customize: data.customizable === '1' ? 'Yes' : 'No', 
+    }));
+};
+
 
   async function getUpdateData() {
     setLoader(true);
@@ -242,17 +256,19 @@ const Product = () => {
       .post(`${BASE_URL}/product_update`, { u_id: update_id })
       .then((res) => {
         setLoader(false);
+        console.log("Fetched Data:", res.data[0]);
         setUid(res.data[0]);
 
-        setValue({
-          customize: uid.customizable,
-        });
+        setCustomizeValue(res.data[0]);
+
+        
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
+  
   const handlestatus = (e, id, column) => {
     const value = e.target.value;
 
@@ -352,6 +368,7 @@ const Product = () => {
       getUpdateData();
       setHasPrice("yes");
     }
+    getUpdateData();
     getGroupData();
     getBrandData();
     getVendordata();
@@ -419,7 +436,6 @@ const Product = () => {
     }
   }, [uid, brand, brand_id]);
 
-  // console.log(brand_id,"juu")
 
   const HandlesubcatChange = (selectedValue) => {
     if (selectedValue) {
@@ -428,7 +444,6 @@ const Product = () => {
       setSelectedSub(selectedValue);
     }
   };
-
   useEffect(() => {
     if (uid.scatid) {
       const selected = subcat.find((option) => option.id === uid.scatid);
@@ -436,6 +451,7 @@ const Product = () => {
       selectedsubcatId(uid.scatid);
     }
   }, [uid, subcat]);
+
 
   const HandleCollectionChange = (selectedValue) => {
     if (selectedValue) {
@@ -446,11 +462,11 @@ const Product = () => {
   };
 
   useEffect(() => {
-    console.log("UID:", uid);
-    console.log("Collection:", collection);
+    // console.log("UID:", uid);
+    // console.log("Collection:", collection);
     if (uid.coll_id) {
       const selected = collection.find((option) => option.id === uid.coll_id);
-      console.log("Selected Collection:", selected);
+      // console.log("Selected Collection:", selected);
       setSelectedOptionCollection(selected);
       setCollectionID(uid.coll_id);
     }
@@ -480,7 +496,6 @@ const Product = () => {
   };
 
   useEffect(() => {
-    // console.log(uid,"??");
 
     if (uid.groupid) {
       const selected = group.find((option) => option.id === uid.groupid);
@@ -489,31 +504,38 @@ const Product = () => {
     }
   }, [uid, group]);
 
-  const HandleCatChange = (selectedValue) => {
-    const val = selectedValue.id;
-    setSelectedCat(selectedValue);
-    selectedId(val);
-    const data = {
-      catid: val,
-    };
+  // const HandleCatChange = (selectedValue) => {
+  //   const val = selectedValue.id;
+  //   setSelectedCat(selectedValue);
+  //   selectedId(val);
+  //   const data = {
+  //     catid: val,
+  //   };
 
-    axios
-      .post(`${BASE_URL}/getsubcategory`, data)
-      .then((res) => {
-        // console.log(res.data)
-        setsubcategory(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  //   axios
+  //     .post(`${BASE_URL}/getsubcategory`, data)
+  //     .then((res) => {
+  //       // console.log(res.data)
+  //       setsubcategory(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
+
+  const HandleCatChange = (selectedValue) => {
+    if (selectedValue) {
+      const catid = selectedValue.id;
+      selectedcatId(catid);
+      setSelectedCat(selectedValue);
+    }
   };
 
   useEffect(() => {
-    // If you have received the ID from the API, find the option that matches the ID
     if (uid.catid) {
       const selected = cat.find((option) => option.id === uid.catid);
       setSelectedCat(selected);
-      selectedId(uid.catid);
+      selectedcatId(uid.catid);
     }
   }, [uid, cat]);
 
@@ -543,37 +565,147 @@ const Product = () => {
     });
   };
 
+  // const handlesubmit = (e) => {
+  //   e.preventDefault();
+  //   if (validateForm()) {
+  //     setLoader(true);
+  //     const formdata = new FormData();
+  //     formdata.append("uid", uid.id);
+
+  //     if (update_id == ":update_id") {
+  //       formdata.append("v_id", vendor_id);
+  //       formdata.append("b_id", brand_id);
+  //       formdata.append("subcatid", subcatid);
+  //       formdata.append("catid", catid);
+  //       formdata.append("groupid", groupid);
+  //       formdata.append("collectionid", collectionid);
+  //     } else {
+  //       formdata.append("v_id", vendor_id);
+  //       formdata.append("b_id", brand_id);
+  //       formdata.append("catid", catid);
+  //       formdata.append("groupid", groupid);
+  //       formdata.append("subcatid", subcatid);
+  //       formdata.append("collectionid", collectionid);
+  //     }
+
+  //     formdata.append("title", value.title);
+  //     formdata.append("customizable", value.customize);
+  //     formdata.append("slug", value.slug);
+  //     formdata.append("price", value.price);
+  //     formdata.append("d_price", value.discountedprice);
+  //     formdata.append("description", value.description);
+  //     formdata.append("gst", value.gst);
+  //     formdata.append("hsn_code", value.hsn_code);
+  //     formdata.append("shipping_option", selectedShipping);
+
+  //     formdata.append("lbh_unit", value.lbh_unit);
+  //     formdata.append("length", value.length);
+  //     formdata.append("height", value.height);
+  //     formdata.append("breadth", value.breadth);
+  //     formdata.append("weight_unit", value.weight_unit);
+  //     formdata.append("weight", value.weight);
+  //     formdata.append("no_of_box", value.no_of_box);
+  //     formdata.append("shipping_time", value.shipping_time);
+
+      
+
+  //     formdata.append("tracking_no", value.tracking_no);
+  //     formdata.append("courier_name", value.courier_name);
+
+  //     formdata.append("sizeimage", sizeimage);
+  //     formdata.append("specification", specification);
+  //     formdata.append("user_id", decryptedUserId());
+
+  //     axios.post(`${BASE_URL}/add_product`, formdata).then((res) => {
+  //       // console.log(res.data)
+  //       setLoader(false);
+  //       alert(res.data);
+  //     });
+  //   }
+  // };
+
+  
   const handlesubmit = (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      setLoader(true);
-      const formdata = new FormData();
-      formdata.append("uid", uid.id);
-
-      if (update_id == ":update_id") {
-        formdata.append("v_id", vendor_id);
-        formdata.append("b_id", brand_id);
-        formdata.append("subcatid", subcatid);
-        formdata.append("catid", catid);
-        formdata.append("groupid", groupid);
-        formdata.append("collectionid", collectionid);
-      } else {
-        formdata.append("v_id", vendor_id);
-        formdata.append("b_id", brand_id);
-        formdata.append("catid", catid);
-        formdata.append("groupid", groupid);
-        formdata.append("subcatid", subcatid);
-        formdata.append("collectionid", collectionid);
+    
+    // Clear previous errors
+    const errors = {};
+  
+    // Check the selected shipping method
+    if (selectedShipping === "company") {
+      // Validate fields for company shipping
+      if (!value.lbh_unit) {
+        errors.lbh_unit = "LBH Unit is required.";
       }
-
-      formdata.append("title", value.title);
-      formdata.append("customizable", value.customize);
-      formdata.append("slug", value.slug);
-      formdata.append("price", value.price);
-      formdata.append("d_price", value.discountedprice);
-      formdata.append("description", value.description);
-      formdata.append("gst", value.gst);
-      formdata.append("hsn_code", value.hsn_code);
+      if (!value.length) {
+        errors.length = "Length is required.";
+      }
+      if (!value.breadth) {
+        errors.breadth = "Breadth is required.";
+      }
+      if (!value.height) {
+        errors.height = "Height is required.";
+      }
+      if (!value.weight_unit) {
+        errors.weight_unit = "Weight Unit is required.";
+      }
+      if (!value.weight) {
+        errors.weight = "Weight is required.";
+      }
+      if (!value.no_of_box) {
+        errors.no_of_box = "Number of Boxes is required.";
+      }
+      if (!value.shipping_time) {
+        errors.shipping_time = "Shipping Time is required.";
+      }
+    } else if (selectedShipping === "self") {
+      // Validate fields for self shipping
+      if (!value.courier_name) {
+        errors.courier_name = "Courier Name is required.";
+      }
+      if (!value.tracking_no) {
+        errors.tracking_no = "Tracking Number is required.";
+      }
+    }
+  
+    // If there are errors, set the error state and return
+    if (Object.keys(errors).length > 0) {
+      setError(errors); // Assuming you have a state to hold errors
+      return;
+    }
+  
+    setLoader(true);
+    const formdata = new FormData();
+    formdata.append("uid", uid.id);
+  
+    if (update_id === ":update_id") {
+      formdata.append("v_id", vendor_id);
+      formdata.append("b_id", brand_id);
+      formdata.append("subcatid", subcatid);
+      formdata.append("catid", catid);
+      formdata.append("groupid", groupid);
+      formdata.append("collectionid", collectionid);
+    } else {
+      formdata.append("v_id", vendor_id);
+      formdata.append("b_id", brand_id);
+      formdata.append("catid", catid);
+      formdata.append("groupid", groupid);
+      formdata.append("subcatid", subcatid);
+      formdata.append("collectionid", collectionid);
+    }
+  
+    formdata.append("title", value.title);
+    formdata.append("customizable", value.customize);
+    formdata.append("slug", value.slug);
+    formdata.append("price", value.price);
+    formdata.append("d_price", value.discountedprice);
+    formdata.append("description", value.description);
+    formdata.append("gst", value.gst);
+    formdata.append("hsn_code", value.hsn_code);
+    formdata.append("shipping_option", selectedShipping);
+    
+    // Append fields based on the selected shipping method
+    if (selectedShipping === "company") {
       formdata.append("lbh_unit", value.lbh_unit);
       formdata.append("length", value.length);
       formdata.append("height", value.height);
@@ -582,20 +714,25 @@ const Product = () => {
       formdata.append("weight", value.weight);
       formdata.append("no_of_box", value.no_of_box);
       formdata.append("shipping_time", value.shipping_time);
-      formdata.append("shipping_option", selectedShipping);
+    } else if (selectedShipping === "self") {
       formdata.append("tracking_no", value.tracking_no);
       formdata.append("courier_name", value.courier_name);
-
-      formdata.append("sizeimage", sizeimage);
-      formdata.append("specification", specification);
-      formdata.append("user_id", decryptedUserId());
-
-      axios.post(`${BASE_URL}/add_product`, formdata).then((res) => {
-        // console.log(res.data)
-        setLoader(false);
-        alert(res.data);
-      });
     }
+  
+    formdata.append("sizeimage", sizeimage);
+    formdata.append("specification", specification);
+    formdata.append("user_id", decryptedUserId());
+  
+    axios.post(`${BASE_URL}/add_product`, formdata).then((res) => {
+      setLoader(false);
+      // alert(res.data);
+      alert("The data Successfully");
+      navigate("/webapp/productcatalog");
+
+    }).catch((error) => {
+      setLoader(false);
+      console.error("There was an error submitting the form!", error);
+    });
   };
 
   const handleslugclick = () => {
@@ -944,7 +1081,7 @@ const Product = () => {
                               disablePortal
                               id="combo-box-demo"
                               options={cat}
-                              value={selectedOption}
+                              value={selectedOptionCat}
                               getOptionLabel={(option) => option.title}
                               getOptionSelected={(option, value) =>
                                 option.id === value.id
@@ -1030,7 +1167,7 @@ const Product = () => {
                             <FormControl
                               fullWidth
                               InputLabelProps={{
-                                shrink: true, // This makes the label move up when there's a value
+                                shrink: true,
                               }}
                             >
                               <InputLabel id="demo-simple-select-label">
@@ -1039,10 +1176,10 @@ const Product = () => {
                               <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                value={value.customize}
                                 // label="Age"
                                 name="customize"
-                                onChange={onhandleChange}
+                                value={value.customize || `1`}
+                                onChange={onhandleChange} 
                               >
                                 <MenuItem value={`1`}>Yes</MenuItem>
                                 <MenuItem value={`2`}>No</MenuItem>
