@@ -80,7 +80,8 @@ const ShopProduct = () => {
 
     const { groupslug, catslug, subcatslug, brand_id } = useParams();
 
-    const group = groupData.find((g) => g.slug === groupslug);
+    const group = groupslug && groupData.find((g) => g.slug === groupslug);
+    const cat = catslug && catData.find((c) => c.slug === catslug);
 
     async function getproductdetails() {
         const data = {
@@ -97,7 +98,6 @@ const ShopProduct = () => {
             .post(`${BASE_URL}/getproductlisting`, data)
             .then((res) => {
                 // console.log(res)
-                console.log("response data", res.data);
                 setProducts(res.data);
             })
             .catch((err) => {
@@ -386,57 +386,109 @@ const ShopProduct = () => {
                                 </li>
                               ))} */}
                                                             {group
-                                                                ? catData
-                                                                      .filter(
-                                                                          (
-                                                                              cat
-                                                                          ) =>
-                                                                              cat.group_id ===
-                                                                              group.id
-                                                                      )
-                                                                      .map(
-                                                                          (
-                                                                              item
-                                                                          ) => (
-                                                                              <li
-                                                                                  key={
-                                                                                      item.slug
-                                                                                  }
-                                                                                  className={`current`}
-                                                                                  style={{
-                                                                                      display:
-                                                                                          "flex",
-                                                                                      alignItems:
-                                                                                          "center",
-                                                                                  }}
-                                                                              >
-                                                                                  <Link
-                                                                                      onClick={
-                                                                                          toggleSidebar
+                                                                ? cat
+                                                                    ? subcatData
+                                                                          .filter(
+                                                                              (
+                                                                                  subcat
+                                                                              ) =>
+                                                                                  subcat.cat_id ===
+                                                                                  cat.id
+                                                                          )
+                                                                          .map(
+                                                                              (
+                                                                                  item
+                                                                              ) => (
+                                                                                  <li
+                                                                                      key={
+                                                                                          item.slug
                                                                                       }
-                                                                                      to={`/shoproduct/${item.slug}`}
+                                                                                      className={`current`}
                                                                                       style={{
-                                                                                          textDecoration:
-                                                                                              "none",
-                                                                                          color: "inherit",
+                                                                                          display:
+                                                                                              "flex",
+                                                                                          alignItems:
+                                                                                              "center",
                                                                                       }}
                                                                                   >
-                                                                                      <i
-                                                                                          class="bi bi-circle-fill"
+                                                                                      <Link
+                                                                                          onClick={
+                                                                                              toggleSidebar
+                                                                                          }
+                                                                                          to={`/shoproduct/${group.slug}/${cat.slug}/${item.slug}`}
                                                                                           style={{
-                                                                                              fontSize:
-                                                                                                  "10px",
-                                                                                              marginRight:
-                                                                                                  "8px",
+                                                                                              textDecoration:
+                                                                                                  "none",
+                                                                                              color: "inherit",
                                                                                           }}
-                                                                                      ></i>
-                                                                                      {
-                                                                                          item.title
-                                                                                      }
-                                                                                  </Link>
-                                                                              </li>
+                                                                                      >
+                                                                                          <i
+                                                                                              class="bi bi-circle-fill"
+                                                                                              style={{
+                                                                                                  fontSize:
+                                                                                                      "10px",
+                                                                                                  marginRight:
+                                                                                                      "8px",
+                                                                                              }}
+                                                                                          ></i>
+                                                                                          {
+                                                                                              item.title
+                                                                                          }
+                                                                                      </Link>
+                                                                                  </li>
+                                                                              )
                                                                           )
-                                                                      )
+                                                                    : catData
+                                                                          .filter(
+                                                                              (
+                                                                                  cat
+                                                                              ) =>
+                                                                                  cat.group_id ===
+                                                                                  group.id
+                                                                          )
+                                                                          .map(
+                                                                              (
+                                                                                  item
+                                                                              ) => (
+                                                                                  <li
+                                                                                      key={
+                                                                                          item.slug
+                                                                                      }
+                                                                                      className={`current`}
+                                                                                      style={{
+                                                                                          display:
+                                                                                              "flex",
+                                                                                          alignItems:
+                                                                                              "center",
+                                                                                      }}
+                                                                                  >
+                                                                                      <Link
+                                                                                          onClick={
+                                                                                              toggleSidebar
+                                                                                          }
+                                                                                          to={`/shoproduct/${group.slug}/${item.slug}`}
+                                                                                          style={{
+                                                                                              textDecoration:
+                                                                                                  "none",
+                                                                                              color: "inherit",
+                                                                                          }}
+                                                                                      >
+                                                                                          <i
+                                                                                              class="bi bi-circle-fill"
+                                                                                              style={{
+                                                                                                  fontSize:
+                                                                                                      "10px",
+                                                                                                  marginRight:
+                                                                                                      "8px",
+                                                                                              }}
+                                                                                          ></i>
+                                                                                          {
+                                                                                              item.title
+                                                                                          }
+                                                                                      </Link>
+                                                                                  </li>
+                                                                              )
+                                                                          )
                                                                 : null}
 
                                                             {/* {catData.map(
