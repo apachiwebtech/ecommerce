@@ -1,6 +1,10 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { Autocomplete, TextField } from "@mui/material";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from '@mui/material/Switch';
+import { styled } from "@mui/material/styles";
+import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
@@ -10,10 +14,6 @@ import decryptedUserId from '../Utils/UserID';
 import { BASE_URL, IMG_URL } from './BaseUrl';
 import InnerHeader from './InnerHeader';
 import Loader from './Loader';
-import Switch from '@mui/material/Switch';
-import { styled } from "@mui/material/styles";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { Autocomplete, TextField } from "@mui/material";
 
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
@@ -105,8 +105,19 @@ const Collection = () => {
 
 
 
-    async function getcatData() {
-        axios.get(`${BASE_URL}/collection_data`)
+    // async function getcatData() {
+    //     axios.get(`${BASE_URL}/collection_data`)
+    //         .then((res) => {
+    //             console.log(res.data)
+    //             setCatData(res.data)
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+    // }
+
+    async function getcatwebsData() {
+        axios.get(`${BASE_URL}/collection_data_web`)
             .then((res) => {
                 console.log(res.data)
                 setCatData(res.data)
@@ -115,7 +126,6 @@ const Collection = () => {
                 console.log(err)
             })
     }
-
  
 
     async function getgroupData() {
@@ -131,13 +141,17 @@ const Collection = () => {
 
     useEffect(() => {
         getgroupData()
-        getcatData()
+        // getcatData()
+        getcatwebsData()
     }, [])
 
 
     const handleToggle = (id, currentStatus) => {
-        const newStatus = currentStatus === 1 ? 0 : 1;
-        console.log("Toggling ID:", id, "New Status:", newStatus);
+        console.log("dddd",currentStatus);
+        
+        const newStatus = currentStatus ? 1 : 0;
+        
+        // console.log("Toggling ID:", id, "New Status:", newStatus);
         axios.post(`${BASE_URL}/toggle_collection`, { toggle_id: id, status: newStatus })
             .then(() => {
                 // Update local state to reflect the change
@@ -147,7 +161,7 @@ const Collection = () => {
 
                 alert("Status Changed")
 
-                getcatData()
+                getcatwebsData()
             })
             .catch(err => {
                 console.error("Error toggling category status:", err);
@@ -184,7 +198,7 @@ const Collection = () => {
 
         axios.post(`${BASE_URL}/collection_delete`, data)
             .then((res) => {
-                getcatData()
+                getcatwebsData()
 
             })
             .catch((err) => {
@@ -239,7 +253,7 @@ const handleSubmit = (e) => {
         axios.post(`${BASE_URL}/add_collection`, formdata)
             .then((res) => {
                 alert(res.data.message); 
-                getcatData();
+                getcatwebsData();
                 setLoader(false);
                 setValue({
                     title: "",
@@ -299,7 +313,7 @@ const handleSubmit = (e) => {
                     control={
                         <Android12Switch
                             checked={params.row.moving_collection === 1}
-                            onChange={() => handleToggle(params.row.id, params.row.moving_category)}
+                            onChange={(e) =>{handleToggle(params.row.id, e.target.checked)}}
                         />
                     }
                     label=""

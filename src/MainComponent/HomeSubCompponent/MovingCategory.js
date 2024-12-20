@@ -24,21 +24,21 @@ const MovingCategory = () => {
   const [cat, setCat] = useState([]);
   const [collection, setCollectionData] = useState([]);
 
-  async function getTrendingData() {
-    axios
-      .get(`${BASE_URL}/moving_category`)
-      .then((res) => {
-        console.log(res);
-        setCat(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  // async function getTrendingData() {
+  //   axios
+  //     .get(`${BASE_URL}/moving_category`)
+  //     .then((res) => {
+  //       console.log(res);
+  //       setCat(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
 
-  useEffect(() => {
-    getTrendingData();
-  }, []);
+  // useEffect(() => {
+  //   getTrendingData();
+  // }, []);
 
   async function getcollectionData() {
     axios

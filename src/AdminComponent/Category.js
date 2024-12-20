@@ -336,22 +336,22 @@ const Category = () => {
             }
         },
         
-        {
-            field: 'Moving_Category',
-            headerName: 'Moving Category',
-            flex: 1,
-            renderCell: (params) => (
-                <FormControlLabel
-                    control={
-                        <Android12Switch
-                            checked={params.row.moving_category === 1}
-                            onChange={() => handleToggle(params.row.id, params.row.moving_category)}
-                        />
-                    }
-                    label=""
-                />
-            ),
-        },
+        // {
+        //     field: 'Moving_Category',
+        //     headerName: 'Moving Category',
+        //     flex: 1,
+        //     renderCell: (params) => (
+        //         <FormControlLabel
+        //             control={
+        //                 <Android12Switch
+        //                     checked={params.row.moving_category === 1}
+        //                     onChange={() => handleToggle(params.row.id, params.row.moving_category)}
+        //                 />
+        //             }
+        //             label=""
+        //         />
+        //     ),
+        // },
         {
             field: 'active',
             headerName: 'Active',

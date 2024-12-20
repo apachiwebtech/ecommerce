@@ -180,6 +180,7 @@ console.log(value.title, "rrr")
 
                     setImage('')
                     setUid([])
+                    setIsEditing(false);
 
                 })
                 .catch((err) => {

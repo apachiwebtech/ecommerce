@@ -368,7 +368,7 @@ const Product = () => {
       getUpdateData();
       setHasPrice("yes");
     }
- 
+    getUpdateData();
     getGroupData();
     getBrandData();
     getVendordata();

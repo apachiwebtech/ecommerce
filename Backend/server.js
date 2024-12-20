@@ -315,6 +315,7 @@ app.use(
 
 
 
+
 app.post("/guestlogin", (req, res) => {
   let email = req.body.email;
   let firstname = req.body.firstname;
@@ -368,7 +369,7 @@ app.post("/guestlogin", (req, res) => {
                     text: `Your OTP is: ${otp}`, 
                   });
 
-                  return res.json([{ email: email, otp: otp }]); 
+                 return res.json(data);
                 }
               });
             }
@@ -396,12 +397,11 @@ app.post("/guestlogin", (req, res) => {
           text: `Your OTP is: ${otp}`, 
         });
 
-        return res.json([{ email: email, otp: otp }]); 
+          return res.json(data);
       }
     }
   });
 });
-
 
 
 app.post("/customerlogin", (req, res) => {
@@ -1577,7 +1577,7 @@ app.post("/add_category", upload6.single("image"), (req, res) => {
 
   let sql, param;
 
-  if (u_id == "undefined") { // Check if u_id is undefined or null
+  if (u_id == "undefined") {
     sql = "INSERT INTO awt_category(`title`, `group_id`, `slug`, `description`, `image`, `created_by`, `created_date`) VALUES (?, ?, ?, ?, ?, ?, ?)";
     param = [title, group_id, slug, description, image, user_id, created_date];
   } else {
@@ -1610,6 +1610,18 @@ app.post("/category_update", (req, res) => {
 
 app.get("/category_data", (req, res) => {
   const sql = "select * from awt_category where deleted = 0 and active = 1";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.get("/category_data_weblog", (req, res) => {
+  const sql = "select * from awt_category where deleted = 0";
 
   con.query(sql, (err, data) => {
     if (err) {
@@ -1690,6 +1702,39 @@ app.post("/category_delete", (req, res) => {
   });
 });
 
+// app.post("/add_group", upload7.single("image"), (req, res) => {
+//   let user_id = req.body.user_id;
+//   let title = req.body.title;
+//   let slug = req.body.slug;
+//   let description = req.body.description;
+//   let created_date = new Date();
+//   let u_id = req.body.u_id;
+
+//   let image;
+//     image = req.file.filename;
+
+//   let sql;
+//   let param;
+
+//   if (u_id == "undefined") {
+//     sql =
+//       "insert into awt_group(`title`,`slug`,`description`,`image`,`created_by`,`created_date`) values(?,?,?,?,?,?)";
+//     param = [title, slug, description, image, user_id, created_date];
+//   } else {
+//     sql =
+//       "update awt_group set title = ? ,slug = ?, description = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?";
+//     param = [title, slug, description, image, user_id, created_date, u_id];
+//   }
+
+//   con.query(sql, param, (err, data) => {
+//     if (err) {
+//       return res.json("Error");
+//     } else {
+//       return res.json("Data Added Successfully");
+//     }
+//   });
+// });
+
 app.post("/add_group", upload7.single("image"), (req, res) => {
   let user_id = req.body.user_id;
   let title = req.body.title;
@@ -1698,26 +1743,34 @@ app.post("/add_group", upload7.single("image"), (req, res) => {
   let created_date = new Date();
   let u_id = req.body.u_id;
 
-  let image;
-  if (req.body.filename == undefined) {
-    image = req.body.image;
-  } else {
+//   let image;
+//   image = req.file.filename;
+
+//   let image;
+//   if (req.body.filename == undefined) {
+//     image = req.body.image;
+//   } else {
+//     image = req.file.filename;
+//   }
+
+let image;
+if (!req.file) { 
+    image = req.body.image; 
+} else {
     image = req.file.filename;
-  }
+}
 
   let sql;
   let param;
-
-  if (u_id == "undefined") {
-    sql =
-      "insert into awt_group(`title`,`slug`,`description`,`image`,`created_by`,`created_date`) values(?,?,?,?,?,?)";
-    param = [title, slug, description, image, user_id, created_date];
-  } else {
-    sql =
+  
+ if (u_id !== undefined && u_id !== null && u_id !== '') {
+     sql =
       "update awt_group set title = ? ,slug = ?, description = ? ,image = ?, updated_by = ? ,updated_date = ? where id = ?";
     param = [title, slug, description, image, user_id, created_date, u_id];
+  } else {
+    return res.status(400).json({ error: "u_id is required for updating." });
   }
-
+  
   con.query(sql, param, (err, data) => {
     if (err) {
       return res.json("Error");
@@ -1726,6 +1779,7 @@ app.post("/add_group", upload7.single("image"), (req, res) => {
     }
   });
 });
+
 
 app.post("/group_update", (req, res) => {
   let u_id = req.body.u_id;
@@ -1985,11 +2039,12 @@ app.post("/add_brand", upload4.single("logo"), (req, res) => {
 //   } else {
 //     image = req.file.filename;
 //   }
+
 let image;
-if (!req.file) { // Check if req.file is undefined
-    image = req.body.image; // This should be the previous logo if updating
+if (!req.file) { 
+    image = req.body.image; 
 } else {
-    image = req.file.filename; // Use the uploaded file's filename
+    image = req.file.filename;
 }
 
   let sql;
@@ -2194,21 +2249,18 @@ app.post("/update_social", (req, res) => {
     }
   });
 });
-app.post("/add_banner", upload2.single("image"), (req, res) => {
-    console.log("Request Body:", req.body);
-    console.log("Uploaded File:", req.file);
 
-    // Extract values from request body
+app.post("/add_banner", upload2.single("image"), (req, res) => {
+  
     let title = req.body.title;
     let banner;
     let ifa;
 
-    // Determine if a new image was uploaded
     if (req.file) {
-        banner = req.file.filename; // Use the uploaded file's filename
+        banner = req.file.filename; 
         ifa = 'new_image';
     } else {
-        banner = req.body.image; // Use the existing image if no new file was uploaded
+        banner = req.body.image;
         ifa = 'existing_image';
     }
 
@@ -2218,12 +2270,10 @@ app.post("/add_banner", upload2.single("image"), (req, res) => {
     let uid = req.body.uid;
     let description = req.body.description;
 
-    // SQL query and parameters
     let sql;
     let param;
 
-    // If no file is uploaded, we are inserting a new record
-    if (!req.file) {
+    if (uid == "undefined") {
         sql = "INSERT INTO awt_banner(`title`, `upload_image`, `link`, `target`, `view`, `description`) VALUES (?, ?, ?, ?, ?, ?)";
         param = [title, banner, link, target, view, description];
     } else {
@@ -2231,7 +2281,6 @@ app.post("/add_banner", upload2.single("image"), (req, res) => {
         param = [title, banner, link, target, view, description, uid];
     }
 
-    // Execute the query
     con.query(sql, param, (err, data) => {
         if (err) {
             console.error("Database error:", err); // Log the error for debugging
@@ -2253,6 +2302,19 @@ app.get(`/banner_data`, (req, res) => {
       return res.json(data);
     }
   });
+});
+
+app.delete(`/banner_delete/:id`, (req, res) => {
+    const bannerId = req.params.id;
+    const sql = "UPDATE awt_banner SET deleted = 1 WHERE id = ?";
+
+    con.query(sql, [bannerId], (err, result) => {
+        if (err) {
+            return res.json(err);
+        } else {
+            return res.json({ message: "Banner deleted successfully" });
+        }
+    });
 });
 
 app.post("/banner_updateid", (req, res) => {
@@ -2288,11 +2350,11 @@ app.post("/add_gallery", upload3.single("image"), (req, res) => {
   let u_id = req.body.u_id;
 
   let image;
-  if (req.body.filename == undefined) {
-    image = req.body.image;
-  } else {
+//   if (req.body.filename == undefined) {
+//     image = req.body.image;
+//   } else {
     image = req.file.filename;
-  }
+//   }
 
   let sql;
   let param;
@@ -6249,11 +6311,11 @@ app.post("/update_advertisement", upload11.single("image"), (req, res) => {
 
   let image;
 
-  if (req.body.filename == undefined) {
-    image = req.body.image
-  } else {
+//   if (req.body.filename == undefined) {
+//     image = req.body.image
+//   } else {
     image = req.file.filename;
-  }
+//   }
 
   if (!id || !slot || !type || !title) {
     return res.status(400).json({ error: "All fields are required" });
@@ -7002,6 +7064,7 @@ app.post('/toggle_active', (req, res) => {
 });
 
 
+
 app.post('/update_AboutUs', upload12.fields([{ name: 'image1' }, { name: 'image2' }, { name: 'image3' }]), (req, res) => {
   const image1 = req.files['image1'] ? req.files['image1'][0].filename : null;
   const image2 = req.files['image2'] ? req.files['image2'][0].filename : null;
@@ -7380,6 +7443,18 @@ app.post("/collection_update", (req, res) => {
 
 
 app.get("/collection_data", (req, res) => {
+  const sql = "select * from awt_collection where deleted = 0 and moving_collection = 1";
+
+  con.query(sql, (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      return res.json(data);
+    }
+  });
+});
+
+app.get("/collection_data_web", (req, res) => {
   const sql = "select * from awt_collection where deleted = 0";
 
   con.query(sql, (err, data) => {
@@ -7390,6 +7465,7 @@ app.get("/collection_data", (req, res) => {
     }
   });
 });
+
 
 app.post("/collection_delete", (req, res) => {
   let cat_id = req.body.cat_id;
