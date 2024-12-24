@@ -33,9 +33,9 @@ const Advertise2 = () => {
 		getLocation();
 	}, []);
 
-	if (isLoading) {
-		return <div>Loading...</div>; // Show a loading state while data is being fetched
-	}
+	// if (isLoading) {
+	// 	return <div>Loading...</div>; 
+	// }
   return (
   	<div>
 

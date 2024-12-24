@@ -178,20 +178,20 @@ app.use(
   })
 );
 
-// const con = mysql.createPool({
-//   host: 'localhost',
-//   user: 'icasasuc_micasasucasa',
-//   password: 'oSPC2)TF&8e,',
-//   database: 'icasasuc_micasasucasa',
-//   timezone: '+05:30'
-// })
-
 const con = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "ecommerce",
-});
+  host: 'localhost',
+  user: 'icasasuc_micasasucasa',
+  password: 'oSPC2)TF&8e,',
+  database: 'icasasuc_micasasucasa',
+  timezone: '+05:30'
+})
+
+// const con = mysql.createPool({
+//   host: "localhost",
+//   user: "root",
+//   password: "",
+//   database: "ecommerce",
+// });
 
 con.getConnection((err, connection) => {
   if (err) {
@@ -6259,6 +6259,26 @@ app.post("/updateSlot", (req, res) => {
   });
 });
 
+
+app.post('/toggle_slot', (req, res) => {
+  const { toggle_id, status } = req.body;
+
+  if (!toggle_id || typeof status !== 'number') {
+      return res.status(400).json({ message: "Invalid input data" });
+  }
+
+  const sql = `UPDATE awt_locationmaster SET status = ? WHERE id = ?`;
+
+  con.query(sql, [status, toggle_id], (err, result) => {
+      if (err) {
+          console.error("Database error:", err);
+          return res.status(500).json({ message: "An error occurred while updating the category." });
+      } else {
+          return res.status(200).json({ message: "Category updated successfully", data: result });
+      }
+  });
+});
+
 // for Advertisement/==========================================================================
 
 app.post('/add_advertisement', upload11.single('image'), (req, res) => {
@@ -6302,6 +6322,25 @@ app.get("/advertisements", (req, res) => {
       return res.status(500).json({ error: "Database error" });
     }
     return res.json(data);
+  });
+});
+
+app.post('/toggle_add', (req, res) => {
+  const { toggle_id, status } = req.body;
+
+  if (!toggle_id || typeof status !== 'number') {
+      return res.status(400).json({ message: "Invalid input data" });
+  }
+
+  const sql = `UPDATE awt_advertisements SET status = ? WHERE id = ?`;
+
+  con.query(sql, [status, toggle_id], (err, result) => {
+      if (err) {
+          console.error("Database error:", err);
+          return res.status(500).json({ message: "An error occurred while updating the category." });
+      } else {
+          return res.status(200).json({ message: "Category updated successfully", data: result });
+      }
   });
 });
 
@@ -6362,6 +6401,39 @@ app.post("/delete_advertisement", (req, res) => {
     return res.json({ message: "Advertisement Deleted Successfully!" });
   });
 });
+
+app.post(`/getlocation`, (req, res) => {
+  let { locid } = req.body;
+
+  const sql = "select * from awt_locationmaster where id = ? "
+
+  con.query(sql, [locid], (err, data) => {
+    if (err) {
+      return res.json(err)
+    } else {
+
+      const slot = data[0].slot;
+
+      const getdetail = 'select * from awt_advertisements where location = ? and  slot = ? and deleted = 0 And status = 1'
+
+      con.query(getdetail, [locid, slot], (err, data) => {
+        if (err) {
+          return res.json(err)
+        } else {
+          return res.json(data)
+        }
+      })
+    }
+  })
+
+})
+
+
+
+
+
+
+
 
 app.post("/sendinquiry", upload10.single("image"), (req, res) => {
   let { product_id, inquiry, email, mobile, user_id, name } = req.body;
@@ -6550,31 +6622,7 @@ app.post(`/updateread`, (req, res) => {
   })
 })
 
-app.post(`/getlocation`, (req, res) => {
-  let { locid } = req.body;
 
-  const sql = "select * from awt_locationmaster where id = ? "
-
-  con.query(sql, [locid], (err, data) => {
-    if (err) {
-      return res.json(err)
-    } else {
-
-      const slot = data[0].slot;
-
-      const getdetail = 'select * from awt_advertisements where location = ? and  slot = ? and deleted = 0'
-
-      con.query(getdetail, [locid, slot], (err, data) => {
-        if (err) {
-          return res.json(err)
-        } else {
-          return res.json(data)
-        }
-      })
-    }
-  })
-
-})
 
 app.get('/moving_category' , (req,res) =>{
   
@@ -7062,7 +7110,6 @@ app.post('/toggle_active', (req, res) => {
       }
   });
 });
-
 
 
 app.post('/update_AboutUs', upload12.fields([{ name: 'image1' }, { name: 'image2' }, { name: 'image3' }]), (req, res) => {

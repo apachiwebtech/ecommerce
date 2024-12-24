@@ -4,7 +4,7 @@ import InnerHeader from "./InnerHeader";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
-
+import axios from "axios";
 
 const Android12Switch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -41,7 +41,7 @@ const Android12Switch = styled(Switch)(({ theme }) => ({
 
 const LocationMaster = () => {
   const [locations, setLocations] = useState([]);
-  const [slot, setSlot] = useState([])
+  const [slot, setSlot] = useState([]);
 
   // Function to fetch locations from the server
   const fetchLocations = async () => {
@@ -54,31 +54,49 @@ const LocationMaster = () => {
     }
   };
 
-
   const updateSlot = async (id, selectedSlot, slot) => {
-
     try {
       const response = await fetch(`${BASE_URL}/updateSlot`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ id, slot: selectedSlot }),
-
-
       });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
 
       const result = await response.json();
-      window.location.reload()
+      window.location.reload();
     } catch (error) {
-      console.error('Error updating slot:', error);
+      console.error("Error updating slot:", error);
     }
   };
 
+  const handleToggle = (id, currentStatus) => {
+    // console.log("dddd", currentStatus);
+
+    const newStatus = currentStatus ? 1 : 0;
+
+    // console.log("Toggling ID:", id, "New Status:", newStatus);
+    axios
+      .post(`${BASE_URL}/toggle_slot`, { toggle_id: id, status: newStatus })
+      .then(() => {
+        // Update local state to reflect the change
+        setLocations((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, status: newStatus } : item
+          )
+        );
+
+        alert("Status Changed");
+      })
+      .catch((err) => {
+        console.error("Error toggling category status:", err);
+      });
+  };
 
   useEffect(() => {
     fetchLocations();
@@ -116,16 +134,33 @@ const LocationMaster = () => {
                           <td>{loc.id}</td>
                           <td>{loc.name}</td>
                           <td>{loc.slot}</td>
-                          <td><select class="form-control form-control-lg" id="exampleFormControlSelect1" name='slot' onChange={(e) => updateSlot(loc.id, e.target.value)}>
-                            <option selected>Select Slot</option>
-                            <option value={`1`}>1</option>
-                            <option value={`2`}>2</option>
-                            <option value={`3`}>3</option>
-                            <option value={`4`}>4</option>
-                          </select>
+                          <td>
+                            <select
+                              class="form-control form-control-lg"
+                              id="exampleFormControlSelect1"
+                              name="slot"
+                              onChange={(e) =>
+                                updateSlot(loc.id, e.target.value)
+                              }
+                            >
+                              <option selected>Select Slot</option>
+                              <option value={`1`}>1</option>
+                              <option value={`2`}>2</option>
+                              <option value={`3`}>3</option>
+                              <option value={`4`}>4</option>
+                            </select>
                           </td>
                           <td>
-                            <FormControlLabel control={<Android12Switch />} />
+                            <FormControlLabel
+                              control={
+                                <Android12Switch
+                                  checked={loc.status == 1} 
+                                  onChange={(e) => {
+                                    handleToggle(loc.id, e.target.checked); 
+                                  }}
+                                />
+                              }
+                            />
                           </td>
                         </tr>
                       ))}

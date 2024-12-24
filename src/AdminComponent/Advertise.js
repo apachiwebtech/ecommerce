@@ -138,6 +138,28 @@ const Advertise = () => {
     }
   };
 
+  const handleToggle = (id, currentStatus) => {
+    // console.log("dddd", currentStatus);
+
+    const newStatus = currentStatus ? 1 : 0;
+
+    // console.log("Toggling ID:", id, "New Status:", newStatus);
+    axios
+      .post(`${BASE_URL}/toggle_add`, { toggle_id: id, status: newStatus })
+      .then(() => {
+        setAdvertisements((prev) =>
+          prev.map((item) =>
+            item.id === id ? { ...item, status: newStatus } : item
+          )
+        );
+
+        // alert("Status Changed");
+      })
+      .catch((err) => {
+        console.error("Error toggling category status:", err);
+      });
+  };
+
 
   const getAdvertisements = async () => {
     try {
@@ -393,7 +415,14 @@ const Advertise = () => {
                             <td>{ad.type}</td>
                             <td><img  src={`${IMG_URL}/Advertisement/` + ad.image} alt=""/></td>
                             <td>
-                              <FormControlLabel control={<Android12Switch />} />
+                              <FormControlLabel control={
+                                <Android12Switch
+                                  checked={ad.status == 1} 
+                                  onChange={(e) => {
+                                    handleToggle(ad.id, e.target.checked); 
+                                  }}
+                                />
+                              }/>
                             </td>
                             <td>
                               <EditIcon

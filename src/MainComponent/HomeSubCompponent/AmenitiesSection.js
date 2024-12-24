@@ -1,8 +1,8 @@
 import React from 'react'
-import retun from '../../assets/frontimg/return.png'
-import payment from '../../assets/frontimg/wallet.png'
-import shipping from '../../assets/frontimg/box.png'
-import support from '../../assets/frontimg/support.png'
+import Support from '../../assets/frontimg/MCSC2.png'
+import Artisanal from '../../assets/frontimg/MCSC3.png'
+import Customisation from '../../assets/frontimg/MCSC4.png'
+import Delivery from '../../assets/frontimg/MCSC1.png'
 import { Box } from '@mui/material'
 const AmenitiesSection = () => {
     return (
@@ -15,60 +15,61 @@ const AmenitiesSection = () => {
                             <div class="col-lg-3 col-md-6 col-sm-6 md-b-15 lg-p-lr">
                                 <div class="box">
                                     <div class="box-icon">
-                                        <img style={{width: "40px"}} src={shipping} alt='' />
+                                        <img style={{width: "40px"}} src={Customisation} alt='' />
                                     </div>
                                     <div class="box-title-wrap">
                                         <h3 class="box-title">
-                                            Free Shipping
+                                        Customisation & Consultation
+
                                         </h3>
-                                        <p class="box-description">
+                                        {/* <p class="box-description">
                                             You will love at great low prices
-                                        </p>
+                                        </p> */}
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-6 md-b-15 lg-p-lr">
                                 <div class="box">
                                     <div class="box-icon">
-                                    <img style={{width: "40px"}} src={payment} alt='' />
+                                    <img style={{width: "40px"}} src={Artisanal} alt='' />
                                     </div>
                                     <div class="box-title-wrap">
                                         <h3 class="box-title">
-                                            Flexible Payment
+                                        Artisanal Brands
                                         </h3>
-                                        <p class="box-description">
+                                        {/* <p class="box-description">
                                             Pay with Multiple Credit Cards
-                                        </p>
+                                        </p> */}
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-6 md-b-15 lg-p-lr">
                                 <div class="box">
                                     <div class="box-icon">
-                                    <img style={{width: "40px"}} src={retun} alt='' />
+                                    <img style={{width: "40px"}} src={Support} alt='' />
                                     </div>
                                     <div class="box-title-wrap">
                                         <h3 class="box-title">
-                                            14 Day Returns
+                                        Online Support
                                         </h3>
-                                        <p class="box-description">
+                                        {/* <p class="box-description">
                                             Within 30 days for an exchange.
-                                        </p>
+                                        </p> */}
                                     </div>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 col-sm-6 md-b-15 lg-p-lr">
                                 <div class="box">
                                     <div class="box-icon">
-                                    <img style={{width: "40px"}} src={support} alt='' />
+                                    <img style={{width: "40px"}} src={Delivery} alt='' />
                                     </div>
                                     <div class="box-title-wrap">
                                         <h3 class="box-title">
-                                            Online Support
+                                        Hassle-Free Delivery
                                         </h3>
-                                        <p class="box-description">
+                                        {/* <p class="box-description">
                                             24 hours a day, 7 days a week
-                                        </p>
+                                        </p> */}
                                     </div>
                                 </div>
                             </div>

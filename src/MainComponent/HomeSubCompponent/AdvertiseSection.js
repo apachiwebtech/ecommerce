@@ -34,9 +34,9 @@ const AdvertiseSection = () => {
 		getLocation();
 	}, []);
 
-	if (isLoading) {
-		return <div>Loading...</div>; // Show a loading state while data is being fetched
-	}
+	// if (isLoading) {
+	// 	return <div>Loading...</div>; 
+	// }
 
 
 	  

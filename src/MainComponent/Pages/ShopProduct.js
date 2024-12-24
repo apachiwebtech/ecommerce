@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import product4_2 from "../../assets/frontimg/product/4-2.jpg";
 import product6_2 from "../../assets/frontimg/product/6-2.jpg";
 import { Chip, Slider } from "@mui/material";
@@ -36,6 +36,8 @@ const ShopProduct = () => {
     const [Subcatebread, setSubcateBread] = useState("");
     const [breadcrumbImage, setBreadcrumbImage] = useState("");
     const [loader, setLoader] = useState(false);
+  const togBoxRef = useRef(null);
+  const togIconRef = useRef(null);
 
     // const breaddata = useBreadcrumb();
     // const defaultBreadcrumbImage = "https://micasasucasa.in/ecomuploads/Breadcrumbs/image-1733552051451.png";
@@ -232,6 +234,28 @@ const ShopProduct = () => {
         });
     }
 
+    
+      useEffect(() => {
+        const isInsidetogBox = (e) => {
+          if (togBoxRef.current && togIconRef.current) {
+            if (
+              !togBoxRef.current.contains(e.target) &&
+              !togIconRef.current.contains(e.target)
+            ) {
+                setToggle(false);
+              return;
+            }
+          }
+        };
+    
+        document.addEventListener("click", isInsidetogBox);
+    
+        return () => {
+          document.removeEventListener("click", isInsidetogBox);
+        };
+      }, []);
+
+
     const handledelete = () => {
         setValue("");
         getproductdetails();
@@ -267,9 +291,7 @@ const ShopProduct = () => {
                             id="title"
                             className="page-title"
                             style={{
-                                // backgroundImage: `url('${breadcrumbImage == "" ? DEF_IMG_BRA : breadcrumbImage  }')`,
                                 backgroundImage: `url('${breadcrumbImage}')`,
-                                // backgroundImage: `url('${breadcrumbImage == "" ? {bread} : breadcrumbImage  }')`,
                             }}
                         >
                             <div className="section-container d-flex justify-content-center">
@@ -302,6 +324,8 @@ const ShopProduct = () => {
                                             className={`col-xl-3 col-lg-3 col-md-12 col-12 mob-left-sidebar ${
                                                 toggle ? `mob-left-view` : ``
                                             }  left-sidebar md-b-50`}
+                                            
+                                            ref={togIconRef}
                                         >
                                             {/* <!-- Block Product Categories --> */}
                                             <div className="block block-product-cats mb-3">
@@ -312,6 +336,7 @@ const ShopProduct = () => {
                                                         textAlign: "right",
                                                         display: "none",
                                                     }}
+                                                    
                                                 >
                                                     <Icon
                                                         path={mdiClose}
@@ -699,7 +724,7 @@ const ShopProduct = () => {
                                             </div>
 
                                             {/* <!-- Block Products --> */}
-                                            <div className="block block-products">
+                                            <div className="block block-products d-md-none d-lg-block">
                                                 {products.length > 0 && (
                                                     <>
                                                         <div className="block-title">
@@ -833,6 +858,7 @@ const ShopProduct = () => {
                                                             style={{
                                                                 display: "none",
                                                             }}
+                                                            ref={togBoxRef}
                                                         >
                                                             <Icon
                                                                 path={

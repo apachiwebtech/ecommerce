@@ -122,7 +122,7 @@ const TrendingSection = () => {
                       },
                     }}
                   >
-                    {data.map((item) => {
+               {Array.isArray(data) && data.map((item) => {
                       return (
                         <SwiperSlide>
                           <div class="item-product ">
