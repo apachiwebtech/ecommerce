@@ -5930,16 +5930,21 @@ app.get("/payment/validate/:merchantTransactionId", async function (req, res) {
       });
 
       if (response.data && response.data.code === "PAYMENT_SUCCESS") {
-        // Redirect to FE payment success status page
-        res.redirect(
-          `https://micasasucasa.in/#/payment-success?transactionid=${merchantTransactionId}`
-        );
+        // Send JSON response for payment success
+        res.json({
+          status: "success",
+          message: "Payment was successful",
+          transactionId: merchantTransactionId,
+        });
       } else {
-        // Redirect to FE payment failure / pending status page
-        res.redirect(
-          `https://micasasucasa.in/#/payment-failure?transactionid=${merchantTransactionId}`
-        );
+        // Send JSON response for payment failure or pending status
+        res.json({
+          status: "failure",
+          message: "Payment failed or is pending",
+          transactionId: merchantTransactionId,
+        });
       }
+      
     } catch (error) {
       console.error(`Payment validation failed: ${error.message}`);
       res

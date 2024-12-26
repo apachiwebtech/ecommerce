@@ -39,7 +39,7 @@ const Checkout = () => {
   const [uid, setUid] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
+  const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -273,7 +273,7 @@ const Checkout = () => {
 
   const navigate = useNavigate();
 
-  const handlepayment = () => {};
+  const handlepayment = () => { };
 
   const onhandlesubmit = (e) => {
     e.preventDefault();
@@ -315,35 +315,39 @@ const Checkout = () => {
       };
       // ---?>  payment log
 
+
+
+
       selectedPayment != "cod"
-        ? axios.post(`${BASE_URL}/payment`, paydata).then((res) => {
-            // ---?>  payment log
+        ? axios.post(`${BASE_URL}/place_order`, data).then((res) => {
+          console.log(res);
 
-            if (res.data.success == true) {
-              axios.post(`${BASE_URL}/place_order`, data).then((res) => {
-                console.log(res);
+          if (res.data) {
+            alert("order placed");
 
-                if (res.data) {
-                  alert("order placed");
-                  Cookies.remove(`orderid`);
-                  Cookies.set("orderno", res.data.orderno, { expires: 1 });
-                  navigate("/payment-success");
-                }
-              });
+            axios.post(`${BASE_URL}/payment`, paydata).then((res) => {
 
               window.location.href = res.data.url;
-            }
-          })
-        : axios.post(`${BASE_URL}/place_order`, data).then((res) => {
-            console.log(res);
 
-            if (res.data) {
-              alert("order placed");
-              Cookies.remove(`orderid`);
-              Cookies.set("orderno", res.data.orderno, { expires: 1 });
-              navigate("/payment-success");
-            }
-          });
+            })
+
+            Cookies.remove(`orderid`);
+            Cookies.set("orderno", res.data.orderno, { expires: 1 });
+          }
+        })
+
+
+
+        : axios.post(`${BASE_URL}/place_order`, data).then((res) => {
+          console.log(res);
+
+          if (res.data) {
+            alert("order placed");
+            Cookies.remove(`orderid`);
+            Cookies.set("orderno", res.data.orderno, { expires: 1 });
+            navigate("/payment-success");
+          }
+        });
     }
   };
 
@@ -470,12 +474,12 @@ const Checkout = () => {
   const openModal = () => {
     setIsModalOpen(true);
   };
-  
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  
- 
+
+
   const handleDelete = (id) => {
     const data = {
       address_id: id,
@@ -498,20 +502,20 @@ const Checkout = () => {
     }));
   };
 
-    const handleDefault = (id) => {
-      const data = {
-        d_id: id,
-        user_id: custdecryptedUserId(),
-      };
-  
-      axios.post(`${BASE_URL}/update_default`, data).then((res) => {
-        console.log(res);
-        getAddressData();
-        fetchAddress();
-        closeModal();
-      });
+  const handleDefault = (id) => {
+    const data = {
+      d_id: id,
+      user_id: custdecryptedUserId(),
     };
-  
+
+    axios.post(`${BASE_URL}/update_default`, data).then((res) => {
+      console.log(res);
+      getAddressData();
+      fetchAddress();
+      closeModal();
+    });
+  };
+
   const handleCancel = (id) => {
     // Hide the confirmation dialog without performing the delete action
     setConfirmationVisibleMap((prevMap) => ({
@@ -930,18 +934,18 @@ const Checkout = () => {
                                     </p>
                                   </div>
                                   <p className="form-row address-field validate-required form-row-wide">
-                                    
-                                      <label>
-                                        Address
-                                        <span
-                                          className="required"
-                                          title="required"
-                                        >
-                                          *
-                                        </span>
-                                      </label>
-                                      {/* <button className="" style={{marginLeft:"15rem"}} onClick={openModal}>Change Address</button> */}
-                         
+
+                                    <label>
+                                      Address
+                                      <span
+                                        className="required"
+                                        title="required"
+                                      >
+                                        *
+                                      </span>
+                                    </label>
+                                    {/* <button className="" style={{marginLeft:"15rem"}} onClick={openModal}>Change Address</button> */}
+
                                     <span className="input-wrapper">
                                       <input
                                         type="text"
@@ -969,7 +973,7 @@ const Checkout = () => {
                                           </button>
                                         </div>
                                         <div className="modal-body">
-                                          <div className="address-list" style={{maxHeight:"400px", overflowY:"auto" }}>
+                                          <div className="address-list" style={{ maxHeight: "400px", overflowY: "auto" }}>
                                             {data.map((item) => (
                                               <div key={item.id} className="address-card border p-3 mb-3 rounded">
                                                 <h6 className="address-title">{item.default === 1 ? "Default Address" : "Address"}</h6>
@@ -1018,7 +1022,7 @@ const Checkout = () => {
                                   </div>
 
 
-                                  
+
                                   <p className="form-row address-field form-row-wide">
                                     <label>
                                       Landmark&nbsp;
@@ -1234,7 +1238,7 @@ const Checkout = () => {
                                         name="smobile"
                                         value={value.smobile}
                                         onChange={onhandlechange}
-                                          pattern="[0-9]{10}"
+                                        pattern="[0-9]{10}"
                                       />
                                     </span>
                                     {errors.smobile && (
