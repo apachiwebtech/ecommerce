@@ -6862,7 +6862,7 @@ const api_to_nimbus = (order_id, v_id, token) => {
       }
 
       const items = data.map(item => ({
-        name :item.pname,
+        name :"test",
         product_id: item.id, // Ensure this field exists in your cart table
         qty: item.pqty,
         price: item.totalprice // Ensure this field exists in your cart table
@@ -7080,7 +7080,7 @@ const getVendorShippingRate = (vendorId, vendorProducts, destination, orderValue
 
       axios(config)
         .then(response => {
-          console.log(`Shipping Rates for Vendor ${vendorId}:`, response.data);
+          // console.log(`Shipping Rates for Vendor ${vendorId}:`, response.data);
           resolve({ vendor_id: vendorId, rates: response.data });
         })
         .catch(error => {
