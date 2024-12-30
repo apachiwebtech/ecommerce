@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 // import logo from '../../assets/frontimg/logo.png'
 import payments from "../../assets/frontimg/payments.png";
 import "../../Style.css";
@@ -6,6 +7,8 @@ import { Link } from "react-router-dom";
 import logo2 from "../../assets/images/mica.png";
 
 const SiteFooter = () => {
+    const [email, setEmail] = useState("")
+
     const handleTop = () => {
         // window.scrollTo(0, 0,);
         window.scrollTo({
@@ -122,7 +125,8 @@ const SiteFooter = () => {
                                                     <input
                                                         type="email"
                                                         name="your-email"
-                                                        value=""
+                                                        value={email}
+                                                        onChange={(e)=>setEmail(e.target.value)}
                                                         size="40"
                                                         placeholder="Email address"
                                                     />

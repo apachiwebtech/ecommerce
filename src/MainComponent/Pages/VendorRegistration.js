@@ -111,11 +111,17 @@ const VendorRegister = () => {
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
                         <div id="title" class="page-title">
-                            <div class="section-container">
+                            <div class="section-container d-flex justify-content-center">
                                 <div class="content-title-heading">
                                 
                                 </div>
-                                <div class="breadcrumbs">
+                                <div 
+                                    class="breadcrumbs bg-light" 
+                                    style={{
+                                        width: "fit-content",
+                                        padding: "5px 10px",
+                                    }}
+                                >
                                     <a href="index.html">Home</a><span class="delimiter"></span>Vendor Registration
                                 </div>
                             </div>
@@ -173,7 +179,7 @@ const VendorRegister = () => {
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-sm-12">
-                                                                    <label class="required">Message</label><br />
+                                                                    <label>Message</label><br />
                                                                     <span class="form-control-wrap">
                                                                         <textarea name="message" value={value.message} onChange={handlechange} cols="40" rows="10" class="form-control" aria-required="true"></textarea>
                                                                     </span>
