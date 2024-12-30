@@ -116,10 +116,15 @@ const CustomizationPage = () => {
                     <div id="primary" class="content-area">
 
                          <div id="title" className="page-title" style={{ backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata}')` }}>
-                            <div class="section-container">
+                            <div class="section-container d-flex justify-content-center">
                                 <div class="content-title-heading">
                                 </div>
-                                <div class="breadcrumbs">
+                                <div 
+                                    class="breadcrumbs bg-light" 
+                                    style={{
+                                        width: "fit-content",
+                                        padding: "5px 10px",
+                                    }}>
                                     <a href="index.html">Home</a><span class="delimiter"></span>Customization
                                 </div>
                             </div>

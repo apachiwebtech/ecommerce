@@ -50,11 +50,17 @@ const ShippingPolicy = () => {
                 backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata}')`,
               }}
             >
-              <div class="section-container">
+              <div class="section-container d-flex justify-content-center">
                 <div class="content-title-heading">
                   {/* <h1 class="text-title-heading">Shipping Policy</h1> */}
                 </div>
-                <div class="breadcrumbs">
+                <div 
+                    class="breadcrumbs bg-light"
+                    style={{
+                        width: "fit-content",
+                        padding: "5px 10px",
+                    }}
+                >
                   <a href="index.html">Home</a>
                   <span class="delimiter"></span>Shipping Policy
                 </div>
