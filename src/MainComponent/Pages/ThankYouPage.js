@@ -13,10 +13,22 @@ const ThankYou = () => {
     const [data, setData] = useState([])
     const Name = localStorage.getItem('Name')
     const OrderNo = Cookies.get('orderno') ? Cookies.get('orderno') : null
-
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const transactionId = queryParams.get('transactionid');
+
+    const retrievedData = JSON.parse(localStorage.getItem('orderData'));
+
+
+    if (retrievedData) {
+        axios.post(`${BASE_URL}/place_order`, retrievedData).then((res) => {
+            localStorage.removeItem("orderData")
+             Cookies.remove(`orderid`);
+             Cookies.set("orderno", res.data.orderno, { expires: 1 });
+        });
+    }
+
+
 
 
     async function getmetadetail() {
@@ -55,10 +67,10 @@ const ThankYou = () => {
 
                                         <div class="">
                                             <div class="block-widget-wrap text-center my-5">
-                                                <img src={check} style={{width : "100px"}} alt='logo' />
+                                                <img src={check} style={{ width: "100px" }} alt='logo' />
                                                 <h1 className='my-2'>Thank You </h1>
                                                 <p>Dear <b>{Name}</b> ,Your transactionid is <b>{transactionId}</b> ,Your Order No is <b>#{OrderNo}</b> and your shipment will process soon...</p>
-                                                <Link style={{color : "blue",textDecoration : "underline"}} to="/profile/order">Click here to check more details</Link>
+                                                <Link style={{ color: "blue", textDecoration: "underline" }} to="/profile/order">Click here to check more details</Link>
                                             </div>
                                         </div>
                                     </div>

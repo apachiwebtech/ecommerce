@@ -313,28 +313,22 @@ const Checkout = () => {
         shippingamt: shippings,
         user_id: custdecryptedUserId(),
       };
+
       // ---?>  payment log
 
 
 
 
-      selectedPayment != "cod"
-        ? axios.post(`${BASE_URL}/place_order`, data).then((res) => {
-          console.log(res);
+      selectedPayment != "cod" ? axios.post(`${BASE_URL}/payment`, paydata).then((res) => {
 
-          if (res.data) {
-            alert("order placed");
+        localStorage.setItem('orderData', JSON.stringify(data));
 
-            axios.post(`${BASE_URL}/payment`, paydata).then((res) => {
+        window.location.href = res.data.url;
 
-              window.location.href = res.data.url;
+      })
 
-            })
 
-            Cookies.remove(`orderid`);
-            Cookies.set("orderno", res.data.orderno, { expires: 1 });
-          }
-        })
+
 
 
 
