@@ -45,13 +45,18 @@ const DetailPage = () => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [selectedColorId, setSelectedColorId] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [swiperInstance, setSwiperInstance] = useState(null);
 
   const handleSlideClick = (index) => {
     setActiveIndex(index);
 
     localStorage.setItem("initial", index);
 
-    window.location.reload();
+    if(swiperInstance){
+        swiperInstance.slideTo(index);
+    }
+
+    // window.location.reload();
   };
 
   useEffect(() => {
@@ -353,8 +358,9 @@ const DetailPage = () => {
                                             activeIndex ||
                                             localStorage.getItem("initial")
                                           }
-                                          onSlideChange={(swiper) =>
-                                            setActiveIndex(swiper.activeIndex)
+                                          onSlideChange={(swiper) =>{
+                                              setActiveIndex(swiper.activeIndex)
+                                          }
                                           } // Keeps state in sync with Swiper
                                           navigation
                                           modules={[
@@ -362,6 +368,7 @@ const DetailPage = () => {
                                             Navigation,
                                             Thumbs,
                                           ]}
+                                          onSwiper={(swiper)=>setSwiperInstance(swiper)}
                                         >
                                           {colorimg.map((item, index) => (
                                             <SwiperSlide key={index}>
