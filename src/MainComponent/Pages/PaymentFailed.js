@@ -33,7 +33,7 @@ const PaymentFailed = () => {
     }, [])
     return (
         <div>
-            <div id="site-main" class="site-main">
+            <div id="site-main" class="site-main" style={{paddingTop : "100px"}}>
                 <Helmet>
                     <title>{data.seo_title}</title>
                     <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />

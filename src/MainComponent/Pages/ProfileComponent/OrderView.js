@@ -50,6 +50,9 @@ const OrderView = () => {
   const totalcgst = cart.reduce((total, row) => total + Number(row.cgst), 0);
   const totalsgst = cart.reduce((total, row) => total + Number(row.sgst), 0);
 
+
+  const finalamount = Number(order.totalamt) + Number(totalcgst)  + Number(totalsgst)
+
   return (
     <div className="row p-5" style={{marginTop:"5rem"}}>
   <div className="col-lg-4 col-md-4 col-12">
@@ -126,6 +129,7 @@ const OrderView = () => {
           <tbody>
             {cart.map((item, index) => {
               const ptotal = item.price * item.pqty;
+
               return (
                 <tr key={index}>
                   <td className="text-center">{index + 1}</td>
@@ -154,7 +158,7 @@ const OrderView = () => {
             </tr>
             <tr>
               <td className="text-start" colSpan="5" style={{ textAlign: "right" }}>Grand Total:</td>
-              <td className="text-center">₹{order.totalamt}</td>
+              <td className="text-center">₹{finalamount.toFixed(2)}</td>
             </tr>
           </tbody>
         </table>

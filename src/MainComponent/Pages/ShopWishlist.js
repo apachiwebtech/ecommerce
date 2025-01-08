@@ -117,7 +117,7 @@ const ShopWishlist = () => {
                                                                         <span><span>&#8377;</span> {wishItem.price}</span>
                                                                     </div>
                                                                 )}
-                                                                <div class="wishlist-item-time">June 6, 2022</div>
+                                                                {/* <div class="wishlist-item-time">June 6, 2022</div> */}
                                                             </td>
                                                             <td class="wishlist-item-actions">
                                                                 <div class="wishlist-item-stock">
@@ -126,7 +126,7 @@ const ShopWishlist = () => {
                                                                 <div class="wishlist-item-add">
                                                                     <div class="btn-add-to-cart" data-title="Add to cart">
                                                                         <Link rel="nofollow" onClick={() =>{
-                                                                                 addToCart(wishItem.prod_id, wishItem.title, wishItem.catid, wishItem.disc_price, dispatch , 1 ,wishItem.v_id);
+                                                                                 addToCart(wishItem.prod_id, wishItem.title, wishItem.catid, wishItem.disc_price, dispatch , 1 ,wishItem.v_id,wishItem.gst);
                                                                                  removeWishListItem(wishItem.id)
                                                                                  addify();
                                                                         }} class="product-btn button">Add to cart</Link>

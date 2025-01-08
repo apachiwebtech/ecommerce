@@ -121,6 +121,8 @@ const ShopProduct = () => {
                     const group = groupdata.find(
                         (group) => group.slug == groupslug
                     );
+    
+
                     if (group.breadcrumb != "") {
                         setBreadcrumbImage(
                             `${IMG_URL}/Breadcrumbs/${group.breadcrumb}`
@@ -141,9 +143,28 @@ const ShopProduct = () => {
         axios
             .get(`${BASE_URL}/category_data`)
             .then((res) => {
-                console.log(res.data);
+           
                 setCatData(res.data);
                 setCateBread(res.data[0].breadcrumb);
+
+                if (!subcatslug) {
+
+                    const cat = catData.find(
+                        (sub) => sub.slug == catslug
+                    );
+            
+               
+
+                    if (cat.breadcrumb != "") {
+                        setBreadcrumbImage(
+                            `${IMG_URL}/Breadcrumbs/${cat.breadcrumb}`
+                        );
+                        // console.log(group, "this is if");
+                    } else {
+                        // console.log(group, "this is else");
+                        setBreadcrumbImage(DEF_IMG_BRA);
+                    }
+                }
             })
             .catch((err) => {
                 console.log(err);
@@ -156,6 +177,25 @@ const ShopProduct = () => {
             .then((res) => {
                 setsubCatData(res.data);
                 setSubcateBread(res.data[0].breadcrumb);
+
+                if (subcatslug) {
+
+                    const subcat = subcatData.find(
+                        (subcat) => subcat.slug == subcatslug
+                    );
+                 
+               
+
+                    if (subcat.breadcrumb != "") {
+                        setBreadcrumbImage(
+                            `${IMG_URL}/Breadcrumbs/${subcat.breadcrumb}`
+                        );
+                        // console.log(group, "this is if");
+                    } else {
+                        // console.log(group, "this is else");
+                        setBreadcrumbImage(DEF_IMG_BRA);
+                    }
+                }
             })
             .catch((err) => {
                 console.log(err);
@@ -190,31 +230,13 @@ const ShopProduct = () => {
         getGroupData();
         getcatData();
         getsubcatData();
-        SiteHeader(subcatslug || catslug || groupslug);
+        SiteHeader(
+            (subcatslug || catslug || groupslug)?.replace(/[0-9-]/g, "")
+          );
+          
 
-        if (subcatslug) {
-            const subcat = subcatData.find((sub) => sub.slug == subcatslug);
-            // console.log(subcat, "this is subcat");
-            if (subcat) {
-                setBreadcrumbImage(
-                    `${IMG_URL}/Breadcrumbs/${subcat.breadcrumb}`
-                );
-                if (subcat.breadcrumb != "") {
-                    setBreadcrumbImage(DEF_IMG_BRA);
-                }
-            }
-        } else if (catslug) {
-            const cat = catData.find((cat) => cat.slug == catslug);
-            // console.log(cat, "this is cat");
-            if (cat) {
-                setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${cat.breadcrumb}`);
-                if (cat.breadcrumb != "") {
-                    setBreadcrumbImage(DEF_IMG_BRA);
-                }
-            }
-        } else {
-            setBreadcrumbImage("");
-        }
+    
+
     }, [groupslug, catslug, subcatslug, brand_id, sort, value, brandid]);
 
     const handleChange = (event, newValue) => {

@@ -93,7 +93,7 @@ const BannerSection = ({ setLoader }) => {
 
                     {banner?.map((item) => {
                         return (
-                            <div class="item slick-slide">
+                            <Link to={item.link} class="item slick-slide">
                                 <div class="item-content">
                                     <div class="content-image">
                                         <img width="1920" height="1080" src={`${IMG_URL}/banner/${item.upload_image}`} alt="Slider" />
@@ -105,13 +105,13 @@ const BannerSection = ({ setLoader }) => {
                                                     {/* <div class="subtitle-slider">20%OFF.END MONDAY</div> */}
                                                     <h2 class="title-slider">{item.title}</h2>
                                                     <div class="description-slider">{item.description} </div>
-                                                    <Link to={item.link} class="button-slider button-white" target={item.target} >SHOP NOW</Link>
+                                                    {/* <Link to={item.link} class="button-slider button-white" target={item.target} >SHOP NOW</Link> */}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         )
 
 

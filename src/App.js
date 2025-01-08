@@ -687,17 +687,6 @@ function App() {
 
 
 
-  async function fetchCartCount() {
-    try {
-      const data = {
-        order_id: Cookies.get(`orderid`),
-      };
-      const response = await axios.post(`${BASE_URL}/getcartcount`, data);
-      setCartCount(response.data[0].count); // Assuming the response has a count property
-    } catch (err) {
-
-    }
-  };
 
 
 
@@ -713,7 +702,7 @@ function App() {
     dispatch(getCartCount())
 
 
-  }, []);
+  }, [pathname]);
 
   const location = useLocation();
   const excludedPaths = ['/about'];
@@ -723,7 +712,7 @@ function App() {
       <ScrollToTop />
       {/* <div id="page" class="hfeed page-wrapper"> */}
       <SiteHeader cartCount={cartCount} />
-      <Outlet fetchcount={fetchCartCount} />
+      <Outlet  />
       {!excludedPaths.includes(location.pathname) && <SiteFooter />}
       {/* </div> */}
     </>

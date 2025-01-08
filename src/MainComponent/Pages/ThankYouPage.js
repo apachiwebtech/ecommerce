@@ -11,6 +11,7 @@ import { BASE_URL } from '../../AdminComponent/BaseUrl';
 
 const ThankYou = () => {
     const [data, setData] = useState([])
+    const [order_no , setorderno] = useState('')
     const Name = localStorage.getItem('Name')
     const OrderNo = Cookies.get('orderno') ? Cookies.get('orderno') : null
     const location = useLocation();
@@ -24,7 +25,7 @@ const ThankYou = () => {
         axios.post(`${BASE_URL}/place_order`, retrievedData).then((res) => {
             localStorage.removeItem("orderData")
              Cookies.remove(`orderid`);
-             Cookies.set("orderno", res.data.orderno, { expires: 1 });
+             setorderno(res.data.orderno)
         });
     }
 
@@ -49,7 +50,7 @@ const ThankYou = () => {
 
     return (
         <div>
-            <div id="site-main" class="site-main">
+            <div id="site-main" class="site-main" style={{paddingTop : "100px"}}>
                 <Helmet>
                     <title>{data.seo_title}</title>
                     <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
@@ -69,7 +70,7 @@ const ThankYou = () => {
                                             <div class="block-widget-wrap text-center my-5">
                                                 <img src={check} style={{ width: "100px" }} alt='logo' />
                                                 <h1 className='my-2'>Thank You </h1>
-                                                <p>Dear <b>{Name}</b> ,Your transactionid is <b>{transactionId}</b> ,Your Order No is <b>#{OrderNo}</b> and your shipment will process soon...</p>
+                                                <p>Dear <b>{Name}</b> ,Your transactionid is <b>{transactionId}</b> ,Your Order No is <b>#{OrderNo ? OrderNo : order_no}</b> and your shipment will process soon...</p>
                                                 <Link style={{ color: "blue", textDecoration: "underline" }} to="/profile/order">Click here to check more details</Link>
                                             </div>
                                         </div>

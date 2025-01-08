@@ -764,23 +764,12 @@ const DetailPage = () => {
                                 >
                                   <div className="mt-3">
                                     <h4 style={{ fontWeight: "400" }}>
-                                      Vendor Name:{" "}
+                                      Brand:{" "}
                                       <span style={{ fontWeight: "300" }}>
                                         {item.vendor_name}
                                       </span>
                                     </h4>
-                                    <h4 style={{ fontWeight: "400" }}>
-                                      Vendor City:{" "}
-                                      <span style={{ fontWeight: "300" }}>
-                                        {item.city}
-                                      </span>
-                                    </h4>
-                                    <h4 style={{ fontWeight: "400" }}>
-                                      Vendor State:{" "}
-                                      <span style={{ fontWeight: "300" }}>
-                                        {item.state}
-                                      </span>
-                                    </h4>
+                                  
                                   </div>
                                 </div>
                                 {/* <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">.kk..</div> */}

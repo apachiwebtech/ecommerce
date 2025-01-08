@@ -11,7 +11,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import Spinner from "../.././MainComponent/Ui/Spinner";
+import Spinner from '../Ui/Spinner'
 import { toast } from "react-toastify";
 import { mdiCloseCircleOutline, mdiPencilOutline } from "@mdi/js";
 import { Icon } from "@mui/material";
@@ -29,7 +29,7 @@ const Checkout = () => {
   const [state, setState] = useState([]);
   const [cart, setCart] = useState([]);
   const [errors, setErrors] = useState({});
-  const [Spinner, setspinner] = useState(false);
+  const [loader, setLoader] = useState(false);
   const [data, setData] = useState([]);
   const [token, settoken] = useState({});
   const [shipping, setshipping] = useState({});
@@ -105,18 +105,30 @@ const Checkout = () => {
       isValid = false;
       newErrors.city = "city is required";
     }
+    const mobileRegex = /^[0-9]{10}$/;
+
     if (!value.mobile) {
       isValid = false;
-      newErrors.mobile = "mobile is required";
+      newErrors.mobile = "Mobile is required";
+    } else if (!mobileRegex.test(value.mobile)) {
+      isValid = false;
+      newErrors.mobile = "Mobile must be a 10-digit number";
     }
+    
     if (!value.state) {
       isValid = false;
       newErrors.state = "state is required";
     }
+    const pincodeRegex = /^\d{6}$/;
+
     if (!value.postcode) {
       isValid = false;
-      newErrors.postcode = "postcode is required";
+      newErrors.postcode = "Pincode is required";
+    } else if (!pincodeRegex.test(value.postcode)) {
+      isValid = false;
+      newErrors.postcode = "Pincode must be exactly 6 digits";
     }
+    
 
     if (!value.sfirstname) {
       isValid = false;
@@ -142,14 +154,16 @@ const Checkout = () => {
       isValid = false;
       newErrors.sstate = "state is required";
     }
+    const postcodeRegex = /^\d{6}$/;
+
     if (!value.spostcode) {
       isValid = false;
-      newErrors.spostcode = "postcode is required";
+      newErrors.spostcode = "Postcode is required";
+    } else if (!postcodeRegex.test(value.spostcode)) {
+      isValid = false;
+      newErrors.spostcode = "Postcode must be exactly 6 digits";
     }
-    // if (!value.smobile) {
-    //   isValid = false;
-    //   newErrors.smobile = "mobile is required";
-    // }
+
     const smobileNumberRegex = /^\d{10}$/;
     if (!smobileNumberRegex.test(value.smobile)) {
       isValid = false;
@@ -193,10 +207,16 @@ const Checkout = () => {
       isValid = false;
       newErrors.city = "state is required";
     }
+    const pincodeRegex = /^\d{6}$/;
+
     if (!value.pincode) {
       isValid = false;
-      newErrors.pincode = "pincode is required";
+      newErrors.pincode = "Pincode is required";
+    } else if (!pincodeRegex.test(value.pincode)) {
+      isValid = false;
+      newErrors.pincode = "Pincode must be exactly 6 digits";
     }
+    
 
     setErrors(newErrors);
     return isValid;
@@ -205,13 +225,14 @@ const Checkout = () => {
   const { orderid } = useParams();
 
   async function getcartdata() {
+    setLoader(true)
     const data = {
       order_id: orderid,
     };
 
     axios.post(`${BASE_URL}/getcartData`, data).then((res) => {
       console.log(res);
-
+      setLoader(false)
       setCart(res.data);
     });
   }
@@ -231,6 +252,7 @@ const Checkout = () => {
   }
   async function get_shipping_rate() {
     if (validateForm()) {
+      setLoader(true)
       const data = {
         token: token,
         order_id: orderid,
@@ -244,6 +266,7 @@ const Checkout = () => {
         );
         const shippingRates = response.data.shippingRates;
         if (shippingRates && shippingRates.length > 0) {
+          setLoader(false)
           const allRates = shippingRates.flatMap(
             (vendor) => vendor.rates?.data || []
           );
@@ -257,6 +280,7 @@ const Checkout = () => {
             console.log(lowestRate.id);
             console.log(lowestRate.total_charges);
             setshow(true);
+            setLoader(false)
           }
         }
       } catch (error) {
@@ -278,6 +302,7 @@ const Checkout = () => {
   const onhandlesubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
+      setLoader(true)
       const paydata = {
         user_id: localStorage.getItem("Name"),
         price: totalPrice,
@@ -339,6 +364,7 @@ const Checkout = () => {
             alert("order placed");
             Cookies.remove(`orderid`);
             Cookies.set("orderno", res.data.orderno, { expires: 1 });
+            setLoader(false)
             navigate("/payment-success");
           }
         });
@@ -369,7 +395,7 @@ const Checkout = () => {
   const addressSubmit = (e) => {
     e.preventDefault();
     if (Addressvalidate()) {
-      // setspinner(true);
+      // setLoader(true);
       const data = {
         firstname: value.firstname,
         lastname: value.lastname,
@@ -385,7 +411,7 @@ const Checkout = () => {
 
       axios.post(`${BASE_URL}/add_address`, data).then((res) => {
         getAddressData();
-        setspinner(false);
+        setLoader(false);
         notify();
       });
     }
@@ -527,6 +553,7 @@ const Checkout = () => {
 
   return (
     <div>
+     {loader &&  <Spinner/> } 
       <div id="site-main" className="site-main">
         <div id="main-content" className="main-content">
           <div id="primary" className="content-area">
@@ -876,15 +903,19 @@ const Checkout = () => {
                                         <input
                                           type="number"
                                           className="input-text"
-                                          name="smobile"
+                                          name="mobile"
                                           value={value.mobile}
-                                          onChange={onhandlechange}
+                                          onChange={(e) => {
+                                            if (e.target.value.length <= 10) {
+                                              onhandlechange(e);
+                                            }
+                                          }}
                                           pattern="[0-9]{10}"
                                         />
                                       </span>
-                                      {errors.smobile && (
+                                      {errors.mobile && (
                                         <span className="text-danger">
-                                          {errors.smobile}
+                                          {errors.mobile}
                                         </span>
                                       )}
                                     </p>
@@ -1118,11 +1149,18 @@ const Checkout = () => {
                                       </label>
                                       <span className="input-wrapper">
                                         <input
-                                          type="text"
+                                          type="number"
                                           className="input-text"
                                           value={value.postcode}
                                           name="postcode"
-                                          onChange={onhandlechange}
+                                          maxLength='6'
+                                          onChange={(e) => {
+                                            const inputValue = e.target.value;
+                                            // Ensure the input is not longer than 6 characters
+                                            if (inputValue.length <= 6) {
+                                              onhandlechange(e);
+                                            }
+                                          }}
                                         />
                                       </span>
                                       {errors.postcode && (
@@ -1407,7 +1445,14 @@ const Checkout = () => {
                                         className="input-text"
                                         name="spostcode"
                                         value={value.spostcode}
-                                        onChange={onhandlechange}
+                                        maxLength='6'
+                                        onChange={(e) => {
+                                          const inputValue = e.target.value;
+                                          // Ensure the input is not longer than 6 characters
+                                          if (inputValue.length <= 6) {
+                                            onhandlechange(e);
+                                          }
+                                        }}
                                       />
                                     </span>
                                     {errors.spostcode && (
@@ -1589,7 +1634,7 @@ const Checkout = () => {
                                       <p>Pay with cash upon delivery.</p>
                                     </div>
                                   </li>
-                                  <li className="payment-method">
+                                  {/* <li className="payment-method">
                                     <input
                                       className="form-check-input"
                                       type="radio"
@@ -1608,7 +1653,7 @@ const Checkout = () => {
                                     <div className="payment-box">
                                       <p>Pay via any UPI app or card.</p>
                                     </div>
-                                  </li>
+                                  </li> */}
                                 </ul>
                                 <div className="form-row place-order">
                                   <div className="terms-and-conditions-wrapper">

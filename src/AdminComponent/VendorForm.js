@@ -275,12 +275,12 @@ const VendorForm = () => {
             setLoader(true)
             let hashpassword
 
-            if (value.password) {
-                hashpassword = md5(value.password)
-
-            } else {
+            if (vendor.id) {
                 hashpassword = vendor.password || "";
+            } else {
+                hashpassword = md5(value.password)
             }
+
 
 
             const formData = new FormData();
@@ -289,7 +289,7 @@ const VendorForm = () => {
             formData.append('email', value.email);
             formData.append('mobile', value.mobile);
             formData.append('username', value.username);
-
+            formData.append('spassword' , value.password)
             formData.append('password', hashpassword);
             formData.append('address', value.address);
             formData.append('state', value.state);
