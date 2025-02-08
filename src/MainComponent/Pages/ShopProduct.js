@@ -36,8 +36,8 @@ const ShopProduct = () => {
     const [Subcatebread, setSubcateBread] = useState("");
     const [breadcrumbImage, setBreadcrumbImage] = useState("");
     const [loader, setLoader] = useState(false);
-  const togBoxRef = useRef(null);
-  const togIconRef = useRef(null);
+    const togBoxRef = useRef(null);
+    const togIconRef = useRef(null);
 
     // const breaddata = useBreadcrumb();
     // const defaultBreadcrumbImage = "https://micasasucasa.in/ecomuploads/Breadcrumbs/image-1733552051451.png";
@@ -121,7 +121,7 @@ const ShopProduct = () => {
                     const group = groupdata.find(
                         (group) => group.slug == groupslug
                     );
-    
+
 
                     if (group.breadcrumb != "") {
                         setBreadcrumbImage(
@@ -143,7 +143,7 @@ const ShopProduct = () => {
         axios
             .get(`${BASE_URL}/category_data`)
             .then((res) => {
-           
+
                 setCatData(res.data);
                 setCateBread(res.data[0].breadcrumb);
 
@@ -152,8 +152,8 @@ const ShopProduct = () => {
                     const cat = catData.find(
                         (sub) => sub.slug == catslug
                     );
-            
-               
+
+
 
                     if (cat.breadcrumb != "") {
                         setBreadcrumbImage(
@@ -183,8 +183,8 @@ const ShopProduct = () => {
                     const subcat = subcatData.find(
                         (subcat) => subcat.slug == subcatslug
                     );
-                 
-               
+
+
 
                     if (subcat.breadcrumb != "") {
                         setBreadcrumbImage(
@@ -232,10 +232,10 @@ const ShopProduct = () => {
         getsubcatData();
         SiteHeader(
             (subcatslug || catslug || groupslug)?.replace(/[0-9-]/g, "")
-          );
-          
+        );
 
-    
+
+
 
     }, [groupslug, catslug, subcatslug, brand_id, sort, value, brandid]);
 
@@ -256,26 +256,26 @@ const ShopProduct = () => {
         });
     }
 
-    
-      useEffect(() => {
+
+    useEffect(() => {
         const isInsidetogBox = (e) => {
-          if (togBoxRef.current && togIconRef.current) {
-            if (
-              !togBoxRef.current.contains(e.target) &&
-              !togIconRef.current.contains(e.target)
-            ) {
-                setToggle(false);
-              return;
+            if (togBoxRef.current && togIconRef.current) {
+                if (
+                    !togBoxRef.current.contains(e.target) &&
+                    !togIconRef.current.contains(e.target)
+                ) {
+                    setToggle(false);
+                    return;
+                }
             }
-          }
         };
-    
+
         document.addEventListener("click", isInsidetogBox);
-    
+
         return () => {
-          document.removeEventListener("click", isInsidetogBox);
+            document.removeEventListener("click", isInsidetogBox);
         };
-      }, []);
+    }, []);
 
 
     const handledelete = () => {
@@ -343,10 +343,9 @@ const ShopProduct = () => {
                                 <div className="section-container p-l-r">
                                     <div className="row">
                                         <div
-                                            className={`col-xl-3 col-lg-3 col-md-12 col-12 mob-left-sidebar ${
-                                                toggle ? `mob-left-view` : ``
-                                            }  left-sidebar md-b-50`}
-                                            
+                                            className={`col-xl-3 col-lg-3 col-md-12 col-12 mob-left-sidebar ${toggle ? `mob-left-view` : ``
+                                                }  left-sidebar md-b-50`}
+
                                             ref={togIconRef}
                                         >
                                             {/* <!-- Block Product Categories --> */}
@@ -358,7 +357,7 @@ const ShopProduct = () => {
                                                         textAlign: "right",
                                                         display: "none",
                                                     }}
-                                                    
+
                                                 >
                                                     <Icon
                                                         path={mdiClose}
@@ -391,223 +390,114 @@ const ShopProduct = () => {
                                                                     "10px",
                                                             }}
                                                         >
-                                                            {/* {groupData.map((item) => {
-                                return (
-                                  <li className="current">
-                                    <Link
-                                      onClick={toggleSidebar}
-                                      to={`/shoproduct/${item.slug}`}
-                                    >
-                                      {item.title}
-                                    </Link>
-                                  </li>
-                                );
-                              })} */}
 
-                                                            {/* {groupData.slice(0, 4).map((item) => (
-                                <li
-                                  key={item.slug}
-                                  className={`current`}
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <Link
-                                    onClick={toggleSidebar}
-                                    to={`/shoproduct/${item.slug}`}
-                                    style={{
-                                      textDecoration: "none",
-                                      color: "inherit",
-                                    }} // Optional styling for the link
-                                  >
-                                    <i
-                                      class="bi bi-circle-fill"
-                                      style={{
-                                        fontSize: "10px",
-                                        marginRight: "8px",
-                                      }}
-                                    ></i>
-                                    {item.title}
-                                  </Link>
-                                </li>
-                              ))} */}
                                                             {group
                                                                 ? cat
                                                                     ? subcatData
-                                                                          .filter(
-                                                                              (
-                                                                                  subcat
-                                                                              ) =>
-                                                                                  subcat.cat_id ===
-                                                                                  cat.id
-                                                                          )
-                                                                          .map(
-                                                                              (
-                                                                                  item
-                                                                              ) => (
-                                                                                  <li
-                                                                                      key={
-                                                                                          item.slug
-                                                                                      }
-                                                                                      className={`current`}
-                                                                                      style={{
-                                                                                          display:
-                                                                                              "flex",
-                                                                                          alignItems:
-                                                                                              "center",
-                                                                                      }}
-                                                                                  >
-                                                                                      <Link
-                                                                                          onClick={
-                                                                                              toggleSidebar
-                                                                                          }
-                                                                                          to={`/shoproduct/${group.slug}/${cat.slug}/${item.slug}`}
-                                                                                          style={{
-                                                                                              textDecoration:
-                                                                                                  "none",
-                                                                                              color: "inherit",
-                                                                                          }}
-                                                                                      >
-                                                                                          <i
-                                                                                              class="bi bi-circle-fill"
-                                                                                              style={{
-                                                                                                  fontSize:
-                                                                                                      "10px",
-                                                                                                  marginRight:
-                                                                                                      "8px",
-                                                                                              }}
-                                                                                          ></i>
-                                                                                          {
-                                                                                              item.title
-                                                                                          }
-                                                                                      </Link>
-                                                                                  </li>
-                                                                              )
-                                                                          )
+                                                                        .filter(
+                                                                            (
+                                                                                subcat
+                                                                            ) =>
+                                                                                subcat.cat_id ===
+                                                                                cat.id
+                                                                        )
+                                                                        .map(
+                                                                            (
+                                                                                item
+                                                                            ) => (
+                                                                                <li
+                                                                                    key={
+                                                                                        item.slug
+                                                                                    }
+                                                                                    className={`current`}
+                                                                                    style={{
+                                                                                        display:
+                                                                                            "flex",
+                                                                                        alignItems:
+                                                                                            "center",
+                                                                                    }}
+                                                                                >
+                                                                                    <Link
+                                                                                        onClick={
+                                                                                            toggleSidebar
+                                                                                        }
+                                                                                        to={`/shoproduct/${group.slug}/${cat.slug}/${item.slug}`}
+                                                                                        style={{
+                                                                                            textDecoration:
+                                                                                                "none",
+                                                                                            color: "inherit",
+                                                                                        }}
+                                                                                    >
+                                                                                        <i
+                                                                                            class="bi bi-circle-fill"
+                                                                                            style={{
+                                                                                                fontSize:
+                                                                                                    "10px",
+                                                                                                marginRight:
+                                                                                                    "8px",
+                                                                                            }}
+                                                                                        ></i>
+                                                                                        {
+                                                                                            item.title
+                                                                                        }
+                                                                                    </Link>
+                                                                                </li>
+                                                                            )
+                                                                        )
                                                                     : catData
-                                                                          .filter(
-                                                                              (
-                                                                                  cat
-                                                                              ) =>
-                                                                                  cat.group_id ===
-                                                                                  group.id
-                                                                          )
-                                                                          .map(
-                                                                              (
-                                                                                  item
-                                                                              ) => (
-                                                                                  <li
-                                                                                      key={
-                                                                                          item.slug
-                                                                                      }
-                                                                                      className={`current`}
-                                                                                      style={{
-                                                                                          display:
-                                                                                              "flex",
-                                                                                          alignItems:
-                                                                                              "center",
-                                                                                      }}
-                                                                                  >
-                                                                                      <Link
-                                                                                          onClick={
-                                                                                              toggleSidebar
-                                                                                          }
-                                                                                          to={`/shoproduct/${group.slug}/${item.slug}`}
-                                                                                          style={{
-                                                                                              textDecoration:
-                                                                                                  "none",
-                                                                                              color: "inherit",
-                                                                                          }}
-                                                                                      >
-                                                                                          <i
-                                                                                              class="bi bi-circle-fill"
-                                                                                              style={{
-                                                                                                  fontSize:
-                                                                                                      "10px",
-                                                                                                  marginRight:
-                                                                                                      "8px",
-                                                                                              }}
-                                                                                          ></i>
-                                                                                          {
-                                                                                              item.title
-                                                                                          }
-                                                                                      </Link>
-                                                                                  </li>
-                                                                              )
-                                                                          )
+                                                                        .filter(
+                                                                            (
+                                                                                cat
+                                                                            ) =>
+                                                                                cat.group_id ===
+                                                                                group.id
+                                                                        )
+                                                                        .map(
+                                                                            (
+                                                                                item
+                                                                            ) => (
+                                                                                <li
+                                                                                    key={
+                                                                                        item.slug
+                                                                                    }
+                                                                                    className={`current`}
+                                                                                    style={{
+                                                                                        display:
+                                                                                            "flex",
+                                                                                        alignItems:
+                                                                                            "center",
+                                                                                    }}
+                                                                                >
+                                                                                    <Link
+                                                                                        onClick={
+                                                                                            toggleSidebar
+                                                                                        }
+                                                                                        to={`/shoproduct/${group.slug}/${item.slug}`}
+                                                                                        style={{
+                                                                                            textDecoration:
+                                                                                                "none",
+                                                                                            color: "inherit",
+                                                                                        }}
+                                                                                    >
+                                                                                        <i
+                                                                                            class="bi bi-circle-fill"
+                                                                                            style={{
+                                                                                                fontSize:
+                                                                                                    "10px",
+                                                                                                marginRight:
+                                                                                                    "8px",
+                                                                                            }}
+                                                                                        ></i>
+                                                                                        {
+                                                                                            item.title
+                                                                                        }
+                                                                                    </Link>
+                                                                                </li>
+                                                                            )
+                                                                        )
                                                                 : null}
 
-                                                            {/* {catData.map(
-                                                                (item) => (
-                                                                    <li
-                                                                        key={
-                                                                            item.slug
-                                                                        }
-                                                                        className={`current`}
-                                                                        style={{
-                                                                            display:
-                                                                                "flex",
-                                                                            alignItems:
-                                                                                "center",
-                                                                        }}
-                                                                    >
-                                                                        <Link
-                                                                            onClick={
-                                                                                toggleSidebar
-                                                                            }
-                                                                            to={`/shoproduct/${item.slug}`}
-                                                                            style={{
-                                                                                textDecoration:
-                                                                                    "none",
-                                                                                color: "inherit",
-                                                                            }}
-                                                                        >
-                                                                            <i
-                                                                                class="bi bi-circle-fill"
-                                                                                style={{
-                                                                                    fontSize:
-                                                                                        "10px",
-                                                                                    marginRight:
-                                                                                        "8px",
-                                                                                }}
-                                                                            ></i>
-                                                                            {
-                                                                                item.title
-                                                                            }
-                                                                        </Link>
-                                                                    </li>
-                                                                )
-                                                            )} */}
-
-                                                            {/* {subcatData.slice(0, 4).map((item) => (
-                                <li
-                                  key={item.slug}
-                                  className={`current`}
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  <Link
-                                    onClick={toggleSidebar}
-                                    to={`/shoproduct/${item.slug}`}
-                                    style={{
-                                      textDecoration: "none",
-                                      color: "inherit",
-                                    }}
-                                  >
-                                    <i
-                                      class="bi bi-circle-fill"
-                                      style={{
-                                        fontSize: "10px",
-                                        marginRight: "8px",
-                                      }}
-                                    ></i>
-                                    {item.title}
-                                  </Link>
-                                </li>
-                              ))} */}
+                                           
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -642,40 +532,26 @@ const ShopProduct = () => {
                                                         sx={{
                                                             color: "black",
                                                             "& .MuiSlider-thumb":
-                                                                {
-                                                                    borderColor:
-                                                                        "black",
-                                                                },
+                                                            {
+                                                                borderColor:
+                                                                    "black",
+                                                            },
                                                             "& .MuiSlider-track":
-                                                                {
-                                                                    borderColor:
-                                                                        "black",
-                                                                },
+                                                            {
+                                                                borderColor:
+                                                                    "black",
+                                                            },
                                                             "& .MuiSlider-rail":
-                                                                {
-                                                                    borderColor:
-                                                                        "black",
-                                                                },
+                                                            {
+                                                                borderColor:
+                                                                    "black",
+                                                            },
                                                         }}
                                                     />
                                                 </div>
                                             </div>
 
-                                            {/* <!-- Block Product Filter --> */}
-                                            {/* <div className="block block-product-filter clearfix my-3">
-                                            <div className="block-title"><h2>Brands</h2></div>
-                                            <div className="block-content">
-                                                <ul className="filter-items image">
-                                                    {brand.map((brand) => {
-                                                        return (
-                                                            <li><Link to={`/${brand.id}` }><span><img onClick={toggleSidebar}  src={`${IMG_URL}/brand/` + brand.logo} alt="Brand" /></span></Link></li>
-                                                        )
-                                                    })}
-
-                                              
-                                                </ul>
-                                            </div>
-                                        </div> */}
+                                    
 
                                             <div className="block block-product-filter clearfix my-3">
                                                 {brand.length > 0 && (
@@ -869,12 +745,7 @@ const ShopProduct = () => {
                                                                 "center",
                                                         }}
                                                     >
-                                                        {/* <div
-                              className="filter-toggle"
-                              onClick={toggleSidebar}
-                            >
-                              Filter
-                            </div> */}
+                                      
                                                         <div
                                                             className="mob-filter"
                                                             style={{
@@ -958,22 +829,22 @@ const ShopProduct = () => {
                                                                         defaultValue={`default`}
                                                                         sx={{
                                                                             "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                                                                {
-                                                                                    borderColor:
-                                                                                        "rgba(0, 0, 0, 1)",
-                                                                                },
+                                                                            {
+                                                                                borderColor:
+                                                                                    "rgba(0, 0, 0, 1)",
+                                                                            },
                                                                             "& .MuiSelect-select":
-                                                                                {
-                                                                                    padding:
-                                                                                        "10px 16px",
-                                                                                    fontSize:
-                                                                                        "0.75rem",
-                                                                                },
+                                                                            {
+                                                                                padding:
+                                                                                    "10px 16px",
+                                                                                fontSize:
+                                                                                    "0.75rem",
+                                                                            },
                                                                             "&:hover .MuiOutlinedInput-notchedOutline":
-                                                                                {
-                                                                                    borderColor:
-                                                                                        "rgba(0, 0, 0, 1)",
-                                                                                },
+                                                                            {
+                                                                                borderColor:
+                                                                                    "rgba(0, 0, 0, 1)",
+                                                                            },
                                                                         }}
                                                                     >
                                                                         <MenuItem value="default">
@@ -1032,7 +903,7 @@ const ShopProduct = () => {
                                                     <div className="products-list grid">
                                                         <div className="row">
                                                             {products.length ===
-                                                            0 ? (
+                                                                0 ? (
                                                                 <div
                                                                     className="no-products-message"
                                                                     style={{
@@ -1063,14 +934,6 @@ const ShopProduct = () => {
                                                                         }}
                                                                     />
 
-                                                                    {/* <p
-                                    style={{
-                                      fontSize: "25px",
-                                      fontWeight: "bold",
-                                    }}
-                                  >
-                                    No products Found
-                                  </p> */}
                                                                 </div>
                                                             ) : (
                                                                 products.map(

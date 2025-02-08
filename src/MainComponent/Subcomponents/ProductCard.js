@@ -124,7 +124,7 @@ const ProductCard = (props) => {
             </div>
           )}
 
-          <div className="product-thumb-hover">
+          <div className="product-thumb-hover max-390">
             <Link to={`/product/${props.slug}`}>
               <img
                 src={`${IMG_URL}/productimg/` + props.image1}

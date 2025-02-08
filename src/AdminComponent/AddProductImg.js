@@ -47,6 +47,14 @@ const AddProductImg = () => {
             isValid = false;
             newErrors.image1 = "Upload 1 is required"
         }
+        if (!image2) {
+            isValid = false;
+            newErrors.image2 = "Upload 2 is required"
+        }
+        if (!image3) {
+            isValid = false;
+            newErrors.image3 = "Upload 3 is required"
+        }
 
         if (!color_id) {
             isValid = false
@@ -350,16 +358,16 @@ const AddProductImg = () => {
                                                         {error.image1 && <span className='text-danger'>{error.image1}</span>}
                                                     </div>
                                                     <div class="form-group col-lg-6">
-                                                        <label>Img Upload 2</label>
+                                                        <label>Img Upload 2<span className='text-danger'>*</span></label>
 
                                                         <input type="file" class="form-control file-upload-info" name='image2' accept="image/*" onChange={handleupload2} />
-                                                        {/* {errors.panupload && <div className="text-danger">{errors.panupload}</div>} */}
+                                                        {error.image2 && <span className='text-danger'>{error.image2}</span>}
                                                     </div>
                                                     <div class="form-group col-lg-6">
-                                                        <label>Img Upload 3</label>
+                                                        <label>Img Upload 3 <span className='text-danger'>*</span></label>
 
                                                         <input type="file" class="form-control file-upload-info" name='image3' accept="image/*" onChange={handleupload3} />
-                                                        {/* {errors.agreementupload && <div className="text-danger">{errors.agreementupload}</div>} */}
+                                                        {error.image2 && <span className='text-danger'>{error.image2}</span>}
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                         <label>Video upload 4</label>

@@ -116,6 +116,7 @@ import CategoryBreadcrum from './AdminComponent/CategoryBreadcrum';
 import SubCategoryBreadcrum from './AdminComponent/SubCategoryBreadcrum';
 import Collection from './AdminComponent/Collection';
 import ContectRequest from './AdminComponent/ContectRequest';
+import AddVendorProductImg from './VendorComponents/AddVendorProductImg';
 
 
 
@@ -156,7 +157,7 @@ const Router = createHashRouter([
   },
   {
     path: '/vendor/addimages/:product_id',
-    element: <AddProductImg />
+    element: <AddVendorProductImg />
   },
   {
     path: '/scarouser',

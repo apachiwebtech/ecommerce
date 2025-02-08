@@ -11673,3 +11673,7 @@ ul.slick-dots li.slick-active button {
         top: -15vw !important; /* Adjust position */
     }
 }
+
+.max-390{
+    max-height: 368px;
+}

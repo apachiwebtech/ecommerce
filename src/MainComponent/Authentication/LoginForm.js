@@ -714,6 +714,7 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
                             value="Continue as Guest"
                           />
                         </div>
+                 
                         <span className="text-danger">{emailexist}</span>
                       </div>
                     </form>
@@ -773,9 +774,7 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
                           onChange={onHandleOtpChange}
                         />
                       </div>
-                      <div className="  align-items-center otp-text pt-2">
-                        {/* <p className='col-6'>1.45 secs Time remaining</p> */}
-                      </div>
+                    
                     </div>
                     <div className="text-center btn-sec">
                       <div
@@ -791,6 +790,9 @@ function LoginForm({ open, setOpen, onLoginSuccess }) {
                           name={loader ? "Processing" : " Verify"}
                           value="Login"
                         />
+                      </div>
+                      <div className="  align-items-center otp-text pt-2">
+                      <p className="text-success">Please check your email for otp</p>
                       </div>
 
                       <p className="text-danger" id="err"></p>
