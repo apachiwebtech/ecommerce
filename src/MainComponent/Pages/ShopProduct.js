@@ -38,6 +38,7 @@ const ShopProduct = () => {
     const [loader, setLoader] = useState(false);
     const togBoxRef = useRef(null);
     const togIconRef = useRef(null);
+    const [priceValArr, setPriceValArr] = useState([0, 10000]);
 
     // const breaddata = useBreadcrumb();
     // const defaultBreadcrumbImage = "https://micasasucasa.in/ecomuploads/Breadcrumbs/image-1733552051451.png";
@@ -93,6 +94,8 @@ const ShopProduct = () => {
             brand_id: brand_id,
             sort: sort,
             price: value,
+            start_price: priceValArr[0],
+            end_price: priceValArr[1],
             brandid: brandid,
         };
 
@@ -118,15 +121,10 @@ const ShopProduct = () => {
                 setGroupBread(res.data[0].breadcrumb);
 
                 if (!catslug && !subcatslug) {
-                    const group = groupdata.find(
-                        (group) => group.slug == groupslug
-                    );
-
+                    const group = groupdata.find((group) => group.slug == groupslug);
 
                     if (group.breadcrumb != "") {
-                        setBreadcrumbImage(
-                            `${IMG_URL}/Breadcrumbs/${group.breadcrumb}`
-                        );
+                        setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${group.breadcrumb}`);
                         // console.log(group, "this is if");
                     } else {
                         // console.log(group, "this is else");
@@ -143,22 +141,14 @@ const ShopProduct = () => {
         axios
             .get(`${BASE_URL}/category_data`)
             .then((res) => {
-
                 setCatData(res.data);
                 setCateBread(res.data[0].breadcrumb);
 
                 if (!subcatslug) {
-
-                    const cat = catData.find(
-                        (sub) => sub.slug == catslug
-                    );
-
-
+                    const cat = catData.find((sub) => sub.slug == catslug);
 
                     if (cat.breadcrumb != "") {
-                        setBreadcrumbImage(
-                            `${IMG_URL}/Breadcrumbs/${cat.breadcrumb}`
-                        );
+                        setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${cat.breadcrumb}`);
                         // console.log(group, "this is if");
                     } else {
                         // console.log(group, "this is else");
@@ -179,17 +169,10 @@ const ShopProduct = () => {
                 setSubcateBread(res.data[0].breadcrumb);
 
                 if (subcatslug) {
-
-                    const subcat = subcatData.find(
-                        (subcat) => subcat.slug == subcatslug
-                    );
-
-
+                    const subcat = subcatData.find((subcat) => subcat.slug == subcatslug);
 
                     if (subcat.breadcrumb != "") {
-                        setBreadcrumbImage(
-                            `${IMG_URL}/Breadcrumbs/${subcat.breadcrumb}`
-                        );
+                        setBreadcrumbImage(`${IMG_URL}/Breadcrumbs/${subcat.breadcrumb}`);
                         // console.log(group, "this is if");
                     } else {
                         // console.log(group, "this is else");
@@ -230,17 +213,14 @@ const ShopProduct = () => {
         getGroupData();
         getcatData();
         getsubcatData();
-        SiteHeader(
-            (subcatslug || catslug || groupslug)?.replace(/[0-9-]/g, "")
-        );
-
-
-
-
-    }, [groupslug, catslug, subcatslug, brand_id, sort, value, brandid]);
+        SiteHeader((subcatslug || catslug || groupslug)?.replace(/[0-9-]/g, ""));
+    }, [groupslug, catslug, subcatslug, brand_id, sort, brandid, priceValArr]);
 
     const handleChange = (event, newValue) => {
-        setValue(newValue);
+        console.log("event", event);
+        console.log("newValue", newValue);
+        setPriceValArr(newValue);
+        setValue(newValue[1]);
     };
 
     const handlesortchange = (e) => {
@@ -256,14 +236,10 @@ const ShopProduct = () => {
         });
     }
 
-
     useEffect(() => {
         const isInsidetogBox = (e) => {
             if (togBoxRef.current && togIconRef.current) {
-                if (
-                    !togBoxRef.current.contains(e.target) &&
-                    !togIconRef.current.contains(e.target)
-                ) {
+                if (!togBoxRef.current.contains(e.target) && !togIconRef.current.contains(e.target)) {
                     setToggle(false);
                     return;
                 }
@@ -277,8 +253,8 @@ const ShopProduct = () => {
         };
     }, []);
 
-
     const handledelete = () => {
+        setPriceValArr([0, 10000]);
         setValue("");
         getproductdetails();
     };
@@ -292,7 +268,7 @@ const ShopProduct = () => {
     useEffect(() => {
         getproductdetails();
         getmetadetail();
-    }, [groupslug, catslug, subcatslug, brand_id, sort, value, brandid]);
+    }, [groupslug, catslug, subcatslug, brand_id, sort, priceValArr, brandid]);
 
     return (
         <div>
@@ -329,11 +305,7 @@ const ShopProduct = () => {
                                 >
                                     <Link to={`/`}>Home</Link>
                                     <span className="delimiter"></span>
-                                    <Link
-                                        style={{ textTransform: "capitalize" }}
-                                    >
-                                        {header}
-                                    </Link>
+                                    <Link style={{ textTransform: "capitalize" }}>{header}</Link>
                                 </div>
                             </div>
                         </div>
@@ -343,9 +315,9 @@ const ShopProduct = () => {
                                 <div className="section-container p-l-r">
                                     <div className="row">
                                         <div
-                                            className={`col-xl-3 col-lg-3 col-md-12 col-12 mob-left-sidebar ${toggle ? `mob-left-view` : ``
-                                                }  left-sidebar md-b-50`}
-
+                                            className={`col-xl-3 col-lg-3 col-md-12 col-12 mob-left-sidebar ${
+                                                toggle ? `mob-left-view` : ``
+                                            }  left-sidebar md-b-50`}
                                             ref={togIconRef}
                                         >
                                             {/* <!-- Block Product Categories --> */}
@@ -357,12 +329,8 @@ const ShopProduct = () => {
                                                         textAlign: "right",
                                                         display: "none",
                                                     }}
-
                                                 >
-                                                    <Icon
-                                                        path={mdiClose}
-                                                        size={1}
-                                                    />
+                                                    <Icon path={mdiClose} size={1} />
                                                 </div>
                                                 <div className="block-title">
                                                     <h2
@@ -386,118 +354,72 @@ const ShopProduct = () => {
                                                     >
                                                         <ul
                                                             style={{
-                                                                marginLeft:
-                                                                    "10px",
+                                                                marginLeft: "10px",
                                                             }}
                                                         >
-
                                                             {group
                                                                 ? cat
                                                                     ? subcatData
-                                                                        .filter(
-                                                                            (
-                                                                                subcat
-                                                                            ) =>
-                                                                                subcat.cat_id ===
-                                                                                cat.id
-                                                                        )
-                                                                        .map(
-                                                                            (
-                                                                                item
-                                                                            ) => (
-                                                                                <li
-                                                                                    key={
-                                                                                        item.slug
-                                                                                    }
-                                                                                    className={`current`}
-                                                                                    style={{
-                                                                                        display:
-                                                                                            "flex",
-                                                                                        alignItems:
-                                                                                            "center",
-                                                                                    }}
-                                                                                >
-                                                                                    <Link
-                                                                                        onClick={
-                                                                                            toggleSidebar
-                                                                                        }
-                                                                                        to={`/shoproduct/${group.slug}/${cat.slug}/${item.slug}`}
-                                                                                        style={{
-                                                                                            textDecoration:
-                                                                                                "none",
-                                                                                            color: "inherit",
-                                                                                        }}
-                                                                                    >
-                                                                                        <i
-                                                                                            class="bi bi-circle-fill"
-                                                                                            style={{
-                                                                                                fontSize:
-                                                                                                    "10px",
-                                                                                                marginRight:
-                                                                                                    "8px",
-                                                                                            }}
-                                                                                        ></i>
-                                                                                        {
-                                                                                            item.title
-                                                                                        }
-                                                                                    </Link>
-                                                                                </li>
-                                                                            )
-                                                                        )
+                                                                          .filter((subcat) => subcat.cat_id === cat.id)
+                                                                          .map((item) => (
+                                                                              <li
+                                                                                  key={item.slug}
+                                                                                  className={`current`}
+                                                                                  style={{
+                                                                                      display: "flex",
+                                                                                      alignItems: "center",
+                                                                                  }}
+                                                                              >
+                                                                                  <Link
+                                                                                      onClick={toggleSidebar}
+                                                                                      to={`/shoproduct/${group.slug}/${cat.slug}/${item.slug}`}
+                                                                                      style={{
+                                                                                          textDecoration: "none",
+                                                                                          color: "inherit",
+                                                                                      }}
+                                                                                  >
+                                                                                      <i
+                                                                                          class="bi bi-circle-fill"
+                                                                                          style={{
+                                                                                              fontSize: "10px",
+                                                                                              marginRight: "8px",
+                                                                                          }}
+                                                                                      ></i>
+                                                                                      {item.title}
+                                                                                  </Link>
+                                                                              </li>
+                                                                          ))
                                                                     : catData
-                                                                        .filter(
-                                                                            (
-                                                                                cat
-                                                                            ) =>
-                                                                                cat.group_id ===
-                                                                                group.id
-                                                                        )
-                                                                        .map(
-                                                                            (
-                                                                                item
-                                                                            ) => (
-                                                                                <li
-                                                                                    key={
-                                                                                        item.slug
-                                                                                    }
-                                                                                    className={`current`}
-                                                                                    style={{
-                                                                                        display:
-                                                                                            "flex",
-                                                                                        alignItems:
-                                                                                            "center",
-                                                                                    }}
-                                                                                >
-                                                                                    <Link
-                                                                                        onClick={
-                                                                                            toggleSidebar
-                                                                                        }
-                                                                                        to={`/shoproduct/${group.slug}/${item.slug}`}
-                                                                                        style={{
-                                                                                            textDecoration:
-                                                                                                "none",
-                                                                                            color: "inherit",
-                                                                                        }}
-                                                                                    >
-                                                                                        <i
-                                                                                            class="bi bi-circle-fill"
-                                                                                            style={{
-                                                                                                fontSize:
-                                                                                                    "10px",
-                                                                                                marginRight:
-                                                                                                    "8px",
-                                                                                            }}
-                                                                                        ></i>
-                                                                                        {
-                                                                                            item.title
-                                                                                        }
-                                                                                    </Link>
-                                                                                </li>
-                                                                            )
-                                                                        )
+                                                                          .filter((cat) => cat.group_id === group.id)
+                                                                          .map((item) => (
+                                                                              <li
+                                                                                  key={item.slug}
+                                                                                  className={`current`}
+                                                                                  style={{
+                                                                                      display: "flex",
+                                                                                      alignItems: "center",
+                                                                                  }}
+                                                                              >
+                                                                                  <Link
+                                                                                      onClick={toggleSidebar}
+                                                                                      to={`/shoproduct/${group.slug}/${item.slug}`}
+                                                                                      style={{
+                                                                                          textDecoration: "none",
+                                                                                          color: "inherit",
+                                                                                      }}
+                                                                                  >
+                                                                                      <i
+                                                                                          class="bi bi-circle-fill"
+                                                                                          style={{
+                                                                                              fontSize: "10px",
+                                                                                              marginRight: "8px",
+                                                                                          }}
+                                                                                      ></i>
+                                                                                      {item.title}
+                                                                                  </Link>
+                                                                              </li>
+                                                                          ))
                                                                 : null}
-
-                                           
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -520,38 +442,29 @@ const ShopProduct = () => {
                                                 <div className="block-content">
                                                     <Slider
                                                         onChange={handleChange}
+                                                        value={priceValArr}
                                                         style={{ width: "90%" }}
                                                         defaultValue={100}
-                                                        getAriaValueText={
-                                                            valuetext
-                                                        }
+                                                        getAriaValueText={valuetext}
                                                         marks={marks}
                                                         max={10000}
                                                         aria-label="Default"
                                                         valueLabelDisplay="auto"
                                                         sx={{
                                                             color: "black",
-                                                            "& .MuiSlider-thumb":
-                                                            {
-                                                                borderColor:
-                                                                    "black",
+                                                            "& .MuiSlider-thumb": {
+                                                                borderColor: "black",
                                                             },
-                                                            "& .MuiSlider-track":
-                                                            {
-                                                                borderColor:
-                                                                    "black",
+                                                            "& .MuiSlider-track": {
+                                                                borderColor: "black",
                                                             },
-                                                            "& .MuiSlider-rail":
-                                                            {
-                                                                borderColor:
-                                                                    "black",
+                                                            "& .MuiSlider-rail": {
+                                                                borderColor: "black",
                                                             },
                                                         }}
                                                     />
                                                 </div>
                                             </div>
-
-                                    
 
                                             <div className="block block-product-filter clearfix my-3">
                                                 {brand.length > 0 && (
@@ -560,12 +473,9 @@ const ShopProduct = () => {
                                                             <h2
                                                                 className="bg-light text-dark text-uppercase"
                                                                 style={{
-                                                                    fontSize:
-                                                                        "17px",
-                                                                    fontWeight:
-                                                                        "bold",
-                                                                    padding:
-                                                                        "5px",
+                                                                    fontSize: "17px",
+                                                                    fontWeight: "bold",
+                                                                    padding: "5px",
                                                                 }}
                                                             >
                                                                 Brands
@@ -574,47 +484,33 @@ const ShopProduct = () => {
                                                         <div
                                                             className="block-content"
                                                             style={{
-                                                                marginLeft:
-                                                                    "10px",
+                                                                marginLeft: "10px",
                                                             }}
                                                         >
                                                             <ul className="filter-items image">
-                                                                {brand.map(
-                                                                    (brand) => {
-                                                                        return (
-                                                                            <li
-                                                                                key={
-                                                                                    brand.id
-                                                                                }
+                                                                {brand.map((brand) => {
+                                                                    return (
+                                                                        <li key={brand.id}>
+                                                                            {" "}
+                                                                            {/* Added key for better performance */}
+                                                                            <span
+                                                                                onClick={() => {
+                                                                                    setBrandid(brand.id);
+                                                                                    setBrandName(brand.title);
+                                                                                }}
                                                                             >
-                                                                                {" "}
-                                                                                {/* Added key for better performance */}
-                                                                                <span
-                                                                                    onClick={() => {
-                                                                                        setBrandid(
-                                                                                            brand.id
-                                                                                        );
-                                                                                        setBrandName(
-                                                                                            brand.title
-                                                                                        );
-                                                                                    }}
-                                                                                >
-                                                                                    <img
-                                                                                        src={
-                                                                                            brand.logo
-                                                                                                ? `${IMG_URL}/brand/${brand.logo}`
-                                                                                                : `${IMG_URL}/brand/${brand.logo}`
-                                                                                        }
-                                                                                        alt={
-                                                                                            brand.title ||
-                                                                                            "Brand"
-                                                                                        }
-                                                                                    />
-                                                                                </span>
-                                                                            </li>
-                                                                        );
-                                                                    }
-                                                                )}
+                                                                                <img
+                                                                                    src={
+                                                                                        brand.logo
+                                                                                            ? `${IMG_URL}/brand/${brand.logo}`
+                                                                                            : `${IMG_URL}/brand/${brand.logo}`
+                                                                                    }
+                                                                                    alt={brand.title || "Brand"}
+                                                                                />
+                                                                            </span>
+                                                                        </li>
+                                                                    );
+                                                                })}
                                                             </ul>
                                                         </div>
                                                     </>
@@ -629,12 +525,9 @@ const ShopProduct = () => {
                                                             <h2
                                                                 className="bg-light text-dark text-uppercase"
                                                                 style={{
-                                                                    fontSize:
-                                                                        "17px",
-                                                                    fontWeight:
-                                                                        "bold",
-                                                                    padding:
-                                                                        "5px",
+                                                                    fontSize: "17px",
+                                                                    fontWeight: "bold",
+                                                                    padding: "5px",
                                                                 }}
                                                             >
                                                                 Feature Product
@@ -643,90 +536,70 @@ const ShopProduct = () => {
                                                         <div
                                                             className="block-content"
                                                             style={{
-                                                                marginLeft:
-                                                                    "10px",
+                                                                marginLeft: "10px",
                                                             }}
                                                         >
                                                             <ul className="products-list">
                                                                 {products
-                                                                    .filter(
-                                                                        (
-                                                                            featured
-                                                                        ) =>
-                                                                            featured.featured ===
-                                                                            1
-                                                                    )
-                                                                    .map(
-                                                                        (
-                                                                            featured
-                                                                        ) => {
-                                                                            return (
-                                                                                <Link
-                                                                                    to={`/product/${featured.slug}`}
-                                                                                    onClick={
-                                                                                        toggleSidebar
-                                                                                    }
-                                                                                >
-                                                                                    <li className="product-item my-2">
-                                                                                        <a
-                                                                                            href="shop-details.html"
-                                                                                            className="product-image"
-                                                                                        >
-                                                                                            <img
-                                                                                                src={
-                                                                                                    `${IMG_URL}/productimg/` +
-                                                                                                    featured.image1
-                                                                                                }
-                                                                                                alt="product6"
-                                                                                            />
-                                                                                        </a>
-                                                                                        <div className="product-content">
-                                                                                            <h2 className="product-title text-uppercase">
-                                                                                                <Link
-                                                                                                    to={`/product/${featured.slug}`}
-                                                                                                >
-                                                                                                    {
-                                                                                                        featured.product_title
-                                                                                                    }
-                                                                                                </Link>
-                                                                                            </h2>
-                                                                                            {/* <div className="rating small">
+                                                                    .filter((featured) => featured.featured === 1)
+                                                                    .map((featured) => {
+                                                                        return (
+                                                                            <Link
+                                                                                to={`/product/${featured.slug}`}
+                                                                                onClick={toggleSidebar}
+                                                                            >
+                                                                                <li className="product-item my-2">
+                                                                                    <a
+                                                                                        href="shop-details.html"
+                                                                                        className="product-image"
+                                                                                    >
+                                                                                        <img
+                                                                                            src={
+                                                                                                `${IMG_URL}/productimg/` +
+                                                                                                featured.image1
+                                                                                            }
+                                                                                            alt="product6"
+                                                                                        />
+                                                                                    </a>
+                                                                                    <div className="product-content">
+                                                                                        <h2 className="product-title text-uppercase">
+                                                                                            <Link
+                                                                                                to={`/product/${featured.slug}`}
+                                                                                            >
+                                                                                                {featured.product_title}
+                                                                                            </Link>
+                                                                                        </h2>
+                                                                                        {/* <div className="rating small">
                                           <div className="star star-5"></div>
                                         </div> */}
 
-                                                                                            {featured.disc_price ? (
-                                                                                                <span className="price">
-                                                                                                    <del aria-hidden="true">
-                                                                                                        <span>
-                                                                                                            ₹
-                                                                                                            {
-                                                                                                                featured.price
-                                                                                                            }
-                                                                                                        </span>
-                                                                                                    </del>
-                                                                                                    <ins>
-                                                                                                        <span>
-                                                                                                            ₹
-                                                                                                            {
-                                                                                                                featured.disc_price
-                                                                                                            }
-                                                                                                        </span>
-                                                                                                    </ins>
-                                                                                                </span>
-                                                                                            ) : (
-                                                                                                <span className="price">
-                                                                                                    ₹
-                                                                                                    {
-                                                                                                        featured.price
-                                                                                                    }
-                                                                                                </span>
-                                                                                            )}
-                                                                                        </div>
-                                                                                    </li>
-                                                                                </Link>
-                                                                            );
-                                                                        }
-                                                                    )}
+                                                                                        {featured.disc_price ? (
+                                                                                            <span className="price">
+                                                                                                <del aria-hidden="true">
+                                                                                                    <span>
+                                                                                                        ₹
+                                                                                                        {featured.price}
+                                                                                                    </span>
+                                                                                                </del>
+                                                                                                <ins>
+                                                                                                    <span>
+                                                                                                        ₹
+                                                                                                        {
+                                                                                                            featured.disc_price
+                                                                                                        }
+                                                                                                    </span>
+                                                                                                </ins>
+                                                                                            </span>
+                                                                                        ) : (
+                                                                                            <span className="price">
+                                                                                                ₹{featured.price}
+                                                                                            </span>
+                                                                                        )}
+                                                                                    </div>
+                                                                                </li>
+                                                                            </Link>
+                                                                        );
+                                                                    })}
                                                             </ul>
                                                         </div>
                                                     </>
@@ -741,11 +614,9 @@ const ShopProduct = () => {
                                                         className="flex-container"
                                                         style={{
                                                             display: "flex",
-                                                            alignItems:
-                                                                "center",
+                                                            alignItems: "center",
                                                         }}
                                                     >
-                                      
                                                         <div
                                                             className="mob-filter"
                                                             style={{
@@ -754,39 +625,29 @@ const ShopProduct = () => {
                                                             ref={togBoxRef}
                                                         >
                                                             <Icon
-                                                                path={
-                                                                    mdiFilterVariant
-                                                                }
-                                                                onClick={
-                                                                    toggleSidebar
-                                                                }
+                                                                path={mdiFilterVariant}
+                                                                onClick={toggleSidebar}
                                                                 className="border p-1"
                                                                 size={2}
                                                             />
                                                         </div>
 
-                                                        {value > 0 && (
+                                                        {priceValArr[0] !== 0 || priceValArr[1] !== 10000 ? (
                                                             <Chip
                                                                 className="mx-2"
-                                                                label={`₹0 to ${value}`}
-                                                                onDelete={
-                                                                    handledelete
-                                                                }
+                                                                label={`₹${priceValArr[0]} to ${priceValArr[1]}`}
+                                                                onDelete={handledelete}
                                                                 style={{
-                                                                    fontSize:
-                                                                        "0.75rem",
+                                                                    fontSize: "0.75rem",
                                                                 }}
                                                             />
-                                                        )}
+                                                        ) : null}
                                                         {brandname !== "" && (
                                                             <Chip
                                                                 label={`${brandname}`}
-                                                                onDelete={
-                                                                    handlbrandedelete
-                                                                }
+                                                                onDelete={handlbrandedelete}
                                                                 style={{
-                                                                    fontSize:
-                                                                        "0.75rem",
+                                                                    fontSize: "0.75rem",
                                                                 }}
                                                             />
                                                         )}
@@ -796,16 +657,11 @@ const ShopProduct = () => {
                                                         <div
                                                             className=""
                                                             style={{
-                                                                fontSize:
-                                                                    "0.75rem",
+                                                                fontSize: "0.75rem",
                                                             }}
                                                         >
                                                             <div className="products-count">
-                                                                Showing all{" "}
-                                                                {
-                                                                    products.length
-                                                                }{" "}
-                                                                results
+                                                                Showing all {products.length} results
                                                             </div>
                                                         </div>
                                                         <div className="products-topbar-right">
@@ -822,69 +678,37 @@ const ShopProduct = () => {
                                                                     }}
                                                                 >
                                                                     <Select
-                                                                        onChange={
-                                                                            handlesortchange
-                                                                        }
+                                                                        onChange={handlesortchange}
                                                                         // displayEmpty
                                                                         defaultValue={`default`}
                                                                         sx={{
                                                                             "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                                                            {
-                                                                                borderColor:
-                                                                                    "rgba(0, 0, 0, 1)",
-                                                                            },
-                                                                            "& .MuiSelect-select":
-                                                                            {
-                                                                                padding:
-                                                                                    "10px 16px",
-                                                                                fontSize:
-                                                                                    "0.75rem",
+                                                                                {
+                                                                                    borderColor: "rgba(0, 0, 0, 1)",
+                                                                                },
+                                                                            "& .MuiSelect-select": {
+                                                                                padding: "10px 16px",
+                                                                                fontSize: "0.75rem",
                                                                             },
                                                                             "&:hover .MuiOutlinedInput-notchedOutline":
-                                                                            {
-                                                                                borderColor:
-                                                                                    "rgba(0, 0, 0, 1)",
-                                                                            },
+                                                                                {
+                                                                                    borderColor: "rgba(0, 0, 0, 1)",
+                                                                                },
                                                                         }}
                                                                     >
                                                                         <MenuItem value="default">
-                                                                            Default
-                                                                            sorting
+                                                                            Default sorting
                                                                         </MenuItem>
                                                                         {/* <MenuItem value={10}>Sort by popularity</MenuItem>
                                                                     <MenuItem value={20}>Sort by average rating</MenuItem> */}
-                                                                        <MenuItem
-                                                                            value={
-                                                                                "latest"
-                                                                            }
-                                                                        >
-                                                                            Sort
-                                                                            by
-                                                                            latest
+                                                                        <MenuItem value={"latest"}>
+                                                                            Sort by latest
                                                                         </MenuItem>
-                                                                        <MenuItem
-                                                                            value={
-                                                                                "low"
-                                                                            }
-                                                                        >
-                                                                            Sort
-                                                                            by
-                                                                            price:
-                                                                            low
-                                                                            to
-                                                                            high
+                                                                        <MenuItem value={"low"}>
+                                                                            Sort by price: low to high
                                                                         </MenuItem>
-                                                                        <MenuItem
-                                                                            value={
-                                                                                "high"
-                                                                            }
-                                                                        >
-                                                                            Sort
-                                                                            by
-                                                                            price:
-                                                                            high
-                                                                            to
-                                                                            low
+                                                                        <MenuItem value={"high"}>
+                                                                            Sort by price: high to low
                                                                         </MenuItem>
                                                                     </Select>
                                                                 </FormControl>
@@ -902,92 +726,50 @@ const ShopProduct = () => {
                                                 >
                                                     <div className="products-list grid">
                                                         <div className="row">
-                                                            {products.length ===
-                                                                0 ? (
+                                                            {products.length === 0 ? (
                                                                 <div
                                                                     className="no-products-message"
                                                                     style={{
-                                                                        textAlign:
-                                                                            "center",
+                                                                        textAlign: "center",
                                                                         width: "100%",
-                                                                        marginTop:
-                                                                            "20px",
-                                                                        fontSize:
-                                                                            "25px",
-                                                                        fontWeight:
-                                                                            "bold",
+                                                                        marginTop: "20px",
+                                                                        fontSize: "25px",
+                                                                        fontWeight: "bold",
                                                                     }}
                                                                 >
                                                                     <img
-                                                                        src={
-                                                                            Noproduct
-                                                                        }
+                                                                        src={Noproduct}
                                                                         alt="No Products Found"
                                                                         style={{
                                                                             width: "100%",
-                                                                            maxWidth:
-                                                                                "400px",
+                                                                            maxWidth: "400px",
                                                                             height: "auto",
-                                                                            display:
-                                                                                "block",
+                                                                            display: "block",
                                                                             margin: "0 auto",
                                                                         }}
                                                                     />
-
                                                                 </div>
                                                             ) : (
-                                                                products.map(
-                                                                    (
-                                                                        product
-                                                                    ) => {
-                                                                        return (
-                                                                            <ProductCard
-                                                                                proid={
-                                                                                    product.proid
-                                                                                }
-                                                                                title={
-                                                                                    product.product_title
-                                                                                }
-                                                                                disc_price={
-                                                                                    product.disc_price
-                                                                                }
-                                                                                price={
-                                                                                    product.disc_price
-                                                                                }
-                                                                                image1={
-                                                                                    product.image1
-                                                                                }
-                                                                                image2={
-                                                                                    product.image2
-                                                                                }
-                                                                                trending={
-                                                                                    product.trending
-                                                                                }
-                                                                                catid={
-                                                                                    product.catid
-                                                                                }
-                                                                                slug={
-                                                                                    product.slug
-                                                                                }
-                                                                                v_id={
-                                                                                    product.v_id
-                                                                                }
-                                                                                gst={
-                                                                                    product.gst
-                                                                                }
-                                                                                customizable={
-                                                                                    product.customizable
-                                                                                }
-                                                                                stock={
-                                                                                    product.stock
-                                                                                }
-                                                                                r_tock={
-                                                                                    product.r_stock
-                                                                                }
-                                                                            />
-                                                                        );
-                                                                    }
-                                                                )
+                                                                products.map((product) => {
+                                                                    return (
+                                                                        <ProductCard
+                                                                            proid={product.proid}
+                                                                            title={product.product_title}
+                                                                            disc_price={product.disc_price}
+                                                                            price={product.disc_price}
+                                                                            image1={product.image1}
+                                                                            image2={product.image2}
+                                                                            trending={product.trending}
+                                                                            catid={product.catid}
+                                                                            slug={product.slug}
+                                                                            v_id={product.v_id}
+                                                                            gst={product.gst}
+                                                                            customizable={product.customizable}
+                                                                            stock={product.stock}
+                                                                            r_tock={product.r_stock}
+                                                                        />
+                                                                    );
+                                                                })
                                                             )}
                                                         </div>
                                                     </div>
