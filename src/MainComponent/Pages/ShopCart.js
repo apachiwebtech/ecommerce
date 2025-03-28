@@ -33,51 +33,57 @@ const ShopCart = ({ fetchcount }) => {
   };
 
 
-  const handleIncrease = (itemId, proid,qty) => {
-    setQuantities(prevQuantities => ({
-      ...prevQuantities,
-      [itemId]: (prevQuantities[itemId] || 0) + 1 
-    }));
-
-
-    console.log(quantities, "value")
-
-    const data = {
-      pqty: quantities[itemId] + 1,
-      order_id: Cookies.get(`orderid`),
-      p_id: proid
-    }
-
-
-    axios.post(`${BASE_URL}/update_proqty`, data)
-      .then((res) => {
-        console.log(res)
-        getcartdata()
-      })
+  const handleIncrease = (itemId, proid, qty, stock) => {
+    setQuantities(prevQuantities => {
+      const currentQty = prevQuantities[itemId] || Number(qty);
+      const updatedQty = currentQty < stock ? currentQty + 1 : stock; // Ensure it doesn't exceed stock
+  
+      const data = {
+        pqty: updatedQty,  // Use the updated quantity
+        order_id: Cookies.get(`orderid`),
+        p_id: proid
+      };
+  
+      if (currentQty < stock) { // Only update the API if quantity is increasing
+        axios.post(`${BASE_URL}/update_proqty`, data)
+          .then(() => {
+            getcartdata();
+          });
+      }
+  
+      return {
+        ...prevQuantities,
+        [itemId]: updatedQty
+      };
+    });
   };
+  
+  
 
 
 
-  const handleDecrease = (itemId, proid) => {
-    setQuantities(prevQuantities => ({
-      ...prevQuantities,
-      [itemId]: Math.max((prevQuantities[itemId] || 0) - 1, 1)
-    }));
-
-
-    const data = {
-      pqty: quantities[itemId] ,
-      order_id: Cookies.get(`orderid`),
-      p_id: proid
-    }
-
-
-    axios.post(`${BASE_URL}/update_proqty`, data)
-      .then((res) => {
-        console.log(res)
-        getcartdata()
-      })
+  const handleDecrease = (itemId, proid, qty) => {
+    setQuantities(prevQuantities => {
+      const updatedQty = Math.max((prevQuantities[itemId] || Number(qty)) - 1, 1);
+  
+      const data = {
+        pqty: updatedQty,  // Use the updated quantity
+        order_id: Cookies.get(`orderid`),
+        p_id: proid
+      };
+  
+      axios.post(`${BASE_URL}/update_proqty`, data)
+        .then(() => {
+          getcartdata();
+        });
+  
+      return {
+        ...prevQuantities,
+        [itemId]: updatedQty
+      };
+    });
   };
+  
 
   async function getcartdata() {
 
@@ -275,9 +281,9 @@ useEffect(() => {
                                               <p className="product-price">Price: <span className="fw-bold">₹{item.price}</span></p>
                                               <div className="product-quantity">
                                                 <div className="quantity">
-                                                  <button type="button" className="minus" onClick={() => handleDecrease(item.id, item.proid , item.pqty)}>-</button>
+                                                  <button type="button" className="minus" onClick={() => handleDecrease(item.id, item.proid , item.pqty )}>-</button>
                                                   <input type="number" className="qty" step="1" min="0" max="" name="quantity" value={quantities[item.id] || item.pqty} title="Qty" size="4" placeholder="" inputMode="numeric" autoComplete="off" />
-                                                  <button type="button" onClick={() => handleIncrease(item.id, item.proid)} className="plus">+</button>
+                                                  <button type="button" onClick={() => handleIncrease(item.id, item.proid , item.pqty , item.stock)} className="plus">+</button>
                                                 </div>
                                               </div>
                                               <p className="product-subtotal mt-2">Subtotal: <span className="product-subtotal fw-bold">₹{total}</span></p>

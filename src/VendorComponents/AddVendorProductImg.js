@@ -6,14 +6,11 @@ import InnerHeader from './InnerHeader';
 import axios from 'axios';
 import { BASE_URL, IMG_URL } from '../AdminComponent/BaseUrl';
 import { Autocomplete, TextField } from '@mui/material';
-import decryptedUserId from '../Utils/UserID';
 import DeleteIcon from "@mui/icons-material/Delete";
 import CustomHeder from './CustomHeder';
 import Loader from './Loader';
-import Cookies from 'js-cookie';
-import { useDispatch, useSelector } from 'react-redux';
-import { getRoleData } from '../Store/Role/role-action';
 import CloseIcon from '@mui/icons-material/Close';
+import decryptedvendorid from '../Utils/Vendorid';
 
 const AddVendorProductImg = () => {
     const [value, setValue] = useState({
@@ -46,6 +43,14 @@ const AddVendorProductImg = () => {
         if (!image1) {
             isValid = false;
             newErrors.image1 = "Upload 1 is required"
+        }
+        if (!image2) {
+            isValid = false;
+            newErrors.image2 = "Upload 2 is required"
+        }
+        if (!image3) {
+            isValid = false;
+            newErrors.image3 = "Upload 3 is required"
         }
 
         if (!color_id) {
@@ -229,7 +234,7 @@ const AddVendorProductImg = () => {
             formdata.append("image4", image4)
             formdata.append("color_id", color_id)
             formdata.append("product_id", product_id)
-            formdata.append("user_id", decryptedUserId())
+            formdata.append("user_id", decryptedvendorid())
 
             axios.post(`${BASE_URL}/add_product_img`, formdata)
                 .then((res) => {
@@ -237,7 +242,10 @@ const AddVendorProductImg = () => {
                     alert(res.data)
                     setLoader(false)
                     getProductimgData()
-                    window.location.pathname = `/webapp/addimages/${product_id}/${product_name}`
+                    window.location.reload()
+                })
+                .catch((err) =>{
+                    console.log(err , "$$$")
                 })
         }
 
@@ -253,7 +261,7 @@ const AddVendorProductImg = () => {
             const data = {
                 title: value.title,
                 colorcode: value.colorcode,
-                user_id: decryptedUserId(),
+                user_id: decryptedvendorid(),
 
             }
 
@@ -288,18 +296,9 @@ const AddVendorProductImg = () => {
 
 
 
-    const roledata = {
-        role: Cookies.get(`role`),
-        pageid: 10
-    }
-
-    const dispatch = useDispatch()
-    const roleaccess = useSelector((state) => state.roleAssign?.roleAssign[0]?.accessid);
 
 
-    useEffect(() => {
-        dispatch(getRoleData(roledata))
-    }, [])
+
 
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -310,7 +309,7 @@ const AddVendorProductImg = () => {
     return (
         <div class="container-fluid page-body-wrapper position-relative col-lg-12" >
             {loader && <Loader />}
-            {roleaccess > 1 ? <div class="main-panel">
+         <div class="main-panel">
                 <div class="content-wrapper" style={{ height: "100vh" }}>
                     <CustomHeder />
                     <div className='py-3'>
@@ -350,22 +349,22 @@ const AddVendorProductImg = () => {
                                                         {error.image1 && <span className='text-danger'>{error.image1}</span>}
                                                     </div>
                                                     <div class="form-group col-lg-6">
-                                                        <label>Img Upload 2</label>
+                                                        <label>Img Upload 2<span className='text-danger'>*</span></label>
 
                                                         <input type="file" class="form-control file-upload-info" name='image2' accept="image/*" onChange={handleupload2} />
-                                                        {/* {errors.panupload && <div className="text-danger">{errors.panupload}</div>} */}
+                                                        {error.image2 && <span className='text-danger'>{error.image2}</span>}
                                                     </div>
                                                     <div class="form-group col-lg-6">
-                                                        <label>Img Upload 3</label>
+                                                        <label>Img Upload 3<span className='text-danger'>*</span></label>
 
                                                         <input type="file" class="form-control file-upload-info" name='image3' accept="image/*" onChange={handleupload3} />
-                                                        {/* {errors.agreementupload && <div className="text-danger">{errors.agreementupload}</div>} */}
+                                                        {error.image3 && <span className='text-danger'>{error.image3}</span>}
                                                     </div>
                                                     <div class="form-group col-lg-6">
                                                         <label>Video upload 4</label>
 
                                                         <input type="file" class="form-control file-upload-info" name='image4' accept="video/*" onChange={handleupload4} />
-                                                        {/* {errors.agreementupload && <div className="text-danger">{errors.agreementupload}</div>} */}
+
                                                     </div>
 
                                                     <div class="form-group col-lg-6">
@@ -412,7 +411,7 @@ const AddVendorProductImg = () => {
                                                                                 <input type="color" class="form-control" value={value.colorcode} name='colorcode' onChange={onhandleChange} />
                                                                             </div>
 
-                                                                            {roleaccess > 2 && <> 
+                                                                           <> 
                                                                              <button type="button" onClick={handleSubmit2} class="btn btn-primary mr-2" data-bs-dismiss="modal">Submit</button>
 
                                                                                 {/* <button type='button' onClick={() => {
@@ -420,7 +419,7 @@ const AddVendorProductImg = () => {
                                                                                 }} class="btn btn-light">Cancel</button> */}
                                                                                 </>
                                                                                 
-                                                                                }
+                                                                                
 
                                                                         </form>
                                                                     </div>
@@ -436,10 +435,10 @@ const AddVendorProductImg = () => {
                                                 <div className='row'>
                                                     <div className="col-lg-12 my-3">
 
-                                                        {roleaccess > 2 && <> <button type='submit' className="btn btn btn-primary mr-2">Add</button>
+                                                      <> <button type='submit' className="btn btn btn-primary mr-2">Add</button>
                                                             <button type='button' onClick={() => {
                                                                 window.location.reload()
-                                                            }} class="btn btn-light">Cancel</button></>}
+                                                            }} class="btn btn-light">Cancel</button></>
 
                                                     </div>
                                                 </div>
@@ -533,9 +532,9 @@ const AddVendorProductImg = () => {
                                                             <td>{item.images[0] ? <img src={`${IMG_URL}/productimg/` + item.images[0]} alt='' /> : <></>}{item.images[1]? <img src={`${IMG_URL}/productimg/` + item.images[1]} alt='' /> : <></>}{item.images[2] ? <img src={`${IMG_URL}/productimg/` + item.images[2]} alt='' /> : <></>}{item.images[3] && <img src={`${IMG_URL}/productimg/` + item.images[3]} alt='' /> }</td>
                                                             <td>{item.title}</td>
                                                             <td>
-                                                                {roleaccess > 3 && <Link>
+                                                        <Link>
                                                                     <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
-                                                                </Link>}
+                                                                </Link>
 
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
@@ -564,7 +563,7 @@ const AddVendorProductImg = () => {
 
                     </div>
                 </div>
-            </div> : null}
+            </div> 
 
         </div>
     )

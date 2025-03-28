@@ -402,9 +402,8 @@ const DetailPage = () => {
 
                                                             <div class="product-info col-lg-5 col-md-12 col-12 ">
                                                                 <h1 class="title text-uppercase">{item.title}</h1>
-                                                                <span class="price">
-                                                                    {console.log(item)}
-                                                                    {item.price ? (
+                                                                {item.price ? (
+                                                                    <span class="price">
                                                                         <del aria-hidden="true">
                                                                             <span
                                                                                 style={{
@@ -415,31 +414,18 @@ const DetailPage = () => {
                                                                                 ₹{item.price}
                                                                             </span>
                                                                         </del>
-                                                                    ) : null}
-                                                                    {/* {item.price !== 0 &&
-                                                                    item.price !== item.disc_price ? (
-                                                                        <del aria-hidden="true">
-                                                                            <span
-                                                                                style={{
-                                                                                    marginRight: "6px",
-                                                                                    display: "inline-block",
-                                                                                }}
-                                                                            >
-                                                                                ₹{item.price}
+                                                                        <ins>
+                                                                            <span style={{ display: "inline-block" }}>
+                                                                                ₹{item.disc_price}
                                                                             </span>
-                                                                        </del>
-                                                                    ) : null} */}
-                                                                    <ins>
-                                                                        <span style={{ display: "inline-block" }}>
-                                                                            ₹{item.disc_price}
-                                                                        </span>
-                                                                    </ins>
-                                                                </span>
+                                                                        </ins>
+                                                                    </span>
+                                                                ) : <span className="price">₹{item.disc_price}</span>}
 
                                                                 {item.stock == null ||
-                                                                item.stock == 0 ||
-                                                                item.stock == r_stock ||
-                                                                item.stock < 0 ? (
+                                                                    item.stock == 0 ||
+                                                                    item.stock == r_stock ||
+                                                                    item.stock < 0 ? (
                                                                     <div className="out-of-stock">
                                                                         <span style={{ color: "red" }}>
                                                                             Out Of Stock
@@ -472,13 +458,13 @@ const DetailPage = () => {
                                                                         <tbody>
                                                                             <tr>
                                                                                 <td class="label">Size</td>
-                                                                                {/* <td class="attributes">
-																					<ul class="text">
-																						<li><span>L</span></li>
-																						<li><span>M</span></li>
-																						<li><span>S</span></li>
+                                                                                <td class="attributes">
+																					<ul class="">
+																						<li><span>{item.length}{item.lbh_unit}</span></li>
+																						<li>X<span> {item.breadth}{item.lbh_unit}</span></li>
+																						<li>X<span> {item.height}{item.lbh_unit}</span></li>
 																					</ul>
-																				</td> */}
+																				</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td class="label">Colour</td>
@@ -496,7 +482,7 @@ const DetailPage = () => {
                                                                                                                 height: "50px",
                                                                                                                 border:
                                                                                                                     selectedColorId ===
-                                                                                                                    item.id
+                                                                                                                        item.id
                                                                                                                         ? "2px solid black"
                                                                                                                         : "none",
                                                                                                             }}
@@ -551,9 +537,9 @@ const DetailPage = () => {
                                                                     </div>
 
                                                                     {item.stock == null ||
-                                                                    item.stock == 0 ||
-                                                                    item.stock == r_stock ||
-                                                                    item.stock < 0 ? (
+                                                                        item.stock == 0 ||
+                                                                        item.stock == r_stock ||
+                                                                        item.stock < 0 ? (
                                                                         <div>
                                                                             {/* <div className="button  text-danger">
                                         Out Of Stock
@@ -572,8 +558,7 @@ const DetailPage = () => {
                                                                                             setValue(value + 1);
                                                                                         } else {
                                                                                             alert(
-                                                                                                `Available stock is ${
-                                                                                                    item.stock - r_stock
+                                                                                                `Available stock is ${item.stock - r_stock
                                                                                                 }`
                                                                                             );
                                                                                         }
@@ -1024,18 +1009,18 @@ const DetailPage = () => {
                                                                                                 <div class="products-thumb">
                                                                                                     {item.customizable ==
                                                                                                         1 && (
-                                                                                                        <div className="product-lable">
-                                                                                                            <div
-                                                                                                                className="hot text-light"
-                                                                                                                style={{
-                                                                                                                    backgroundColor:
-                                                                                                                        "#000000",
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                customizable
+                                                                                                            <div className="product-lable">
+                                                                                                                <div
+                                                                                                                    className="hot text-light"
+                                                                                                                    style={{
+                                                                                                                        backgroundColor:
+                                                                                                                            "#000000",
+                                                                                                                    }}
+                                                                                                                >
+                                                                                                                    customizable
+                                                                                                                </div>
                                                                                                             </div>
-                                                                                                        </div>
-                                                                                                    )}
+                                                                                                        )}
 
                                                                                                     <div class="product-thumb-hover">
                                                                                                         <Link
@@ -1127,7 +1112,7 @@ const DetailPage = () => {
                                                                                                         {/* <div class="rating">
 																											<div class="star star-5"></div>
 																										</div> */}
-                                                                                                        {item.disc_price ? (
+                                                                                                        {item.price ? (
                                                                                                             <span className="price">
                                                                                                                 {item.price ? (
                                                                                                                     <del aria-hidden="true">
@@ -1151,7 +1136,7 @@ const DetailPage = () => {
                                                                                                         ) : (
                                                                                                             <span className="price">
                                                                                                                 {
-                                                                                                                    item.price
+                                                                                                                    item.disc_price
                                                                                                                 }
                                                                                                             </span>
                                                                                                         )}

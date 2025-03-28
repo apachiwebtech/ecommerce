@@ -428,57 +428,7 @@ const SubCategory = () => {
                       )}
                     </div>
 
-                    {/* <div class="table-responsive pt-3">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th>
-                                                        #
-                                                    </th>
-                                                    <th>
-                                                        Title
-                                                    </th>
-
-
-
-                                                    <th>
-                                                        Action
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                {subcat.map((item, index) => {
-                                                    return (
-                                                        <tr key={index}>
-                                                            <td>
-                                                                {index + 1}
-                                                            </td>
-                                                            <td>
-                                                                {item.title}
-                                                            </td>
-
-
-                                                            <td>
-                                                                <EditIcon onClick={() => handleUpdate(item.id)} />
-                                                                <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
-                                                                <button className='btn btn-sm btn-danger' >Delete</button>
-                                                            </td>
-                                                            {confirmationVisibleMap[item.id] && (
-                                                                <div className='confirm-delete'>
-                                                                    <p>Are you sure you want to delete?</p>
-                                                                    <button onClick={() => handleDelete(item.id)} className='btn btn-sm btn-primary'>OK</button>
-                                                                    <button onClick={() => handleCancel(item.id)} className='btn btn-sm btn-danger'>Cancel</button>
-                                                                </div>
-                                                            )}
-                                                        </tr>
-                                                    )
-                                                })}
-
-
-                                            </tbody>
-                                        </table>
-                                    </div> */}
+            
                   </div>
                 </div>
               </div>

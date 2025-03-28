@@ -86,7 +86,7 @@ const TrendingSection = () => {
         <div class="block block-products slider">
           <div class="block-widget-wrap">
             <div class="block-title">
-              <h2>Best Seller</h2>
+             {data.length > 0 && <h2>Best Seller</h2> } 
             </div>
             <div class="block-content">
               <div class="content-product-list slick-wrap">

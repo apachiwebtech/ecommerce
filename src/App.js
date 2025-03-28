@@ -3,7 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import 'bootstrap/dist/js/bootstrap.min.js';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
-import { Outlet, createHashRouter, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, createBrowserRouter, createHashRouter, useLocation, useNavigate } from 'react-router-dom';
 import '../src/MainComponent/Library/Fontawsome/Font-awsome.css';
 import '../src/MainComponent/Library/Icomoonfont/icomoon.css';
 import '../src/MainComponent/Library/elegant-icons/css/elegant.css';
@@ -15,7 +15,7 @@ import AdminUser from './AdminComponent/AdminUser';
 import Banner from './AdminComponent/Banner';
 import { BASE_URL } from './AdminComponent/BaseUrl';
 import Brand from './AdminComponent/Brand';
-import Category from './AdminComponent/Category';
+import Category from './AdminComponent/Category'; 
 import Color from './AdminComponent/Color';
 import Gallery from './AdminComponent/Gallery';
 import Group from './AdminComponent/Group';
@@ -33,6 +33,7 @@ import SubCatetgory from './AdminComponent/SubCategory';
 import VendorForm from './AdminComponent/VendorForm';
 import VendorMaster from './AdminComponent/VendorMaster';
 import View from './AdminComponent/View';
+import  Vendorview from './VendorComponents/View';
 import WebLogin from './AdminComponent/WebLogin';
 import './App.css';
 import SiteFooter from './MainComponent/Layout/SiteFooter';
@@ -117,12 +118,13 @@ import SubCategoryBreadcrum from './AdminComponent/SubCategoryBreadcrum';
 import Collection from './AdminComponent/Collection';
 import ContectRequest from './AdminComponent/ContectRequest';
 import AddVendorProductImg from './VendorComponents/AddVendorProductImg';
+import VendorDashboard from './VendorComponents/VendorDashboard';
 
 
 
 
 
-const Router = createHashRouter([
+const Router = createBrowserRouter([
   {
     path: '/weblog',
     element: <WebLogin />
@@ -504,7 +506,7 @@ const Router = createHashRouter([
     children: [
       {
         path: '/vendor',
-        element: <AdminDashBoard />
+        element: <VendorDashboard />
       },
       {
         path: '/vendor/addProduct/:update_id',
@@ -543,7 +545,7 @@ const Router = createHashRouter([
 
       {
         path: '/vendor/view/:orderid',
-        element: <View />
+        element: <Vendorview />
       },
       {
         path: '/vendor/addbrand',

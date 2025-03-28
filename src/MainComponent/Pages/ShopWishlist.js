@@ -57,26 +57,26 @@ const ShopWishlist = () => {
 
     return (
         <div id="page" class="hfeed page-wrapper">
-            <ToastContainer theme="dark"     position="bottom-right" />
+            <ToastContainer theme="dark" position="bottom-right" />
             <div id="site-main" class="site-main">
-            <Helmet>
+                <Helmet>
                     <title>{data.seo_title}</title>
                     <meta name="description" content={data.seo_desc} dangerouslySetInnerHTML={{ __html: data.seo_desc }} />
                     <meta name="author" content={data.seo_title} />
                 </Helmet>
                 <div id="main-content" class="main-content">
                     <div id="primary" class="content-area">
-                    <div id="title" className="page-title" style={{backgroundImage:`url('${IMG_URL}/Breadcrumbs/${breaddata}')`}}>
+                        <div id="title" className="page-title" style={{ backgroundImage: `url('${IMG_URL}/Breadcrumbs/${breaddata}')` }}>
                             <div class="section-container d-flex justify-content-center">
                                 <div class="content-title-heading">
-                                    
+
                                 </div>
-                                <div 
-                                  class="breadcrumbs bg-light"
-                                  style={{
-                                    width: "fit-content",
-                                    padding: "5px 10px",
-                                  }}
+                                <div
+                                    class="breadcrumbs bg-light"
+                                    style={{
+                                        width: "fit-content",
+                                        padding: "5px 10px",
+                                    }}
                                 >
                                     <Link href="index.html">Home</Link><span class="delimiter"></span><Link href="shop-grid-left.html">Shop</Link><span class="delimiter"></span>Wishlist
                                 </div>
@@ -88,8 +88,8 @@ const ShopWishlist = () => {
                                 <div class="section-container p-l-r">
                                     <div class="shop-wishlist">
                                         <div className='text-center'>
-                                        {wishList.length == 0 && <img src={empty} alt='' />}
-                                        {wishList.length == 0 && <h3>Your wishlist is empty</h3>}
+                                            {wishList.length == 0 && <img src={empty} alt='' />}
+                                            {wishList.length == 0 && <h3>Your wishlist is empty</h3>}
                                         </div>
                                         <table class="wishlist-items">
                                             <tbody>
@@ -109,61 +109,35 @@ const ShopWishlist = () => {
                                                                 <div class="wishlist-item-name">
                                                                     <Link href="shop-details.html">{wishItem.title}</Link>
                                                                 </div>
-                                                                {wishItem.disc_price ? (<div class="wishlist-item-price">
+                                                                {wishItem.price ? (<div class="wishlist-item-price">
                                                                     <del aria-hidden="true"><span><span>&#8377;</span> {wishItem.price}</span></del>
                                                                     <ins><span>{wishItem.disc_price}</span></ins>
                                                                 </div>) : (
                                                                     <div class="wishlist-item-price">
-                                                                        <span><span>&#8377;</span> {wishItem.price}</span>
+                                                                        <span><span>&#8377;</span> {wishItem.disc_price}</span>
                                                                     </div>
                                                                 )}
                                                                 {/* <div class="wishlist-item-time">June 6, 2022</div> */}
                                                             </td>
                                                             <td class="wishlist-item-actions">
                                                                 <div class="wishlist-item-stock">
-                                                                    In stock
+                                                                    {wishItem.stock > 0 ? <span >In stock</span> : <span className='text-danger'>Out of stock</span>}
                                                                 </div>
                                                                 <div class="wishlist-item-add">
-                                                                    <div class="btn-add-to-cart" data-title="Add to cart">
-                                                                        <Link rel="nofollow" onClick={() =>{
-                                                                                 addToCart(wishItem.prod_id, wishItem.title, wishItem.catid, wishItem.disc_price, dispatch , 1 ,wishItem.v_id,wishItem.gst);
-                                                                                 removeWishListItem(wishItem.id)
-                                                                                 addify();
+                                                                    {wishItem.stock > 0 && <div class="btn-add-to-cart" data-title="Add to cart">
+                                                                        <Link rel="nofollow" onClick={() => {
+                                                                            addToCart(wishItem.prod_id, wishItem.title, wishItem.catid, wishItem.disc_price, dispatch, 1, wishItem.v_id, wishItem.gst);
+                                                                            removeWishListItem(wishItem.id)
+                                                                            addify();
                                                                         }} class="product-btn button">Add to cart</Link>
-                                                                    </div>
+                                                                    </div>}
+
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     )
                                                 })}
-                                                {/* <tr class="wishlist-item">
-                                                    <td class="wishlist-item-remove"><span></span></td>
-                                                    <td class="wishlist-item-image">
-                                                        <Link href="shop-details.html">
-                                                            <img width="600" height="600" src={product1} alt="" />
-                                                        </Link>
-                                                    </td>
-                                                    <td class="wishlist-item-info">
-                                                        <div class="wishlist-item-name">
-                                                            <Link href="shop-details.html">Pillar Dining Table Round</Link>
-                                                        </div>
-                                                        <div class="wishlist-item-price">
-                                                            <del aria-hidden="true"><span>$150.00</span></del>
-                                                            <ins><span>$100.00</span></ins>
-                                                        </div>
-                                                        <div class="wishlist-item-time">June 6, 2022</div>
-                                                    </td>
-                                                    <td class="wishlist-item-actions">
-                                                        <div class="wishlist-item-stock">
-                                                            In stock
-                                                        </div>
-                                                        <div class="wishlist-item-add">
-                                                            <div class="btn-add-to-cart" data-title="Add to cart">
-                                                                <Link rel="nofollow" href="#" class="product-btn button">Add to cart</Link>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr> */}
+
                                             </tbody>
                                         </table>
                                     </div>

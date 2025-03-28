@@ -260,7 +260,7 @@ const Product = () => {
         setUid(res.data[0]);
 
         setCustomizeValue(res.data[0]);
-
+       setHasPrice(res.data[0].isdiscounted)
         
       })
       .catch((err) => {
@@ -281,6 +281,7 @@ const Product = () => {
     axios.post(`${BASE_URL}/product_status`, data).then((res) => {
       // console.log(res)
       // setProductData()
+      alert("Status Changed")
     });
   };
 
@@ -565,64 +566,7 @@ const Product = () => {
     });
   };
 
-  // const handlesubmit = (e) => {
-  //   e.preventDefault();
-  //   if (validateForm()) {
-  //     setLoader(true);
-  //     const formdata = new FormData();
-  //     formdata.append("uid", uid.id);
 
-  //     if (update_id == ":update_id") {
-  //       formdata.append("v_id", vendor_id);
-  //       formdata.append("b_id", brand_id);
-  //       formdata.append("subcatid", subcatid);
-  //       formdata.append("catid", catid);
-  //       formdata.append("groupid", groupid);
-  //       formdata.append("collectionid", collectionid);
-  //     } else {
-  //       formdata.append("v_id", vendor_id);
-  //       formdata.append("b_id", brand_id);
-  //       formdata.append("catid", catid);
-  //       formdata.append("groupid", groupid);
-  //       formdata.append("subcatid", subcatid);
-  //       formdata.append("collectionid", collectionid);
-  //     }
-
-  //     formdata.append("title", value.title);
-  //     formdata.append("customizable", value.customize);
-  //     formdata.append("slug", value.slug);
-  //     formdata.append("price", value.price);
-  //     formdata.append("d_price", value.discountedprice);
-  //     formdata.append("description", value.description);
-  //     formdata.append("gst", value.gst);
-  //     formdata.append("hsn_code", value.hsn_code);
-  //     formdata.append("shipping_option", selectedShipping);
-
-  //     formdata.append("lbh_unit", value.lbh_unit);
-  //     formdata.append("length", value.length);
-  //     formdata.append("height", value.height);
-  //     formdata.append("breadth", value.breadth);
-  //     formdata.append("weight_unit", value.weight_unit);
-  //     formdata.append("weight", value.weight);
-  //     formdata.append("no_of_box", value.no_of_box);
-  //     formdata.append("shipping_time", value.shipping_time);
-
-      
-
-  //     formdata.append("tracking_no", value.tracking_no);
-  //     formdata.append("courier_name", value.courier_name);
-
-  //     formdata.append("sizeimage", sizeimage);
-  //     formdata.append("specification", specification);
-  //     formdata.append("user_id", decryptedUserId());
-
-  //     axios.post(`${BASE_URL}/add_product`, formdata).then((res) => {
-  //       // console.log(res.data)
-  //       setLoader(false);
-  //       alert(res.data);
-  //     });
-  //   }
-  // };
 
   
   const handlesubmit = (e) => {
@@ -696,6 +640,7 @@ const Product = () => {
   
     formdata.append("title", value.title);
     formdata.append("customizable", value.customize);
+    formdata.append("isdiscounted", hasPrice);
     formdata.append("slug", value.slug);
     formdata.append("price", value.price);
     formdata.append("d_price", value.discountedprice);
@@ -1285,7 +1230,7 @@ const Product = () => {
                         <div className="col-md-6 ">
                           <div className="form-group">
                             <label>
-                              Do you have a price?
+                              Do you have a discount price?
                               <span className="text-danger">*</span>
                             </label>
                             <FormControl

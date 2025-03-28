@@ -5,7 +5,7 @@ import { BASE_URL, IMG_URL } from '../AdminComponent/BaseUrl';
 import md5 from 'js-md5'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie';
-import logo from '../assets/images/logo/ecomlogo.png'
+import logo from "../assets/frontimg/bgrlogo.png";
 import CryptoJS from 'crypto-js';
 
 const VendorLogin = () => {
@@ -104,7 +104,10 @@ const VendorLogin = () => {
             navigate('/vendor')
           }
           else {
-            setErr('/vendorLog')
+            setErr(res.data)
+            setTimeout(() => {
+              setErr('')
+            }, 5000);
           }
 
         })
@@ -182,7 +185,7 @@ const VendorLogin = () => {
                       SIGN IN
                     </button>
                   </div>
-                  <p className='text-danger'>{err}</p>
+                  <p className='text-danger py-3'>{err}</p>
                 </form>
 
 

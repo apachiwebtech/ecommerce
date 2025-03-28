@@ -97,22 +97,25 @@ const WebLogin = () => {
       }
       axios.post(`${BASE_URL}/login`, data)
         .then((res) => {
-          console.log(res.data.data[0].role, "role")
+
 
           if (res.data.id) {
 
             const role = res.data.data[0].role
             const ciphertext = CryptoJS.AES.encrypt(res.data.id.toString(), encryptionKey).toString();
-         
-            Cookies.set('userid', ciphertext, { expires: 2 }); 
+
+            Cookies.set('userid', ciphertext, { expires: 2 });
             Cookies.set('role', role, { expires: 2 });
-      
-           
+
+
             navigate('/webapp')
+          }else {
+            setErr(res.data.err)
+            setTimeout(() => {
+              setErr('')
+            }, 5000);
           }
-          else {
-            setErr('/weblog')
-          }
+
 
         })
         .catch((err) => {
@@ -189,7 +192,7 @@ const WebLogin = () => {
                       SIGN IN
                     </button>
                   </div>
-                  <p className='text-danger'>{err}</p>
+                  <p className='text-danger py-3'>{err}</p>
                 </form>
 
 

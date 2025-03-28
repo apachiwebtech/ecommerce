@@ -50,6 +50,7 @@ const Checkout = () => {
 
 
 
+
   const [value, setValue] = useState({
     firstname: "",
     lastname: "",
@@ -61,6 +62,8 @@ const Checkout = () => {
     postcode: "",
     orderNotes: "",
     mobile: "",
+    gst: "",
+    cname : "",
 
     sfirstname: "",
     slastname: "",
@@ -72,6 +75,9 @@ const Checkout = () => {
     spostcode: "",
     smobile: "",
   });
+
+  
+  console.log(value.cname , value.gst , "%%&%$#$%Y")
 
 
   const notify = () => toast("Profile updated successfully..");
@@ -114,7 +120,7 @@ const Checkout = () => {
       isValid = false;
       newErrors.mobile = "Mobile must be a 10-digit number";
     }
-    
+
     if (!value.state) {
       isValid = false;
       newErrors.state = "state is required";
@@ -128,7 +134,7 @@ const Checkout = () => {
       isValid = false;
       newErrors.postcode = "Pincode must be exactly 6 digits";
     }
-    
+
 
     if (!value.sfirstname) {
       isValid = false;
@@ -216,7 +222,7 @@ const Checkout = () => {
       isValid = false;
       newErrors.pincode = "Pincode must be exactly 6 digits";
     }
-    
+
 
     setErrors(newErrors);
     return isValid;
@@ -279,9 +285,9 @@ const Checkout = () => {
             setshippings(lowestRate.total_charges); // Set the ID with the lowest total charges
             console.log(lowestRate.id);
             console.log(lowestRate.total_charges);
-            setshow(true);
             setLoader(false)
           }
+          setshow(true);
         }
       } catch (error) {
         console.error("Error fetching shipping rates:", error);
@@ -297,7 +303,6 @@ const Checkout = () => {
 
   const navigate = useNavigate();
 
-  const handlepayment = () => { };
 
   const onhandlesubmit = (e) => {
     e.preventDefault();
@@ -321,6 +326,8 @@ const Checkout = () => {
         orderNotes: value.orderNotes,
         mobile: value.mobile,
         vendor_id: unique_vendor_id,
+        gst : value.gst,
+        cname : value.cname,
         sfirstname: value.sfirstname || value.firstname,
         slastname: value.slastname || value.lastname,
         scountry: value.scountry || value.country,
@@ -334,10 +341,13 @@ const Checkout = () => {
         totalamt: totalPrice,
         paymode: selectedPayment,
         token: token,
-        shippingid: shipping,
-        shippingamt: shippings,
+        shippingid: shipping || '1',
+        shippingamt: shippings || '200',
         user_id: custdecryptedUserId(),
       };
+
+
+      console.log(data, "%%^&*")
 
       // ---?>  payment log
 
@@ -475,6 +485,8 @@ const Checkout = () => {
       state: value.state,
       mobile: value.mobile,
       postcode: value.postcode,
+      gst : value.gst,
+      cname : value.cname,
       sfirstname: value.firstname,
       slastname: value.lastname,
       scountry: 1,
@@ -553,7 +565,7 @@ const Checkout = () => {
 
   return (
     <div>
-     {loader &&  <Spinner/> } 
+      {loader && <Spinner />}
       <div id="site-main" className="site-main">
         <div id="main-content" className="main-content">
           <div id="primary" className="content-area">
@@ -1169,6 +1181,37 @@ const Checkout = () => {
                                         </span>
                                       )}
                                     </p>
+                                    <p className="form-row address-field validate-required validate-postcode form-row-wide col-lg-6 col-6">
+                                      <label>
+                                        Company Name
+
+                                      </label>
+                                      <span className="input-wrapper">
+                                        <input
+                                          type="text"
+                                          className="input-text"
+                                          name="cname"
+                                          value={value.cname}
+                                          onChange={onhandlechange}
+                                        />
+                                      </span>
+
+                                    </p>
+                                    <p className="form-row address-field validate-required validate-postcode form-row-wide col-lg-6 col-6">
+                                      <label>
+                                        GST No.
+                                      </label>
+                                      <span className="input-wrapper">
+                                        <input
+                                          type="text"
+                                          className="input-text"
+                                          name="gst"
+                                          value={value.gst}
+                                          onChange={onhandlechange}
+                                        />
+                                      </span>
+
+                                    </p>
                                   </div>
                                 </div>
                               </div>
@@ -1441,7 +1484,7 @@ const Checkout = () => {
                                     </label>
                                     <span className="input-wrapper">
                                       <input
-                                        type="text"
+                                        type="number"
                                         className="input-text"
                                         name="spostcode"
                                         value={value.spostcode}
@@ -1461,6 +1504,7 @@ const Checkout = () => {
                                       </span>
                                     )}
                                   </p>
+
                                 </div>
                               </div>
                             </div>
@@ -1529,7 +1573,7 @@ const Checkout = () => {
                                     <span>₹{totalPrice}</span>
                                   </div>
                                 </div>
-                                <div className="shipping-totals shipping">
+                                {/* <div className="shipping-totals shipping">
                                   <h2>Shipping</h2>
                                   <div data-title="Shipping">
                                     <ul className="shipping-methods custom-radio">
@@ -1544,12 +1588,10 @@ const Checkout = () => {
                                         />
                                         <label>Free shipping</label>
                                       </li>
-                                      {/* <li>
-                                                                           <input type="radio" name="shipping_method" data-index="0" value="flat_rate" className="shipping_method" /><label>Flat rate</label>
-                                                                       </li> */}
+                        
                                     </ul>
                                   </div>
-                                </div>
+                                </div> */}
                                 <div className="order-total">
                                   <h2>Total</h2>
                                   <div className="total-price">
@@ -1614,7 +1656,7 @@ const Checkout = () => {
                                       </p>
                                     </div>
                                   </li>
-                                  <li className="payment-method">
+                                  {/* <li className="payment-method">
                                     <input
                                       className="form-check-input"
                                       type="radio"
@@ -1633,8 +1675,8 @@ const Checkout = () => {
                                     <div className="payment-box">
                                       <p>Pay with cash upon delivery.</p>
                                     </div>
-                                  </li>
-                                  {/* <li className="payment-method">
+                                  </li> */}
+                                  <li className="payment-method">
                                     <input
                                       className="form-check-input"
                                       type="radio"
@@ -1653,7 +1695,7 @@ const Checkout = () => {
                                     <div className="payment-box">
                                       <p>Pay via any UPI app or card.</p>
                                     </div>
-                                  </li> */}
+                                  </li>
                                 </ul>
                                 <div className="form-row place-order">
                                   <div className="terms-and-conditions-wrapper">

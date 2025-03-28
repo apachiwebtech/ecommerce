@@ -18,12 +18,29 @@ const View = () => {
     const [orderstatus, setOrderStatus] = useState();
     const { orderid } = useParams();
 
+
+    const [value, setValue] = useState({
+        tracking_no: "",
+        courier_name: ""
+
+    })
+
+
+    const onTypeChange = (e) => {
+        setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    }
+
+
     async function getOrderDetails() {
         const data = {
             order_id: orderid,
         };
         axios.post(`${BASE_URL}/order_view`, data).then((res) => {
             setOrder(res.data[0]);
+            setValue({
+                tracking_no: res.data[0].tracking_no,
+                courier_name: res.data[0].courier_comp
+            })
         });
     }
 
@@ -67,6 +84,27 @@ const View = () => {
     const handleChange = (e) => {
         setOrderStatus(e.target.value);
     };
+
+    const handletracking = (e) => {
+        e.preventDefault()
+
+        const data = {
+            tracking_no: value.tracking_no,
+            courier_name: value.courier_name,
+            order_id: orderid
+        }
+
+        axios.post(`${BASE_URL}/updatetrackingdetails`, data)
+            .then((res) => {
+                console.log(res.data)
+                alert("Data Submitted")
+            })
+            .then((err) => {
+                console.log(err)
+            })
+
+
+    }
 
     const totalcgst = cart.reduce((total, row) => total + Number(row.cgst), 0);
     const totalsgst = cart.reduce((total, row) => total + Number(row.sgst), 0);
@@ -209,6 +247,41 @@ const View = () => {
 
                     <div class="row mt-4">
                         <div class="col-lg-9">
+                            <form onSubmit={handletracking} className="row align-items-center">
+
+                                <div className="form-group col-lg-5">
+                                    <label htmlFor="courier_name">
+                                        Courier Name<span className="text-danger">*</span>
+
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={value.courier_name}
+                                        onChange={onTypeChange}
+                                        name="courier_name"
+                                        placeholder="Enter courier name"
+                                    />
+                                </div>
+                                <div className="form-group col-lg-5">
+                                    <label htmlFor="tracking_no">
+                                        Tracking No<span className="text-danger">*</span>
+
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        value={value.tracking_no}
+                                        onChange={onTypeChange}
+                                        name="tracking_no"
+                                        placeholder="Enter tracking number"
+                                    />
+                                </div>
+                                <div className="col-lg-2 mt-1">
+                                    <button type="submit" className="btn btn-primary">Submit</button>
+                                </div>
+
+                            </form>
                             <div>
                                 <div class="card" style={{ height: "min-content" }}>
                                     <div class="card-head">

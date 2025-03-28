@@ -11,13 +11,17 @@ import Loader from "./Loader";
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
 import { getRoleData } from "../Store/Role/role-action";
+import { Autocomplete, TextField } from "@mui/material";
 
 const Brand = () => {
   const [brand, setBrand] = useState([]);
   const [uid, setUid] = useState([]);
+  const [vendor, setVendorData] = useState([]);
   const [image, setImage] = useState();
   const [loader, setLoader] = useState(false);
   const [cid, setCid] = useState("");
+  const [vendor_id, setId] = useState("");
+  const [selectedOption, setSelectedOption] = useState(null);
   const [error, setError] = useState({});
   const [confirmationVisibleMap, setConfirmationVisibleMap] = useState({});
   const [value, setValue] = useState({
@@ -63,6 +67,18 @@ const Brand = () => {
       });
   };
 
+
+  async function getvendordata() {
+    axios
+      .get(`${BASE_URL}/getvendordata`)
+      .then((res) => {
+        setVendorData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   async function getBrandData() {
     axios
       .get(`${BASE_URL}/Brand_data`)
@@ -77,6 +93,7 @@ const Brand = () => {
 
   useEffect(() => {
     getBrandData();
+    getvendordata()
   }, []);
 
   const handleClick = (id) => {
@@ -93,6 +110,15 @@ const Brand = () => {
       ...prevMap,
       [id]: false,
     }));
+  };
+
+  const HandleChange = (selectedValue) => {
+    if (selectedValue) {
+
+      const selectedId = selectedValue.id;
+      setSelectedOption(selectedValue);
+      setId(selectedId);
+    }
   };
 
   const handleDelete = (id) => {
@@ -129,6 +155,7 @@ const Brand = () => {
         formdata.append("logo", uid.logo);
       }
       formdata.append("description", value.description);
+      formdata.append("vendor_id", vendor_id);
       formdata.append("user_id", decryptedUserId());
       formdata.append("uid", uid.id);
 
@@ -249,6 +276,33 @@ const Brand = () => {
                     <h4 class="card-title">Add Brand</h4>
 
                     <form class="forms-sample py-3" onSubmit={handleSubmit}>
+
+                      <div class="form-group">
+                        <label for="exampleInputUsername1">Vendor</label>
+                        <Autocomplete
+                          disablePortal
+                          id="combo-box-demo"
+                          options={vendor}
+                          size="small"
+                          value={selectedOption}
+                          getOptionLabel={(option) => option.vendor_name}
+                          getOptionSelected={(option, value) =>
+                            option.id === value.id
+                          }
+                          sx={{
+                            width: "100%",
+                            border: "none",
+                            borderRadius: "5px",
+                          }}
+                          renderInput={(params) => <TextField {...params} />}
+                          onChange={(event, value) => HandleChange(value)}
+                          name="vendor"
+                        />
+                        {error.category && (
+                          <span className="text-danger">{error.category}</span>
+                        )}
+                      </div>
+
                       <div class="form-group">
                         <label for="exampleInputUsername1">
                           Title<span className="text-danger">*</span>

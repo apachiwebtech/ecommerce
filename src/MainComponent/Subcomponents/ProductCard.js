@@ -36,67 +36,45 @@ const ProductCard = (props) => {
         <div className="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6">
             <div className="products-entry clearfix product-wapper">
                 <ToastContainer theme="dark" position="bottom-right" />
-                <div className="products-thumb">
-                    {props.customizable == 1 && (
-                        // <div className="product-lable">
-                        //   <div
-                        //     className="hot text-light"
-                        //     style={{
-                        //       width: "0",
-                        //       height: "0",
-                        //       borderRight: "60px solid transparent",
-                        //       borderTop: "60px solid #D8B64B",
-                        //       top: "0",
-                        //       left: "0",
-                        //       zIndex: "1",
-                        //     }}
-                        //   >
-                        //     <div style={{ position: "absolute", top: "8px", left: "8px" }}>
-                        //       Luxe
-                        //     </div>
-                        //   </div>
-                        //   <div
-                        //     className="hot text-dark"
-                        //     style={{ backgroundColor: "#fbecd6" }}
-                        //   >
-                        //     customizable
-                        //   </div>
-                        // </div>
+                <div className="products-thumb" style={{maxHeight : "500px"}}>
 
-                        <div
-                            className="product-label"
+
+                    <div
+                        className="product-label"
+                        style={{
+                            position: "relative",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                        }}
+                    >
+                       {props.isluxe == 'Yes' && <div
+                            className="triangle"
                             style={{
-                                position: "relative",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "flex-start",
+                                width: "0px",
+                                height: "0px",
+                                borderRight: "90px solid transparent",
+                                borderTop: "90px solid transparent",
+                                position: "absolute",
+                                top: "0",
+                                left: "0",
+                                zIndex: "1",
                             }}
                         >
                             <div
-                                className="triangle"
                                 style={{
-                                    width: "0px",
-                                    height: "0px",
-                                    borderRight: "90px solid transparent",
-                                    borderTop: "90px solid transparent",
                                     position: "absolute",
-                                    top: "0",
+                                    top: "-90px",
                                     left: "0",
-                                    zIndex: "1",
+                                    width: "90px",
+                                    height: "90px",
+                                    background: "linear-gradient(rgb(216, 182, 75), rgb(255, 193, 7))",
+                                    clipPath: "polygon(0 0, 100% 0, 0 100%)",
                                 }}
-                            >
-                                <div
-                                    style={{
-                                        position: "absolute",
-                                        top: "-90px",
-                                        left: "0",
-                                        width: "90px",
-                                        height: "90px",
-                                        background: "linear-gradient(rgb(216, 182, 75), rgb(255, 193, 7))",
-                                        clipPath: "polygon(0 0, 100% 0, 0 100%)",
-                                    }}
-                                ></div>
-                            </div>
+                            ></div>
+                        </div> }
+
+                        {props.isluxe == 'Yes' && (
                             <div
                                 style={{
                                     position: "absolute",
@@ -109,6 +87,9 @@ const ProductCard = (props) => {
                             >
                                 Luxe
                             </div>
+                        )}
+
+                        {props.customizable == 1 && (
                             <div
                                 className="hot text-light"
                                 style={{
@@ -120,8 +101,9 @@ const ProductCard = (props) => {
                             >
                                 customizable
                             </div>
-                        </div>
-                    )}
+                        )}
+
+                    </div>
 
                     <div className="product-thumb-hover max-390">
                         <Link to={`/product/${props.slug}`}>
@@ -131,9 +113,9 @@ const ProductCard = (props) => {
                     </div>
                     <div className="product-button">
                         {props.stock == null ||
-                        props.stock == 0 ||
-                        props.stock == props.r_stock ||
-                        props.stock < 0 ? null : (
+                            props.stock == 0 ||
+                            props.stock == props.r_stock ||
+                            props.stock < 0 ? null : (
                             <div className="btn-add-to-cart" data-title="Add to cart">
                                 <button
                                     rel="nofollow"
@@ -143,7 +125,7 @@ const ProductCard = (props) => {
                                             props.proid,
                                             props.title,
                                             props.catid,
-                                            props.price,
+                                            props.disc_price,
                                             dispatch,
                                             "1",
                                             props.v_id,
@@ -186,20 +168,18 @@ const ProductCard = (props) => {
                         <h3 className="product-title">
                             <Link to={`/product/${props.slug}`}>{props.title}</Link>
                         </h3>
-                        {/* {console.log(props)} */}
-                        {props.disc_price ? (
+
+                        {props.price ? (
                             <span className="price">
-                                {props.price ? (
-                                    <del aria-hidden="true">
-                                        <span>₹{props.price}</span>
-                                    </del>
-                                ) : null}
+                                <del aria-hidden="true">
+                                    <span>₹{props.price}</span>
+                                </del>
                                 <ins>
                                     <span>₹{props.disc_price}</span>
                                 </ins>
                             </span>
                         ) : (
-                            <span className="price">{props.price}</span>
+                            <span className="price">₹{props.disc_price}</span>
                         )}
                     </div>
                 </div>

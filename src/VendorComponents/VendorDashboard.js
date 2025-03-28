@@ -2,24 +2,23 @@ import React, { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { mdiMenu } from '@mdi/js';
 import Icon from '@mdi/react';
-import logo from "../assets/frontimg/bgrlogo.png";
+
 import InnerHeader from './InnerHeader';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { BASE_URL } from './BaseUrl';
+import logo from "../assets/frontimg/bgrlogo.png";
 
-
-const AdminDashBoard = () => {
+const VendorDashboard = () => {
 
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    Cookies.remove('userid');
+    Cookies.remove('vendorid');
     Cookies.remove('token');
     Cookies.remove('role');
     
     // navigate('/weblog');
-    window.location.pathname = '/weblog'
+    window.location.pathname = '/vendorlog'
   };
 
 
@@ -49,8 +48,8 @@ const AdminDashBoard = () => {
         </div>
   
       </nav>
-
-      {/* <div className="main-panel">
+{/* 
+      <div className="main-panel">
         <div className="content-wrapper">
           <div className="row">
             <div className="col-12 col-xl-6 grid-margin stretch-card">
@@ -436,4 +435,4 @@ const AdminDashBoard = () => {
   )
 }
 
-export default AdminDashBoard;
+export default VendorDashboard;

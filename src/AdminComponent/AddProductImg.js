@@ -245,7 +245,8 @@ const AddProductImg = () => {
                     alert(res.data)
                     setLoader(false)
                     getProductimgData()
-                    window.location.pathname = `/webapp/addimages/${product_id}/${product_name}`
+                    // window.location.pathname = `/webapp/addimages/${product_id}/${product_name}`
+                    window.location.reload()
                 })
         }
 
