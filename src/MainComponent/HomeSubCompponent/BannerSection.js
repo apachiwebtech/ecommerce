@@ -7,125 +7,95 @@ import './BannerSliderBtn.css'
 import { BASE_URL, IMG_URL } from '../../AdminComponent/BaseUrl';
 import { Link } from 'react-router-dom';
 
-// import { Swiper, SwiperSlide } from 'swiper/react';
-// import { Zoom, Mousewheel, Navigation, Thumbs } from 'swiper/modules';
-// import 'swiper/css';
-// import 'swiper/css/navigation';
-
 const BannerSection = ({ setLoader }) => {
-    const [banner, setBanner] = useState([])
+  const [banner, setBanner] = useState([]);
+  const [minHeight, setMinHeight] = useState('100vh'); // Default to desktop
+  const [fontSize, setFontSize] = useState('24px'); // Default font size for desktop
 
-    var settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1
+  };
+
+  async function getTrendingData() {
+    axios.get(`${BASE_URL}/main_Banner`)
+      .then((res) => {
+        console.log(res.data);
+
+        const filteredData = res.data.filter(item => {
+          if (window.innerWidth <= 768) {
+            return item.view === 1; // Mobile
+          } else {
+            return item.view === 2; // Desktop
+          }
+        });
+
+        setBanner(filteredData);
+
+        const timeoutId = setTimeout(() => {
+          setLoader(false);
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    getTrendingData();
+
+    const updateStyles = () => {
+      if (window.innerWidth <= 768) {
+        setMinHeight('25vh'); // Mobile
+        setFontSize('16px'); // Smaller font size for mobile
+        console.log('Styles updated for mobile: MinHeight 25vh, FontSize 16px');
+      } else {
+        setMinHeight('100vh'); // Desktop
+        setFontSize('24px'); // Larger font size for desktop
+        console.log('Styles updated for desktop: MinHeight 100vh, FontSize 24px');
+      }
     };
 
+    updateStyles(); // Set initial values
+    window.addEventListener('resize', updateStyles);
 
-    async function getTrendingData() {
-        axios.get(`${BASE_URL}/main_Banner`)
-            .then((res) => {
-                console.log(res.data)
-                setBanner(res.data)
+    return () => window.removeEventListener('resize', updateStyles);
+  }, []);
 
-                const timeoutId = setTimeout(() => {
-                    setLoader(false);
-                }, 500);
-
-                return () => clearTimeout(timeoutId);
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
-    useEffect(() => {
-        getTrendingData()
-    }, [])
-
-
-    return (
-        <section class="section">
-
-
-
-            <div class="block block-sliders">
-
-
-                {/* <Swiper spaceBetween={20}
-                    slidesPerView={1}
-                    modules={[Navigation, Thumbs]}
-                    navigation
-
-                >
-
-                    {banner?.map((item) => {
-                        return (
-                            <SwiperSlide>
-                                <div class="item slick-slide">
-                                    <div class="item-content">
-                                        <div class="content-image">
-                                            <img width="1920" height="1080" src={`${IMG_URL}/banner/${item.upload_image}`} alt="Slider" />
-                                        </div>
-                                        <div class="section-padding">
-                                            <div class="section-container">
-                                                <div class="item-info horizontal-start vertical-middle">
-                                                    <div class="content">
-                                                        <h2 class="title-slider">{item.title}</h2>
-                                                        <div class="description-slider">{item.description} </div>
-                                                        <Link to={item.link} class="button-slider button-white" target={item.target} >SHOP NOW</Link>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </SwiperSlide>
-                        )
-
-
-                    })}
-                </Swiper> */}
-
-                <Slider {...settings}>
-
-                    {banner?.map((item) => {
-                        return (
-                            <Link to={item.link} class="item slick-slide">
-                                <div class="item-content">
-                                    <div class="content-image">
-                                        <img width="1920" height="1080" src={`${IMG_URL}/banner/${item.upload_image}`} alt="Slider" />
-                                    </div>
-                                    <div class="section-padding">
-                                        <div class="section-container">
-                                            <div class="item-info horizontal-start vertical-middle">
-                                                <div class="content">
-                                                    {/* <div class="subtitle-slider">20%OFF.END MONDAY</div> */}
-                                                    <h2 class="title-slider">{item.title}</h2>
-                                                    <div class="description-slider">{item.description} </div>
-                                                    {/* <Link to={item.link} class="button-slider button-white" target={item.target} >SHOP NOW</Link> */}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
-                        )
-
-
-                    })}
-
-
-                </Slider>
-
-
-
-
-            </div>
-        </section>
-    )
+  return (
+    <section class="section">
+      <div class="block block-sliders">
+        <Slider {...settings}>
+          {banner?.map((item) => {
+            return (
+              <Link to={item.link} class="item slick-slide">
+                <div class="item-content">
+                  <div class="content-image" >
+                    <img width="100" height="100" style={{ minHeight }} src={`${IMG_URL}/banner/${item.upload_image}`} alt="Slider" />
+                  </div>
+                  <div class="section-padding">
+                    <div class="section-container">
+                      <div class="item-info horizontal-start vertical-middle">
+                        <div class="content">
+                          <h2 class="title-slider" style={{ fontSize }}>{item.title}</h2>
+                          <div class="description-slider" style={{ fontSize }}>{item.description} </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
+        </Slider>
+      </div>
+    </section>
+  )
 }
 
 export default BannerSection
