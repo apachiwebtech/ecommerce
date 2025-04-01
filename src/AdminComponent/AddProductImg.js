@@ -16,6 +16,7 @@ import { getRoleData } from '../Store/Role/role-action';
 import CloseIcon from '@mui/icons-material/Close';
 
 const AddProductImg = () => {
+
     const [value, setValue] = useState({
         image1: "",
         image2: "",
@@ -272,8 +273,8 @@ const AddProductImg = () => {
                     alert(res.data)
                     getColorData()
                     setValue({
-                        title:"",
-                        colorcode :""
+                        title: "",
+                        colorcode: ""
                     })
 
                 })
@@ -287,13 +288,47 @@ const AddProductImg = () => {
 
     const HandleChange = (selectedValue) => {
         if (selectedValue) {
-            console.log(selectedValue, "::::")
             const selectedId = selectedValue.id;
             setSelectedOption(selectedValue);
             // Now you have the selected id, you can use it in your application logic
             setId(selectedId)
         }
     };
+
+    const handleUpdate = async (id) => {
+        setValue({
+            description: "",
+            title: "", 
+            colorcode: "", 
+            
+        })
+        setLoader(true)
+        axios.post(`${BASE_URL}/product_img/${id}`,)
+            .then((res) => {
+                if (res.data.length > 0) {
+                    setLoader(false)
+                    const product = res.data;
+                    product.map((item) => {
+
+                        setValue({
+                            
+                            image1: `https://micasasucasa.in/ecomuploads/productimg/${item.images[0]}` || "",
+                            image2: `https://micasasucasa.in/ecomuploads/productimg/${item.images[1]}` || "",
+                            image3: `https://micasasucasa.in/ecomuploads/productimg/${item.images[2]}` || "",
+                            image4: `https://micasasucasa.in/ecomuploads/productimg/${item.images[3]}` || "",
+                            title: item.title || "",
+                            colorcode: item.colorcode || ""
+
+                        })
+                    })
+
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
 
 
 
@@ -313,6 +348,8 @@ const AddProductImg = () => {
     const onhandleChange = (e) => {
         setValue((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
+
+    console.log(value)
 
 
 
@@ -390,6 +427,7 @@ const AddProductImg = () => {
                                                             sx={{ width: "100%", border: "none", borderRadius: "5px" }}
                                                             renderInput={(params) => <TextField label="Select Colour" {...params} />}
                                                             onChange={(event, value) => HandleChange(value)}
+                                                            value={color.find(c => c.title === value.title) || null}
                                                             name="color"
                                                         />
                                                         {error.color_id && <span className='text-danger'>{error.color_id}</span>}
@@ -404,8 +442,8 @@ const AddProductImg = () => {
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                   
-                                                                        <CloseIcon style={{width:"30px"}} type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+
+                                                                        <CloseIcon style={{ width: "30px" }} type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" />
                                                                     </div>
                                                                     <div class="modal-body">
                                                                         <form class="forms-sample py-3" >
@@ -417,23 +455,23 @@ const AddProductImg = () => {
                                                                             </div>
 
                                                                             <div class="form-group ">
-                                                                                <label for="exampleTextarea1">Color code <span className='text-danger'>*</span></label>                                    
+                                                                                <label for="exampleTextarea1">Color code <span className='text-danger'>*</span></label>
                                                                                 <input type="color" class="form-control" value={value.colorcode} name='colorcode' onChange={onhandleChange} />
                                                                             </div>
 
-                                                                            {roleaccess > 2 && <> 
-                                                                             <button type="button" onClick={handleSubmit2} class="btn btn-primary mr-2" data-bs-dismiss="modal">Submit</button>
+                                                                            {roleaccess > 2 && <>
+                                                                                <button type="button" onClick={handleSubmit2} class="btn btn-primary mr-2" data-bs-dismiss="modal">Submit</button>
 
                                                                                 {/* <button type='button' onClick={() => {
                                                                                     window.location.reload()
                                                                                 }} class="btn btn-light">Cancel</button> */}
-                                                                                </>
-                                                                                
-                                                                                }
+                                                                            </>
+
+                                                                            }
 
                                                                         </form>
                                                                     </div>
-                                                                 
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -539,12 +577,13 @@ const AddProductImg = () => {
                                                     return (
                                                         <tr>
                                                             <td>{index + 1}</td>
-                                                            <td>{item.images[0] ? <img src={`${IMG_URL}/productimg/` + item.images[0]} alt='' /> : <></>}{item.images[1]? <img src={`${IMG_URL}/productimg/` + item.images[1]} alt='' /> : <></>}{item.images[2] ? <img src={`${IMG_URL}/productimg/` + item.images[2]} alt='' /> : <></>}{item.images[3] && <img src={`${IMG_URL}/productimg/` + item.images[3]} alt='' /> }</td>
+                                                            <td>{item.images[0] ? <img src={`${IMG_URL}/productimg/` + item.images[0]} alt='' /> : <></>}{item.images[1] ? <img src={`${IMG_URL}/productimg/` + item.images[1]} alt='' /> : <></>}{item.images[2] ? <img src={`${IMG_URL}/productimg/` + item.images[2]} alt='' /> : <></>}{item.images[3] && <img src={`${IMG_URL}/productimg/` + item.images[3]} alt='' />}</td>
                                                             <td>{item.title}</td>
                                                             <td>
                                                                 {roleaccess > 3 && <Link>
                                                                     <DeleteIcon style={{ color: "red" }} onClick={() => handleClick(item.id)} />
                                                                 </Link>}
+                                                                <EditIcon style={{ color: "black", cursor: 'pointer' }} onClick={() => handleUpdate(item.id)} />
 
                                                             </td>
                                                             {confirmationVisibleMap[item.id] && (
