@@ -1938,6 +1938,19 @@ ul.slick-dots li.slick-active button {
     color: #868686;
     display: block;
     position: relative;
+    text-transform: uppercase;
+}
+.block-title h2 {
+    text-transform: uppercase;
+    font-size: 29px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.swiper-slide.swiper-slide h4 {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 18px;
 }
 .site-navigation
     ul
@@ -3318,10 +3331,14 @@ ul.slick-dots li.slick-active button {
     font-size: 14px;
     color: #000;
     font-weight: 500;
+    text-transform: uppercase;
 }
 .site-main .page-title .breadcrumbs a {
+   
     color: #868686;
     position: relative;
+    text-transform: uppercase !important;
+    font-weight: 600;
 }
 .site-main .page-title .breadcrumbs .delimiter {
     margin: 0 10px;
@@ -4994,10 +5011,11 @@ ul.slick-dots li.slick-active button {
 }
 .block-product-cats ul li a {
     color: #868686;
-    font-weight: 400;
+    font-weight: 500;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    text-transform: uppercase;
 }
 .block-product-cats ul li.current a,
 .block-product-cats ul li a:hover {
@@ -5175,7 +5193,10 @@ ul.slick-dots li.slick-active button {
     display: block;
 }
 .block-feature .box .box-title {
-    font-size: 20px;
+    
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
 }
 .block-feature .box .box-description {
     margin-bottom: 0;
@@ -6642,8 +6663,9 @@ ul.slick-dots li.slick-active button {
 .block-contact-form .contact-us-form label {
     color: #000;
     margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 15px;
     position: relative;
+    text-transform: uppercase;
 }
 .block-contact-form .contact-us-form label.required:before {
     content: "*";
