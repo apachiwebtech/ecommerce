@@ -3146,7 +3146,7 @@ ul.slick-dots li.slick-active button {
     transform: translateX(100%);
     -webkit-transition: transform 0.3s ease-in-out;
     transition: transform 0.3s ease-in-out;
-    padding: 40px 50px;
+    padding: 10px 20px;
     background: #fff;
     position: fixed;
     top: 0;

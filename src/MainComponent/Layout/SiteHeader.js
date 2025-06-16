@@ -32,13 +32,15 @@ const SiteHeader = (cartCount) => {
   const [searchtoggle, setsearchtoggle] = useState(false);
   const custuser_id = Cookies.get("custuserid");
   const location = useLocation();
-  const isHomePage = location.pathname === "/home";
+  const isHomePage = location.pathname === "/";
   const [isFurnitureOpen, setFurnitureOpen] = useState(false);
   const [isDecorOpen, setDecorOpen] = useState(false);
   const [isTableOpen, setTableOpen] = useState(false);
   const [activeSidebar, setActiveSidebar] = useState(null);
   const searchBoxRef = useRef(null);
   const searchIconRef = useRef(null);
+
+  
 
   const toggleFurniture = () => {
     setActiveSidebar(activeSidebar === "furniture" ? null : "furniture");
@@ -163,12 +165,19 @@ const SiteHeader = (cartCount) => {
   const count = useSelector((state) => state.cartCount.cartCount);
   const wishcount = useSelector((state) => state.wishlist.wishCount);
   const handlechangesearch = (e) => {
-    setSearch(e.target.value);
+    const inputValue = e.target.value;
+    setSearch(inputValue);
 
-    axios.post(`${BASE_URL}/searchproduct`, { search: search }).then((res) => {
-      setProducts(res.data);
-    });
+    axios
+      .post(`${BASE_URL}/searchproduct`, { search: inputValue })
+      .then((res) => {
+        setProducts(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
 
   useEffect(() => {
     dispatch(getCartCount());
@@ -176,10 +185,11 @@ const SiteHeader = (cartCount) => {
   }, []);
 
   const handlesearch = () => {
-    console.log("Search toggle clicked. Current state:", searchtoggle);
-    setsearchtoggle(!searchtoggle);
-    setSearch("");
+    setsearchtoggle(!searchtoggle); // Toggle visibility
+    setSearch(""); // Clear search input
+    setProducts([]); // Clear product results
   };
+
 
   useEffect(() => {
     const isInsideSearchBox = (e) => {
@@ -391,8 +401,8 @@ const SiteHeader = (cartCount) => {
             </div>
 
             <div className="search-box">
-            <div className="search-toggle" onClick={handlesearch}>
-              <i className="icon-search"></i>
+              <div className="search-toggle" onClick={handlesearch}>
+                <i className="icon-search"></i>
               </div>
             </div>
 
@@ -453,10 +463,10 @@ const SiteHeader = (cartCount) => {
 
                     <div className="block block-products">
                       <div className="block-title">
-                        <h2>Searched Product</h2>
+                        <h2>Results</h2>
                       </div>
 
-                      <div className="block-content">
+                      <div className="block-content" >
                         {products.length > 0 ? (
                           <ul className="products-list">
                             {products.map((item) => {
@@ -491,7 +501,7 @@ const SiteHeader = (cartCount) => {
                                       {item.disc_price ? (
                                         <span className="price">
                                           {item.price !== 0 &&
-                                          item.price !== item.disc_price ? (
+                                            item.price !== item.disc_price ? (
                                             <del aria-hidden="true">
                                               <span>₹{item.price}</span>
                                             </del>
@@ -560,7 +570,7 @@ const SiteHeader = (cartCount) => {
                 </div>
               </div>
             </div>
-          
+
             {/* after clickinh search on mobile view end /==================================================== */}
           </div>
         </div>
@@ -608,11 +618,10 @@ const SiteHeader = (cartCount) => {
                                 .map((item) => {
                                   return (
                                     <li
-                                      className={`level-1 menu-item ${
-                                        updatedSubCat[item.id]
-                                          ? "menu-item-has-children"
-                                          : ""
-                                      }`}
+                                      className={`level-1 menu-item ${updatedSubCat[item.id]
+                                        ? "menu-item-has-children"
+                                        : ""
+                                        }`}
                                     >
                                       <Link
                                         to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}
@@ -707,11 +716,10 @@ const SiteHeader = (cartCount) => {
                                 .map((item) => {
                                   return (
                                     <li
-                                      className={`level-1 menu-item ${
-                                        updatedSubCat[item.id]
-                                          ? "menu-item-has-children"
-                                          : ""
-                                      }`}
+                                      className={`level-1 menu-item ${updatedSubCat[item.id]
+                                        ? "menu-item-has-children"
+                                        : ""
+                                        }`}
                                     >
                                       <Link
                                         to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}
@@ -802,11 +810,10 @@ const SiteHeader = (cartCount) => {
                                 .map((item) => {
                                   return (
                                     <li
-                                      className={`level-1 menu-item ${
-                                        updatedSubCat[item.id]
-                                          ? "menu-item-has-children"
-                                          : ""
-                                      }`}
+                                      className={`level-1 menu-item ${updatedSubCat[item.id]
+                                        ? "menu-item-has-children"
+                                        : ""
+                                        }`}
                                     >
                                       <Link
                                         to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}
@@ -896,11 +903,10 @@ const SiteHeader = (cartCount) => {
                                   .map((item) => {
                                     return (
                                       <li
-                                        className={`level-1 menu-item ${
-                                          updatedSubCat[item.id]
-                                            ? "menu-item-has-children"
-                                            : ""
-                                        }`}
+                                        className={`level-1 menu-item ${updatedSubCat[item.id]
+                                          ? "menu-item-has-children"
+                                          : ""
+                                          }`}
                                       >
                                         <Link
                                           to={`/shoproduct/${banner[0]?.slug}/${item.slug}`}
@@ -1058,14 +1064,7 @@ const SiteHeader = (cartCount) => {
                           >
                             <div className="close-search"></div>
 
-                            <div
-                              className={
-                                searchtoggle
-                                  ? `wrapper-search wrapper-open`
-                                  : `wrapper-search `
-                              }
-                              ref={searchBoxRef}
-                            >
+                            <div className="wrapper-search wrapper-open" style={{ display: "block" }}>
                               <div
                                 className="search-from ajax-search"
                                 style={{
@@ -1138,7 +1137,7 @@ const SiteHeader = (cartCount) => {
                                                     {item.disc_price ? (
                                                       <span className="price">
                                                         {item.price !== 0 &&
-                                                        item.price !==
+                                                          item.price !==
                                                           item.disc_price ? (
                                                           <del aria-hidden="true">
                                                             <span>
