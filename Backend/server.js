@@ -675,15 +675,13 @@ app.post("/otp", (req, res) => {
       if (err) {
         return res.json(err);
       } else {
-        console.log(data, "otp");
         return res.json(data);
       }
     });
   }
 
   if (value == 0) {
-    const sql =
-      "SELECT * from awt_customers_dummy where email = ? and otp = ? and deleted = 0 ";
+    const sql ="SELECT * from awt_customers_dummy where email = ? and otp = ? and deleted = 0 ";
     params = [email, otp];
     con.query(sql, params, (err, data) => {
       if (err) {
@@ -701,12 +699,11 @@ app.post("/otp", (req, res) => {
                 return res.json(err);
               } else {
                 const insertedId = data.insertId;
-                const sql =
-                  "SELECT * from  awt_customers WHERE id = ? and deleted = 0";
+                const sql ="SELECT * from  awt_customers WHERE id = ? and deleted = 0";
 
                 con.query(sql, [insertedId], (err, data) => {
                   if (err) {
-                    console.log(err);
+                    return res.json(err);
                   } else {
                     return res.json(data);
                   }
@@ -718,8 +715,9 @@ app.post("/otp", (req, res) => {
       }
     });
   }
+  
+  
 });
-
 
 
 app.post("/register", (req, res) => {
@@ -1103,6 +1101,7 @@ app.post(
       if (err) {
         return res.json("error");
       } else {
+        
         const gstimage =
           data[0] && data[0].gst_upload !== undefined ? data[0].gst_upload : "";
         const panimage =

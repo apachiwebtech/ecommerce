@@ -171,7 +171,7 @@ const Router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <CommingSoon />
+        element: <DashBoard />
       },
       {
         path: '/home',

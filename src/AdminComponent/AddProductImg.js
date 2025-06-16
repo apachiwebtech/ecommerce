@@ -30,6 +30,7 @@ const AddProductImg = () => {
     const [image2, setImage2] = useState()
     const [image3, setImage3] = useState()
     const [image4, setImage4] = useState()
+    const [editid, setEditid] = useState('')
     const [loader, setLoader] = useState(false)
     const [selectedOption, setSelectedOption] = useState(null);
     const [color_id, setId] = useState("")
@@ -239,16 +240,34 @@ const AddProductImg = () => {
             formdata.append("color_id", color_id)
             formdata.append("product_id", product_id)
             formdata.append("user_id", decryptedUserId())
+            formdata.append("eid", editid)
 
-            axios.post(`${BASE_URL}/add_product_img`, formdata)
-                .then((res) => {
-                    console.log(res)
-                    alert(res.data)
-                    setLoader(false)
-                    getProductimgData()
-                    // window.location.pathname = `/webapp/addimages/${product_id}/${product_name}`
-                    window.location.reload()
-                })
+            if (editid) {
+                axios.post(`${BASE_URL}/update_product_img`, formdata)
+                    .then((res) => {
+                        console.log(res)
+                        alert(res.data)
+                        setLoader(false)
+                        getProductimgData()
+                        // window.location.pathname = `/webapp/addimages/${product_id}/${product_name}`
+                        window.location.reload()
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            } else {
+                axios.post(`${BASE_URL}/add_product_img`, formdata)
+                    .then((res) => {
+                        console.log(res)
+                        alert(res.data)
+                        setLoader(false)
+                        getProductimgData()
+                        // window.location.pathname = `/webapp/addimages/${product_id}/${product_name}`
+                        window.location.reload()
+                    })
+            }
+
+
         }
 
 
@@ -298,9 +317,9 @@ const AddProductImg = () => {
     const handleUpdate = async (id) => {
         setValue({
             description: "",
-            title: "", 
-            colorcode: "", 
-            
+            title: "",
+            colorcode: "",
+
         })
         setLoader(true)
         axios.post(`${BASE_URL}/product_img/${id}`,)
@@ -308,10 +327,17 @@ const AddProductImg = () => {
                 if (res.data.length > 0) {
                     setLoader(false)
                     const product = res.data;
+                    setImage1(product[0].images[0])
+                    setImage2(product[0].images[1])     
+                    setImage3(product[0].images[2])
+                    setImage4(product[0].images[3])
+                    setEditid(product[0].id)
+                    setId(product[0].colorcode)
+                    setSelectedOption(color.find(c => c.id === product[0].color_id) || null);
+
                     product.map((item) => {
 
                         setValue({
-                            
                             image1: `https://micasasucasa.in/ecomuploads/productimg/${item.images[0]}` || "",
                             image2: `https://micasasucasa.in/ecomuploads/productimg/${item.images[1]}` || "",
                             image3: `https://micasasucasa.in/ecomuploads/productimg/${item.images[2]}` || "",
