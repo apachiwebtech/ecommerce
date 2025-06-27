@@ -244,10 +244,10 @@ const Product = () => {
 
   const setCustomizeValue = (data) => {
     setValue((prevValue) => ({
-        ...prevValue,
-        customize: data.customizable === '1' ? 'Yes' : 'No', 
+      ...prevValue,
+      customize: data.customizable === '1' ? 'Yes' : 'No',
     }));
-};
+  };
 
 
   async function getUpdateData() {
@@ -258,17 +258,27 @@ const Product = () => {
         setLoader(false);
         console.log("Fetched Data:", res.data[0]);
         setUid(res.data[0]);
+        // selectedBrandId(res.data[0].b_id)
+        const selected1 = brand.find((option) => option.id === res.data[0].b_id);
+        setSelectedBrand(selected1);
+        selectedBrandId(uid.b_id);
+
+
+        // selectedVendorId(res.data[0].v_id)
+         const selected = vendor.find((option) => option.id === res.data[0].v_id);
+         setSelectedVendor(selected);
+         selectedVendorId(uid.v_id);
 
         setCustomizeValue(res.data[0]);
-       setHasPrice(res.data[0].isdiscounted)
-        
+        setHasPrice(res.data[0].isdiscounted)
+
       })
       .catch((err) => {
         console.log(err);
       });
   }
 
-  
+
   const handlestatus = (e, id, column) => {
     const value = e.target.value;
 
@@ -369,7 +379,7 @@ const Product = () => {
       getUpdateData();
       setHasPrice("yes");
     }
- 
+
     getGroupData();
     getBrandData();
     getVendordata();
@@ -411,13 +421,13 @@ const Product = () => {
     }
   };
 
-  useEffect(() => {
-    if (uid.v_id) {
-      const selected = vendor.find((option) => option.id === uid.v_id);
-      setSelectedVendor(selected);
-      selectedVendorId(uid.v_id);
-    }
-  }, [uid, vendor, vendor_id]);
+  // useEffect(() => {
+  //   if (uid.v_id) {
+  //     const selected = vendor.find((option) => option.id === uid.v_id);
+  //     setSelectedVendor(selected);
+  //     selectedVendorId(uid.v_id);
+  //   }
+  // }, [uid, vendor, vendor_id]);
 
   // console.log(vendor_id,"dd")
 
@@ -429,13 +439,13 @@ const Product = () => {
     }
   };
 
-  useEffect(() => {
-    if (uid.b_id) {
-      const selected = brand.find((option) => option.id === uid.b_id);
-      setSelectedBrand(selected);
-      selectedBrandId(uid.b_id);
-    }
-  }, [uid, brand, brand_id]);
+  // useEffect(() => {
+  //   if (uid.b_id) {
+  //     const selected = brand.find((option) => option.id === uid.b_id);
+  //     setSelectedBrand(selected);
+  //     selectedBrandId(uid.b_id);
+  //   }
+  // }, [uid, brand, brand_id]);
 
 
   const HandlesubcatChange = (selectedValue) => {
@@ -568,13 +578,13 @@ const Product = () => {
 
 
 
-  
+
   const handlesubmit = (e) => {
     e.preventDefault();
-    
+
     // Clear previous errors
     const errors = {};
-  
+
     // Check the selected shipping method
     if (selectedShipping === "company") {
       // Validate fields for company shipping
@@ -611,17 +621,17 @@ const Product = () => {
         errors.tracking_no = "Tracking Number is required.";
       }
     }
-  
+
     // If there are errors, set the error state and return
     if (Object.keys(errors).length > 0) {
       setError(errors); // Assuming you have a state to hold errors
       return;
     }
-  
+
     setLoader(true);
     const formdata = new FormData();
     formdata.append("uid", uid.id);
-  
+
     if (update_id === ":update_id") {
       formdata.append("v_id", vendor_id);
       formdata.append("b_id", brand_id);
@@ -637,7 +647,7 @@ const Product = () => {
       formdata.append("subcatid", subcatid);
       formdata.append("collectionid", collectionid);
     }
-  
+
     formdata.append("title", value.title);
     formdata.append("customizable", value.customize);
     formdata.append("isdiscounted", hasPrice);
@@ -648,7 +658,7 @@ const Product = () => {
     formdata.append("gst", value.gst);
     formdata.append("hsn_code", value.hsn_code);
     formdata.append("shipping_option", selectedShipping);
-    
+
     // Append fields based on the selected shipping method
     if (selectedShipping === "company") {
       formdata.append("lbh_unit", value.lbh_unit);
@@ -663,11 +673,11 @@ const Product = () => {
       formdata.append("tracking_no", value.tracking_no);
       formdata.append("courier_name", value.courier_name);
     }
-  
+
     formdata.append("sizeimage", sizeimage);
     formdata.append("specification", specification);
     formdata.append("user_id", decryptedUserId());
-  
+
     axios.post(`${BASE_URL}/add_product`, formdata).then((res) => {
       setLoader(false);
       // alert(res.data);
@@ -1124,7 +1134,7 @@ const Product = () => {
                                 // label="Age"
                                 name="customize"
                                 value={value.customize || `1`}
-                                onChange={onhandleChange} 
+                                onChange={onhandleChange}
                               >
                                 <MenuItem value={`1`}>Yes</MenuItem>
                                 <MenuItem value={`2`}>No</MenuItem>
@@ -1721,29 +1731,78 @@ const Product = () => {
                       {window.location.pathname.match(
                         /^\/webapp\/product\/\d+$/
                       ) && (
-                        <div className="mt-3">
-                          <div className="form-group">
-                            <div className="setting-block">
-                              <div>
+                          <div className="mt-3">
+                            <div className="form-group">
+                              <div className="setting-block">
+                                <div>
+                                  <label
+                                    htmlFor=""
+                                    className="switch switch-sm switch-icon"
+                                  >
+                                    Activate it
+                                  </label>
+                                </div>
+                                <div>
+                                  {isNaN(update_id) && (
+                                    <FormControlLabel
+                                      control={<Android12Switch disabled />}
+                                    />
+                                  )}
+                                  {uid.active == 1 && (
+                                    <FormControlLabel
+                                      control={
+                                        <Android12Switch
+                                          onChange={(e) =>
+                                            handlestatus(e, uid.id, "active")
+                                          }
+                                          value="0"
+                                          defaultChecked
+                                        />
+                                      }
+                                    />
+                                  )}
+                                  {uid.active == 0 && (
+                                    <FormControlLabel
+                                      control={
+                                        <Android12Switch
+                                          onChange={(e) =>
+                                            handlestatus(e, uid.id, "active")
+                                          }
+                                          value="1"
+                                        />
+                                      }
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                      {window.location.pathname.match(
+                        /^\/webapp\/product\/\d+$/
+                      ) && (
+                          <div className="mt-3">
+                            <div className="form-group">
+                              <div className="setting-block">
                                 <label
                                   htmlFor=""
                                   className="switch switch-sm switch-icon"
                                 >
-                                  Activate it
+                                  Approval status
                                 </label>
-                              </div>
-                              <div>
                                 {isNaN(update_id) && (
                                   <FormControlLabel
                                     control={<Android12Switch disabled />}
                                   />
                                 )}
-                                {uid.active == 1 && (
+
+                                {uid.approve == 1 && (
                                   <FormControlLabel
                                     control={
                                       <Android12Switch
                                         onChange={(e) =>
-                                          handlestatus(e, uid.id, "active")
+                                          handlestatus(e, uid.id, "approve")
                                         }
                                         value="0"
                                         defaultChecked
@@ -1751,12 +1810,12 @@ const Product = () => {
                                     }
                                   />
                                 )}
-                                {uid.active == 0 && (
+                                {uid.approve == 0 && (
                                   <FormControlLabel
                                     control={
                                       <Android12Switch
                                         onChange={(e) =>
-                                          handlestatus(e, uid.id, "active")
+                                          handlestatus(e, uid.id, "approve")
                                         }
                                         value="1"
                                       />
@@ -1766,56 +1825,7 @@ const Product = () => {
                               </div>
                             </div>
                           </div>
-                        </div>
-                      )}
-
-                      {window.location.pathname.match(
-                        /^\/webapp\/product\/\d+$/
-                      ) && (
-                        <div className="mt-3">
-                          <div className="form-group">
-                            <div className="setting-block">
-                              <label
-                                htmlFor=""
-                                className="switch switch-sm switch-icon"
-                              >
-                                Approval status
-                              </label>
-                              {isNaN(update_id) && (
-                                <FormControlLabel
-                                  control={<Android12Switch disabled />}
-                                />
-                              )}
-
-                              {uid.approve == 1 && (
-                                <FormControlLabel
-                                  control={
-                                    <Android12Switch
-                                      onChange={(e) =>
-                                        handlestatus(e, uid.id, "approve")
-                                      }
-                                      value="0"
-                                      defaultChecked
-                                    />
-                                  }
-                                />
-                              )}
-                              {uid.approve == 0 && (
-                                <FormControlLabel
-                                  control={
-                                    <Android12Switch
-                                      onChange={(e) =>
-                                        handlestatus(e, uid.id, "approve")
-                                      }
-                                      value="1"
-                                    />
-                                  }
-                                />
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                        )}
                     </div>
                   </div>
                   <div className="card mt-3">
