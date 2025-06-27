@@ -199,7 +199,7 @@ const ProductCatalog = () => {
                                 <td>{item.category}</td>
                                 <td>{item.subcategory}</td>
                                 <td>{item.vendor}</td>
-                                <td>{item.price}</td>
+                                <td>{item.disc_price}</td>
                                 {roleaccess >= 2 && (
                                   <td>
                                     <Link
