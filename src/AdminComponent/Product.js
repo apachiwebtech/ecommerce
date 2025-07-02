@@ -259,15 +259,15 @@ const Product = () => {
         console.log("Fetched Data:", res.data[0]);
         setUid(res.data[0]);
         // selectedBrandId(res.data[0].b_id)
-        const selected1 = brand.find((option) => option.id === res.data[0].b_id);
-        setSelectedBrand(selected1);
-        selectedBrandId(uid.b_id);
+        // const selected1 = brand.find((option) => option.id === res.data[0].b_id);
+        // setSelectedBrand(selected1);
+        // selectedBrandId(uid.b_id);
 
 
         // selectedVendorId(res.data[0].v_id)
-         const selected = vendor.find((option) => option.id === res.data[0].v_id);
-         setSelectedVendor(selected);
-         selectedVendorId(uid.v_id);
+        //  const selected = vendor.find((option) => option.id === res.data[0].v_id);
+        //  setSelectedVendor(selected);
+        //  selectedVendorId(uid.v_id);
 
         setCustomizeValue(res.data[0]);
         setHasPrice(res.data[0].isdiscounted)
@@ -421,13 +421,13 @@ const Product = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (uid.v_id) {
-  //     const selected = vendor.find((option) => option.id === uid.v_id);
-  //     setSelectedVendor(selected);
-  //     selectedVendorId(uid.v_id);
-  //   }
-  // }, [uid, vendor, vendor_id]);
+  useEffect(() => {
+    if (uid.v_id) {
+      const selected = vendor.find((option) => option.id === uid.v_id);
+      setSelectedVendor(selected);
+      selectedVendorId(uid.v_id);
+    }
+  }, [uid, vendor]);
 
   // console.log(vendor_id,"dd")
 
@@ -439,13 +439,13 @@ const Product = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (uid.b_id) {
-  //     const selected = brand.find((option) => option.id === uid.b_id);
-  //     setSelectedBrand(selected);
-  //     selectedBrandId(uid.b_id);
-  //   }
-  // }, [uid, brand, brand_id]);
+  useEffect(() => {
+    if (uid.b_id) {
+      const selected = brand.find((option) => option.id === uid.b_id);
+      setSelectedBrand(selected);
+      selectedBrandId(uid.b_id);
+    }
+  }, [uid, brand]);
 
 
   const HandlesubcatChange = (selectedValue) => {
